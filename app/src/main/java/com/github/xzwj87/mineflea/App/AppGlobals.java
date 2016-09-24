@@ -12,10 +12,15 @@ public class AppGlobals extends Application{
 
     private static Context sContext;
 
-    public AppGlobals(){
-        super();
+    @Override
+    public void onCreate(){
+        super.onCreate();
 
         sContext = getApplicationContext();
+    }
+
+    public AppGlobals(){
+        super();
     }
 
     public static Context getAppContext(){

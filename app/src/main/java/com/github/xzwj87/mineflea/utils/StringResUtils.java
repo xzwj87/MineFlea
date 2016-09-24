@@ -8,22 +8,18 @@ import com.github.xzwj87.mineflea.R;
  */
 public class StringResUtils {
 
-    private String TAB_NAME_1 = AppGlobals.getAppContext().
-            getString(R.string.tab_trends);
-    private String TAB_NAME_2 = AppGlobals.getAppContext().
-            getString(R.string.tab_nearby);
-    private String TAB_NAME_3 = AppGlobals.getAppContext().
-            getString(R.string.tab_mine);
 
-
-    public  String getTabName(int pos){
+    public static String getTabName(int pos){
         switch (pos){
             case 0:
-                return TAB_NAME_1;
+                return AppGlobals.getAppContext().
+                        getString(R.string.tab_trends);
             case 1:
-                return TAB_NAME_2;
+                return AppGlobals.getAppContext().
+                        getString(R.string.tab_nearby);
             case 2:
-                return TAB_NAME_3;
+                return AppGlobals.getAppContext().
+                        getString(R.string.tab_mine);
         }
 
         return null;
