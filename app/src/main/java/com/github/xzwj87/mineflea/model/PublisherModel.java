@@ -9,6 +9,8 @@ public class PublisherModel {
 
     private String mName;
 
+    private String mHeadIconUri;
+
     private String mTelNumber;
 
     private String mEmail;
@@ -42,6 +44,14 @@ public class PublisherModel {
 
     public String getName(){
         return mName;
+    }
+
+    public String getHeadIconUri(){
+        return mHeadIconUri;
+    }
+
+    public void setHeadIconUri(String iconUri){
+        mHeadIconUri = iconUri;
     }
 
     public void setTelNumber(String no){
@@ -105,14 +115,14 @@ public class PublisherModel {
     public String toString(){
         StringBuilder sb = new StringBuilder();
 
-        sb.append("-------- Publisher --------\n");
+        sb.append("-------- Publisher Detail --------\n");
         sb.append("id: " + mId + "\n");
         sb.append("name: " + mName + "\n");
         sb.append("email: " + mEmail + "\n");
         sb.append("credit: " + mCredit + "\n");
         sb.append("location: " + mLocation + "\n");
         sb.append("distance: " + mDistance + "\n");
-        sb.append("----------------------------\n");
+        sb.append("----------------------------------\n");
 
         return sb.toString();
     }

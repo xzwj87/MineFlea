@@ -55,7 +55,7 @@ public class MineFleaContract {
 
         public static final String COL_ID = "id";
         public static final String COL_NAME = "name";
-        public static final String COL_PUBLISHER = "publisher";
+        public static final String COL_PUBLISHER_ID = "publisher_id";
         /* estimated price */
         public static final String COL_HIGH_PRICE = "high_price";
         public static final String COL_LOW_PRICE = "low_price";
