@@ -120,39 +120,88 @@ public class MineFleaLocalSource implements DataSource{
                 Cursor c = query(PublishedGoodsEntry.TABLE_PUBLISHER_GOODS,
                         null,null,null,sortBy);
 
-                List<GoodsModel> goodsList = new ArrayList<GoodsModel>();
+                if(c != null) {
+                    List<GoodsModel> goodsList = new ArrayList<GoodsModel>();
 
-                while(c.moveToNext()){
-                    goodsList.add(GoodsModelMapper.transform(c));
+                    while (c.moveToNext()) {
+                        goodsList.add(GoodsModelMapper.transform(c));
+                    }
+
+                    subscriber.onNext(goodsList);
+                }else{
+                    subscriber.onError(new SQLiteException("fail to query published goods list"));
+                }
+            }
+        });
+    }
+
+    @Override
+    public void favorGoods(GoodsModel goods) {
+        Log.v(TAG,"favorGoods(): goods = " + goods);
+        ContentValues cv = GoodsModelMapper.map(goods);
+
+        insert(FavorGoodsEntry.TABLE_FAVOR_GOODS,cv);
+
+    }
+
+    @Override
+    public Observable<GoodsModel> queryFavorGoodsDetail(long id) {
+        Log.v(TAG,"queryFavorGoodsDetail(): id = " + id);
+
+        final String selection = FavorGoodsEntry._ID + " =? " + id;
+
+        return Observable.create(new Observable.OnSubscribe<GoodsModel>() {
+            @Override
+            public void call(Subscriber<? super GoodsModel> subscriber) {
+                Cursor c = query(FavorGoodsEntry.TABLE_FAVOR_GOODS,null,
+                        selection,null,null);
+
+                if(c != null) {
+                    GoodsModel data = GoodsModelMapper.transform(c);
+                    subscriber.onNext(data);
+                }else{
+                    subscriber.onError(new SQLiteException("fail to query favor goods detail"));
+                }
+            }
+        });
+    }
+
+    @Override
+    public Observable<List<GoodsModel>> queryFavorGoodsList() {
+        Log.v(TAG,"queryFavorGoodsList()");
+
+
+        return Observable.create(new Observable.OnSubscribe<List<GoodsModel>>() {
+            @Override
+            public void call(Subscriber<? super List<GoodsModel>> subscriber) {
+                String sortBy = FavorGoodsEntry.COL_RELEASE_DATE + " ASC";
+                Cursor c = query(FavorGoodsEntry.TABLE_FAVOR_GOODS,null,null,null,sortBy);
+
+                if(c != null){
+                    List<GoodsModel> goodsList = new ArrayList<GoodsModel>();
+
+                    while(c.moveToNext()){
+                        goodsList.add(GoodsModelMapper.transform(c));
+                    }
+
+                    subscriber.onNext(goodsList);
+                }else{
+                    subscriber.onError(new SQLiteException("fail to query favor goods list"));
                 }
 
-                subscriber.onNext(goodsList);
             }
         });
     }
 
     @Override
     public Observable<PublisherModel> queryPublisherDetail(long id) {
-        return null;
+        throw new UnsupportedOperationException("it should be called in " +
+                "remote data source");
     }
 
-    @Override
-    public void favorGoods(GoodsModel goods) {
-
-    }
 
     @Override
-    public Observable<GoodsModel> queryFavorGoodsDetail(long id) {
-        return null;
-    }
-
-    @Override
-    public Observable<List<GoodsModel>> queryFavorGoodsList() {
-        return null;
-    }
-
-    @Override
-    public Observable<List<GoodsModel>> queryGoodsList() {
+    public Observable<List<GoodsModel>> queryLatestGoodsList() {
         throw new UnsupportedOperationException(
                 "it should be queried in remote data source");
     }

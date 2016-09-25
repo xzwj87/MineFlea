@@ -12,43 +12,50 @@ import rx.Observable;
  */
 public interface DataSource {
 
-    /*
+    /**
      * release goods
+     * @source: local and remote
      */
     void publishGoods(GoodsModel goods);
 
-    /*
+    /**
      * query the detail of a goods
+     * @source: local
      */
     Observable<GoodsModel> queryPublishedGoodsDetail(long id);
 
     Observable<List<GoodsModel>> queryPublishedGoodsList();
 
-    /*
+    /**
      * add goods to a favorite one
+     * @source: local
      */
     void favorGoods(GoodsModel goods);
 
-    /*
+    /**
      * query the detail info of a favored goods
+     * @source: local
      */
     Observable<GoodsModel> queryFavorGoodsDetail(long id);
 
     Observable<List<GoodsModel>> queryFavorGoodsList();
 
 
-    /*
+    /**
      * query the info of a publisher
+     * @source: remote
      */
     Observable<PublisherModel> queryPublisherDetail(long id);
 
-    /*
+    /**
      * query latest goods list
+     * @source: remote
      */
-    Observable<List<GoodsModel>> queryGoodsList();
+    Observable<List<GoodsModel>> queryLatestGoodsList();
 
-    /*
+    /**
      * follow some publisher
+     * @source: remote
      */
     void followPublisher(PublisherModel publisher);
 }
