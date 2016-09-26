@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_trends">动态</string>
+    <string name="tab_nearby">附近</string>
+    <string name="tab_mine">我的</string>
+</resources>
