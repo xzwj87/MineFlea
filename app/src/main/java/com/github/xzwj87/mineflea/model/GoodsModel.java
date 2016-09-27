@@ -16,6 +16,8 @@ public class GoodsModel {
 
     private long mPublisherId;
 
+    private double mDepreciationRate;
+
     private double mHighPrice;
 
     private double mLowPrice;
@@ -43,6 +45,14 @@ public class GoodsModel {
 
     public void setName(String name){
         mName = name;
+    }
+
+    public double getDepreciationRate(){
+        return mDepreciationRate;
+    }
+
+    public void setDepreciationRate(double rate){
+        mDepreciationRate = rate;
     }
 
     public long getPublisherId(){
