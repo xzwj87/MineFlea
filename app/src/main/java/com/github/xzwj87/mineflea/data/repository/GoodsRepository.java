@@ -1,4 +1,4 @@
-package com.github.xzwj87.mineflea.repository;
+package com.github.xzwj87.mineflea.data.repository;
 
 import com.github.xzwj87.mineflea.model.GoodsModel;
 

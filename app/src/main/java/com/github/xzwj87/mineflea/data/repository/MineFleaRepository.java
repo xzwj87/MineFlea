@@ -1,4 +1,4 @@
-package com.github.xzwj87.mineflea.repository;
+package com.github.xzwj87.mineflea.data.repository;
 
 import android.util.Log;
 
@@ -8,7 +8,6 @@ import com.github.xzwj87.mineflea.data.remote.MineFleaCloudSource;
 import com.github.xzwj87.mineflea.model.GoodsModel;
 import com.github.xzwj87.mineflea.model.PublisherModel;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 import rx.Observable;

@@ -1,6 +1,5 @@
-package com.github.xzwj87.mineflea.repository;
+package com.github.xzwj87.mineflea.data.repository;
 
-import com.github.xzwj87.mineflea.model.GoodsModel;
 import com.github.xzwj87.mineflea.model.PublisherModel;
 
 import java.util.List;
