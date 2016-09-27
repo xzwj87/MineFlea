@@ -3,7 +3,7 @@
     package="com.github.xzwj87.mineflea">
 
     <application
-        android:name=".App.AppGlobals"
+        android:name=".app.AppGlobals"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

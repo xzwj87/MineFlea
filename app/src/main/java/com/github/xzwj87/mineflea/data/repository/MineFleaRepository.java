@@ -2,7 +2,7 @@ package com.github.xzwj87.mineflea.data.repository;
 
 import android.util.Log;
 
-import com.github.xzwj87.mineflea.App.AppGlobals;
+import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.data.local.MineFleaLocalSource;
 import com.github.xzwj87.mineflea.data.remote.MineFleaCloudSource;
 import com.github.xzwj87.mineflea.model.GoodsModel;

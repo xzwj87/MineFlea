@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.github.xzwj87.mineflea.App.AppGlobals;
+import com.github.xzwj87.mineflea.app.AppGlobals;
 
 /**
  * Created by jason on 9/25/16.
