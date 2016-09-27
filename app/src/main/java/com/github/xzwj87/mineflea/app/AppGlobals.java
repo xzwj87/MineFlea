@@ -1,9 +1,7 @@
-package com.github.xzwj87.mineflea.App;
+package com.github.xzwj87.mineflea.app;
 
 import android.app.Application;
 import android.content.Context;
-
-import com.github.xzwj87.mineflea.ui.adapter.SectionsPageAdapter;
 
 /**
  * Created by JasonWang on 2016/9/19.
