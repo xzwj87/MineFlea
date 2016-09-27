@@ -4,6 +4,7 @@ import android.util.Log;
 import android.widget.TabHost;
 
 import com.github.xzwj87.mineflea.data.DataSource;
+import com.github.xzwj87.mineflea.exception.NetNoConnectionException;
 import com.github.xzwj87.mineflea.model.GoodsModel;
 import com.github.xzwj87.mineflea.model.PublisherModel;
 import com.github.xzwj87.mineflea.net.NetDataApi;
@@ -20,11 +21,19 @@ public class MineFleaCloudSource implements DataSource{
     public static final String TAG = MineFleaCloudSource.class.getSimpleName();
 
     private NetDataApi mNetApi;
+    private static MineFleaCloudSource sInstance;
 
-    public MineFleaCloudSource(NetDataApi netApi){
+    private MineFleaCloudSource(NetDataApi netApi){
         mNetApi = netApi;
     }
 
+    public static MineFleaCloudSource getInstance(){
+        if(sInstance == null){
+            sInstance = new MineFleaCloudSource(new NetDataApiImpl());
+        }
+
+        return sInstance;
+    }
     /**
      * release goods
      *
@@ -35,7 +44,13 @@ public class MineFleaCloudSource implements DataSource{
     public void publishGoods(GoodsModel goods) {
         Log.v(TAG,"publishGoods(): goods = " + goods);
 
-        mNetApi.publishGoods(goods);
+        // TODO: may want to notify User about this condition
+        try {
+            mNetApi.publishGoods(goods);
+        }catch (NetNoConnectionException e){
+            Log.e(TAG,"publishGoods(): no network connection");
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -49,6 +64,12 @@ public class MineFleaCloudSource implements DataSource{
         Log.v(TAG,"queryPublisherDetail(): id = " + id);
 
         return mNetApi.queryPublisherDetail(id);
+    }
+
+    @Override
+    public Observable<List<PublisherModel>> queryPublisherList() {
+        throw new UnsupportedOperationException("queryPublisherList() should not be" +
+                " called in cloud resource");
     }
 
     /**
@@ -73,7 +94,12 @@ public class MineFleaCloudSource implements DataSource{
     public void followPublisher(PublisherModel publisher) {
         Log.v(TAG,"followPublisher(): publisher = " + publisher);
 
-        mNetApi.followPublisher(publisher);
+        try {
+            mNetApi.followPublisher(publisher);
+        }catch (NetNoConnectionException e){
+            Log.e(TAG,"followPublisher(): no network connection");
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -100,10 +126,12 @@ public class MineFleaCloudSource implements DataSource{
      * @param goods
      * @source: local
      */
+
+    // TODO: it need to notify the Server about the state of this goods
     @Override
     public void favorGoods(GoodsModel goods) {
         throw new UnsupportedOperationException("favorGoods() " +
-                "shouldb be called in local data base");
+                "should be called in local data base");
     }
 
     /**

@@ -15,6 +15,7 @@ import com.github.xzwj87.mineflea.model.PublisherModel;
 
 import com.github.xzwj87.mineflea.data.local.MineFleaContract.*;
 import com.github.xzwj87.mineflea.model.mapper.GoodsModelMapper;
+import com.github.xzwj87.mineflea.model.mapper.PublisherModelMapper;
 import com.github.xzwj87.mineflea.ui.fragment.TabHolderFragment;
 
 import java.util.ArrayList;
@@ -100,7 +101,10 @@ public class MineFleaLocalSource implements DataSource{
                 Cursor c = query(PublishedGoodsEntry.TABLE_PUBLISHER_GOODS,
                         null,selection,null,null);
                 if(c != null) {
+                    c.moveToFirst();
                     GoodsModel data = GoodsModelMapper.transform(c);
+
+                    c.close();
                     subscriber.onNext(data);
                 }else{
                     subscriber.onError(new SQLiteException("query failure"));
@@ -127,6 +131,7 @@ public class MineFleaLocalSource implements DataSource{
                         goodsList.add(GoodsModelMapper.transform(c));
                     }
 
+                    c.close();
                     subscriber.onNext(goodsList);
                 }else{
                     subscriber.onError(new SQLiteException("fail to query published goods list"));
@@ -157,7 +162,10 @@ public class MineFleaLocalSource implements DataSource{
                         selection,null,null);
 
                 if(c != null) {
+                    c.moveToFirst();
                     GoodsModel data = GoodsModelMapper.transform(c);
+
+                    c.close();
                     subscriber.onNext(data);
                 }else{
                     subscriber.onError(new SQLiteException("fail to query favor goods detail"));
@@ -184,6 +192,7 @@ public class MineFleaLocalSource implements DataSource{
                         goodsList.add(GoodsModelMapper.transform(c));
                     }
 
+                    c.close();
                     subscriber.onNext(goodsList);
                 }else{
                     subscriber.onError(new SQLiteException("fail to query favor goods list"));
@@ -195,8 +204,49 @@ public class MineFleaLocalSource implements DataSource{
 
     @Override
     public Observable<PublisherModel> queryPublisherDetail(long id) {
-        throw new UnsupportedOperationException("it should be called in " +
-                "remote data source");
+        Log.v(TAG,"queryPublisherDetail(): id = " + id);
+
+        final String selection = FavorPublisherEntry._ID + " =? " + id;
+
+        return Observable.create(new Observable.OnSubscribe<PublisherModel>() {
+            @Override
+            public void call(Subscriber<? super PublisherModel> subscriber) {
+                Cursor c = query(FavorPublisherEntry.TABLE_PUBLISHER,null,
+                        selection, null,null);
+                if(c != null){
+                    c.moveToFirst();
+                    subscriber.onNext(PublisherModelMapper.transform(c));
+
+                    c.close();
+                }else{
+                    subscriber.onError(new SQLiteException("fail to get publisher detail"));
+                }
+            }
+        });
+    }
+
+    @Override
+    public Observable<List<PublisherModel>> queryPublisherList() {
+        Log.v(TAG,"queryPublisherList()");
+
+        return Observable.create(new Observable.OnSubscribe<List<PublisherModel>>() {
+            @Override
+            public void call(Subscriber<? super List<PublisherModel>> subscriber) {
+                String sortBy = FavorPublisherEntry.COL_DISTANCE + " ASC";
+                Cursor c = query(FavorPublisherEntry.TABLE_PUBLISHER,null,
+                        null,null,sortBy);
+                if(c != null){
+                    List<PublisherModel> publisherList = new ArrayList<PublisherModel>();
+
+                    while(c.moveToNext()){
+                        publisherList.add(PublisherModelMapper.transform(c));
+                    }
+
+                    c.close();
+                    subscriber.onNext(publisherList);
+                }
+            }
+        });
     }
 
 

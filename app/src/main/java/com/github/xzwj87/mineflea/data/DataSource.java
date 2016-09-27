@@ -47,6 +47,8 @@ public interface DataSource {
      */
     Observable<PublisherModel> queryPublisherDetail(long id);
 
+    Observable<List<PublisherModel>> queryPublisherList();
+
     /**
      * query latest goods list
      * @source: remote
