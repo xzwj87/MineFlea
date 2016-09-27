@@ -30,7 +30,6 @@ public class HttpUrlApi {
     private static final String CONTENT_TYPE_VALUE_JSON = "application/json; charset-utf-8";
 
     private URL mUrl;
-    private String mResponse;
     private OkHttpClient mHttpClient;
 
     private HttpUrlApi(String url) throws MalformedURLException {
@@ -38,7 +37,7 @@ public class HttpUrlApi {
         mHttpClient = createHttpClient();
     }
 
-    public HttpUrlApi create(String url) throws MalformedURLException{
+    public static HttpUrlApi create(String url) throws MalformedURLException{
         return new HttpUrlApi(url);
     }
 
