@@ -1,8 +1,10 @@
 package com.github.xzwj87.mineflea.net;
 
 import android.accounts.NetworkErrorException;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.github.xzwj87.mineflea.data.RepoResponseCode;
 import com.github.xzwj87.mineflea.exception.NetNoConnectionException;
 import com.github.xzwj87.mineflea.model.GoodsModel;
 import com.github.xzwj87.mineflea.model.PublisherModel;
@@ -33,17 +35,29 @@ public class NetDataApiImpl implements NetDataApi{
     }
 
     @Override
-    public void publishGoods(GoodsModel goods) throws NetNoConnectionException{
+    public Observable<RepoResponseCode> publishGoods(GoodsModel goods) {
         Log.v(TAG,"publishGoods(): goods = " + goods);
 
+        int responseCode = RepoResponseCode.RESP_SUCCESS;
         if(NetConnectionUtils.isNetworkConnected()) {
             HttpUrlApi httpApi = createHttpApi(BASE_URL);
             if (httpApi != null) {
-                httpApi.postData(GoodsJsonMapper.map(goods));
+                String resp = httpApi.postData(GoodsJsonMapper.map(goods));
+                if(TextUtils.isEmpty(resp)){
+                    responseCode = RepoResponseCode.RESP_NETWORK_ERROR;
+                }
             }
         }else{
-            throw new NetNoConnectionException("network is not connected");
+            responseCode = RepoResponseCode.RESP_NETWORK_NOT_CONNECTED;
         }
+
+        final RepoResponseCode response = new RepoResponseCode(responseCode);
+        return Observable.create(new Observable.OnSubscribe<RepoResponseCode>() {
+            @Override
+            public void call(Subscriber<? super RepoResponseCode> subscriber) {
+                subscriber.onNext(response);
+            }
+        });
     }
 
     @Override
@@ -114,17 +128,31 @@ public class NetDataApiImpl implements NetDataApi{
     }
 
     @Override
-    public void followPublisher(PublisherModel publisher) throws NetNoConnectionException{
+    public Observable<RepoResponseCode> followPublisher(PublisherModel publisher) {
         Log.v(TAG,"followPublisher(): publisher = " + publisher);
 
+        int responseCode = RepoResponseCode.RESP_SUCCESS;
         if(NetConnectionUtils.isNetworkConnected()) {
             HttpUrlApi httpApi = createHttpApi(BASE_URL);
             if (httpApi != null) {
-                httpApi.postData(PublisherJsonMapper.map(publisher));
+                String resp = httpApi.postData(PublisherJsonMapper.map(publisher));
+
+                if(TextUtils.isEmpty(resp)){
+                    responseCode = RepoResponseCode.RESP_NETWORK_ERROR;
+                }
             }
         }else{
-            throw new NetNoConnectionException("network is not connected");
+            responseCode = RepoResponseCode.RESP_NETWORK_NOT_CONNECTED;
         }
+
+        final RepoResponseCode response = new RepoResponseCode(responseCode);
+
+        return Observable.create(new Observable.OnSubscribe<RepoResponseCode>() {
+            @Override
+            public void call(Subscriber<? super RepoResponseCode> subscriber) {
+                subscriber.onNext(response);
+            }
+        });
     }
 
     private HttpUrlApi createHttpApi(String url){

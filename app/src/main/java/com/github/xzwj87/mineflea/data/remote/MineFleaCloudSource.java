@@ -4,6 +4,7 @@ import android.util.Log;
 import android.widget.TabHost;
 
 import com.github.xzwj87.mineflea.data.DataSource;
+import com.github.xzwj87.mineflea.data.RepoResponseCode;
 import com.github.xzwj87.mineflea.exception.NetNoConnectionException;
 import com.github.xzwj87.mineflea.model.GoodsModel;
 import com.github.xzwj87.mineflea.model.PublisherModel;
@@ -41,16 +42,10 @@ public class MineFleaCloudSource implements DataSource{
      * @source: local and remote
      */
     @Override
-    public void publishGoods(GoodsModel goods) {
+    public Observable<RepoResponseCode> publishGoods(GoodsModel goods) {
         Log.v(TAG,"publishGoods(): goods = " + goods);
 
-        // TODO: may want to notify User about this condition
-        try {
-            mNetApi.publishGoods(goods);
-        }catch (NetNoConnectionException e){
-            Log.e(TAG,"publishGoods(): no network connection");
-            e.printStackTrace();
-        }
+        return mNetApi.publishGoods(goods);
     }
 
     /**
@@ -91,15 +86,10 @@ public class MineFleaCloudSource implements DataSource{
      * @source: remote
      */
     @Override
-    public void followPublisher(PublisherModel publisher) {
+    public Observable<RepoResponseCode> followPublisher(PublisherModel publisher) {
         Log.v(TAG,"followPublisher(): publisher = " + publisher);
 
-        try {
-            mNetApi.followPublisher(publisher);
-        }catch (NetNoConnectionException e){
-            Log.e(TAG,"followPublisher(): no network connection");
-            e.printStackTrace();
-        }
+            return mNetApi.followPublisher(publisher);
     }
 
     /**
@@ -129,7 +119,7 @@ public class MineFleaCloudSource implements DataSource{
 
     // TODO: it need to notify the Server about the state of this goods
     @Override
-    public void favorGoods(GoodsModel goods) {
+    public Observable<RepoResponseCode> favorGoods(GoodsModel goods) {
         throw new UnsupportedOperationException("favorGoods() " +
                 "should be called in local data base");
     }

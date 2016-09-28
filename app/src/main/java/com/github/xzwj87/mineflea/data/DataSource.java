@@ -16,7 +16,7 @@ public interface DataSource {
      * release goods
      * @source: local and remote
      */
-    void publishGoods(GoodsModel goods);
+    Observable<RepoResponseCode> publishGoods(GoodsModel goods);
 
     /**
      * query the detail of a goods
@@ -30,7 +30,7 @@ public interface DataSource {
      * add goods to a favorite one
      * @source: local
      */
-    void favorGoods(GoodsModel goods);
+    Observable<RepoResponseCode> favorGoods(GoodsModel goods);
 
     /**
      * query the detail info of a favored goods
@@ -59,5 +59,5 @@ public interface DataSource {
      * follow some publisher
      * @source: remote
      */
-    void followPublisher(PublisherModel publisher);
+    Observable<RepoResponseCode> followPublisher(PublisherModel publisher);
 }

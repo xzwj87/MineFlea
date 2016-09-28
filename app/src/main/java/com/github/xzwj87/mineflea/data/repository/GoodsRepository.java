@@ -1,5 +1,6 @@
 package com.github.xzwj87.mineflea.data.repository;
 
+import com.github.xzwj87.mineflea.data.RepoResponseCode;
 import com.github.xzwj87.mineflea.model.GoodsModel;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface GoodsRepository {
     /**
      * publish a goods
      */
-    void publishGoods(GoodsModel goods);
+    Observable<RepoResponseCode> publishGoods(GoodsModel goods);
 
     /**
      * get a published goods detail by its id
@@ -35,7 +36,7 @@ public interface GoodsRepository {
     /**
      * favor a goods
      */
-    void favorGoods(GoodsModel goods);
+    Observable<RepoResponseCode> favorGoods(GoodsModel goods);
 
     /**
      * get favored goods detail

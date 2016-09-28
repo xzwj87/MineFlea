@@ -1,5 +1,6 @@
 package com.github.xzwj87.mineflea.net;
 
+import com.github.xzwj87.mineflea.data.RepoResponseCode;
 import com.github.xzwj87.mineflea.exception.NetNoConnectionException;
 import com.github.xzwj87.mineflea.model.GoodsModel;
 import com.github.xzwj87.mineflea.model.PublisherModel;
@@ -17,7 +18,7 @@ public interface NetDataApi {
     /**
      * publish goods info to remote server
      */
-    void publishGoods(GoodsModel goods) throws NetNoConnectionException;
+    Observable<RepoResponseCode> publishGoods(GoodsModel goods);
 
 
     /**
@@ -31,12 +32,12 @@ public interface NetDataApi {
     /**
      * query latest goods list
      */
-    public Observable<List<GoodsModel>> queryLatestGoodsList();
+    Observable<List<GoodsModel>> queryLatestGoodsList();
 
     /**
      * follow some publisher
      *
      * @param : the publisher data to remote server
      */
-    public void followPublisher(PublisherModel publisher) throws NetNoConnectionException;
+    Observable<RepoResponseCode> followPublisher(PublisherModel publisher);
 }

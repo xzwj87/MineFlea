@@ -1,5 +1,6 @@
 package com.github.xzwj87.mineflea.data.repository;
 
+import com.github.xzwj87.mineflea.data.RepoResponseCode;
 import com.github.xzwj87.mineflea.model.PublisherModel;
 
 import java.util.List;
@@ -26,4 +27,9 @@ public interface PublisherRepository {
      * get the favorite publisher list
      */
     Observable<List<PublisherModel>> getFavorPublisherList();
+
+    /**
+     * follow a publisher
+     */
+    Observable<RepoResponseCode> followPublisher(PublisherModel publisher);
 }

@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.github.xzwj87.mineflea.data.DataSource;
+import com.github.xzwj87.mineflea.data.RepoResponseCode;
 import com.github.xzwj87.mineflea.model.GoodsModel;
 import com.github.xzwj87.mineflea.model.PublisherModel;
 
@@ -80,12 +81,26 @@ public class MineFleaLocalSource implements DataSource{
 
 
     @Override
-    public void publishGoods(GoodsModel goods) {
+    public Observable<RepoResponseCode> publishGoods(GoodsModel goods) {
         Log.v(TAG,"publishGoods(): goods = " + goods);
 
         ContentValues cv = GoodsModelMapper.map(goods);
 
-        insert(PublishedGoodsEntry.TABLE_PUBLISHER_GOODS,cv);
+        long id = insert(PublishedGoodsEntry.TABLE_PUBLISHER_GOODS,cv);
+
+        int code = RepoResponseCode.RESP_SUCCESS;
+        if(id == -1){
+            code = RepoResponseCode.RESP_DATABASE_SQL_ERROR;
+        }
+
+        final RepoResponseCode response = new RepoResponseCode(code);
+
+        return Observable.create(new Observable.OnSubscribe<RepoResponseCode>() {
+            @Override
+            public void call(Subscriber<? super RepoResponseCode> subscriber) {
+                subscriber.onNext(response);
+            }
+        });
     }
 
     @Override
@@ -141,12 +156,25 @@ public class MineFleaLocalSource implements DataSource{
     }
 
     @Override
-    public void favorGoods(GoodsModel goods) {
+    public Observable<RepoResponseCode> favorGoods(GoodsModel goods) {
         Log.v(TAG,"favorGoods(): goods = " + goods);
         ContentValues cv = GoodsModelMapper.map(goods);
 
-        insert(FavorGoodsEntry.TABLE_FAVOR_GOODS,cv);
+        long id = insert(FavorGoodsEntry.TABLE_FAVOR_GOODS,cv);
 
+        int code = RepoResponseCode.RESP_SUCCESS;
+        if(id == -1){
+            code = RepoResponseCode.RESP_DATABASE_SQL_ERROR;
+        }
+
+        final RepoResponseCode response = new RepoResponseCode(code);
+
+        return Observable.create(new Observable.OnSubscribe<RepoResponseCode>() {
+            @Override
+            public void call(Subscriber<? super RepoResponseCode> subscriber) {
+                subscriber.onNext(response);
+            }
+        });
     }
 
     @Override
@@ -257,7 +285,7 @@ public class MineFleaLocalSource implements DataSource{
     }
 
     @Override
-    public void followPublisher(PublisherModel publisher) {
+    public Observable<RepoResponseCode> followPublisher(PublisherModel publisher) {
         throw new UnsupportedOperationException(
                 "it should be called in remote data source");
     }

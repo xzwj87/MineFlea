@@ -3,6 +3,7 @@ package com.github.xzwj87.mineflea.data.repository;
 import android.util.Log;
 
 import com.github.xzwj87.mineflea.app.AppGlobals;
+import com.github.xzwj87.mineflea.data.RepoResponseCode;
 import com.github.xzwj87.mineflea.data.local.MineFleaLocalSource;
 import com.github.xzwj87.mineflea.data.remote.MineFleaCloudSource;
 import com.github.xzwj87.mineflea.model.GoodsModel;
@@ -27,11 +28,11 @@ public class MineFleaRepository implements GoodsRepository,PublisherRepository{
     }
 
     @Override
-    public void publishGoods(GoodsModel goods) {
+    public Observable<RepoResponseCode> publishGoods(GoodsModel goods) {
         Log.v(TAG,"publishGoods(): goods = " + goods);
 
         mLocalSrc.publishGoods(goods);
-        mCloudSrc.publishGoods(goods);
+        return mCloudSrc.publishGoods(goods);
     }
 
     @Override
@@ -56,11 +57,12 @@ public class MineFleaRepository implements GoodsRepository,PublisherRepository{
     }
 
     @Override
-    public void favorGoods(GoodsModel goods) {
+    public Observable<RepoResponseCode> favorGoods(GoodsModel goods) {
         Log.v(TAG,"favorGoods(): goods = " + goods);
 
+        //TODO:consider both response
         mLocalSrc.favorGoods(goods);
-        mCloudSrc.favorGoods(goods);
+        return mCloudSrc.favorGoods(goods);
     }
 
     @Override
@@ -97,5 +99,10 @@ public class MineFleaRepository implements GoodsRepository,PublisherRepository{
         Log.v(TAG,"getFavorPublisherList()");
 
         return mLocalSrc.queryPublisherList();
+    }
+
+    @Override
+    public Observable<RepoResponseCode> followPublisher(PublisherModel publisher) {
+        return null;
     }
 }
