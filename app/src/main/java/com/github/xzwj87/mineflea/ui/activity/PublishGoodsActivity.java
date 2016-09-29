@@ -4,14 +4,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.model.GoodsModel;
+import com.github.xzwj87.mineflea.presenter.PublishGoodsPresenter;
+import com.github.xzwj87.mineflea.presenter.PublishGoodsPresenterImpl;
+import com.github.xzwj87.mineflea.ui.PublishGoodsView;
 
 import java.util.Date;
 
@@ -22,7 +23,7 @@ import butterknife.OnClick;
  * Created by jason on 9/27/16.
  */
 
-public class PublishGoodsActivity extends AppCompatActivity{
+public class PublishGoodsActivity extends AppCompatActivity implements PublishGoodsView{
     public static final String TAG = PublishGoodsActivity.class.getSimpleName();
 
     @BindView(R.id.goods_icon) ImageButton mIbGoodsIcon;
@@ -33,12 +34,15 @@ public class PublishGoodsActivity extends AppCompatActivity{
     @BindView(R.id.et_note) EditText mEtNote;
 
     private GoodsModel mGoods;
+    private PublishGoodsPresenter mPresenter;
 
     @Override
     public void onCreate(Bundle bundle){
         super.onCreate(bundle);
 
         setContentView(R.layout.activity_publish_goods);
+
+        init();
     }
 
     @Override
@@ -48,9 +52,17 @@ public class PublishGoodsActivity extends AppCompatActivity{
     }
 
     @Override
+    public void onPause(){
+        super.onPause();
+
+        mPresenter.onPause();
+    }
+
+    @Override
     public void onDestroy(){
         super.onDestroy();
 
+        mPresenter.onDestroy();
     }
 
     @Override
@@ -82,7 +94,8 @@ public class PublishGoodsActivity extends AppCompatActivity{
 
     }
 
-    private void publishGoods(){
+    @Override
+    public void publishGoods(){
         Log.v(TAG,"publishGoods()");
 
     }
@@ -97,5 +110,9 @@ public class PublishGoodsActivity extends AppCompatActivity{
         mGoods.setLowerPrice(Double.parseDouble(mEtLowPrice.getText().toString()));
 
         mGoods.setReleasedDate(new Date());
+    }
+
+    private void init(){
+        mPresenter = new PublishGoodsPresenterImpl(this);
     }
 }
