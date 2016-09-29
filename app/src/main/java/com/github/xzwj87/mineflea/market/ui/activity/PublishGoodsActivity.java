@@ -9,6 +9,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.github.xzwj87.mineflea.R;
+import com.github.xzwj87.mineflea.market.internal.di.HasComponent;
+import com.github.xzwj87.mineflea.market.internal.di.component.DaggerMarketComponent;
+import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
 import com.github.xzwj87.mineflea.market.model.GoodsModel;
 import com.github.xzwj87.mineflea.market.presenter.PublishGoodsPresenter;
 import com.github.xzwj87.mineflea.market.presenter.PublishGoodsPresenterImpl;
@@ -23,7 +26,8 @@ import butterknife.OnClick;
  * Created by jason on 9/27/16.
  */
 
-public class PublishGoodsActivity extends AppCompatActivity implements PublishGoodsView{
+public class PublishGoodsActivity extends BaseActivity
+        implements PublishGoodsView,HasComponent<MarketComponent> {
     public static final String TAG = PublishGoodsActivity.class.getSimpleName();
 
     @BindView(R.id.goods_icon) ImageButton mIbGoodsIcon;
@@ -35,6 +39,7 @@ public class PublishGoodsActivity extends AppCompatActivity implements PublishGo
 
     private GoodsModel mGoods;
     private PublishGoodsPresenter mPresenter;
+    private MarketComponent mMarketComponent;
 
     @Override
     public void onCreate(Bundle bundle){
@@ -43,6 +48,7 @@ public class PublishGoodsActivity extends AppCompatActivity implements PublishGo
         setContentView(R.layout.activity_publish_goods);
 
         init();
+        initInjector();
     }
 
     @Override
@@ -89,7 +95,7 @@ public class PublishGoodsActivity extends AppCompatActivity implements PublishGo
     }
 
     @OnClick(R.id.ib_goods_icon)
-    private void uploadGoodsIcon(){
+    void uploadGoodsIcon(){
         Log.v(TAG,"uploadGoodsIcon()");
 
     }
@@ -114,5 +120,18 @@ public class PublishGoodsActivity extends AppCompatActivity implements PublishGo
 
     private void init(){
         mPresenter = new PublishGoodsPresenterImpl(this);
+    }
+
+    private void initInjector(){
+        mMarketComponent = DaggerMarketComponent.builder()
+                .activityModule(getActivityModule())
+                .build();
+
+        mMarketComponent.inject(this);
+    }
+
+    @Override
+    public MarketComponent getComponent() {
+        return mMarketComponent;
     }
 }

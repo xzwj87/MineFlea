@@ -63,7 +63,7 @@ public class MineFleaLocalSource implements DataSource{
     }
 
 
-    private MineFleaLocalSource(Context context){
+    public MineFleaLocalSource(Context context){
         mDbHelper = MineFleaDbHelper.getInstance(context);
     }
 

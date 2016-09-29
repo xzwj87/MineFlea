@@ -22,7 +22,7 @@ public class MineFleaCloudSource implements DataSource{
     private NetDataApi mNetApi;
     private static MineFleaCloudSource sInstance;
 
-    private MineFleaCloudSource(NetDataApi netApi){
+    public MineFleaCloudSource(NetDataApi netApi){
         mNetApi = netApi;
     }
 
