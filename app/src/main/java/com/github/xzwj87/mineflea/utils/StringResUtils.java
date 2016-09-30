@@ -1,6 +1,6 @@
 package com.github.xzwj87.mineflea.utils;
 
-import com.github.xzwj87.mineflea.App.AppGlobals;
+import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.R;
 
 /**

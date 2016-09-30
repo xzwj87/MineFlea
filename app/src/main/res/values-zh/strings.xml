@@ -3,4 +3,10 @@
     <string name="tab_trends">动态</string>
     <string name="tab_nearby">附近</string>
     <string name="tab_mine">我的</string>
+    <string name="action_publish">Publish</string>
+    <string name="goods_name">Goods Name</string>
+    <string name="goods_price">High Price</string>
+    <string name="goods_high_price">High Price</string>
+    <string name="note_hint">Please write anything about this goods</string>
+    <string name="action_ok">OK</string>
 </resources>
