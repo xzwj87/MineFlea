@@ -1,86 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/goods_icon">
+    android:fitsSystemWindows="true"
+    tools:context=".market.ui.activity.PublishGoodsActivity">
 
-    <ImageButton  android:id="@+id/ib_goods_icon"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        app:srcCompat="@mipmap/ic_launcher"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
-
-    <LinearLayout
-        android:orientation="vertical"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_vertical_margin">
+        android:paddingTop="@dimen/appbar_padding_top"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-        <TextView
-            android:text="@string/goods_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/goods_item_margin" />
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:layout_collapseMode="pin">
+        </android.support.v7.widget.Toolbar>
 
-        <EditText android:id="@+id/et_goods_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+    </android.support.design.widget.AppBarLayout>
 
-    </LinearLayout>
-
-    <LinearLayout
+    <FrameLayout android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_vertical_margin">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            android:text="@string/goods_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/goods_item_margin" />
+    </FrameLayout>
 
-        <EditText android:id="@+id/et_goods_low_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"/>
-
-        <TextView
-            android:text="@string/range_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <EditText android:id="@+id/et_goods_high_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_vertical_margin">
-
-        <TextView
-            android:text="@string/goods_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/goods_item_margin" />
-
-        <EditText android:id="@+id/et_depreciation_rate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <EditText android:id="@+id/et_note"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="fill_vertical"
-        android:hint="@string/note_hint"
-        android:minHeight="30dp"/>
-
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

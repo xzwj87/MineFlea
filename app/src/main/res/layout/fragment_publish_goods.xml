@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:scrollbars="horizontal"
+    android:orientation="vertical"
+    android:layout_margin="@dimen/goods_item_margin"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText android:id="@+id/et_goods_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/goods_name"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+        <EditText android:id="@+id/et_goods_low_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:minWidth="50dp"/>
+
+        <TextView
+            android:text="@string/range_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="30dp"/>
+
+        <EditText android:id="@+id/et_goods_high_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:minWidth="50dp"/>
+
+    </LinearLayout>
+
+    <EditText android:id="@+id/et_depreciation_rate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/depreciation_rate"/>
+
+    <EditText android:id="@+id/et_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill_vertical"
+        android:hint="@string/note_hint"
+        android:minHeight="32dp"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
+
+    <android.support.v7.widget.RecyclerView android:id="@+id/rv_goods_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="3dp"
+        android:clipChildren="false"
+        tools:listItem="@layout/item_layout_publish_goods_image">
+
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>

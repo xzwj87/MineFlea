@@ -1,5 +1,6 @@
 package com.github.xzwj87.mineflea.market.ui.activity;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -7,10 +8,14 @@ import android.support.v7.widget.Toolbar;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.SaveCallback;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.ui.adapter.SectionsPageAdapter;
 
@@ -51,6 +56,8 @@ public class MineFleaActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+        testLeanCloud();
+
     }
 
 
@@ -73,10 +80,28 @@ public class MineFleaActivity extends AppCompatActivity {
             case R.id.action_settings:
                 return true;
             case R.id.action_publish:
+                startPublishActivity();
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    private void testLeanCloud(){
+        AVObject testObject = new AVObject("TestObject");
+        testObject.put("words","Hello World!");
+        testObject.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                if(e == null){
+                    Log.d("saved","success!");
+                }
+            }
+        });
+    }
+
+    private void startPublishActivity(){
+        Intent intent = new Intent(this,PublishGoodsActivity.class);
+        startActivity(intent);
+    }
 }
