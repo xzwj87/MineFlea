@@ -31,6 +31,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    // leanCloud:为了解决部分第三方库重复打包了META-INF的问题
+    packagingOptions{
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
@@ -50,4 +59,12 @@ dependencies {
 
     compile 'com.google.dagger:dagger:2.7'
     apt 'com.google.dagger:dagger-compiler:2.7'
+
+    //leanCloud - basic
+    compile ('cn.leancloud.android:avoscloud-sdk:v3.+')
+    // chat/msg push
+    compile ('cn.leancloud.android:avoscloud-push:v3.+@aar'){transitive = true}
+    //3rd party login
+    compile ('cn.leancloud.android:avoscloud-sns:v3.+@aar')
+    compile ('cn.leancloud.android:qq-sdk:1.6.1-leancloud')
 }
