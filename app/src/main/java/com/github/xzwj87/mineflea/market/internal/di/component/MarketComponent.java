@@ -15,7 +15,7 @@ import dagger.Component;
  */
 
 @PerActivity
-@Component(dependencies = {AppModule.class},
+@Component(dependencies = {AppComponent.class},
         modules = {ActivityModule.class,MarketModule.class})
 public interface MarketComponent extends ActivityComponent{
     void inject(PublishGoodsActivity activity);

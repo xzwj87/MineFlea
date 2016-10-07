@@ -4,10 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.github.xzwj87.mineflea.app.AppGlobals;
-import com.github.xzwj87.mineflea.market.internal.di.HasComponent;
-import com.github.xzwj87.mineflea.market.internal.di.component.ActivityComponent;
 import com.github.xzwj87.mineflea.market.internal.di.component.AppComponent;
-import com.github.xzwj87.mineflea.market.internal.di.component.DaggerActivityComponent;
 import com.github.xzwj87.mineflea.market.internal.di.module.ActivityModule;
 
 /**
