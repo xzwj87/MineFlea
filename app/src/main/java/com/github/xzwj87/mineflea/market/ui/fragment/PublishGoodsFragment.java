@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
@@ -42,10 +40,6 @@ import droidninja.filepicker.FilePickerConst;
 public class PublishGoodsFragment extends BaseFragment
         implements PublishGoodsView,PublishGoodsImageAdapter.ItemClickListener{
     public static final String TAG = PublishGoodsFragment.class.getSimpleName();
-
-    private static final String ADD_ICON_NAME = "add_image_icon.png";
-    private static final String ADD_ICON_PATH = AppGlobals.FILE_DIR_MISC +
-            "/" + ADD_ICON_NAME;
 
     @BindView(R.id.rv_goods_image) RecyclerView mRvGoodsImg;
     @BindView(R.id.et_goods_name) EditText mEtGoodsName;
@@ -116,8 +110,10 @@ public class PublishGoodsFragment extends BaseFragment
         mPresenter = new PublishGoodsPresenterImpl(this);
 
         mFilePath = new ArrayList<>();
-        // add ADD ICON to file dir
-        mFilePath.add(getAddIconPath());
+        // add a dummy value
+        mFilePath.add(null);
+
+        setupRecycleView();
         addImgToView();
     }
 
@@ -125,16 +121,22 @@ public class PublishGoodsFragment extends BaseFragment
         Log.v(TAG,"addImgToView()");
 
         if(mRvGoodsImg != null){
-            GridLayoutManager gridLayoutMgr = new GridLayoutManager(getActivity(),3);
-            mRvGoodsImg.setLayoutManager(gridLayoutMgr);
-
             PublishGoodsImageAdapter adapter = new PublishGoodsImageAdapter(getContext(),mFilePath);
             adapter.setClickListener(this);
 
             mRvGoodsImg.setAdapter(adapter);
-            mRvGoodsImg.setItemAnimator(new DefaultItemAnimator());
         }
 
+    }
+
+    private void setupRecycleView(){
+        Log.v(TAG,"setupRecycleView()");
+
+        if(mRvGoodsImg != null) {
+            GridLayoutManager gridLayoutMgr = new GridLayoutManager(getActivity(), 3);
+            mRvGoodsImg.setLayoutManager(gridLayoutMgr);
+            mRvGoodsImg.setItemAnimator(new DefaultItemAnimator());
+        }
     }
 
     @Override
@@ -157,27 +159,13 @@ public class PublishGoodsFragment extends BaseFragment
                 .pickPhoto(this);
     }
 
-    private String getAddIconPath(){
-        File file = new File(ADD_ICON_PATH);
-        if(!file.exists()) {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-/*            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_add_gray_24dp,
-                    options);*/
-            Bitmap bitmap = null;
-            if(Build.VERSION.SDK_INT >= 21) {
-                bitmap = FileManager.drawableToBitmap(getResources().getDrawable(R.drawable.ic_photo_gray_24dp, null));
-            }else{
-                bitmap = FileManager.drawableToBitmap(getResources().getDrawable(R.drawable.ic_photo_gray_24dp));
-            }
-            if (bitmap != null) {
-                return FileManager.saveBitmapToFile(AppGlobals.FILE_DIR_MISC, ADD_ICON_NAME, bitmap);
-            }
-        }else{
-            return ADD_ICON_PATH;
-        }
+    @Override
+    public void onButtonRemoveClickListener(int pos) {
+        Log.v(TAG,"onButtonRemoveClickListener(): pos = " + pos);
 
-        return null;
+        mFilePath.remove(pos);
+
+        addImgToView();
     }
 
     @Override
@@ -194,6 +182,7 @@ public class PublishGoodsFragment extends BaseFragment
                     }
                     Log.v(TAG,mFilePath.size()-1 + " pictures picked");
                 }
+
                 addImgToView();
 
                 break;

@@ -1,16 +1,25 @@
 package com.github.xzwj87.mineflea.market.ui.adapter;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
+import com.github.xzwj87.mineflea.BuildConfig;
 import com.github.xzwj87.mineflea.R;
+import com.github.xzwj87.mineflea.utils.FileManager;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
@@ -21,6 +30,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by jason on 10/7/16.
@@ -29,6 +39,7 @@ import butterknife.ButterKnife;
 public class PublishGoodsImageAdapter extends RecyclerView.Adapter<PublishGoodsImageAdapter.ImageViewHolder>{
 
     private static int MAX_IMG_COLS = 3;
+    private int mItemSize;
     private ArrayList<String> mImgPath;
     private int mImgSize;
     private Context mContext;
@@ -37,12 +48,14 @@ public class PublishGoodsImageAdapter extends RecyclerView.Adapter<PublishGoodsI
     public PublishGoodsImageAdapter(Context context, ArrayList<String> filePath){
         mImgPath = filePath;
         mContext = context;
+        mItemSize = mImgPath.size();
         setColumnNumber(context,MAX_IMG_COLS);
     }
 
     public interface ItemClickListener{
         void onItemClickListener(int pos);
         void onItemLongClickListener(int pos);
+        void onButtonRemoveClickListener(int pos);
     }
 
     public void setClickListener(ItemClickListener listener){
@@ -63,12 +76,30 @@ public class PublishGoodsImageAdapter extends RecyclerView.Adapter<PublishGoodsI
     @Override
     public void onBindViewHolder(ImageViewHolder holder, int position) {
         String path = mImgPath.get(position);
-        Uri imgUri = Uri.fromFile(new File(path));
 
-        Picasso.with(mContext)
-                .load(imgUri)
-                .resize(mImgSize,mImgSize)
-                .into(holder.imgView);
+        if(path != null) {
+            Uri imgUri = Uri.fromFile(new File(path));
+            Picasso.with(mContext)
+                    .load(imgUri)
+                    .resize(mImgSize, mImgSize)
+                    .into(holder.imgView);
+
+            holder.mBtnRemove.setVisibility(View.VISIBLE);
+        }else{
+            Drawable drawable;
+            if(Build.VERSION.SDK_INT >= 21){
+                drawable = mContext.getDrawable(R.drawable.ic_add_grey_100dp);
+            }else{
+                drawable = mContext.
+                        getResources().getDrawable(R.drawable.ic_add_grey_100dp);
+            }
+
+            Bitmap bitmap = FileManager.drawableToBitmap(drawable,mImgSize,mImgSize);
+            if(bitmap != null) {
+                holder.imgView.setImageBitmap(bitmap);
+            }
+            holder.imgView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        }
     }
 
     @Override
@@ -87,6 +118,7 @@ public class PublishGoodsImageAdapter extends RecyclerView.Adapter<PublishGoodsI
     public class ImageViewHolder extends RecyclerView.ViewHolder{
 
         @BindView(R.id.goods_img) RoundedImageView imgView;
+        @BindView(R.id.btn_remove) ImageButton mBtnRemove;
 
         public ImageViewHolder(View itemView) {
             super(itemView);
@@ -110,6 +142,13 @@ public class PublishGoodsImageAdapter extends RecyclerView.Adapter<PublishGoodsI
                         mListener.onItemLongClickListener(getItemCount()-1);
                     }
                     return true;
+                }
+            });
+
+            mBtnRemove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onButtonRemoveClickListener(getLayoutPosition());
                 }
             });
         }
