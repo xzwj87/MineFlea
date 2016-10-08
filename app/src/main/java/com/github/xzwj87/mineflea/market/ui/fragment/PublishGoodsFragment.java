@@ -45,7 +45,6 @@ public class PublishGoodsFragment extends BaseFragment
     @BindView(R.id.et_goods_name) EditText mEtGoodsName;
     @BindView(R.id.et_goods_high_price) EditText mEtHighPrice;
     @BindView(R.id.et_goods_low_price) EditText mEtLowPrice;
-    @BindView(R.id.et_depreciation_rate) EditText mEtDepRate;
     @BindView(R.id.et_note) EditText mEtNote;
 
     private PublishGoodsPresenterImpl mPresenter;

@@ -6,4 +6,6 @@
     <dimen name="appbar_padding_top">8dp</dimen>
 
     <dimen name="goods_item_margin">12dp</dimen>
+
+    <dimen name="input_text_size">16sp</dimen>
 </resources>

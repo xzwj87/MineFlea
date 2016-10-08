@@ -11,9 +11,8 @@
 
     <string name="goods_name">Name</string>
     <string name="goods_price">Price Range</string>
-    <string name="goods_low_Price">Low Price</string>
-    <string name="goods_high_price">High Price</string>
-    <string name="range_label">-</string>
+    <string name="goods_low_Price">$Low</string>
+    <string name="goods_high_price">$High</string>
     <string name="note_hint">Please write anything about this goods</string>
     <string name="title_activity_login">Sign in</string>
 
@@ -29,5 +28,5 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="depreciation_rate">Depreciation Rate</string>
+    <string name="add_pictures">Add pictures</string>
 </resources>
