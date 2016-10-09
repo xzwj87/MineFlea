@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.github.xzwj87.mineflea.market.ui.fragment.TabHolderFragment;
+import com.github.xzwj87.mineflea.market.ui.fragment.UserCenterFragment;
 import com.github.xzwj87.mineflea.utils.StringResUtils;
 
 /**
@@ -22,6 +23,16 @@ public class SectionsPageAdapter extends FragmentPagerAdapter{
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
+        Fragment fragment;
+        switch (position){
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                return UserCenterFragment.newInstance();
+        }
+
         return TabHolderFragment.newInstance(position + 1);
     }
 
