@@ -29,4 +29,11 @@
         completions."
     </string>
     <string name="add_pictures">Add pictures</string>
+    <string name="logout">Logout</string>
+    <string name="published_goods">Published Goods</string>
+    <string name="my_followees">My Followees</string>
+    <string name="my_favorites">My Favorites</string>
+    <string name="my_followers">My Followers</string>
+    <string name="about">About</string>
+    <string name="settings">Settings</string>
 </resources>
