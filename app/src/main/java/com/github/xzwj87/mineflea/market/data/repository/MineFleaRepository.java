@@ -2,14 +2,18 @@ package com.github.xzwj87.mineflea.market.data.repository;
 
 import android.util.Log;
 
+import com.avos.avoscloud.AVObject;
 import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
 import com.github.xzwj87.mineflea.market.data.local.MineFleaLocalSource;
 import com.github.xzwj87.mineflea.market.data.remote.MineFleaCloudSource;
-import com.github.xzwj87.mineflea.market.model.GoodsModel;
+import com.github.xzwj87.mineflea.market.model.ModelConstants;
+import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.PublisherModel;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import rx.Observable;
 
@@ -22,42 +26,44 @@ public class MineFleaRepository implements GoodsRepository,PublisherRepository{
     private MineFleaLocalSource mLocalSrc;
     private MineFleaCloudSource mCloudSrc;
 
+    @Inject
     public MineFleaRepository(){
         mLocalSrc = MineFleaLocalSource.getInstance(AppGlobals.getAppContext());
         mCloudSrc = MineFleaCloudSource.getInstance();
     }
 
     @Override
-    public Observable<RepoResponseCode> publishGoods(GoodsModel goods) {
+    public Observable<RepoResponseCode> publishGoods(PublishGoodsInfo goods) {
         Log.v(TAG,"publishGoods(): goods = " + goods);
 
-        mLocalSrc.publishGoods(goods);
+        //mLocalSrc.publishGoods(goods);
+
         return mCloudSrc.publishGoods(goods);
     }
 
     @Override
-    public Observable<GoodsModel> getPublishedGoodsDetail(long id) {
+    public Observable<PublishGoodsInfo> getPublishedGoodsDetail(long id) {
         Log.v(TAG,"getPublishedGoodsDetail(): id = " + id);
 
         return mLocalSrc.queryPublishedGoodsDetail(id);
     }
 
     @Override
-    public Observable<List<GoodsModel>> getPublishedGoodsList() {
+    public Observable<List<PublishGoodsInfo>> getPublishedGoodsList() {
         Log.v(TAG,"getPublishedGoodsList()");
 
         return mLocalSrc.queryPublishedGoodsList();
     }
 
     @Override
-    public Observable<List<GoodsModel>> getLatestGoodsList() {
+    public Observable<List<PublishGoodsInfo>> getLatestGoodsList() {
         Log.v(TAG,"getLatestGoodsList()");
 
         return mCloudSrc.queryLatestGoodsList();
     }
 
     @Override
-    public Observable<RepoResponseCode> favorGoods(GoodsModel goods) {
+    public Observable<RepoResponseCode> favorGoods(PublishGoodsInfo goods) {
         Log.v(TAG,"favorGoods(): goods = " + goods);
 
         //TODO:consider both response
@@ -66,14 +72,14 @@ public class MineFleaRepository implements GoodsRepository,PublisherRepository{
     }
 
     @Override
-    public Observable<GoodsModel> getFavorGoodsDetail(long id) {
+    public Observable<PublishGoodsInfo> getFavorGoodsDetail(long id) {
         Log.v(TAG,"getFavorGoodsDetail(): id = " + id);
 
         return mLocalSrc.queryFavorGoodsDetail(id);
     }
 
     @Override
-    public Observable<List<GoodsModel>> getFavorGoodsList() {
+    public Observable<List<PublishGoodsInfo>> getFavorGoodsList() {
         Log.v(TAG,"getFavorGoodsList()");
 
         return mLocalSrc.queryFavorGoodsList();

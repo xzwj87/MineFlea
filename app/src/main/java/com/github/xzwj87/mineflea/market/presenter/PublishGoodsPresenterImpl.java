@@ -1,37 +1,55 @@
 package com.github.xzwj87.mineflea.market.presenter;
 
+import android.util.Log;
+
 import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
 import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
 import com.github.xzwj87.mineflea.market.executor.JobExecutor;
 import com.github.xzwj87.mineflea.market.interactor.DefaultSubscriber;
 import com.github.xzwj87.mineflea.market.interactor.PublishGoodsUseCase;
-import com.github.xzwj87.mineflea.market.model.GoodsModel;
+import com.github.xzwj87.mineflea.market.interactor.UseCase;
+import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
+import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.ui.PublishGoodsView;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * Created by jason on 9/27/16.
  */
 
+@PerActivity
 public class PublishGoodsPresenterImpl implements PublishGoodsPresenter {
     public static final String TAG = PublishGoodsPresenterImpl.class.getSimpleName();
 
-    private PublishGoodsUseCase mUseCase;
+    private UseCase mPublishGoodsUseCase;
     private PublishGoodsView mView;
 
-    public PublishGoodsPresenterImpl(PublishGoodsView view){
+    @Inject
+    public PublishGoodsPresenterImpl(@Named("publishGoods") UseCase useCase){
+        mPublishGoodsUseCase = useCase;
+    }
+
+    public void setPublishGoodsView(PublishGoodsView view){
         mView = view;
     }
 
     @Override
-    public void publishGoods(GoodsModel goods) {
+    public void init() {
 
-        mUseCase.setData(goods);
-        mUseCase.execute(new PublishGoodsSubscriber());
+    }
+
+    @Override
+    public void publishGoods(PublishGoodsInfo goods) {
+
+        mPublishGoodsUseCase.setData(goods);
+        mPublishGoodsUseCase.execute(new PublishGoodsSubscriber());
     }
 
     @Override
     public void onCreate() {
-        mUseCase = new PublishGoodsUseCase(new MineFleaRepository(),
+        mPublishGoodsUseCase = new PublishGoodsUseCase(new MineFleaRepository(),
                 new JobExecutor());
     }
 
@@ -53,7 +71,8 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter {
 
         @Override
         public void onNext(RepoResponseCode responseCode){
-
+            Log.v(TAG,"onNext(): response code =  " + responseCode);
+            //mView.onPublishComplete(responseCode);
         }
 
         @Override
