@@ -1,15 +1,15 @@
 package com.github.xzwj87.mineflea.market.data.repository;
 
+import android.os.Message;
 import android.util.Log;
 
-import com.avos.avoscloud.AVObject;
 import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
 import com.github.xzwj87.mineflea.market.data.local.MineFleaLocalSource;
 import com.github.xzwj87.mineflea.market.data.remote.MineFleaCloudSource;
-import com.github.xzwj87.mineflea.market.model.ModelConstants;
+import com.github.xzwj87.mineflea.market.interactor.PublishCallBack;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
-import com.github.xzwj87.mineflea.market.model.PublisherModel;
+import com.github.xzwj87.mineflea.market.model.PublisherInfo;
 
 import java.util.List;
 
@@ -20,25 +20,31 @@ import rx.Observable;
 /**
  * Created by JasonWang on 2016/9/20.
  */
-public class MineFleaRepository implements GoodsRepository,PublisherRepository{
+public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.CloudSourceCallback{
     public static final String TAG = MineFleaRepository.class.getSimpleName();
 
     private MineFleaLocalSource mLocalSrc;
     private MineFleaCloudSource mCloudSrc;
+    private PublishCallBack mCb;
 
     @Inject
     public MineFleaRepository(){
         mLocalSrc = MineFleaLocalSource.getInstance(AppGlobals.getAppContext());
         mCloudSrc = MineFleaCloudSource.getInstance();
+        mCloudSrc.setCloudCallback(this);
+    }
+
+    public void setPublishCallback(PublishCallBack callBack){
+        mCb = callBack;
     }
 
     @Override
-    public Observable<RepoResponseCode> publishGoods(PublishGoodsInfo goods) {
+    public void publishGoods(PublishGoodsInfo goods) {
         Log.v(TAG,"publishGoods(): goods = " + goods);
 
         //mLocalSrc.publishGoods(goods);
 
-        return mCloudSrc.publishGoods(goods);
+        mCloudSrc.publishGoods(goods);
     }
 
     @Override
@@ -87,28 +93,34 @@ public class MineFleaRepository implements GoodsRepository,PublisherRepository{
 
 
     @Override
-    public Observable<PublisherModel> getPublisherDetail(long id) {
+    public Observable<PublisherInfo> getPublisherDetail(long id) {
         Log.v(TAG,"getPublisherDetail(): id = " + id);
 
         return mCloudSrc.queryPublisherDetail(id);
     }
 
     @Override
-    public Observable<PublisherModel> getFavorPublisherDetail(long id) {
+    public Observable<PublisherInfo> getFavorPublisherDetail(long id) {
         Log.v(TAG,"getFavorPublisherDetail() id = " + id);
 
         return mLocalSrc.queryPublisherDetail(id);
     }
 
     @Override
-    public Observable<List<PublisherModel>> getFavorPublisherList() {
+    public Observable<List<PublisherInfo>> getFavorPublisherList() {
         Log.v(TAG,"getFavorPublisherList()");
 
         return mLocalSrc.queryPublisherList();
     }
 
     @Override
-    public Observable<RepoResponseCode> followPublisher(PublisherModel publisher) {
+    public Observable<RepoResponseCode> followPublisher(PublisherInfo publisher) {
         return null;
+    }
+
+    @Override
+    public void publishComplete(Message message) {
+        Log.v(TAG,"publishComplete()");
+        mCb.onPublishComplete(message);
     }
 }

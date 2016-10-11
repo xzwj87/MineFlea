@@ -2,10 +2,10 @@ package com.github.xzwj87.mineflea.market.ui.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,14 +19,17 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.github.xzwj87.mineflea.R;
-import com.github.xzwj87.mineflea.app.AppGlobals;
+import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
+import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
+import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.presenter.PublishGoodsPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.PublishGoodsView;
 import com.github.xzwj87.mineflea.market.ui.adapter.PublishGoodsImageAdapter;
-import com.github.xzwj87.mineflea.utils.FileManager;
+import com.github.xzwj87.mineflea.utils.StringResUtils;
 
-import java.io.File;
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,7 +50,8 @@ public class PublishGoodsFragment extends BaseFragment
     @BindView(R.id.et_goods_low_price) EditText mEtLowPrice;
     @BindView(R.id.et_note) EditText mEtNote;
 
-    private PublishGoodsPresenterImpl mPresenter;
+    @Inject
+    PublishGoodsPresenterImpl mPresenter;
     private ArrayList<String> mFilePath = null;
 
     public PublishGoodsFragment(){}
@@ -73,8 +77,6 @@ public class PublishGoodsFragment extends BaseFragment
         switch (id){
             case R.id.action_publish:
                 publishGoods();
-
-                return false;
             default:
                 return super.onOptionsItemSelected(menuItem);
         }
@@ -100,13 +102,44 @@ public class PublishGoodsFragment extends BaseFragment
 
     }
 
+    //TODO: put Model to presenter
     @Override
     public void publishGoods() {
+        Log.v(TAG,"publishGoods()");
 
+        PublishGoodsInfo goodsInfo = new PublishGoodsInfo();
+
+        goodsInfo.setName(mEtGoodsName.getText().toString());
+        goodsInfo.setPublisher("dummy");
+        goodsInfo.setLowerPrice(Double.parseDouble(mEtLowPrice.getText().toString()));
+        goodsInfo.setHighPrice(Double.parseDouble(mEtHighPrice.getText().toString()));
+        goodsInfo.setImageUri(mFilePath.subList(0,mFilePath.size()-1));
+
+        mPresenter.publishGoods(goodsInfo);
+    }
+
+    @Override
+    public void onPublishComplete(RepoResponseCode responseCode) {
+        Log.v(TAG,"onPublishComplete(): response = " + responseCode);
+
+        if(responseCode.getCode() == RepoResponseCode.RESP_SUCCESS){
+            showToast(StringResUtils.getString(R.string.publish_goods_success));
+        }else{
+            showToast(StringResUtils.getString(R.string.publish_goods_error));
+        }
+    }
+
+    @Override
+    public void finishView() {
+        getActivity().finish();
     }
 
     private void init(){
-        mPresenter = new PublishGoodsPresenterImpl(this);
+
+        getComponent(MarketComponent.class).inject(this);
+
+        mPresenter.setPublishGoodsView(this);
+        mPresenter.init();
 
         mFilePath = new ArrayList<>();
         // add a dummy value
@@ -189,4 +222,5 @@ public class PublishGoodsFragment extends BaseFragment
                 break;
         }
     }
+
 }

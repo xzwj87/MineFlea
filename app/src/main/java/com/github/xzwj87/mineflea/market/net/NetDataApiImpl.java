@@ -11,7 +11,7 @@ import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
 import com.github.xzwj87.mineflea.market.exception.NetNoConnectionException;
 import com.github.xzwj87.mineflea.market.model.ModelConstants;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
-import com.github.xzwj87.mineflea.market.model.PublisherModel;
+import com.github.xzwj87.mineflea.market.model.PublisherInfo;
 import com.github.xzwj87.mineflea.market.model.mapper.GoodsJsonMapper;
 import com.github.xzwj87.mineflea.market.model.mapper.PublisherJsonMapper;
 import com.github.xzwj87.mineflea.utils.NetConnectionUtils;
@@ -91,7 +91,7 @@ public class NetDataApiImpl implements NetDataApi{
     }
 
     @Override
-    public Observable<PublisherModel> queryPublisherDetail(long id) {
+    public Observable<PublisherInfo> queryPublisherDetail(long id) {
         Log.v(TAG,"queryPublisherDetail()");
 
         if(NetConnectionUtils.isNetworkConnected()) {
@@ -99,9 +99,9 @@ public class NetDataApiImpl implements NetDataApi{
 
             if (httpApi != null) {
                 final String json = httpApi.getData();
-                return Observable.create(new Observable.OnSubscribe<PublisherModel>() {
+                return Observable.create(new Observable.OnSubscribe<PublisherInfo>() {
                     @Override
-                    public void call(Subscriber<? super PublisherModel> subscriber) {
+                    public void call(Subscriber<? super PublisherInfo> subscriber) {
                         if (json != null) {
                             subscriber.onNext(PublisherJsonMapper.transform(json));
                         } else {
@@ -112,9 +112,9 @@ public class NetDataApiImpl implements NetDataApi{
                 });
             }
         }else{
-            return Observable.create(new Observable.OnSubscribe<PublisherModel>() {
+            return Observable.create(new Observable.OnSubscribe<PublisherInfo>() {
                 @Override
-                public void call(Subscriber<? super PublisherModel> subscriber) {
+                public void call(Subscriber<? super PublisherInfo> subscriber) {
                     subscriber.onError(new NetNoConnectionException("network is not connected"));
                 }
             });
@@ -158,7 +158,7 @@ public class NetDataApiImpl implements NetDataApi{
     }
 
     @Override
-    public Observable<RepoResponseCode> followPublisher(PublisherModel publisher) {
+    public Observable<RepoResponseCode> followPublisher(PublisherInfo publisher) {
         Log.v(TAG,"followPublisher(): publisher = " + publisher);
 
         int responseCode = RepoResponseCode.RESP_SUCCESS;

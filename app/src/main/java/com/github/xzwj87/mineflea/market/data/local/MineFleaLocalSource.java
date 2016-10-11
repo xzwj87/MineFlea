@@ -5,12 +5,13 @@ import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
+import android.os.Message;
 import android.util.Log;
 
 import com.github.xzwj87.mineflea.market.data.DataSource;
 import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
-import com.github.xzwj87.mineflea.market.model.GoodsModel;
-import com.github.xzwj87.mineflea.market.model.PublisherModel;
+import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
+import com.github.xzwj87.mineflea.market.model.PublisherInfo;
 
 import com.github.xzwj87.mineflea.market.data.local.MineFleaContract.*;
 import com.github.xzwj87.mineflea.market.model.mapper.GoodsModelMapper;
@@ -77,7 +78,7 @@ public class MineFleaLocalSource implements DataSource{
 
 
     @Override
-    public Observable<RepoResponseCode> publishGoods(GoodsModel goods) {
+    public void publishGoods(PublishGoodsInfo goods) {
         Log.v(TAG,"publishGoods(): goods = " + goods);
 
         ContentValues cv = GoodsModelMapper.map(goods);
@@ -90,30 +91,23 @@ public class MineFleaLocalSource implements DataSource{
         }
 
         final RepoResponseCode response = new RepoResponseCode(code);
-
-        return Observable.create(new Observable.OnSubscribe<RepoResponseCode>() {
-            @Override
-            public void call(Subscriber<? super RepoResponseCode> subscriber) {
-                subscriber.onNext(response);
-            }
-        });
     }
 
     @Override
-    public Observable<GoodsModel> queryPublishedGoodsDetail(long id) {
+    public Observable<PublishGoodsInfo> queryPublishedGoodsDetail(long id) {
         Log.v(TAG,"queryPublishedGoodsDetail(): id = " + id);
 
         final String selection = PublishedGoodsEntry._ID + " =? " + id;
 
 
-        return Observable.create(new Observable.OnSubscribe<GoodsModel>() {
+        return Observable.create(new Observable.OnSubscribe<PublishGoodsInfo>() {
             @Override
-            public void call(Subscriber<? super GoodsModel> subscriber) {
+            public void call(Subscriber<? super PublishGoodsInfo> subscriber) {
                 Cursor c = query(PublishedGoodsEntry.TABLE_PUBLISHER_GOODS,
                         null,selection,null,null);
                 if(c != null) {
                     c.moveToFirst();
-                    GoodsModel data = GoodsModelMapper.transform(c);
+                    PublishGoodsInfo data = GoodsModelMapper.transform(c);
 
                     c.close();
                     subscriber.onNext(data);
@@ -125,18 +119,18 @@ public class MineFleaLocalSource implements DataSource{
     }
 
     @Override
-    public Observable<List<GoodsModel>> queryPublishedGoodsList() {
+    public Observable<List<PublishGoodsInfo>> queryPublishedGoodsList() {
         Log.v(TAG,"queryPublishedGoodsList()");
 
-        return Observable.create(new Observable.OnSubscribe<List<GoodsModel>>() {
+        return Observable.create(new Observable.OnSubscribe<List<PublishGoodsInfo>>() {
             @Override
-            public void call(Subscriber<? super List<GoodsModel>> subscriber) {
+            public void call(Subscriber<? super List<PublishGoodsInfo>> subscriber) {
                 String sortBy = PublishedGoodsEntry.COL_RELEASE_DATE + " ASC";
                 Cursor c = query(PublishedGoodsEntry.TABLE_PUBLISHER_GOODS,
                         null,null,null,sortBy);
 
                 if(c != null) {
-                    List<GoodsModel> goodsList = new ArrayList<GoodsModel>();
+                    List<PublishGoodsInfo> goodsList = new ArrayList<PublishGoodsInfo>();
 
                     while (c.moveToNext()) {
                         goodsList.add(GoodsModelMapper.transform(c));
@@ -152,7 +146,7 @@ public class MineFleaLocalSource implements DataSource{
     }
 
     @Override
-    public Observable<RepoResponseCode> favorGoods(GoodsModel goods) {
+    public Observable<RepoResponseCode> favorGoods(PublishGoodsInfo goods) {
         Log.v(TAG,"favorGoods(): goods = " + goods);
         ContentValues cv = GoodsModelMapper.map(goods);
 
@@ -174,20 +168,20 @@ public class MineFleaLocalSource implements DataSource{
     }
 
     @Override
-    public Observable<GoodsModel> queryFavorGoodsDetail(long id) {
+    public Observable<PublishGoodsInfo> queryFavorGoodsDetail(long id) {
         Log.v(TAG,"queryFavorGoodsDetail(): id = " + id);
 
         final String selection = FavorGoodsEntry._ID + " =? " + id;
 
-        return Observable.create(new Observable.OnSubscribe<GoodsModel>() {
+        return Observable.create(new Observable.OnSubscribe<PublishGoodsInfo>() {
             @Override
-            public void call(Subscriber<? super GoodsModel> subscriber) {
+            public void call(Subscriber<? super PublishGoodsInfo> subscriber) {
                 Cursor c = query(FavorGoodsEntry.TABLE_FAVOR_GOODS,null,
                         selection,null,null);
 
                 if(c != null) {
                     c.moveToFirst();
-                    GoodsModel data = GoodsModelMapper.transform(c);
+                    PublishGoodsInfo data = GoodsModelMapper.transform(c);
 
                     c.close();
                     subscriber.onNext(data);
@@ -199,18 +193,18 @@ public class MineFleaLocalSource implements DataSource{
     }
 
     @Override
-    public Observable<List<GoodsModel>> queryFavorGoodsList() {
+    public Observable<List<PublishGoodsInfo>> queryFavorGoodsList() {
         Log.v(TAG,"queryFavorGoodsList()");
 
 
-        return Observable.create(new Observable.OnSubscribe<List<GoodsModel>>() {
+        return Observable.create(new Observable.OnSubscribe<List<PublishGoodsInfo>>() {
             @Override
-            public void call(Subscriber<? super List<GoodsModel>> subscriber) {
+            public void call(Subscriber<? super List<PublishGoodsInfo>> subscriber) {
                 String sortBy = FavorGoodsEntry.COL_RELEASE_DATE + " ASC";
                 Cursor c = query(FavorGoodsEntry.TABLE_FAVOR_GOODS,null,null,null,sortBy);
 
                 if(c != null){
-                    List<GoodsModel> goodsList = new ArrayList<GoodsModel>();
+                    List<PublishGoodsInfo> goodsList = new ArrayList<PublishGoodsInfo>();
 
                     while(c.moveToNext()){
                         goodsList.add(GoodsModelMapper.transform(c));
@@ -227,14 +221,14 @@ public class MineFleaLocalSource implements DataSource{
     }
 
     @Override
-    public Observable<PublisherModel> queryPublisherDetail(long id) {
+    public Observable<PublisherInfo> queryPublisherDetail(long id) {
         Log.v(TAG,"queryPublisherDetail(): id = " + id);
 
         final String selection = FavorPublisherEntry._ID + " =? " + id;
 
-        return Observable.create(new Observable.OnSubscribe<PublisherModel>() {
+        return Observable.create(new Observable.OnSubscribe<PublisherInfo>() {
             @Override
-            public void call(Subscriber<? super PublisherModel> subscriber) {
+            public void call(Subscriber<? super PublisherInfo> subscriber) {
                 Cursor c = query(FavorPublisherEntry.TABLE_PUBLISHER,null,
                         selection, null,null);
                 if(c != null){
@@ -250,17 +244,17 @@ public class MineFleaLocalSource implements DataSource{
     }
 
     @Override
-    public Observable<List<PublisherModel>> queryPublisherList() {
+    public Observable<List<PublisherInfo>> queryPublisherList() {
         Log.v(TAG,"queryPublisherList()");
 
-        return Observable.create(new Observable.OnSubscribe<List<PublisherModel>>() {
+        return Observable.create(new Observable.OnSubscribe<List<PublisherInfo>>() {
             @Override
-            public void call(Subscriber<? super List<PublisherModel>> subscriber) {
+            public void call(Subscriber<? super List<PublisherInfo>> subscriber) {
                 String sortBy = FavorPublisherEntry.COL_DISTANCE + " ASC";
                 Cursor c = query(FavorPublisherEntry.TABLE_PUBLISHER,null,
                         null,null,sortBy);
                 if(c != null){
-                    List<PublisherModel> publisherList = new ArrayList<PublisherModel>();
+                    List<PublisherInfo> publisherList = new ArrayList<PublisherInfo>();
 
                     while(c.moveToNext()){
                         publisherList.add(PublisherModelMapper.transform(c));
@@ -275,13 +269,13 @@ public class MineFleaLocalSource implements DataSource{
 
 
     @Override
-    public Observable<List<GoodsModel>> queryLatestGoodsList() {
+    public Observable<List<PublishGoodsInfo>> queryLatestGoodsList() {
         throw new UnsupportedOperationException(
                 "it should be queried in remote data source");
     }
 
     @Override
-    public Observable<RepoResponseCode> followPublisher(PublisherModel publisher) {
+    public Observable<RepoResponseCode> followPublisher(PublisherInfo publisher) {
         throw new UnsupportedOperationException(
                 "it should be called in remote data source");
     }

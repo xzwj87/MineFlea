@@ -1,8 +1,8 @@
 package com.github.xzwj87.mineflea.market.net;
 
 import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
-import com.github.xzwj87.mineflea.market.model.GoodsModel;
-import com.github.xzwj87.mineflea.market.model.PublisherModel;
+import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
+import com.github.xzwj87.mineflea.market.model.PublisherInfo;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public interface NetDataApi {
     /**
      * publish goods info to remote server
      */
-    Observable<RepoResponseCode> publishGoods(GoodsModel goods);
+    Observable<RepoResponseCode> publishGoods(PublishGoodsInfo goods);
 
 
     /**
@@ -25,18 +25,18 @@ public interface NetDataApi {
      *
      * @param: id - the id of the publisher
      */
-    Observable<PublisherModel> queryPublisherDetail(long id);
+    Observable<PublisherInfo> queryPublisherDetail(long id);
 
 
     /**
      * query latest goods list
      */
-    Observable<List<GoodsModel>> queryLatestGoodsList();
+    Observable<List<PublishGoodsInfo>> queryLatestGoodsList();
 
     /**
      * follow some publisher
      *
      * @param : the publisher data to remote server
      */
-    Observable<RepoResponseCode> followPublisher(PublisherModel publisher);
+    Observable<RepoResponseCode> followPublisher(PublisherInfo publisher);
 }

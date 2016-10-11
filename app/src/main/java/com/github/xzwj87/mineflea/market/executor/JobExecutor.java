@@ -6,6 +6,8 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 /**
  * Created by jason on 9/27/16.
  */
@@ -21,6 +23,7 @@ public class JobExecutor implements Executor {
     private ThreadPoolExecutor mPoolExecutor;
     private BlockingDeque<Runnable> mJobQueue;
 
+    @Inject
     public JobExecutor(){
         mJobQueue = new LinkedBlockingDeque<>();
         mPoolExecutor = new ThreadPoolExecutor(INI_POOL_SIZE,MAX_POOL_SIZE,

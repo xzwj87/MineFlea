@@ -17,4 +17,7 @@
     <string name="my_followers">我的关注</string>
     <string name="about">关于</string>
     <string name="settings">设置</string>
+
+    <string name="publish_goods_success">发布成功</string>
+    <string name="publish_goods_error">发布失败</string>
 </resources>

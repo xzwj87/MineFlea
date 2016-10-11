@@ -1,6 +1,10 @@
 package com.github.xzwj87.mineflea.market.interactor;
 
 import com.github.xzwj87.mineflea.market.executor.JobExecutor;
+import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -15,23 +19,17 @@ import rx.subscriptions.Subscriptions;
 
 public abstract class UseCase {
 
-    private final JobExecutor mExecutor;
+    protected final JobExecutor mExecutor;
 
-    private Subscription mSubscription = Subscriptions.empty();
+    protected Subscription mSubscription = Subscriptions.empty();
 
     public UseCase(JobExecutor executor){
         mExecutor = executor;
     }
 
-    public abstract Observable buildUseCaseObservable();
+    public abstract void setData(PublishGoodsInfo info);
 
-    //@SuppressWarnings("unchecked")
-    public void execute(Subscriber useCaseSubscriber){
-        mSubscription = buildUseCaseObservable()
-                .subscribeOn(Schedulers.from(mExecutor))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
-    }
+    public abstract void execute(Subscriber subscriber);
 
     public void unSubscribe(){
         if(!mSubscription.isUnsubscribed()){

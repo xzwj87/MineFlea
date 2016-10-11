@@ -3,9 +3,15 @@ package com.github.xzwj87.mineflea.market.model;
 /**
  * Created by JasonWang on 2016/9/22.
  */
-public class PublisherModel {
+public class PublisherInfo {
+
+    public static String USER_NAME = "user_name";
+
+    public static String TOKEN = "token";
 
     private long mId;
+
+    private String mToken;
 
     private String mName;
 
@@ -26,7 +32,7 @@ public class PublisherModel {
     private double mDistance;
 
 
-    public PublisherModel(){
+    public PublisherInfo(){
 
     }
 
@@ -44,6 +50,14 @@ public class PublisherModel {
 
     public String getName(){
         return mName;
+    }
+
+    public String getToken(){
+        return mToken;
+    }
+
+    public void setToken(String token){
+        mToken = token;
     }
 
     public String getHeadIconUri(){

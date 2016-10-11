@@ -1,38 +1,42 @@
 package com.github.xzwj87.mineflea.market.model;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by JasonWang on 2016/9/22.
  */
-public class GoodsModel {
+public class PublishGoodsInfo {
 
-    private long mId;
+    public static final String GOODS_NAME = "name";
+    public static final String GOODS_PUBLISHER = "goods_publisher";
+    public static final String GOODS_LOW_PRICE = "low_Price";
+    public static final String GOODS_HIGH_PRICE = "high_price";
+    public static final String GOODS_RELEASE_DATE = "release_date";
+
+    private String mId;
 
     private String mName;
 
-    private long mPublisherId;
-
-    private double mDepreciationRate;
+    private String mPublisher;
 
     private double mHighPrice;
 
     private double mLowPrice;
 
-    private Date mReleasedDate;
+    private long mReleasedDate;
 
-    private int mStars;
+    private List<String> mImageUri;
 
-    private String mImageUri;
-
-    public GoodsModel(){
+    public PublishGoodsInfo(){
+        mReleasedDate = System.currentTimeMillis();
     }
 
-    public long getId(){
+    public String getId(){
         return mId;
     }
 
-    public void setId(long id){
+    public void setId(String id){
         mId = id;
     }
 
@@ -44,20 +48,13 @@ public class GoodsModel {
         mName = name;
     }
 
-    public double getDepreciationRate(){
-        return mDepreciationRate;
+
+    public String getPublisher(){
+        return mPublisher;
     }
 
-    public void setDepreciationRate(double rate){
-        mDepreciationRate = rate;
-    }
-
-    public long getPublisherId(){
-        return mPublisherId;
-    }
-
-    public void setPublisherId(long publisherId){
-        mPublisherId = publisherId;
+    public void setPublisher(String publisher){
+        mPublisher = publisher;
     }
 
     public double getHighPrice(){
@@ -76,27 +73,19 @@ public class GoodsModel {
         mLowPrice = price;
     }
 
-    public Date getReleasedDate(){
+    public long getReleasedDate(){
         return mReleasedDate;
     }
 
-    public void setReleasedDate(Date date){
+    public void setReleasedDate(long date){
         mReleasedDate = date;
     }
 
-    public int getStars(){
-        return mStars;
-    }
-
-    public void setStars(int stars){
-        mStars = stars;
-    }
-
-    public String getImageUri(){
+    public List<String> getImageUri(){
         return mImageUri;
     }
 
-    public void setImageUri(String uri){
+    public void setImageUri(List<String> uri){
         mImageUri = uri;
     }
 
@@ -110,8 +99,7 @@ public class GoodsModel {
         sb.append("name = " + mName + "\n");
         sb.append("high price = " + mHighPrice + "\n");
         sb.append("lower price = " + mLowPrice + "\n");
-        sb.append("released date = " + mReleasedDate + "\n");
-        sb.append("stars = " + mStars + "\n");
+        sb.append("released date = " + new Date(mReleasedDate) + "\n");
         sb.append("-------------------------------\n");
 
         return sb.toString();

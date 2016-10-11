@@ -24,4 +24,8 @@ public class StringResUtils {
 
         return null;
     }
+
+    public static String getString(int resId){
+        return AppGlobals.getAppContext().getString(resId);
+    }
 }

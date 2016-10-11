@@ -1,8 +1,8 @@
 package com.github.xzwj87.mineflea.market.presenter;
 
+import android.os.Message;
 import android.util.Log;
 
-import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
 import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
 import com.github.xzwj87.mineflea.market.executor.JobExecutor;
 import com.github.xzwj87.mineflea.market.interactor.DefaultSubscriber;
@@ -45,12 +45,14 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter {
 
         mPublishGoodsUseCase.setData(goods);
         mPublishGoodsUseCase.execute(new PublishGoodsSubscriber());
+
+        mView.finishView();
     }
 
     @Override
     public void onCreate() {
-        mPublishGoodsUseCase = new PublishGoodsUseCase(new MineFleaRepository(),
-                new JobExecutor());
+/*        mPublishGoodsUseCase = new PublishGoodsUseCase(new MineFleaRepository(),
+                new JobExecutor());*/
     }
 
     @Override
@@ -64,14 +66,14 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter {
     }
 
 
-    private class PublishGoodsSubscriber extends DefaultSubscriber<RepoResponseCode>{
+    private class PublishGoodsSubscriber extends DefaultSubscriber<Message>{
 
         @Override
         public void onCompleted(){}
 
         @Override
-        public void onNext(RepoResponseCode responseCode){
-            Log.v(TAG,"onNext(): response code =  " + responseCode);
+        public void onNext(Message message){
+            Log.v(TAG,"onNext(): message =  " + message);
             //mView.onPublishComplete(responseCode);
         }
 
