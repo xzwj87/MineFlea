@@ -27,7 +27,7 @@
         </receiver>
 
         <activity
-            android:name=".market.ui.activity.MineFleaActivity"
+            android:name=".market.ui.activity.MineFleaHomeActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -39,7 +39,7 @@
         <activity android:name=".market.ui.activity.PublishGoodsActivity"
             android:label=""
             android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".market.ui.activity.MineFleaActivity">
+            android:parentActivityName=".market.ui.activity.MineFleaHomeActivity">
 
         </activity>
     </application>

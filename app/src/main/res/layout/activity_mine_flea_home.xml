@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".market.ui.activity.MineFleaActivity">
+    tools:context=".market.ui.activity.MineFleaHomeActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -41,7 +41,6 @@
         android:background="@color/colorPrimary"
         android:elevation="4dp"
         app:tabTextColor="@android:color/white"
-        app:tabTextAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
         app:tabSelectedTextColor="@color/colorAccent"
         app:tabIndicatorColor="@color/colorAccent"/>
 

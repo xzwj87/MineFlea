@@ -8,18 +8,14 @@ import android.support.v7.widget.Toolbar;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.SaveCallback;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.ui.adapter.SectionsPageAdapter;
 
-public class MineFleaActivity extends AppCompatActivity {
+public class MineFleaHomeActivity extends AppCompatActivity {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -39,7 +35,7 @@ public class MineFleaActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mine_flea);
+        setContentView(R.layout.activity_mine_flea_home);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -59,7 +55,6 @@ public class MineFleaActivity extends AppCompatActivity {
         //testLeanCloud();
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -85,19 +80,6 @@ public class MineFleaActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void testLeanCloud(){
-        AVObject testObject = new AVObject("TestObject");
-        testObject.put("words","Hello World!");
-        testObject.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(AVException e) {
-                if(e == null){
-                    Log.d("saved","success!");
-                }
-            }
-        });
     }
 
     private void startPublishActivity(){
