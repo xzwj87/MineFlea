@@ -8,7 +8,6 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.SaveCallback;
 import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
-import com.github.xzwj87.mineflea.market.exception.NetNoConnectionException;
 import com.github.xzwj87.mineflea.market.model.ModelConstants;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.PublisherInfo;
@@ -112,12 +111,7 @@ public class NetDataApiImpl implements NetDataApi{
                 });
             }
         }else{
-            return Observable.create(new Observable.OnSubscribe<PublisherInfo>() {
-                @Override
-                public void call(Subscriber<? super PublisherInfo> subscriber) {
-                    subscriber.onError(new NetNoConnectionException("network is not connected"));
-                }
-            });
+            return null;
         }
 
         return null;
@@ -146,12 +140,7 @@ public class NetDataApiImpl implements NetDataApi{
 
             }
         }else{
-            return Observable.create(new Observable.OnSubscribe<List<PublishGoodsInfo>>() {
-                @Override
-                public void call(Subscriber<? super List<PublishGoodsInfo>> subscriber) {
-                    subscriber.onError(new NetNoConnectionException("network is not connected"));
-                }
-            });
+            return null;
         }
 
         return null;

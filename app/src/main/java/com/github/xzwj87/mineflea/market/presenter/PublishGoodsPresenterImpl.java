@@ -3,14 +3,13 @@ package com.github.xzwj87.mineflea.market.presenter;
 import android.os.Message;
 import android.util.Log;
 
-import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
-import com.github.xzwj87.mineflea.market.executor.JobExecutor;
 import com.github.xzwj87.mineflea.market.interactor.DefaultSubscriber;
-import com.github.xzwj87.mineflea.market.interactor.PublishGoodsUseCase;
 import com.github.xzwj87.mineflea.market.interactor.UseCase;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.ui.PublishGoodsView;
+
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -25,6 +24,7 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter {
 
     private UseCase mPublishGoodsUseCase;
     private PublishGoodsView mView;
+    private PublishGoodsInfo mGoodsInfo;
 
     @Inject
     public PublishGoodsPresenterImpl(@Named("publishGoods") UseCase useCase){
@@ -37,32 +37,51 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter {
 
     @Override
     public void init() {
-
+        mGoodsInfo = new PublishGoodsInfo();
     }
 
     @Override
-    public void publishGoods(PublishGoodsInfo goods) {
+    public void publishGoods() {
 
-        mPublishGoodsUseCase.setData(goods);
+        mPublishGoodsUseCase.setData(mGoodsInfo);
         mPublishGoodsUseCase.execute(new PublishGoodsSubscriber());
 
         mView.finishView();
     }
 
     @Override
-    public void onCreate() {
-/*        mPublishGoodsUseCase = new PublishGoodsUseCase(new MineFleaRepository(),
-                new JobExecutor());*/
+    public void setGoodsName(String name) {
+        mGoodsInfo.setName(name);
+    }
+
+    @Override
+    public void setGoodsLowPrice(double price) {
+        mGoodsInfo.setLowerPrice(price);
+    }
+
+    @Override
+    public void setGoodsHighPrice(double price) {
+        mGoodsInfo.setHighPrice(price);
+    }
+
+    @Override
+    public void setGoodsNote(String note) {
+        mGoodsInfo.setNote(note);
+    }
+
+    @Override
+    public void setGoodsImgUrl(List<String> urls) {
+        mGoodsInfo.setImageUri(urls);
     }
 
     @Override
     public void onPause() {
-
+        mPublishGoodsUseCase.unSubscribe();
     }
 
     @Override
     public void onDestroy() {
-
+        mGoodsInfo = null;
     }
 
 
@@ -73,8 +92,8 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter {
 
         @Override
         public void onNext(Message message){
-            Log.v(TAG,"onNext(): message =  " + message);
-            //mView.onPublishComplete(responseCode);
+            Log.v(TAG,"onNext(): message =  " + message.arg1);
+
         }
 
         @Override

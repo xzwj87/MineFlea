@@ -30,8 +30,8 @@ public class PublisherInfoPrefsUtil {
     public static PublisherInfo getPublisherInfo() {
         PublisherInfo user = new PublisherInfo();
 
-        String name = prefs.getString(PublisherInfo.USER_NAME,"");
-        String token = prefs.getString(PublisherInfo.TOKEN,"");
+        String name = prefs.getString(PublisherInfo.USER_NAME,"dummy");
+        String token = prefs.getString(PublisherInfo.TOKEN,"dummy");
         if(!TextUtils.isEmpty(name) && !TextUtils.isEmpty(token)){
             return user;
         }

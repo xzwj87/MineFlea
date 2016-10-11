@@ -24,6 +24,8 @@ public class PublishGoodsInfo {
 
     private double mLowPrice;
 
+    private String mNote;
+
     private long mReleasedDate;
 
     private List<String> mImageUri;
@@ -71,6 +73,14 @@ public class PublishGoodsInfo {
 
     public void setLowerPrice(double price){
         mLowPrice = price;
+    }
+
+    public void setNote(String note){
+        mNote = note;
+    }
+
+    public String getNote(){
+        return mNote;
     }
 
     public long getReleasedDate(){

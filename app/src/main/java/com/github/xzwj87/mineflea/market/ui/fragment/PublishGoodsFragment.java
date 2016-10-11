@@ -3,9 +3,6 @@ package com.github.xzwj87.mineflea.market.ui.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,13 +16,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.github.xzwj87.mineflea.R;
-import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
 import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
-import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.presenter.PublishGoodsPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.PublishGoodsView;
 import com.github.xzwj87.mineflea.market.ui.adapter.PublishGoodsImageAdapter;
-import com.github.xzwj87.mineflea.utils.StringResUtils;
 
 import java.util.ArrayList;
 
@@ -82,11 +76,19 @@ public class PublishGoodsFragment extends BaseFragment
         }
     }
 
-    @Override
-    public void onCreate(Bundle savedState){
-        super.onCreate(savedState);
 
-        //setHasOptionsMenu(true);
+    @Override
+    public void onPause(){
+        super.onPause();
+
+        mPresenter.onPause();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+
+        mPresenter.onDestroy();
     }
 
     @Override
@@ -102,31 +104,17 @@ public class PublishGoodsFragment extends BaseFragment
 
     }
 
-    //TODO: put Model to presenter
     @Override
     public void publishGoods() {
         Log.v(TAG,"publishGoods()");
 
-        PublishGoodsInfo goodsInfo = new PublishGoodsInfo();
+        mPresenter.setGoodsName(mEtGoodsName.getText().toString());
+        mPresenter.setGoodsLowPrice(Double.parseDouble(mEtLowPrice.getText().toString()));
+        mPresenter.setGoodsHighPrice(Double.parseDouble(mEtHighPrice.getText().toString()));
+        mPresenter.setGoodsNote(mEtNote.getText().toString());
+        mPresenter.setGoodsImgUrl(mFilePath.subList(0,mFilePath.size()-1));
 
-        goodsInfo.setName(mEtGoodsName.getText().toString());
-        goodsInfo.setPublisher("dummy");
-        goodsInfo.setLowerPrice(Double.parseDouble(mEtLowPrice.getText().toString()));
-        goodsInfo.setHighPrice(Double.parseDouble(mEtHighPrice.getText().toString()));
-        goodsInfo.setImageUri(mFilePath.subList(0,mFilePath.size()-1));
-
-        mPresenter.publishGoods(goodsInfo);
-    }
-
-    @Override
-    public void onPublishComplete(RepoResponseCode responseCode) {
-        Log.v(TAG,"onPublishComplete(): response = " + responseCode);
-
-        if(responseCode.getCode() == RepoResponseCode.RESP_SUCCESS){
-            showToast(StringResUtils.getString(R.string.publish_goods_success));
-        }else{
-            showToast(StringResUtils.getString(R.string.publish_goods_error));
-        }
+        mPresenter.publishGoods();
     }
 
     @Override
