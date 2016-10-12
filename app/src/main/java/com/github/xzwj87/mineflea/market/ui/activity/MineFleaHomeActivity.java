@@ -1,5 +1,6 @@
 package com.github.xzwj87.mineflea.market.ui.activity;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,7 +15,7 @@ import android.view.MenuItem;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.ui.adapter.SectionsPageAdapter;
 
-public class MineFleaActivity extends AppCompatActivity {
+public class MineFleaHomeActivity extends AppCompatActivity {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -34,7 +35,7 @@ public class MineFleaActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mine_flea);
+        setContentView(R.layout.activity_mine_flea_home);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -51,8 +52,9 @@ public class MineFleaActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-    }
+        //testLeanCloud();
 
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -73,10 +75,15 @@ public class MineFleaActivity extends AppCompatActivity {
             case R.id.action_settings:
                 return true;
             case R.id.action_publish:
+                startPublishActivity();
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    private void startPublishActivity(){
+        Intent intent = new Intent(this,PublishGoodsActivity.class);
+        startActivity(intent);
+    }
 }

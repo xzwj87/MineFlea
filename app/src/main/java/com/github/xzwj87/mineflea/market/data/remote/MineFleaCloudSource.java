@@ -1,13 +1,20 @@
 package com.github.xzwj87.mineflea.market.data.remote;
 
+import android.os.Message;
 import android.util.Log;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.SaveCallback;
 import com.github.xzwj87.mineflea.market.data.DataSource;
 import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
-import com.github.xzwj87.mineflea.market.model.GoodsModel;
-import com.github.xzwj87.mineflea.market.model.PublisherModel;
+import com.github.xzwj87.mineflea.market.data.repository.BaseRepository;
+import com.github.xzwj87.mineflea.market.model.ModelConstants;
+import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
+import com.github.xzwj87.mineflea.market.model.PublisherInfo;
 import com.github.xzwj87.mineflea.market.net.NetDataApi;
 import com.github.xzwj87.mineflea.market.net.NetDataApiImpl;
+import com.github.xzwj87.mineflea.utils.NetConnectionUtils;
 
 import java.util.List;
 
@@ -19,11 +26,16 @@ import rx.Observable;
 public class MineFleaCloudSource implements DataSource{
     public static final String TAG = MineFleaCloudSource.class.getSimpleName();
 
-    private NetDataApi mNetApi;
+    private NetDataApiImpl mNetApi;
     private static MineFleaCloudSource sInstance;
+    private CloudSourceCallback mCloudCallback;
 
     public MineFleaCloudSource(NetDataApi netApi){
-        mNetApi = netApi;
+        mNetApi = (NetDataApiImpl)netApi;
+    }
+
+    public void setCloudCallback(CloudSourceCallback callback){
+        mCloudCallback = callback;
     }
 
     public static MineFleaCloudSource getInstance(){
@@ -33,6 +45,11 @@ public class MineFleaCloudSource implements DataSource{
 
         return sInstance;
     }
+
+    public interface CloudSourceCallback{
+        void publishComplete(Message message);
+    }
+
     /**
      * release goods
      *
@@ -40,10 +57,42 @@ public class MineFleaCloudSource implements DataSource{
      * @source: local and remote
      */
     @Override
-    public Observable<RepoResponseCode> publishGoods(GoodsModel goods) {
-        Log.v(TAG,"publishGoods(): goods = " + goods);
+    public void publishGoods(final PublishGoodsInfo goods) {
 
-        return mNetApi.publishGoods(goods);
+        if(NetConnectionUtils.isNetworkConnected()) {
+
+            final AVObject avObject = new AVObject(ModelConstants.AV_OBJ_GOODS);
+            avObject.put(PublishGoodsInfo.GOODS_NAME,goods.getName());
+            avObject.put(PublishGoodsInfo.GOODS_PUBLISHER,goods.getPublisher());
+            avObject.put(PublishGoodsInfo.GOODS_LOW_PRICE,goods.getLowerPrice());
+            avObject.put(PublishGoodsInfo.GOODS_HIGH_PRICE,goods.getHighPrice());
+            avObject.put(PublishGoodsInfo.GOODS_RELEASE_DATE,goods.getReleasedDate());
+
+            avObject.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    Log.v(TAG,"saveInBackground(): done");
+
+                    int code = RepoResponseCode.RESP_SUCCESS;
+                    if(e == null){
+                        goods.setId(avObject.getObjectId());
+                    }else{
+                        goods.setId("");
+                        code = RepoResponseCode.RESP_AV_SAVED_FAILURE;
+                    }
+
+                    Log.v(TAG,"publishGoods(): goods = " + goods);
+
+                    final Message msg = new Message();
+                    msg.arg1 = code;
+                    msg.obj = goods.getId();
+                    mCloudCallback.publishComplete(new Message());
+                }
+            });
+
+        }else{
+            // broadcast to upper layer about network state
+        }
     }
 
     /**
@@ -53,14 +102,14 @@ public class MineFleaCloudSource implements DataSource{
      * @source: remote
      */
     @Override
-    public Observable<PublisherModel> queryPublisherDetail(long id) {
+    public Observable<PublisherInfo> queryPublisherDetail(long id) {
         Log.v(TAG,"queryPublisherDetail(): id = " + id);
 
         return mNetApi.queryPublisherDetail(id);
     }
 
     @Override
-    public Observable<List<PublisherModel>> queryPublisherList() {
+    public Observable<List<PublisherInfo>> queryPublisherList() {
         throw new UnsupportedOperationException("queryPublisherList() should not be" +
                 " called in cloud resource");
     }
@@ -71,7 +120,7 @@ public class MineFleaCloudSource implements DataSource{
      * @source: remote
      */
     @Override
-    public Observable<List<GoodsModel>> queryLatestGoodsList() {
+    public Observable<List<PublishGoodsInfo>> queryLatestGoodsList() {
         Log.v(TAG,"queryLatestGoodsList()");
 
         return mNetApi.queryLatestGoodsList();
@@ -84,7 +133,7 @@ public class MineFleaCloudSource implements DataSource{
      * @source: remote
      */
     @Override
-    public Observable<RepoResponseCode> followPublisher(PublisherModel publisher) {
+    public Observable<RepoResponseCode> followPublisher(PublisherInfo publisher) {
         Log.v(TAG,"followPublisher(): publisher = " + publisher);
 
             return mNetApi.followPublisher(publisher);
@@ -97,13 +146,13 @@ public class MineFleaCloudSource implements DataSource{
      * @source: local
      */
     @Override
-    public Observable<GoodsModel> queryPublishedGoodsDetail(long id) {
+    public Observable<PublishGoodsInfo> queryPublishedGoodsDetail(long id) {
         throw new UnsupportedOperationException(
                 "queryPublishedGoodsDetail() should be called in local data base");
     }
 
     @Override
-    public Observable<List<GoodsModel>> queryPublishedGoodsList() {
+    public Observable<List<PublishGoodsInfo>> queryPublishedGoodsList() {
         throw new UnsupportedOperationException(
                 "queryPublishedGoodsList() should be called in local data base");
     }
@@ -117,7 +166,7 @@ public class MineFleaCloudSource implements DataSource{
 
     // TODO: it need to notify the Server about the state of this goods
     @Override
-    public Observable<RepoResponseCode> favorGoods(GoodsModel goods) {
+    public Observable<RepoResponseCode> favorGoods(PublishGoodsInfo goods) {
         throw new UnsupportedOperationException("favorGoods() " +
                 "should be called in local data base");
     }
@@ -129,13 +178,13 @@ public class MineFleaCloudSource implements DataSource{
      * @source: local
      */
     @Override
-    public Observable<GoodsModel> queryFavorGoodsDetail(long id) {
+    public Observable<PublishGoodsInfo> queryFavorGoodsDetail(long id) {
         throw new UnsupportedOperationException(
                 "queryFavorGoodsDetail() should be called in local data base");
     }
 
     @Override
-    public Observable<List<GoodsModel>> queryFavorGoodsList() {
+    public Observable<List<PublishGoodsInfo>> queryFavorGoodsList() {
         throw new UnsupportedOperationException(
                 "queryFavorGoodsList() should be called in local data base");
     }

@@ -13,7 +13,7 @@ import dagger.Component;
  */
 
 @PerActivity
-@Component(dependencies = {AppModule.class},modules = {ActivityModule.class})
+@Component(dependencies = {AppComponent.class},modules = {ActivityModule.class})
 public interface ActivityComponent {
     Activity activity();
 }

@@ -17,7 +17,6 @@ import dagger.Component;
  * Created by jason on 9/29/16.
  */
 
-@PerActivity
 @Singleton
 @Component(modules = {AppModule.class})
 public interface AppComponent {

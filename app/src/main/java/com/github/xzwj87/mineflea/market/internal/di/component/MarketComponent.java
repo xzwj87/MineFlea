@@ -7,6 +7,7 @@ import com.github.xzwj87.mineflea.market.internal.di.module.ActivityModule;
 import com.github.xzwj87.mineflea.market.internal.di.module.AppModule;
 import com.github.xzwj87.mineflea.market.internal.di.module.MarketModule;
 import com.github.xzwj87.mineflea.market.ui.activity.PublishGoodsActivity;
+import com.github.xzwj87.mineflea.market.ui.fragment.PublishGoodsFragment;
 
 import dagger.Component;
 
@@ -15,8 +16,8 @@ import dagger.Component;
  */
 
 @PerActivity
-@Component(dependencies = {AppModule.class},
+@Component(dependencies = {AppComponent.class},
         modules = {ActivityModule.class,MarketModule.class})
 public interface MarketComponent extends ActivityComponent{
-    void inject(PublishGoodsActivity activity);
+    void inject(PublishGoodsFragment fragment);
 }

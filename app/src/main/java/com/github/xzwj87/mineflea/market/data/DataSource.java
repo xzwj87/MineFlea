@@ -1,7 +1,9 @@
 package com.github.xzwj87.mineflea.market.data;
 
-import com.github.xzwj87.mineflea.market.model.PublisherModel;
-import com.github.xzwj87.mineflea.market.model.GoodsModel;
+import android.os.Message;
+
+import com.github.xzwj87.mineflea.market.model.PublisherInfo;
+import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 
 import java.util.List;
 
@@ -16,48 +18,48 @@ public interface DataSource {
      * release goods
      * @source: local and remote
      */
-    Observable<RepoResponseCode> publishGoods(GoodsModel goods);
+    void publishGoods(PublishGoodsInfo goods);
 
     /**
      * query the detail of a goods
      * @source: local
      */
-    Observable<GoodsModel> queryPublishedGoodsDetail(long id);
+    Observable<PublishGoodsInfo> queryPublishedGoodsDetail(long id);
 
-    Observable<List<GoodsModel>> queryPublishedGoodsList();
+    Observable<List<PublishGoodsInfo>> queryPublishedGoodsList();
 
     /**
      * add goods to a favorite one
      * @source: local
      */
-    Observable<RepoResponseCode> favorGoods(GoodsModel goods);
+    Observable<RepoResponseCode> favorGoods(PublishGoodsInfo goods);
 
     /**
      * query the detail info of a favored goods
      * @source: local
      */
-    Observable<GoodsModel> queryFavorGoodsDetail(long id);
+    Observable<PublishGoodsInfo> queryFavorGoodsDetail(long id);
 
-    Observable<List<GoodsModel>> queryFavorGoodsList();
+    Observable<List<PublishGoodsInfo>> queryFavorGoodsList();
 
 
     /**
      * query the info of a publisher
      * @source: remote
      */
-    Observable<PublisherModel> queryPublisherDetail(long id);
+    Observable<PublisherInfo> queryPublisherDetail(long id);
 
-    Observable<List<PublisherModel>> queryPublisherList();
+    Observable<List<PublisherInfo>> queryPublisherList();
 
     /**
      * query latest goods list
      * @source: remote
      */
-    Observable<List<GoodsModel>> queryLatestGoodsList();
+    Observable<List<PublishGoodsInfo>> queryLatestGoodsList();
 
     /**
      * follow some publisher
      * @source: remote
      */
-    Observable<RepoResponseCode> followPublisher(PublisherModel publisher);
+    Observable<RepoResponseCode> followPublisher(PublisherInfo publisher);
 }

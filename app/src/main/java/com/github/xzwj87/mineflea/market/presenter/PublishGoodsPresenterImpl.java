@@ -1,58 +1,98 @@
 package com.github.xzwj87.mineflea.market.presenter;
 
-import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
-import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
-import com.github.xzwj87.mineflea.market.executor.JobExecutor;
+import android.os.Message;
+import android.util.Log;
+
 import com.github.xzwj87.mineflea.market.interactor.DefaultSubscriber;
-import com.github.xzwj87.mineflea.market.interactor.PublishGoodsUseCase;
-import com.github.xzwj87.mineflea.market.model.GoodsModel;
+import com.github.xzwj87.mineflea.market.interactor.UseCase;
+import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
+import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.ui.PublishGoodsView;
+
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * Created by jason on 9/27/16.
  */
 
+@PerActivity
 public class PublishGoodsPresenterImpl implements PublishGoodsPresenter {
     public static final String TAG = PublishGoodsPresenterImpl.class.getSimpleName();
 
-    private PublishGoodsUseCase mUseCase;
+    private UseCase mPublishGoodsUseCase;
     private PublishGoodsView mView;
+    private PublishGoodsInfo mGoodsInfo;
 
-    public PublishGoodsPresenterImpl(PublishGoodsView view){
+    @Inject
+    public PublishGoodsPresenterImpl(@Named("publishGoods") UseCase useCase){
+        mPublishGoodsUseCase = useCase;
+    }
+
+    public void setPublishGoodsView(PublishGoodsView view){
         mView = view;
     }
 
     @Override
-    public void publishGoods(GoodsModel goods) {
-
-        mUseCase.setData(goods);
-        mUseCase.execute(new PublishGoodsSubscriber());
+    public void init() {
+        mGoodsInfo = new PublishGoodsInfo();
     }
 
     @Override
-    public void onCreate() {
-        mUseCase = new PublishGoodsUseCase(new MineFleaRepository(),
-                new JobExecutor());
+    public void publishGoods() {
+
+        mPublishGoodsUseCase.setData(mGoodsInfo);
+        mPublishGoodsUseCase.execute(new PublishGoodsSubscriber());
+
+        mView.finishView();
+    }
+
+    @Override
+    public void setGoodsName(String name) {
+        mGoodsInfo.setName(name);
+    }
+
+    @Override
+    public void setGoodsLowPrice(double price) {
+        mGoodsInfo.setLowerPrice(price);
+    }
+
+    @Override
+    public void setGoodsHighPrice(double price) {
+        mGoodsInfo.setHighPrice(price);
+    }
+
+    @Override
+    public void setGoodsNote(String note) {
+        mGoodsInfo.setNote(note);
+    }
+
+    @Override
+    public void setGoodsImgUrl(List<String> urls) {
+        mGoodsInfo.setImageUri(urls);
     }
 
     @Override
     public void onPause() {
-
+        mPublishGoodsUseCase.unSubscribe();
     }
 
     @Override
     public void onDestroy() {
-
+        mGoodsInfo = null;
     }
 
 
-    private class PublishGoodsSubscriber extends DefaultSubscriber<RepoResponseCode>{
+    private class PublishGoodsSubscriber extends DefaultSubscriber<Message>{
 
         @Override
         public void onCompleted(){}
 
         @Override
-        public void onNext(RepoResponseCode responseCode){
+        public void onNext(Message message){
+            Log.v(TAG,"onNext(): message =  " + message.arg1);
 
         }
 

@@ -4,10 +4,13 @@ import android.accounts.NetworkErrorException;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.SaveCallback;
 import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
-import com.github.xzwj87.mineflea.market.exception.NetNoConnectionException;
-import com.github.xzwj87.mineflea.market.model.GoodsModel;
-import com.github.xzwj87.mineflea.market.model.PublisherModel;
+import com.github.xzwj87.mineflea.market.model.ModelConstants;
+import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
+import com.github.xzwj87.mineflea.market.model.PublisherInfo;
 import com.github.xzwj87.mineflea.market.model.mapper.GoodsJsonMapper;
 import com.github.xzwj87.mineflea.market.model.mapper.PublisherJsonMapper;
 import com.github.xzwj87.mineflea.utils.NetConnectionUtils;
@@ -30,28 +33,54 @@ public class NetDataApiImpl implements NetDataApi{
     private static final String ALL_GOODS_URL = " ";
     private static final String PUBLISHER_DETAIL_URL = " ";
 
+    private NetDataCallback mNetCb;
+
     // TODO: we may want to cache data using disk
     public NetDataApiImpl(){
     }
 
+    public interface NetDataCallback{
+        void onPublishComplete(int response,String goodsId);
+    }
+
+    public void setCallback(NetDataCallback cb){
+        mNetCb = cb;
+    }
+
     @Override
-    public Observable<RepoResponseCode> publishGoods(GoodsModel goods) {
+    public Observable<RepoResponseCode> publishGoods(final PublishGoodsInfo goods) {
         Log.v(TAG,"publishGoods(): goods = " + goods);
 
-        int responseCode = RepoResponseCode.RESP_SUCCESS;
         if(NetConnectionUtils.isNetworkConnected()) {
-            HttpUrlApi httpApi = createHttpApi(BASE_URL);
-            if (httpApi != null) {
-                String resp = httpApi.postData(GoodsJsonMapper.map(goods));
-                if(TextUtils.isEmpty(resp)){
-                    responseCode = RepoResponseCode.RESP_NETWORK_ERROR;
+
+            final AVObject avObject = new AVObject(ModelConstants.AV_OBJ_GOODS);
+            avObject.put(PublishGoodsInfo.GOODS_NAME,goods.getName());
+            avObject.put(PublishGoodsInfo.GOODS_PUBLISHER,goods.getPublisher());
+            avObject.put(PublishGoodsInfo.GOODS_LOW_PRICE,goods.getLowerPrice());
+            avObject.put(PublishGoodsInfo.GOODS_HIGH_PRICE,goods.getHighPrice());
+            avObject.put(PublishGoodsInfo.GOODS_RELEASE_DATE,goods.getReleasedDate());
+
+            avObject.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    Log.v(TAG,"saveInBackground(): done");
+
+                    int code = RepoResponseCode.RESP_SUCCESS;
+                    if(e == null){
+                        goods.setId(avObject.getObjectId());
+                    }else{
+                        goods.setId("");
+                        code = RepoResponseCode.RESP_AV_SAVED_FAILURE;
+                    }
+
+                    Log.v(TAG,"publishGoods(): goods = " + goods);
+                    mNetCb.onPublishComplete(code, goods.getId());
                 }
-            }
-        }else{
-            responseCode = RepoResponseCode.RESP_NETWORK_NOT_CONNECTED;
+            });
+
         }
 
-        final RepoResponseCode response = new RepoResponseCode(responseCode);
+        final RepoResponseCode response = new RepoResponseCode(RepoResponseCode.RESP_NETWORK_NOT_CONNECTED);
         return Observable.create(new Observable.OnSubscribe<RepoResponseCode>() {
             @Override
             public void call(Subscriber<? super RepoResponseCode> subscriber) {
@@ -61,7 +90,7 @@ public class NetDataApiImpl implements NetDataApi{
     }
 
     @Override
-    public Observable<PublisherModel> queryPublisherDetail(long id) {
+    public Observable<PublisherInfo> queryPublisherDetail(long id) {
         Log.v(TAG,"queryPublisherDetail()");
 
         if(NetConnectionUtils.isNetworkConnected()) {
@@ -69,9 +98,9 @@ public class NetDataApiImpl implements NetDataApi{
 
             if (httpApi != null) {
                 final String json = httpApi.getData();
-                return Observable.create(new Observable.OnSubscribe<PublisherModel>() {
+                return Observable.create(new Observable.OnSubscribe<PublisherInfo>() {
                     @Override
-                    public void call(Subscriber<? super PublisherModel> subscriber) {
+                    public void call(Subscriber<? super PublisherInfo> subscriber) {
                         if (json != null) {
                             subscriber.onNext(PublisherJsonMapper.transform(json));
                         } else {
@@ -82,19 +111,14 @@ public class NetDataApiImpl implements NetDataApi{
                 });
             }
         }else{
-            return Observable.create(new Observable.OnSubscribe<PublisherModel>() {
-                @Override
-                public void call(Subscriber<? super PublisherModel> subscriber) {
-                    subscriber.onError(new NetNoConnectionException("network is not connected"));
-                }
-            });
+            return null;
         }
 
         return null;
     }
 
     @Override
-    public Observable<List<GoodsModel>> queryLatestGoodsList() {
+    public Observable<List<PublishGoodsInfo>> queryLatestGoodsList() {
         Log.v(TAG,"queryLatestGoodsList()");
 
         if(NetConnectionUtils.isNetworkConnected()) {
@@ -102,9 +126,9 @@ public class NetDataApiImpl implements NetDataApi{
             if (httpUri != null) {
                 final String json = httpUri.getData();
 
-                return Observable.create(new Observable.OnSubscribe<List<GoodsModel>>() {
+                return Observable.create(new Observable.OnSubscribe<List<PublishGoodsInfo>>() {
                     @Override
-                    public void call(Subscriber<? super List<GoodsModel>> subscriber) {
+                    public void call(Subscriber<? super List<PublishGoodsInfo>> subscriber) {
                         if (json != null) {
                             subscriber.onNext(GoodsJsonMapper.transformToList(json));
                         } else {
@@ -116,19 +140,14 @@ public class NetDataApiImpl implements NetDataApi{
 
             }
         }else{
-            return Observable.create(new Observable.OnSubscribe<List<GoodsModel>>() {
-                @Override
-                public void call(Subscriber<? super List<GoodsModel>> subscriber) {
-                    subscriber.onError(new NetNoConnectionException("network is not connected"));
-                }
-            });
+            return null;
         }
 
         return null;
     }
 
     @Override
-    public Observable<RepoResponseCode> followPublisher(PublisherModel publisher) {
+    public Observable<RepoResponseCode> followPublisher(PublisherInfo publisher) {
         Log.v(TAG,"followPublisher(): publisher = " + publisher);
 
         int responseCode = RepoResponseCode.RESP_SUCCESS;

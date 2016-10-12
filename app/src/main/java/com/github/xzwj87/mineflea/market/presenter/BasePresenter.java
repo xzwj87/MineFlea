@@ -6,7 +6,7 @@ package com.github.xzwj87.mineflea.market.presenter;
 
 public interface BasePresenter {
 
-    void onCreate();
+    void init();
 
     void onPause();
 
