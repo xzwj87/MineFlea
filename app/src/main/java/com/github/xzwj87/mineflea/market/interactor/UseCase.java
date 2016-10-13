@@ -27,8 +27,6 @@ public abstract class UseCase {
         mExecutor = executor;
     }
 
-    public abstract void setData(PublishGoodsInfo info);
-
     public abstract void execute(Subscriber subscriber);
 
     public void unSubscribe(){

@@ -9,6 +9,7 @@ import com.avos.avoscloud.SaveCallback;
 import com.github.xzwj87.mineflea.market.data.DataSource;
 import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
 import com.github.xzwj87.mineflea.market.data.repository.BaseRepository;
+import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.ModelConstants;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.PublisherInfo;
@@ -18,11 +19,18 @@ import com.github.xzwj87.mineflea.utils.NetConnectionUtils;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
+import butterknife.BindView;
 import rx.Observable;
 
 /**
  * Created by JasonWang on 2016/9/20.
  */
+
+@PerActivity
 public class MineFleaCloudSource implements DataSource{
     public static final String TAG = MineFleaCloudSource.class.getSimpleName();
 
@@ -30,8 +38,9 @@ public class MineFleaCloudSource implements DataSource{
     private static MineFleaCloudSource sInstance;
     private CloudSourceCallback mCloudCallback;
 
-    public MineFleaCloudSource(NetDataApi netApi){
-        mNetApi = (NetDataApiImpl)netApi;
+    @Inject
+    public MineFleaCloudSource(@Named("netApi") NetDataApiImpl netApi){
+        mNetApi = netApi;
     }
 
     public void setCloudCallback(CloudSourceCallback callback){
@@ -73,20 +82,20 @@ public class MineFleaCloudSource implements DataSource{
                 public void done(AVException e) {
                     Log.v(TAG,"saveInBackground(): done");
 
+                    final Message msg = new Message();
                     int code = RepoResponseCode.RESP_SUCCESS;
                     if(e == null){
-                        goods.setId(avObject.getObjectId());
+                        msg.obj = avObject.getObjectId();
                     }else{
-                        goods.setId("");
+                        msg.obj = "dummy";
                         code = RepoResponseCode.RESP_AV_SAVED_FAILURE;
                     }
 
                     Log.v(TAG,"publishGoods(): goods = " + goods);
 
-                    final Message msg = new Message();
+
                     msg.arg1 = code;
-                    msg.obj = goods.getId();
-                    mCloudCallback.publishComplete(new Message());
+                    mCloudCallback.publishComplete(msg);
                 }
             });
 

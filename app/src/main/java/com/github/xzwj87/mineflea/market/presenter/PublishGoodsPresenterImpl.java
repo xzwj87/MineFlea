@@ -4,6 +4,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.github.xzwj87.mineflea.market.interactor.DefaultSubscriber;
+import com.github.xzwj87.mineflea.market.interactor.PublishGoodsUseCase;
 import com.github.xzwj87.mineflea.market.interactor.UseCase;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
@@ -22,13 +23,13 @@ import javax.inject.Named;
 public class PublishGoodsPresenterImpl implements PublishGoodsPresenter {
     public static final String TAG = PublishGoodsPresenterImpl.class.getSimpleName();
 
-    private UseCase mPublishGoodsUseCase;
+    private PublishGoodsUseCase mPublishGoodsUseCase;
     private PublishGoodsView mView;
     private PublishGoodsInfo mGoodsInfo;
 
     @Inject
     public PublishGoodsPresenterImpl(@Named("publishGoods") UseCase useCase){
-        mPublishGoodsUseCase = useCase;
+        mPublishGoodsUseCase = (PublishGoodsUseCase)useCase;
     }
 
     public void setPublishGoodsView(PublishGoodsView view){
@@ -70,6 +71,11 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter {
     }
 
     @Override
+    public void setLocation(String loc) {
+        mGoodsInfo.setLocation(loc);
+    }
+
+    @Override
     public void setGoodsImgUrl(List<String> urls) {
         mGoodsInfo.setImageUri(urls);
     }
@@ -93,7 +99,6 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter {
         @Override
         public void onNext(Message message){
             Log.v(TAG,"onNext(): message =  " + message.arg1);
-
         }
 
         @Override

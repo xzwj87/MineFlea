@@ -1,15 +1,15 @@
 package com.github.xzwj87.mineflea.market.data.local;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
-import android.os.Message;
 import android.util.Log;
 
+import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.data.DataSource;
 import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
+import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.PublisherInfo;
 
@@ -20,12 +20,16 @@ import com.github.xzwj87.mineflea.market.model.mapper.PublisherModelMapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import rx.Observable;
 import rx.Subscriber;
 
 /**
  * Created by JasonWang on 2016/9/20.
  */
+
+@PerActivity
 public class MineFleaLocalSource implements DataSource{
     public static final String TAG = MineFleaLocalSource.class.getSimpleName();
 
@@ -63,47 +67,39 @@ public class MineFleaLocalSource implements DataSource{
         sUriMatcher.addURI(AUTHORITY,MineFleaContract.PATH_PUBLISHED_GOODS,PUBLISHED_GOODS_WITH_ID);
     }
 
-
-    public MineFleaLocalSource(Context context){
-        mDbHelper = MineFleaDbHelper.getInstance(context);
+    @Inject
+    public MineFleaLocalSource(){
+        mDbHelper = MineFleaDbHelper.getInstance(AppGlobals.getAppContext());
     }
 
-    public static MineFleaLocalSource getInstance(Context context){
+    public static MineFleaLocalSource getInstance(){
         if(sInstance == null){
-            sInstance = new MineFleaLocalSource(context);
+            sInstance = new MineFleaLocalSource();
         }
 
         return sInstance;
     }
 
-
     @Override
     public void publishGoods(PublishGoodsInfo goods) {
-        Log.v(TAG,"publishGoods(): goods = " + goods);
-
         ContentValues cv = GoodsModelMapper.map(goods);
 
-        long id = insert(PublishedGoodsEntry.TABLE_PUBLISHER_GOODS,cv);
+        long id = insert(PublishGoodsEntry.TABLE_PUBLISHER_GOODS,cv);
 
-        int code = RepoResponseCode.RESP_SUCCESS;
-        if(id == -1){
-            code = RepoResponseCode.RESP_DATABASE_SQL_ERROR;
-        }
-
-        final RepoResponseCode response = new RepoResponseCode(code);
+        Log.v(TAG,"publishGoods(): goods id = " + id);
     }
 
     @Override
     public Observable<PublishGoodsInfo> queryPublishedGoodsDetail(long id) {
         Log.v(TAG,"queryPublishedGoodsDetail(): id = " + id);
 
-        final String selection = PublishedGoodsEntry._ID + " =? " + id;
+        final String selection = PublishGoodsEntry._ID + " =? " + id;
 
 
         return Observable.create(new Observable.OnSubscribe<PublishGoodsInfo>() {
             @Override
             public void call(Subscriber<? super PublishGoodsInfo> subscriber) {
-                Cursor c = query(PublishedGoodsEntry.TABLE_PUBLISHER_GOODS,
+                Cursor c = query(PublishGoodsEntry.TABLE_PUBLISHER_GOODS,
                         null,selection,null,null);
                 if(c != null) {
                     c.moveToFirst();
@@ -125,8 +121,8 @@ public class MineFleaLocalSource implements DataSource{
         return Observable.create(new Observable.OnSubscribe<List<PublishGoodsInfo>>() {
             @Override
             public void call(Subscriber<? super List<PublishGoodsInfo>> subscriber) {
-                String sortBy = PublishedGoodsEntry.COL_RELEASE_DATE + " ASC";
-                Cursor c = query(PublishedGoodsEntry.TABLE_PUBLISHER_GOODS,
+                String sortBy = PublishGoodsEntry.COL_RELEASE_DATE + " ASC";
+                Cursor c = query(PublishGoodsEntry.TABLE_PUBLISHER_GOODS,
                         null,null,null,sortBy);
 
                 if(c != null) {

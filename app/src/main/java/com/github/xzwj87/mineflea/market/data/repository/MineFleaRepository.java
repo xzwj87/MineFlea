@@ -8,30 +8,34 @@ import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
 import com.github.xzwj87.mineflea.market.data.local.MineFleaLocalSource;
 import com.github.xzwj87.mineflea.market.data.remote.MineFleaCloudSource;
 import com.github.xzwj87.mineflea.market.interactor.PublishCallBack;
+import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.PublisherInfo;
 
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import rx.Observable;
 
 /**
  * Created by JasonWang on 2016/9/20.
  */
+
+// TODO: Create/Query/Update/Delete
+@PerActivity
 public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.CloudSourceCallback{
     public static final String TAG = MineFleaRepository.class.getSimpleName();
 
     private MineFleaLocalSource mLocalSrc;
-    private MineFleaCloudSource mCloudSrc;
+    @Inject MineFleaCloudSource mCloudSrc;
     private PublishCallBack mCb;
+    private PublishGoodsInfo mGoodsInfo;
 
     @Inject
-    public MineFleaRepository(){
-        mLocalSrc = MineFleaLocalSource.getInstance(AppGlobals.getAppContext());
-        mCloudSrc = MineFleaCloudSource.getInstance();
-        mCloudSrc.setCloudCallback(this);
+    public MineFleaRepository(@Named("localResource") MineFleaLocalSource localSource,
+                              @Named("remoteResource") MineFleaCloudSource cloudSource){
     }
 
     public void setPublishCallback(PublishCallBack callBack){
@@ -42,8 +46,9 @@ public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.Cl
     public void publishGoods(PublishGoodsInfo goods) {
         Log.v(TAG,"publishGoods(): goods = " + goods);
 
-        //mLocalSrc.publishGoods(goods);
+        mCloudSrc.setCloudCallback(this);
 
+        mGoodsInfo = goods;
         mCloudSrc.publishGoods(goods);
     }
 
@@ -120,7 +125,11 @@ public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.Cl
 
     @Override
     public void publishComplete(Message message) {
-        Log.v(TAG,"publishComplete()");
+        Log.v(TAG,"publishComplete(): goods id = " + message.obj);
+
+        mGoodsInfo.setId((String)message.obj);
+        mLocalSrc.publishGoods(mGoodsInfo);
+
         mCb.onPublishComplete(message);
     }
 }

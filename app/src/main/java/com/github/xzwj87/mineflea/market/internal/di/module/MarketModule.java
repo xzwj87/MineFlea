@@ -13,6 +13,7 @@ import com.github.xzwj87.mineflea.market.net.NetDataApi;
 import com.github.xzwj87.mineflea.market.net.NetDataApiImpl;
 
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -34,26 +35,27 @@ public class MarketModule {
 
     @PerActivity @Provides
     @Named("netApi")
-    NetDataApi provideNetApi(){
+    NetDataApiImpl provideNetApi(){
         return new NetDataApiImpl();
     }
 
     @PerActivity @Provides
     @Named("localResource")
-    MineFleaLocalSource provideLocalResource(Context context){
-        return new MineFleaLocalSource(context);
+    MineFleaLocalSource provideLocalResource(){
+        return new MineFleaLocalSource();
     }
 
     @PerActivity @Provides
     @Named("remoteResource")
-    MineFleaCloudSource provideRemoteResource(NetDataApi netApi){
+    MineFleaCloudSource provideRemoteResource(NetDataApiImpl netApi){
         return new MineFleaCloudSource(netApi);
     }
 
     @PerActivity @Provides
     @Named("dataRepository")
-    MineFleaRepository provideRepository(){
-        return new MineFleaRepository();
+    MineFleaRepository provideRepository(MineFleaLocalSource localSource,
+                                         MineFleaCloudSource cloudSource){
+        return new MineFleaRepository(localSource,cloudSource);
     }
 
     @PerActivity @Provides

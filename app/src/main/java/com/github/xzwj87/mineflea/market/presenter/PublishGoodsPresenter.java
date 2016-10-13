@@ -15,5 +15,6 @@ public interface PublishGoodsPresenter extends BasePresenter{
     void setGoodsLowPrice(double price);
     void setGoodsHighPrice(double price);
     void setGoodsNote(String note);
+    void setLocation(String loc);
     void setGoodsImgUrl(List<String> url);
 }

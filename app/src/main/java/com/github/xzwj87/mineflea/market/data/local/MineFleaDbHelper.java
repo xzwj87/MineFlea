@@ -35,28 +35,26 @@ public class MineFleaDbHelper extends SQLiteOpenHelper {
             FavorPublisherEntry.COL_FOLLOWERS + INTEGER + COMMA_SEP +
             FavorPublisherEntry.COL_GOODS_COUNT + INTEGER + COMMA_SEP +
             FavorPublisherEntry.COL_LOCATION + TEXT + COMMA_SEP +
-            FavorPublisherEntry.COL_DISTANCE + TEXT + COMMA_SEP +
+            FavorPublisherEntry.COL_DISTANCE + TEXT +
             " )";
 
     public static final String SQL_DELETE_TABLE_FAVOR = "DROP TABLE IF EXITS " +
             FavorPublisherEntry.TABLE_PUBLISHER;
-    public static final String SQL_DELETE_TABLE_RELEASE = "DROP TABLE IF EXITS " +
-            PublishedGoodsEntry.TABLE_PUBLISHER_GOODS;
+    public static final String SQL_DELETE_TABLE_PUBLISH_GOODS = "DROP TABLE IF EXITS " +
+            PublishGoodsEntry.TABLE_PUBLISHER_GOODS;
 
 
-    public static final String SQL_CREATE_TABLE_RELEASE = "CREATE TABLE " +
-            PublishedGoodsEntry.TABLE_PUBLISHER_GOODS + " (" +
-            PublishedGoodsEntry._ID + " PRIMARY KEY" + COMMA_SEP +
-            PublishedGoodsEntry.COL_PUBLISHER_ID + INTEGER_NOT_NULL + COMMA_SEP +
-            PublishedGoodsEntry.COL_PUBLISHER_NAME + TEXT_NOT_NULL + COMMA_SEP +
-            PublishedGoodsEntry.COL_TELEPHONE_NUMBER + TEXT + COMMA_SEP +
-            PublishedGoodsEntry.COL_GOODS_ID + INTEGER + COMMA_SEP +
-            PublishedGoodsEntry.COL_GOODS_NAME + TEXT_NOT_NULL + COMMA_SEP +
-            PublishedGoodsEntry.COL_HIGH_PRICE + REAL + COMMA_SEP +
-            PublishedGoodsEntry.COL_LOW_PRICE + REAL + COMMA_SEP +
-            PublishedGoodsEntry.COL_PLACE + TEXT + COMMA_SEP +
-            PublishedGoodsEntry.COL_RELEASE_DATE + INTEGER_NOT_NULL + COMMA_SEP +
-            PublishedGoodsEntry.COL_NOTE + TEXT +
+    public static final String SQL_CREATE_TABLE_PUBLISH_GOODS = "CREATE TABLE " +
+            PublishGoodsEntry.TABLE_PUBLISHER_GOODS + " (" +
+            PublishGoodsEntry._ID + " PRIMARY KEY" + COMMA_SEP +
+            PublishGoodsEntry.COL_PUBLISHER_ID + TEXT_NOT_NULL + COMMA_SEP +
+            PublishGoodsEntry.COL_GOODS_ID + TEXT_NOT_NULL + COMMA_SEP +
+            PublishGoodsEntry.COL_GOODS_NAME + TEXT_NOT_NULL + COMMA_SEP +
+            PublishGoodsEntry.COL_HIGH_PRICE + REAL + COMMA_SEP +
+            PublishGoodsEntry.COL_LOW_PRICE + REAL + COMMA_SEP +
+            PublishGoodsEntry.COL_LOCATION + TEXT + COMMA_SEP +
+            PublishGoodsEntry.COL_NOTE + TEXT + COMMA_SEP +
+            PublishGoodsEntry.COL_RELEASE_DATE + INTEGER_NOT_NULL +
             " )";
 
     private static MineFleaDbHelper sInstance;
@@ -80,7 +78,7 @@ public class MineFleaDbHelper extends SQLiteOpenHelper {
         Log.v(TAG,"onCreate()");
 
         db.execSQL(SQL_CREATE_TABLE_FAVOR);
-        db.execSQL(SQL_CREATE_TABLE_RELEASE);
+        db.execSQL(SQL_CREATE_TABLE_PUBLISH_GOODS);
     }
 
     @Override
@@ -89,7 +87,7 @@ public class MineFleaDbHelper extends SQLiteOpenHelper {
                 ")-> newVersion(" + newVersion +")");
 
         db.execSQL(SQL_DELETE_TABLE_FAVOR);
-        db.execSQL(SQL_DELETE_TABLE_RELEASE);
+        db.execSQL(SQL_DELETE_TABLE_PUBLISH_GOODS);
 
         onCreate(db);
     }
