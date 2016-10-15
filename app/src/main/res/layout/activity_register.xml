@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_vertical_margin"
+    android:fitsSystemWindows="true"
+    tools:context=".market.ui.activity.RegisterActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/name_input_layout"
+                    android:layout_marginEnd="48dp"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/et_user_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="@string/prompt_name"
+                        android:inputType="textPersonName"
+                        android:maxLines="1"
+                        android:textSize="@dimen/edit_text_size"
+                        android:drawableLeft="@drawable/ic_user_name_grey_24dp"
+                        android:drawablePadding="@dimen/drawable_padding" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/add_header_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/ic_camera_grey_48dp"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true" />
+
+            </RelativeLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <AutoCompleteTextView
+                    android:id="@+id/atv_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_email_register"
+                    android:inputType="textEmailAddress"
+                    android:textSize="@dimen/edit_text_size"
+                    android:maxLines="1"
+                    android:drawableLeft="@drawable/ic_email_grey_24dp"
+                    android:drawablePadding="@dimen/drawable_padding"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/et_tel_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_tel_number"
+                    android:inputType="textPhonetic"
+                    android:textSize="@dimen/edit_text_size"
+                    android:maxLines="1"
+                    android:drawableLeft="@drawable/ic_phone_grey_24dp"
+                    android:drawablePadding="@dimen/drawable_padding"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/et_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_password"
+                    android:inputType="textPassword"
+                    android:textSize="@dimen/edit_text_size"
+                    android:maxLines="1"
+                    android:drawableLeft="@drawable/ic_lock_grey_24dp"
+                    android:drawablePadding="@dimen/drawable_padding"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/btn_register"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/action_register"
+                android:textStyle="bold"
+                android:elevation="3dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>
