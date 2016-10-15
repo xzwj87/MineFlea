@@ -39,4 +39,7 @@
 
     <string name="publish_goods_success">Publish goods successfully</string>
     <string name="publish_goods_error">Fail to publish goods</string>
+
+    <string name="clear_map">clear_map</string>
+    <string name="reset_map">reset_map</string>
 </resources>
