@@ -8,4 +8,7 @@
     <dimen name="goods_item_margin">12dp</dimen>
 
     <dimen name="input_text_size">16sp</dimen>
+    <dimen name="edit_text_size">14sp</dimen>
+
+    <dimen name="drawable_padding">16dp</dimen>
 </resources>
