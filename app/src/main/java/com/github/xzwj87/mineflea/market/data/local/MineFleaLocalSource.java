@@ -95,7 +95,6 @@ public class MineFleaLocalSource implements DataSource{
         Log.v(TAG,"register(): not supported");
     }
 
-    @Override
     public Observable<PublishGoodsInfo> queryPublishedGoodsDetail(long id) {
         Log.v(TAG,"queryPublishedGoodsDetail(): id = " + id);
 
@@ -120,7 +119,6 @@ public class MineFleaLocalSource implements DataSource{
         });
     }
 
-    @Override
     public Observable<List<PublishGoodsInfo>> queryPublishedGoodsList() {
         Log.v(TAG,"queryPublishedGoodsList()");
 
@@ -147,7 +145,6 @@ public class MineFleaLocalSource implements DataSource{
         });
     }
 
-    @Override
     public Observable<RepoResponseCode> favorGoods(PublishGoodsInfo goods) {
         Log.v(TAG,"favorGoods(): goods = " + goods);
         ContentValues cv = GoodsModelMapper.map(goods);
@@ -169,7 +166,6 @@ public class MineFleaLocalSource implements DataSource{
         });
     }
 
-    @Override
     public Observable<PublishGoodsInfo> queryFavorGoodsDetail(long id) {
         Log.v(TAG,"queryFavorGoodsDetail(): id = " + id);
 
@@ -194,7 +190,6 @@ public class MineFleaLocalSource implements DataSource{
         });
     }
 
-    @Override
     public Observable<List<PublishGoodsInfo>> queryFavorGoodsList() {
         Log.v(TAG,"queryFavorGoodsList()");
 
@@ -222,7 +217,6 @@ public class MineFleaLocalSource implements DataSource{
         });
     }
 
-    @Override
     public Observable<PublisherInfo> queryPublisherDetail(long id) {
         Log.v(TAG,"queryPublisherDetail(): id = " + id);
 
@@ -245,7 +239,6 @@ public class MineFleaLocalSource implements DataSource{
         });
     }
 
-    @Override
     public Observable<List<PublisherInfo>> queryPublisherList() {
         Log.v(TAG,"queryPublisherList()");
 
@@ -270,13 +263,11 @@ public class MineFleaLocalSource implements DataSource{
     }
 
 
-    @Override
     public Observable<List<PublishGoodsInfo>> queryLatestGoodsList() {
         throw new UnsupportedOperationException(
                 "it should be queried in remote data source");
     }
 
-    @Override
     public Observable<RepoResponseCode> followPublisher(PublisherInfo publisher) {
         throw new UnsupportedOperationException(
                 "it should be called in remote data source");

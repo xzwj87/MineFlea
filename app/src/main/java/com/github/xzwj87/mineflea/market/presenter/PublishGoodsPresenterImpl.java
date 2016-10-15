@@ -3,11 +3,10 @@ package com.github.xzwj87.mineflea.market.presenter;
 import android.os.Message;
 import android.util.Log;
 
-import com.github.xzwj87.mineflea.market.interactor.DefaultSubscriber;
-import com.github.xzwj87.mineflea.market.interactor.PublishGoodsUseCase;
-import com.github.xzwj87.mineflea.market.interactor.UseCase;
+import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
+import com.github.xzwj87.mineflea.market.presenter.callback.PublishCallBack;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.PublishGoodsView;
 
@@ -21,16 +20,17 @@ import javax.inject.Named;
  */
 
 @PerActivity
-public class PublishGoodsPresenterImpl implements PublishGoodsPresenter {
+public class PublishGoodsPresenterImpl implements PublishGoodsPresenter,
+        PublishCallBack{
     public static final String TAG = PublishGoodsPresenterImpl.class.getSimpleName();
 
-    private PublishGoodsUseCase mPublishGoodsUseCase;
+    private MineFleaRepository mRepository;
     private PublishGoodsView mView;
     private PublishGoodsInfo mGoodsInfo;
 
     @Inject
-    public PublishGoodsPresenterImpl(@Named("publishGoods") UseCase useCase){
-        mPublishGoodsUseCase = (PublishGoodsUseCase)useCase;
+    public PublishGoodsPresenterImpl(@Named("dataRepository") MineFleaRepository repository){
+        mRepository = repository;
     }
 
     @Override
@@ -41,13 +41,14 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter {
     @Override
     public void init() {
         mGoodsInfo = new PublishGoodsInfo();
+        mRepository.init();
+        mRepository.setPublishCallback(this);
     }
 
     @Override
     public void publishGoods() {
 
-        mPublishGoodsUseCase.setData(mGoodsInfo);
-        mPublishGoodsUseCase.execute(new PublishGoodsSubscriber());
+        mRepository.publishGoods(mGoodsInfo);
 
         mView.finishView();
     }
@@ -84,7 +85,6 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter {
 
     @Override
     public void onPause() {
-        mPublishGoodsUseCase.unSubscribe();
     }
 
     @Override
@@ -92,21 +92,8 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter {
         mGoodsInfo = null;
     }
 
+    @Override
+    public void onPublishComplete(Message message) {
 
-    private class PublishGoodsSubscriber extends DefaultSubscriber<Message>{
-
-        @Override
-        public void onCompleted(){}
-
-        @Override
-        public void onNext(Message message){
-            Log.v(TAG,"onNext(): message =  " + message.arg1);
-        }
-
-        @Override
-        public void onError(Throwable e){
-
-        }
     }
-
 }

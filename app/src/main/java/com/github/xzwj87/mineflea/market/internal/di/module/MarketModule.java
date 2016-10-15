@@ -6,11 +6,7 @@ import com.github.xzwj87.mineflea.market.data.local.MineFleaLocalSource;
 import com.github.xzwj87.mineflea.market.data.remote.MineFleaCloudSource;
 import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
 import com.github.xzwj87.mineflea.market.executor.JobExecutor;
-import com.github.xzwj87.mineflea.market.interactor.PublishGoodsUseCase;
-import com.github.xzwj87.mineflea.market.interactor.RegisterUseCase;
-import com.github.xzwj87.mineflea.market.interactor.UseCase;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
-import com.github.xzwj87.mineflea.market.net.NetDataApi;
 import com.github.xzwj87.mineflea.market.net.NetDataApiImpl;
 
 import javax.inject.Named;
@@ -58,17 +54,4 @@ public class MarketModule {
                                          MineFleaCloudSource cloudSource){
         return new MineFleaRepository(localSource,cloudSource);
     }
-
-    @PerActivity @Provides
-    @Named("publishGoods")
-    UseCase providePublishUseCase(MineFleaRepository repository,JobExecutor executor){
-        return new PublishGoodsUseCase(repository,executor);
-    }
-
-    @PerActivity @Provides
-    @Named("register")
-    UseCase providerRegisterUseCase(MineFleaRepository repository,JobExecutor jobExecutor){
-        return new RegisterUseCase(repository,jobExecutor);
-    }
-
 }

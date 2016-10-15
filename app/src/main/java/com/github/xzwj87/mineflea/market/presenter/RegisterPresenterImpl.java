@@ -4,11 +4,10 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.github.xzwj87.mineflea.market.interactor.DefaultSubscriber;
-import com.github.xzwj87.mineflea.market.interactor.RegisterUseCase;
-import com.github.xzwj87.mineflea.market.interactor.UseCase;
+import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
+import com.github.xzwj87.mineflea.market.presenter.callback.RegisterCallBack;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.RegisterView;
 import com.github.xzwj87.mineflea.utils.UserInfoUtils;
@@ -21,16 +20,17 @@ import javax.inject.Named;
  */
 
 @PerActivity
-public class RegisterPresenterImpl implements RegisterPresenter{
+public class RegisterPresenterImpl implements RegisterPresenter,
+        RegisterCallBack{
     public static final String TAG = RegisterPresenterImpl.class.getSimpleName();
 
+    private MineFleaRepository mRepository;
     private RegisterView mView;
-    private RegisterUseCase mUseCase;
     private UserInfo mUserInfo;
 
     @Inject
-    public RegisterPresenterImpl(@Named("register")UseCase useCase){
-        mUseCase = (RegisterUseCase)useCase;
+    public RegisterPresenterImpl(@Named("dataRepository") MineFleaRepository repository){
+        mRepository = repository;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class RegisterPresenterImpl implements RegisterPresenter{
     @Override
     public void register() {
         Log.v(TAG,"register()");
-        mUseCase.register(mUserInfo);
+        mRepository.register(mUserInfo);
     }
 
     @Override
@@ -96,12 +96,13 @@ public class RegisterPresenterImpl implements RegisterPresenter{
     @Override
     public void init() {
         mUserInfo = new UserInfo();
-        mUseCase.execute(new RegisterSubscriber());
+        mRepository.init();
+        mRepository.setRegisterCallback(this);
     }
 
     @Override
     public void onPause() {
-        mUseCase.unSubscribe();
+
     }
 
     @Override
@@ -109,25 +110,14 @@ public class RegisterPresenterImpl implements RegisterPresenter{
 
     }
 
-    private class RegisterSubscriber extends DefaultSubscriber<Message>{
-        @Override
-        public void onCompleted(){}
+    @Override
+    public void onRegisterComplete(Message message) {
+        Log.v(TAG,"onRegisterComplete(): user id " + message.obj);
 
-        @Override
-        public void onNext(Message message){
-            Log.v(TAG,"onNext(): message =  " + message.arg1);
-
-            if(message.obj != null){
-                mView.onRegisterComplete(true);
-            }else {
-                mView.onRegisterComplete(false);
-            }
-        }
-
-        @Override
-        public void onError(Throwable e){
-
+        if(message.obj != null){
+            mView.onRegisterComplete(true);
+        }else {
+            mView.onRegisterComplete(false);
         }
     }
-
 }

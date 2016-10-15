@@ -1,4 +1,4 @@
-package com.github.xzwj87.mineflea.market.interactor;
+package com.github.xzwj87.mineflea.market.presenter.callback;
 
 import android.os.Message;
 

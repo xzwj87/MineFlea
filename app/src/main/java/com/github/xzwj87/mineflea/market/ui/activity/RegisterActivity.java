@@ -1,12 +1,8 @@
 package com.github.xzwj87.mineflea.market.ui.activity;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.hardware.usb.UsbRequest;
 import android.os.Bundle;
-import android.os.Message;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -16,7 +12,6 @@ import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.internal.di.HasComponent;
 import com.github.xzwj87.mineflea.market.internal.di.component.DaggerMarketComponent;
 import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
-import com.github.xzwj87.mineflea.market.internal.di.module.MarketModule;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.RegisterPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.RegisterView;
