@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
 import com.github.xzwj87.mineflea.market.data.DataSource;
 import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
@@ -13,6 +14,7 @@ import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.ModelConstants;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.PublisherInfo;
+import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.net.NetDataApi;
 import com.github.xzwj87.mineflea.market.net.NetDataApiImpl;
 import com.github.xzwj87.mineflea.utils.NetConnectionUtils;
@@ -57,6 +59,7 @@ public class MineFleaCloudSource implements DataSource{
 
     public interface CloudSourceCallback{
         void publishComplete(Message message);
+        void registerComplete(Message message);
     }
 
     /**
@@ -102,6 +105,34 @@ public class MineFleaCloudSource implements DataSource{
         }else{
             // broadcast to upper layer about network state
         }
+    }
+
+    @Override
+    public void register(UserInfo userInfo) {
+        Log.v(TAG,"register(): user info " + userInfo);
+
+        final AVUser avUser = new AVUser();
+
+        avUser.setUsername(userInfo.getUserName());
+        avUser.setEmail(userInfo.getUserEmail());
+        avUser.setMobilePhoneNumber(userInfo.getUserTelNumber());
+        avUser.setPassword(userInfo.getUserPwd());
+
+        avUser.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                final Message msg = new Message();
+                if(e == null){
+                    msg.obj = avUser.getObjectId();
+                    msg.arg1 = RepoResponseCode.RESP_REGISTER_SUCCESS;
+                }else{
+                    msg.obj = "dummy";
+                    msg.arg1 = RepoResponseCode.RESP_REGISTER_FAIL;
+                }
+
+                mCloudCallback.registerComplete(msg);
+            }
+        });
     }
 
     /**

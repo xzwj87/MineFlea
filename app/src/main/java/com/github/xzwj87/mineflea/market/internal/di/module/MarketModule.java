@@ -7,6 +7,7 @@ import com.github.xzwj87.mineflea.market.data.remote.MineFleaCloudSource;
 import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
 import com.github.xzwj87.mineflea.market.executor.JobExecutor;
 import com.github.xzwj87.mineflea.market.interactor.PublishGoodsUseCase;
+import com.github.xzwj87.mineflea.market.interactor.RegisterUseCase;
 import com.github.xzwj87.mineflea.market.interactor.UseCase;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.net.NetDataApi;
@@ -64,5 +65,10 @@ public class MarketModule {
         return new PublishGoodsUseCase(repository,executor);
     }
 
+    @PerActivity @Provides
+    @Named("register")
+    UseCase providerRegisterUseCase(MineFleaRepository repository,JobExecutor jobExecutor){
+        return new RegisterUseCase(repository,jobExecutor);
+    }
 
 }

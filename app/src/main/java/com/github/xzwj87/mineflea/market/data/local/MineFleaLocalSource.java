@@ -14,6 +14,7 @@ import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.PublisherInfo;
 
 import com.github.xzwj87.mineflea.market.data.local.MineFleaContract.*;
+import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.model.mapper.GoodsModelMapper;
 import com.github.xzwj87.mineflea.market.model.mapper.PublisherModelMapper;
 
@@ -87,6 +88,11 @@ public class MineFleaLocalSource implements DataSource{
         long id = insert(PublishGoodsEntry.TABLE_PUBLISHER_GOODS,cv);
 
         Log.v(TAG,"publishGoods(): goods id = " + id);
+    }
+
+    @Override
+    public void register(UserInfo userInfo) {
+        Log.v(TAG,"register(): not supported");
     }
 
     @Override

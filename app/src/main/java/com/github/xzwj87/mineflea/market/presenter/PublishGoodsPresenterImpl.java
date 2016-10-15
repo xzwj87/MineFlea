@@ -8,6 +8,7 @@ import com.github.xzwj87.mineflea.market.interactor.PublishGoodsUseCase;
 import com.github.xzwj87.mineflea.market.interactor.UseCase;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
+import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.PublishGoodsView;
 
 import java.util.List;
@@ -32,8 +33,9 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter {
         mPublishGoodsUseCase = (PublishGoodsUseCase)useCase;
     }
 
-    public void setPublishGoodsView(PublishGoodsView view){
-        mView = view;
+    @Override
+    public void setView(BaseView view){
+        mView = (PublishGoodsView)view;
     }
 
     @Override

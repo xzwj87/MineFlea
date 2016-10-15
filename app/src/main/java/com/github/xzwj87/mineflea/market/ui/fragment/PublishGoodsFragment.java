@@ -126,7 +126,7 @@ public class PublishGoodsFragment extends BaseFragment
 
         getComponent(MarketComponent.class).inject(this);
 
-        mPresenter.setPublishGoodsView(this);
+        mPresenter.setView(this);
         mPresenter.init();
 
         mFilePath = new ArrayList<>();

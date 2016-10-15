@@ -4,6 +4,7 @@ import android.os.Message;
 
 import com.github.xzwj87.mineflea.market.model.PublisherInfo;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
+import com.github.xzwj87.mineflea.market.model.UserInfo;
 
 import java.util.List;
 
@@ -19,6 +20,11 @@ public interface DataSource {
      * @source: local and remote
      */
     void publishGoods(PublishGoodsInfo goods);
+
+    /*
+     * register account
+     */
+    void register(UserInfo userInfo);
 
     /**
      * query the detail of a goods

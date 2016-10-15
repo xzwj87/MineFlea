@@ -3,14 +3,15 @@ package com.github.xzwj87.mineflea.market.data.repository;
 import android.os.Message;
 import android.util.Log;
 
-import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
 import com.github.xzwj87.mineflea.market.data.local.MineFleaLocalSource;
 import com.github.xzwj87.mineflea.market.data.remote.MineFleaCloudSource;
 import com.github.xzwj87.mineflea.market.interactor.PublishCallBack;
+import com.github.xzwj87.mineflea.market.interactor.RegisterCallBack;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.PublisherInfo;
+import com.github.xzwj87.mineflea.market.model.UserInfo;
 
 import java.util.List;
 
@@ -30,26 +31,42 @@ public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.Cl
 
     private MineFleaLocalSource mLocalSrc;
     @Inject MineFleaCloudSource mCloudSrc;
-    private PublishCallBack mCb;
+    private PublishCallBack mPublishCb;
+    private RegisterCallBack mRegisterCb;
     private PublishGoodsInfo mGoodsInfo;
 
     @Inject
     public MineFleaRepository(@Named("localResource") MineFleaLocalSource localSource,
                               @Named("remoteResource") MineFleaCloudSource cloudSource){
+        Log.v(TAG,"Constructor()");
+        mCloudSrc = cloudSource;
+        mLocalSrc = localSource;
+        //mCloudSrc.setCloudCallback(this);
     }
 
     public void setPublishCallback(PublishCallBack callBack){
-        mCb = callBack;
+        mPublishCb = callBack;
+    }
+
+    public void setRegisterCallback(RegisterCallBack callBack){
+        mRegisterCb = callBack;
+    }
+
+    public void init(){
+        mCloudSrc.setCloudCallback(this);
     }
 
     @Override
     public void publishGoods(PublishGoodsInfo goods) {
         Log.v(TAG,"publishGoods(): goods = " + goods);
 
-        mCloudSrc.setCloudCallback(this);
-
         mGoodsInfo = goods;
         mCloudSrc.publishGoods(goods);
+    }
+
+    @Override
+    public void register(UserInfo userInfo) {
+        mCloudSrc.register(userInfo);
     }
 
     @Override
@@ -130,6 +147,13 @@ public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.Cl
         mGoodsInfo.setId((String)message.obj);
         mLocalSrc.publishGoods(mGoodsInfo);
 
-        mCb.onPublishComplete(message);
+        mPublishCb.onPublishComplete(message);
+    }
+
+    @Override
+    public void registerComplete(Message message) {
+        Log.v(TAG,"registerComplete(): message " + message.obj);
+
+        mRegisterCb.onRegisterComplete(message);
     }
 }

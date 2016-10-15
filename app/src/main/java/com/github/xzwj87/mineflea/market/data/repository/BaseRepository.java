@@ -6,6 +6,7 @@ import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
 import com.github.xzwj87.mineflea.market.interactor.UseCase;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.PublisherInfo;
+import com.github.xzwj87.mineflea.market.model.UserInfo;
 
 import java.util.List;
 
@@ -20,6 +21,12 @@ public interface BaseRepository {
      * publish a goods
      */
     void publishGoods(PublishGoodsInfo goods);
+
+
+    /*
+     * register user
+     */
+    void register(UserInfo userInfo);
 
     /**
      * get a published goods detail by its id
