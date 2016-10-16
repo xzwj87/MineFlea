@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.github.xzwj87.mineflea.market.ui.fragment.DiscoverTabFragment;
 import com.github.xzwj87.mineflea.market.ui.fragment.TabHolderFragment;
 import com.github.xzwj87.mineflea.market.ui.fragment.UserCenterFragment;
 import com.github.xzwj87.mineflea.utils.StringResUtils;
@@ -15,6 +16,11 @@ public class SectionsPageAdapter extends FragmentPagerAdapter{
 
     public static final int NUMBER_OF_TABS = 3;
 
+    public static final int FRAGMENT_DISCOVER_TAB = 0;
+    public static final int FRAGMENT_NEARBY_TAB = 1;
+    public static final int FRAGMENT_SETTING_TAB = 2;
+
+
     public SectionsPageAdapter(FragmentManager fm){
         super(fm);
     }
@@ -23,13 +29,12 @@ public class SectionsPageAdapter extends FragmentPagerAdapter{
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
-        Fragment fragment;
         switch (position){
-            case 0:
+            case FRAGMENT_DISCOVER_TAB:
                 break;
-            case 1:
-                break;
-            case 2:
+            case FRAGMENT_NEARBY_TAB:
+                return DiscoverTabFragment.newInstance();
+            case FRAGMENT_SETTING_TAB:
                 return UserCenterFragment.newInstance();
         }
 
@@ -45,11 +50,11 @@ public class SectionsPageAdapter extends FragmentPagerAdapter{
     @Override
     public CharSequence getPageTitle(int position) {
         switch (position) {
-            case 0:
+            case FRAGMENT_DISCOVER_TAB:
                 return StringResUtils.getTabName(0);
-            case 1:
+            case FRAGMENT_NEARBY_TAB:
                 return StringResUtils.getTabName(1);
-            case 2:
+            case FRAGMENT_SETTING_TAB:
                 return StringResUtils.getTabName(2);
         }
 
