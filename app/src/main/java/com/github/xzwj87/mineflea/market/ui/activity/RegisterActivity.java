@@ -2,7 +2,6 @@ package com.github.xzwj87.mineflea.market.ui.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.hardware.usb.UsbRequest;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.AutoCompleteTextView;
@@ -82,7 +81,7 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
         String tel = mEtTelNumber.getText().toString();
         String pwd = mEtPwd.getText().toString();
 
-        mPresenter.setUserName(name);
+        mPresenter.setUserNickName(name);
         mPresenter.setUserEmail(email);
         mPresenter.setUserTel(tel);
         mPresenter.setUserPwd(pwd);
@@ -133,7 +132,7 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
 
         mEtName.setError(getString(R.string.error_invalid_user_name));
         mEtName.requestFocus();
-        mEtName.setError("");
+        //mEtName.setError("");
     }
 
     @Override
@@ -142,7 +141,7 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
 
         mAtvEmail.setText(getString(R.string.error_invalid_email));
         mAtvEmail.requestFocus();
-        mAtvEmail.setError("");
+        //mAtvEmail.setError("");
     }
 
     @Override
@@ -151,7 +150,7 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
 
         mEtTelNumber.setError(getString(R.string.error_invalid_user_tel));
         mEtTelNumber.requestFocus();
-        mEtTelNumber.setError("");
+        //mEtTelNumber.setError("");
     }
 
     @Override
@@ -160,7 +159,7 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
 
         mEtPwd.setError(getString(R.string.error_invalid_password));
         mEtPwd.requestFocus();
-        mEtPwd.setError("");
+        //mEtPwd.setError("");
     }
 
     @Override

@@ -55,4 +55,5 @@
     <string name="button_cancel">Cancel</string>
     <string name="register_progress_info">Registering, please wait for a while</string>
     <string name="error_publish_fail">Fail to publish goods</string>
+    <string name="prompt_login_incorrect_email_password">Incorrect Name or password</string>
 </resources>

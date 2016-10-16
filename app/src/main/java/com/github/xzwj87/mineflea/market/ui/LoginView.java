@@ -7,5 +7,12 @@ import android.os.Message;
  */
 
 public interface LoginView extends BaseView{
-    void onLoginComplete(Message message);
+    void onLoginSuccess();
+    void onLoginFail();
+    void showAccountInvalidMsg();
+    void showPwdInvalidMsg();
+
+    void updateUserHeadIcon(String url);
+    void updateUserNickName(String nickName);
+    void updateUserEmail(String email);
 }

@@ -95,6 +95,11 @@ public class MineFleaLocalSource implements DataSource{
         Log.v(TAG,"register(): not supported");
     }
 
+    @Override
+    public void login(UserInfo info) {
+
+    }
+
     public Observable<PublishGoodsInfo> queryPublishedGoodsDetail(long id) {
         Log.v(TAG,"queryPublishedGoodsDetail(): id = " + id);
 

@@ -6,7 +6,7 @@ package com.github.xzwj87.mineflea.market.presenter;
 
 public interface RegisterPresenter extends BasePresenter{
     void register();
-    void setUserName(String name);
+    void setUserNickName(String name);
     void setUserEmail(String email);
     void setUserTel(String tel);
     void setUserPwd(String pwd);

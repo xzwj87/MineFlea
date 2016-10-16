@@ -34,8 +34,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.xzwj87.mineflea.R;
+import com.github.xzwj87.mineflea.market.internal.di.component.DaggerMarketComponent;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
-import com.tencent.qc.stat.common.User;
+import com.github.xzwj87.mineflea.market.presenter.LoginPresenterImpl;
+import com.github.xzwj87.mineflea.market.ui.LoginView;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,9 +47,11 @@ import butterknife.OnClick;
 import butterknife.OnEditorAction;
 
 import static android.Manifest.permission.READ_CONTACTS;
+import static com.github.xzwj87.mineflea.utils.UserInfoUtils.isEmailValid;
 
 
-public class LoginActivity extends BaseActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends BaseActivity implements LoaderCallbacks<Cursor>,
+        LoginView{
     public static final String TAG = LoginActivity.class.getSimpleName();
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -60,11 +66,18 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     @BindView(R.id.btn_register) Button mBtnRegister;
     @BindView(R.id.btn_sign_in) Button mBtnEmailSignIn;
 
+    @Inject LoginPresenterImpl mPresenter;
+    private String mHeadIconUrl;
+    private String mNickName;
+    private String mEmail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+
+        init();
     }
 
     @OnEditorAction(R.id.et_password)
@@ -99,12 +112,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             switch (request) {
                 case REQUEST_USER_REGISTER:
                     if(result == RESULT_OK && data != null) {
-                        String email = data.getStringExtra(UserInfo.UER_EMAIL);
-                        String pwd = data.getStringExtra(UserInfo.USER_NAME);
-
-                        mEmailView.setText(email);
-                        mPasswordView.setText(pwd);
-
                         setResult(RESULT_OK, data);
                     }
                     break;
@@ -165,33 +172,15 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
-        boolean cancel = false;
-        View focusView = null;
+        mPresenter.setUserAccount(email);
+        mPresenter.setUserPwd(password);
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
+        // check user login info
+        if(mPresenter.validLoginInfo()){
+            mPresenter.login();
             showProgress(true);
+        }else{
+            showProgress(false);
         }
     }
 
@@ -201,20 +190,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         // start another activity
         Intent intent = new Intent(this,RegisterActivity.class);
         startActivityForResult(intent,REQUEST_USER_REGISTER);
-    }
-
-
-    private boolean isEmailValid(String email) {
-        Pattern pattern = Pattern.compile(UserInfo.VALIDATE_EMAIL_REGEX);
-        Matcher matcher = pattern.matcher(email);
-
-        return email.contains("@") || matcher.matches();
-    }
-
-    private boolean isPasswordValid(String password) {
-        if(TextUtils.isEmpty(password)) return false;
-
-        return password.length() >= UserInfo.MIN_PWD_LEN;
     }
 
 
@@ -290,6 +265,68 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         mEmailView.setAdapter(adapter);
     }
 
+    @Override
+    public void onLoginSuccess() {
+        Log.v(TAG,"onLoginSuccess()");
+
+        showProgress(false);
+
+        Intent intent = new Intent();
+        intent.putExtra(UserInfo.IS_LOGIN,true);
+        intent.putExtra(UserInfo.USER_NICK_NAME,mNickName);
+        intent.putExtra(UserInfo.UER_EMAIL,mEmail);
+        intent.putExtra(UserInfo.USER_HEAD_ICON,mHeadIconUrl);
+
+        setResult(RESULT_OK,intent);
+
+        finishView();
+    }
+
+    @Override
+    public void onLoginFail() {
+        Log.v(TAG,"onLoginFail()");
+
+        showToast(getString(R.string.prompt_login_incorrect_email_password));
+    }
+
+    @Override
+    public void showAccountInvalidMsg() {
+        // Check for a valid email address.
+        String email = mEmailView.getText().toString();
+        if (TextUtils.isEmpty(email)) {
+            mEmailView.setError(getString(R.string.error_field_required));
+        } else if (!isEmailValid(email)) {
+            mEmailView.setError(getString(R.string.error_invalid_email));
+        }
+        mEmailView.requestFocus();
+    }
+
+    @Override
+    public void showPwdInvalidMsg() {
+        mPasswordView.setError(getString(R.string.error_invalid_email));
+        mPasswordView.requestFocus();
+    }
+
+    @Override
+    public void updateUserHeadIcon(String url) {
+        mHeadIconUrl = url;
+    }
+
+    @Override
+    public void updateUserNickName(String nickName) {
+        mNickName = nickName;
+    }
+
+    @Override
+    public void updateUserEmail(String email) {
+        mEmail = email;
+    }
+
+    @Override
+    public void finishView() {
+        finish();
+    }
+
 
     private interface ProfileQuery {
         String[] PROJECTION = {
@@ -299,6 +336,21 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
         int ADDRESS = 0;
         int IS_PRIMARY = 1;
+    }
+
+    private void init() {
+        initInjector();
+
+        mPresenter.init();
+    }
+
+    private void initInjector(){
+        DaggerMarketComponent.builder()
+                             .appComponent(getAppComponent())
+                             .activityModule(getActivityModule())
+                             .build()
+                             .inject(this);
+        mPresenter.setView(this);
     }
 }
 

@@ -25,4 +25,9 @@ public interface DataSource {
      * register account
      */
     void register(UserInfo userInfo);
+
+    /*
+     * login
+     */
+    void login(UserInfo info);
 }

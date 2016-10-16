@@ -45,12 +45,14 @@ public class RegisterPresenterImpl implements RegisterPresenter,
     }
 
     @Override
-    public void setUserName(String name) {
-        mUserInfo.setUserName(name);
+    public void setUserNickName(String name) {
+        mUserInfo.setNickName(name);
     }
 
     @Override
     public void setUserEmail(String email) {
+        // just keep user name/email the same
+        mUserInfo.setUserName(email);
         mUserInfo.setUerEmail(email);
     }
 

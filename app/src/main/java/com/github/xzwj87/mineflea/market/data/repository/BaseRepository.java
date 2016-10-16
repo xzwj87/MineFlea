@@ -4,6 +4,7 @@ import android.os.Message;
 
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
+import com.github.xzwj87.mineflea.market.presenter.callback.LoginCallback;
 import com.github.xzwj87.mineflea.market.presenter.callback.PublishCallBack;
 import com.github.xzwj87.mineflea.market.presenter.callback.RegisterCallBack;
 
@@ -27,6 +28,12 @@ public interface BaseRepository {
      */
     void register(UserInfo userInfo);
 
+    /*
+     * login
+     */
+    void login(UserInfo info);
+
     void setPublishCallback(PublishCallBack callback);
     void setRegisterCallback(RegisterCallBack callback);
+    void setLoginCallback(LoginCallback callback);
 }

@@ -20,6 +20,10 @@ public class RepoResponseCode {
 
     public static final int RESP_REGISTER_FAIL = 0x06;
 
+    public static final int RESP_LOGIN_SUCCESS = 0x07;
+
+    public static final int RESP_LOGIN_FAIL = 0x08;
+
     private int mCode = RESP_SUCCESS;
 
     public RepoResponseCode(){}

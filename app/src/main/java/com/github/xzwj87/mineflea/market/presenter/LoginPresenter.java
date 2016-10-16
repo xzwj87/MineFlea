@@ -9,4 +9,7 @@ import android.os.Message;
 public interface LoginPresenter extends BasePresenter{
 
     void login();
+    boolean validLoginInfo();
+    void setUserAccount(String account);
+    void setUserPwd(String pwd);
 }

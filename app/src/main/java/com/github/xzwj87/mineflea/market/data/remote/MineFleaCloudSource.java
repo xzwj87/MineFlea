@@ -6,6 +6,7 @@ import android.util.Log;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.LogInCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.github.xzwj87.mineflea.market.data.DataSource;
 import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
@@ -60,6 +61,7 @@ public class MineFleaCloudSource implements DataSource{
     public interface CloudSourceCallback{
         void publishComplete(Message message);
         void registerComplete(Message message);
+        void loginComplete(Message message);
     }
 
     /**
@@ -113,7 +115,9 @@ public class MineFleaCloudSource implements DataSource{
 
         final AVUser avUser = new AVUser();
 
-        avUser.setUsername(userInfo.getUserName());
+        avUser.put(UserInfo.USER_NICK_NAME,userInfo.getNickName());
+        avUser.put(UserInfo.USER_HEAD_ICON,userInfo.getHeadIconUrl());
+        avUser.setUsername(userInfo.getUserEmail());
         avUser.setEmail(userInfo.getUserEmail());
         avUser.setMobilePhoneNumber(userInfo.getUserTelNumber());
         avUser.setPassword(userInfo.getUserPwd());
@@ -131,6 +135,29 @@ public class MineFleaCloudSource implements DataSource{
                 }
 
                 mCloudCallback.registerComplete(msg);
+            }
+        });
+    }
+
+    @Override
+    public void login(UserInfo info) {
+        Log.v(TAG,"user info detail = " + info);
+
+        AVUser.logInInBackground(info.getUserName(),info.getUserPwd(), new LogInCallback<AVUser>() {
+            @Override
+            public void done(AVUser avUser, AVException e) {
+                Message message = new Message();
+                if(e == null){
+                    message.arg1 = RepoResponseCode.RESP_LOGIN_SUCCESS;
+                    message.obj = avUser;
+                }else{
+                    message.arg1 = RepoResponseCode.RESP_LOGIN_FAIL;
+                    message.obj = null;
+                }
+
+                Log.v(TAG,"AVUser detail = " + avUser);
+
+                mCloudCallback.loginComplete(message);
             }
         });
     }

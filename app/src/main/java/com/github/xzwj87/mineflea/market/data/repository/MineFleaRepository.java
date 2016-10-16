@@ -8,6 +8,7 @@ import com.github.xzwj87.mineflea.market.data.remote.MineFleaCloudSource;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
+import com.github.xzwj87.mineflea.market.presenter.callback.LoginCallback;
 import com.github.xzwj87.mineflea.market.presenter.callback.PublishCallBack;
 import com.github.xzwj87.mineflea.market.presenter.callback.RegisterCallBack;
 
@@ -28,6 +29,7 @@ public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.Cl
 
     private PublishCallBack mPublishCb;
     private RegisterCallBack mRegisterCb;
+    private LoginCallback mLoginCb;
 
     private PublishGoodsInfo mGoodsInfo;
 
@@ -57,6 +59,11 @@ public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.Cl
     }
 
     @Override
+    public void login(UserInfo info) {
+        mCloudSrc.login(info);
+    }
+
+    @Override
     public void setPublishCallback(PublishCallBack callback) {
         mPublishCb = callback;
     }
@@ -64,6 +71,11 @@ public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.Cl
     @Override
     public void setRegisterCallback(RegisterCallBack callback) {
         mRegisterCb = callback;
+    }
+
+    @Override
+    public void setLoginCallback(LoginCallback callback) {
+        mLoginCb = callback;
     }
 
 
@@ -84,5 +96,10 @@ public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.Cl
         Log.v(TAG,"registerComplete(): message " + message.obj);
 
         mRegisterCb.onRegisterComplete(message);
+    }
+
+    @Override
+    public void loginComplete(Message message) {
+        mLoginCb.loginComplete(message);
     }
 }

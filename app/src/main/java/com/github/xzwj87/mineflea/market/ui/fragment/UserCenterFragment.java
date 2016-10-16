@@ -2,6 +2,7 @@ package com.github.xzwj87.mineflea.market.ui.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -30,11 +31,15 @@ public class UserCenterFragment extends BaseFragment{
     public static final String TAG = UserCenterFragment.class.getSimpleName();
 
     public static final int REQUEST_LOGIN = 1;
+
     @BindView(R.id.civ_user_header) CircleImageView mCivHeader;
     @BindView(R.id.header_container) LinearLayout mHeaderLayout;
-    @BindView(R.id.tv_user_name) TextView mTvUserName;
+    @BindView(R.id.tv_user_nick_name) TextView mTvNickName;
+    @BindView(R.id.tv_user_email) TextView mTvUserEmail;
 
-    public UserCenterFragment(){}
+
+    public UserCenterFragment(){
+    }
 
     public static UserCenterFragment newInstance(){
         UserCenterFragment fragment = new UserCenterFragment();
@@ -48,6 +53,8 @@ public class UserCenterFragment extends BaseFragment{
         View root = inflater.inflate(R.layout.fragment_user_center,container,false);
 
         ButterKnife.bind(this,root);
+
+        initView();
 
         return root;
     }
@@ -64,7 +71,6 @@ public class UserCenterFragment extends BaseFragment{
     public void pickUserHeadIcon(){
         Log.v(TAG,"pickUserHeadIcon()");
 
-
     }
 
     @Override
@@ -75,17 +81,21 @@ public class UserCenterFragment extends BaseFragment{
             case REQUEST_LOGIN:
                 if(result == Activity.RESULT_OK && data != null) {
                     UserInfo userInfo = new UserInfo();
+                    userInfo.setLoginState(true);
                     userInfo.setUserName(data.getStringExtra(UserInfo.USER_NAME));
                     userInfo.setHeadIconUrl(data.getStringExtra(UserInfo.USER_HEAD_ICON));
                     userInfo.setUerEmail(data.getStringExtra(UserInfo.UER_EMAIL));
                     userInfo.setUserPwd(data.getStringExtra(UserInfo.USER_PWD));
+                    userInfo.setUserTelNumber(data.getStringExtra(UserInfo.USER_TEL));
 
                     if(TextUtils.isEmpty(userInfo.getHeadIconUrl())) {
                         Picasso.with(getActivity())
                                 .load(userInfo.getHeadIconUrl())
                                 .into(mCivHeader);
                     }
-                    mTvUserName.setText(userInfo.getUserName());
+                    mTvNickName.setText(userInfo.getNickName());
+                    mTvUserEmail.setVisibility(View.VISIBLE);
+                    mTvUserEmail.setText(userInfo.getUserEmail());
                     // save user data
                     UserPrefsUtil.saveUserLoginInfo(userInfo);
                     Log.v(TAG,"onActivityResult(): user detail = " + userInfo);
@@ -93,6 +103,32 @@ public class UserCenterFragment extends BaseFragment{
                 break;
             default:
                 break;
+        }
+    }
+
+    private void initView(){
+        Boolean isLogin = UserPrefsUtil.getBoolean(UserInfo.IS_LOGIN,false);
+
+        if(isLogin) {
+            mTvNickName.setText(UserPrefsUtil.getString(UserInfo.USER_NICK_NAME, ""));
+            mTvUserEmail.setText(UserPrefsUtil.getString(UserInfo.UER_EMAIL,""));
+
+            //TODO: we may want to use custom ImageView to display head icon
+            // for Picasso seems to make image 变形
+            String headIcon = UserPrefsUtil.getString(UserInfo.USER_HEAD_ICON,"");
+            if(!TextUtils.isEmpty(headIcon)) {
+                Picasso.with(getActivity())
+                        .load(headIcon)
+                        .into(mCivHeader);
+            }else{
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    mCivHeader.setImageDrawable(
+                            getResources().getDrawable(R.drawable.ic_account_circle_grey_72dp, null));
+                }else{
+                    mCivHeader.setImageDrawable(
+                            getResources().getDrawable(R.drawable.ic_account_circle_grey_72dp));
+                }
+            }
         }
     }
 }
