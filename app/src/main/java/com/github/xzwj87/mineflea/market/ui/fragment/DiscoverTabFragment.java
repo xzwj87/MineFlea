@@ -1,12 +1,12 @@
 package com.github.xzwj87.mineflea.market.ui.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,8 +18,7 @@ import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
-import com.github.xzwj87.mineflea.market.ui.bean.NearbyGoogsInfo;
-import com.github.xzwj87.mineflea.utils.Constants;
+import com.github.xzwj87.mineflea.market.model.NearbyGoodsInfo;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,16 +36,11 @@ public class DiscoverTabFragment extends BaseFragment implements View.OnClickLis
     private AMap aMap;
     private LatLng latlng = new LatLng(39.761, 116.434);
 
-    @BindView(R.id.map)
-    MapView mapView;
-    @BindView(R.id.clearMap)
-    Button clearMapBtn;
-    @BindView(R.id.resetMap)
-    Button resetMapBtn;
-    @BindView(R.id.iv_zan)
-    ImageView iv_zan;
-    @BindView(R.id.info_img)
-    ImageView iv_info;
+    @BindView(R.id.map) MapView mapView;
+    @BindView(R.id.clearMap) Button clearMapBtn;
+    @BindView(R.id.resetMap) Button resetMapBtn;
+    @BindView(R.id.iv_zan) ImageView iv_zan;
+    @BindView(R.id.info_img) ImageView iv_info;
 
     public DiscoverTabFragment() {
     }
@@ -66,6 +60,7 @@ public class DiscoverTabFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void init() {
+        Log.v(TAG,"init()");
         clearMapBtn.setOnClickListener(this);
         resetMapBtn.setOnClickListener(this);
         iv_zan.setOnClickListener(this);
@@ -89,7 +84,7 @@ public class DiscoverTabFragment extends BaseFragment implements View.OnClickLis
                 .draggable(true);
         aMap.addMarker(mMarkerOptions);
 
-        for (NearbyGoogsInfo info : NearbyGoogsInfo.infos){
+        for (NearbyGoodsInfo info : NearbyGoodsInfo.infos){
             MarkerOptions options = new MarkerOptions().icon(BitmapDescriptorFactory
                     .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                     .title(info.getName())
