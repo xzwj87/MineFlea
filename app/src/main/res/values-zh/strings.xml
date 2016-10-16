@@ -3,7 +3,6 @@
     <string name="tab_trends">动态</string>
     <string name="tab_nearby">附近</string>
     <string name="tab_mine">我的</string>
-    <string name="tab_friends">好友</string>
     <string name="action_publish">发布</string>
     <string name="goods_name">物品名称</string>
     <string name="goods_low_Price">￥低价</string>
@@ -29,19 +28,13 @@
     <string name="action_sign_in_short">登陆</string>
     <string name="error_invalid_email">电子邮箱不正确</string>
     <string name="error_invalid_password">密码太短（不小于6个字符）</string>
-    <string name="error_incorrect_password">密码不正确</string>
     <string name="error_field_required">必须填写</string>
     <string name="error_invalid_user_name">无效用户名</string>
     <string name="error_invalid_user_tel">电话号码长度位11位</string>
     <string name="permission_rationale">"需要联系人读权限"</string>
 
-    <string name="publish_goods_success">发布成功</string>
-    <string name="publish_goods_error">发布失败</string>
-
     <string name="title_activity_login">登陆</string>
     <string name="title_activity_register">注册账号</string>
-    <string name="button_ok">OK</string>
-    <string name="button_cancel">Cancel</string>
     <string name="register_progress_info">Registering, please wait for a while</string>
 
 </resources>

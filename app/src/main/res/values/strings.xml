@@ -48,6 +48,9 @@
 
     <string name="publish_goods_success">Publish goods successfully</string>
     <string name="publish_goods_error">Fail to publish goods</string>
+
+    <string name="clear_map">clear_map</string>
+    <string name="reset_map">reset_map</string>
     <string name="button_ok">OK</string>
     <string name="button_cancel">Cancel</string>
     <string name="register_progress_info">Registering, please wait for a while</string>

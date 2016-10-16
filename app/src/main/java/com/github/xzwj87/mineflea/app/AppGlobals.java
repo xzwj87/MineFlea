@@ -3,8 +3,10 @@ package com.github.xzwj87.mineflea.app;
 import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
+import android.os.RemoteException;
 import android.util.Log;
 
+import com.amap.api.maps2d.MapsInitializer;
 import com.avos.avoscloud.AVOSCloud;
 import com.github.xzwj87.mineflea.market.internal.di.HasComponent;
 import com.github.xzwj87.mineflea.market.internal.di.component.AppComponent;
@@ -44,6 +46,15 @@ public class AppGlobals extends Application
 
         initLeanCloudService();
         initFileDir();
+        initMap();
+    }
+
+    private void initMap() {
+        try {
+            MapsInitializer.initialize(sContext);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     public AppGlobals(){

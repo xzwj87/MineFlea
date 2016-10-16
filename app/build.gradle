@@ -40,6 +40,12 @@ android {
     lintOptions {
         abortOnError false
     }
+    // Amap
+    sourceSets{
+        main{
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }
 
 dependencies {
