@@ -18,19 +18,19 @@ public class NearbyProtocol {
 
     public List<NearbyGoogsInfo> loadNearbyData() {
         List<NearbyGoogsInfo> list = new ArrayList<>();
-        NearbyGoogsInfo info =new NearbyGoogsInfo(Constants.BEIJING, R.mipmap.ic_launcher, "英伦贵族小旅馆",
+        NearbyGoogsInfo info =new NearbyGoogsInfo(Constants.BEIJING, R.mipmap.test_info_iv, "英伦贵族小旅馆",
                 "距离209米", 1456);
         list.add(info);
-        info = new NearbyGoogsInfo(Constants.CHENGDU, R.mipmap.ic_launcher, "沙井国际洗浴会所",
+        info = new NearbyGoogsInfo(Constants.CHENGDU, R.mipmap.test_info_iv, "沙井国际洗浴会所",
                 "距离897米", 456);
         list.add(info);
-        info = new NearbyGoogsInfo(Constants.ZHONGGUANCUN, R.mipmap.ic_launcher, "老米家泡馍小炒",
+        info = new NearbyGoogsInfo(Constants.ZHONGGUANCUN, R.mipmap.test_info_iv, "老米家泡馍小炒",
                 "距离679米", 1456);
         list.add(info);
-        info = new NearbyGoogsInfo(Constants.ZHENGZHOU, R.mipmap.ic_launcher, "老米家泡馍小炒",
+        info = new NearbyGoogsInfo(Constants.ZHENGZHOU, R.mipmap.test_info_iv, "老米家泡馍小炒",
                 "距离679米", 1456);
         list.add(info);
-        info = new NearbyGoogsInfo(Constants.SHANGHAI, R.mipmap.ic_launcher, "老米家泡馍小炒",
+        info = new NearbyGoogsInfo(Constants.SHANGHAI, R.mipmap.test_info_iv, "老米家泡馍小炒",
                 "距离679米", 1456);
         list.add(info);
         return list;

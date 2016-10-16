@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.github.xzwj87.mineflea.market.ui.fragment.DiscoverTabFragment;
+import com.github.xzwj87.mineflea.market.ui.fragment.NearbyTabFragment;
 import com.github.xzwj87.mineflea.market.ui.fragment.TabHolderFragment;
 import com.github.xzwj87.mineflea.market.ui.fragment.UserCenterFragment;
 import com.github.xzwj87.mineflea.utils.StringResUtils;
@@ -31,9 +32,9 @@ public class SectionsPageAdapter extends FragmentPagerAdapter{
         // Return a PlaceholderFragment (defined as a static inner class below).
         switch (position){
             case FRAGMENT_DISCOVER_TAB:
-                break;
-            case FRAGMENT_NEARBY_TAB:
                 return DiscoverTabFragment.newInstance();
+            case FRAGMENT_NEARBY_TAB:
+                return NearbyTabFragment.newInstance();
             case FRAGMENT_SETTING_TAB:
                 return UserCenterFragment.newInstance();
         }
