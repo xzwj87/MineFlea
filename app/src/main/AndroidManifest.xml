@@ -26,7 +26,7 @@
         android:theme="@style/AppTheme">
 
         <!--高德地图 key -->
-        <meta-data android:name="com.amap.api.v2.apikey" android:value="92cb62e3c6763aa14bd8d74bfc7afc33">//开发者申请的key
+        <meta-data android:name="com.amap.api.v2.apikey" android:value="92cb62e3c6763aa14bd8d74bfc7afc33">
         </meta-data>
 
         // for real-time chat and message pushing service
@@ -55,6 +55,11 @@
             android:parentActivityName=".market.ui.activity.MineFleaHomeActivity">
 
         </activity>
+
+        <activity android:name=".market.ui.activity.NearbyGoodsActivity"></activity>
+
+        <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
+        <service android:name="com.amap.api.location.APSService"></service>
     </application>
 
 </manifest>
