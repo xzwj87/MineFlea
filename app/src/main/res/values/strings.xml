@@ -54,4 +54,5 @@
     <string name="button_ok">OK</string>
     <string name="button_cancel">Cancel</string>
     <string name="register_progress_info">Registering, please wait for a while</string>
+    <string name="error_publish_fail">Fail to publish goods</string>
 </resources>

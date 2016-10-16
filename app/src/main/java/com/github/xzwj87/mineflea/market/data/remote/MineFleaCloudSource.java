@@ -90,7 +90,7 @@ public class MineFleaCloudSource implements DataSource{
                     if(e == null){
                         msg.obj = avObject.getObjectId();
                     }else{
-                        msg.obj = "dummy";
+                        msg.obj = null;
                         code = RepoResponseCode.RESP_AV_SAVED_FAILURE;
                     }
 
@@ -126,7 +126,7 @@ public class MineFleaCloudSource implements DataSource{
                     msg.obj = avUser.getObjectId();
                     msg.arg1 = RepoResponseCode.RESP_REGISTER_SUCCESS;
                 }else{
-                    msg.obj = "dummy";
+                    msg.obj = null;
                     msg.arg1 = RepoResponseCode.RESP_REGISTER_FAIL;
                 }
 

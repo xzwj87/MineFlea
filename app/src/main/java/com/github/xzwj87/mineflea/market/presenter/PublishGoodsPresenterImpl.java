@@ -94,6 +94,10 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter,
 
     @Override
     public void onPublishComplete(Message message) {
+        if(message.obj == null){
 
+        }else{
+
+        }
     }
 }

@@ -1,18 +1,21 @@
 package com.github.xzwj87.mineflea.market.ui.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.xzwj87.mineflea.R;
+import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.ui.activity.LoginActivity;
+import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +32,7 @@ public class UserCenterFragment extends BaseFragment{
     public static final int REQUEST_LOGIN = 1;
     @BindView(R.id.civ_user_header) CircleImageView mCivHeader;
     @BindView(R.id.header_container) LinearLayout mHeaderLayout;
+    @BindView(R.id.tv_user_name) TextView mTvUserName;
 
     public UserCenterFragment(){}
 
@@ -56,10 +60,39 @@ public class UserCenterFragment extends BaseFragment{
         startActivityForResult(intent,REQUEST_LOGIN);
     }
 
+    @OnClick(R.id.civ_user_header)
+    public void pickUserHeadIcon(){
+        Log.v(TAG,"pickUserHeadIcon()");
+
+
+    }
+
     @Override
     public void onActivityResult(int request, int result, Intent data){
         Log.v(TAG,"onActivityResult(): result = " + result);
 
+        switch (request){
+            case REQUEST_LOGIN:
+                if(result == Activity.RESULT_OK && data != null) {
+                    UserInfo userInfo = new UserInfo();
+                    userInfo.setUserName(data.getStringExtra(UserInfo.USER_NAME));
+                    userInfo.setHeadIconUrl(data.getStringExtra(UserInfo.USER_HEAD_ICON));
+                    userInfo.setUerEmail(data.getStringExtra(UserInfo.UER_EMAIL));
+                    userInfo.setUserPwd(data.getStringExtra(UserInfo.USER_PWD));
 
+                    if(TextUtils.isEmpty(userInfo.getHeadIconUrl())) {
+                        Picasso.with(getActivity())
+                                .load(userInfo.getHeadIconUrl())
+                                .into(mCivHeader);
+                    }
+                    mTvUserName.setText(userInfo.getUserName());
+                    // save user data
+                    UserPrefsUtil.saveUserLoginInfo(userInfo);
+                    Log.v(TAG,"onActivityResult(): user detail = " + userInfo);
+                }
+                break;
+            default:
+                break;
+        }
     }
 }

@@ -31,10 +31,13 @@ public class UserInfo {
 
     public static final String USER_TEL = "user_tel";
 
+    public static final String USER_HEAD_ICON = "head_icon";
+
     private String mUserName;
     private String mUserEmail;
     private String mTelNumber;
     private String mUserPwd;
+    private String mHeadIconUrl;
 
     public void setUerEmail(String email){
         mUserEmail = email;
@@ -68,13 +71,22 @@ public class UserInfo {
         return mUserPwd;
     }
 
+    public void setHeadIconUrl(String url){
+        mHeadIconUrl = url;
+    }
+
+    public String getHeadIconUrl(){
+        return mHeadIconUrl;
+    }
+
     @Override
     public String toString(){
-        StringBuilder builder = new StringBuilder(3);
+        StringBuilder builder = new StringBuilder(4);
 
-        builder.append("User Name = " + mUserName + "\n")
+        builder.append("\nUser Name = " + mUserName + "\n")
                .append("User Email = " + mUserEmail + "\n")
-               .append("User Telephone number " + mTelNumber + "\n");
+               .append("User Telephone number " + mTelNumber + "\n")
+               .append("User head icon url = " + mHeadIconUrl);
 
         return builder.toString();
     }

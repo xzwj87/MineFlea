@@ -2,6 +2,7 @@ package com.github.xzwj87.mineflea.market.ui.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.hardware.usb.UsbRequest;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.AutoCompleteTextView;
@@ -15,12 +16,18 @@ import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.RegisterPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.RegisterView;
+import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import droidninja.filepicker.FilePickerBuilder;
+import droidninja.filepicker.FilePickerConst;
 
 /**
  * Created by jason on 10/13/16.
@@ -34,10 +41,12 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
     @BindView(R.id.atv_email) AutoCompleteTextView mAtvEmail;
     @BindView(R.id.et_tel_number) EditText mEtTelNumber;
     @BindView(R.id.et_password) EditText mEtPwd;
+    @BindView(R.id.user_header_picker) RoundedImageView mHeaderPicker;
 
     @Inject RegisterPresenterImpl mPresenter;
     private ProgressDialog mProgress;
     private MarketComponent mMarketComponent;
+    private ArrayList<String> mHeadIconUrl;
 
     @Override
     public void onCreate(Bundle savedState){
@@ -84,6 +93,16 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
         }
     }
 
+    @OnClick(R.id.user_header_picker)
+    public void pickHeadIcon(){
+        Log.v(TAG,"pickHeadIcon()");
+
+        FilePickerBuilder builder = FilePickerBuilder.getInstance();
+        builder.setMaxCount(1)
+               .setSelectedFiles(mHeadIconUrl)
+               .pickPhoto(this);
+    }
+
     @Override
     public void onRegisterComplete(boolean success) {
         Log.v(TAG,"onRegisterComplete(): " + (success ? "success" : "fail"));
@@ -98,7 +117,11 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
         bundle.putString(UserInfo.UER_EMAIL,mAtvEmail.getText().toString());
         bundle.putString(UserInfo.USER_TEL,mEtTelNumber.getText().toString());
         bundle.putString(UserInfo.USER_PWD,mEtPwd.getText().toString());
+        if(mHeadIconUrl != null && mHeadIconUrl.size() >= 1) {
+            bundle.putString(UserInfo.USER_HEAD_ICON, mHeadIconUrl.get(0));
+        }
 
+        data.putExtras(bundle);
         setResult(RESULT_OK,data);
 
         finishView();
@@ -153,6 +176,7 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
 
     private void init(){
         mPresenter.init();
+        mHeadIconUrl = new ArrayList<>(1);
     }
 
     private void initInjector(){
@@ -168,5 +192,20 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
     @Override
     public MarketComponent getComponent() {
         return mMarketComponent;
+    }
+
+    @Override
+    public void onActivityResult(int request, int result, Intent data){
+        Log.v(TAG,"onActivityResult(): result = " + result);
+
+        if(result == RESULT_OK && data != null){
+            mHeadIconUrl = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_PHOTOS);
+            Log.v(TAG,mHeadIconUrl.size() + " photos are picked");
+            Picasso.with(this)
+                   .load(mHeadIconUrl.get(0))
+                   .resize(48,48)
+                   .centerInside()
+                   .into(mHeaderPicker);
+        }
     }
 }

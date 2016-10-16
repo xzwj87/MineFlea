@@ -96,13 +96,20 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     public void onActivityResult(int request,int result,Intent data){
         Log.v(TAG,"onActivityResult(): result = " + result);
 
-        if(request == RESULT_OK && data != null){
-            String email = data.getStringExtra(UserInfo.UER_EMAIL);
-            String pwd = data.getStringExtra(UserInfo.USER_NAME);
+            switch (request) {
+                case REQUEST_USER_REGISTER:
+                    if(result == RESULT_OK && data != null) {
+                        String email = data.getStringExtra(UserInfo.UER_EMAIL);
+                        String pwd = data.getStringExtra(UserInfo.USER_NAME);
 
-            mEmailView.setText(email);
-            mPasswordView.setText(pwd);
-        }
+                        mEmailView.setText(email);
+                        mPasswordView.setText(pwd);
+
+                        setResult(RESULT_OK, data);
+                    }
+                    break;
+            }
+            finish();
     }
 
     private void populateAutoComplete() {

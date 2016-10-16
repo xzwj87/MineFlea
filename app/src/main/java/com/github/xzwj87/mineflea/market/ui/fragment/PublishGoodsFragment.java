@@ -118,6 +118,16 @@ public class PublishGoodsFragment extends BaseFragment
     }
 
     @Override
+    public void onPublishComplete(boolean success) {
+        Log.v(TAG,"onPublishComplete(): " + (success ? "success" : "failure"));
+
+        // Todo: save those failed info to "draft box"
+        if(!success){
+            showToast(getString(R.string.error_publish_fail));
+        }
+    }
+
+    @Override
     public void finishView() {
         getActivity().finish();
     }

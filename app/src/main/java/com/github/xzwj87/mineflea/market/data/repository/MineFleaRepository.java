@@ -71,8 +71,10 @@ public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.Cl
     public void publishComplete(Message message) {
         Log.v(TAG,"publishComplete(): goods id = " + message.obj);
 
-        mGoodsInfo.setId((String)message.obj);
-        mLocalSrc.publishGoods(mGoodsInfo);
+        if(message.obj != null) {
+            mGoodsInfo.setId((String) message.obj);
+            mLocalSrc.publishGoods(mGoodsInfo);
+        }
 
         mPublishCb.onPublishComplete(message);
     }

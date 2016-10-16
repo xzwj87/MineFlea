@@ -21,7 +21,7 @@ public class UserPrefsUtil {
             getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
 
 
-    public static void saveUserInfo(PublisherInfo info){
+    public static void savePublisherInfo(PublisherInfo info){
 
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PublisherInfo.USER_NAME,info.getName());
@@ -49,6 +49,7 @@ public class UserPrefsUtil {
         editor.putString(UserInfo.USER_NAME,info.getUserName());
         editor.putString(UserInfo.UER_EMAIL,info.getUserEmail());
         editor.putString(UserInfo.USER_PWD,info.getUserPwd());
+        editor.putString(UserInfo.USER_HEAD_ICON,info.getHeadIconUrl());
 
         editor.apply();
     }

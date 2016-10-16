@@ -15,6 +15,7 @@
         app:civ_border_width="1dp"/>
 
     <TextView
+        android:id="@+id/tv_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/civ_user_header"

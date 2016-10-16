@@ -10,4 +10,5 @@ import java.util.List;
 
 public interface PublishGoodsView extends BaseView{
     void publishGoods();
+    void onPublishComplete(boolean success);
 }

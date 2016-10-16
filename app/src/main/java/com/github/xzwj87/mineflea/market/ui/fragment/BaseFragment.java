@@ -12,6 +12,8 @@ public class BaseFragment extends Fragment{
 
     public BaseFragment(){
         super();
+
+        setRetainInstance(true);
     }
 
     public void showToast(String msg){
