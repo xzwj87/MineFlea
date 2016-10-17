@@ -29,8 +29,8 @@ import com.amap.api.maps2d.model.MyLocationStyle;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.ui.activity.NearbyGoodsActivity;
-import com.github.xzwj87.mineflea.market.ui.bean.NearbyGoogsInfo;
-import com.github.xzwj87.mineflea.market.ui.protocol.NearbyProtocol;
+import com.github.xzwj87.mineflea.market.model.NearbyGoodsInfo;
+import com.github.xzwj87.mineflea.utils.NearbyProtocol;
 
 import java.util.List;
 
@@ -142,8 +142,8 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
                 .draggable(true);
         aMap.addMarker(mMarkerOptions);
         NearbyProtocol protocol = new NearbyProtocol();
-        List<NearbyGoogsInfo> list = protocol.loadNearbyData();
-        for (NearbyGoogsInfo info : list) {
+        List<NearbyGoodsInfo> list = protocol.loadNearbyData();
+        for (NearbyGoodsInfo info : list) {
             MarkerOptions options = new MarkerOptions().icon(BitmapDescriptorFactory
                     .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                     .title(info.getName())
@@ -216,7 +216,7 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
             if (mCurrentMarker.equals(marker)) {
                 markerLy.setVisibility(View.GONE);
             } else {
-                NearbyGoogsInfo info = (NearbyGoogsInfo) marker.getObject();
+                NearbyGoodsInfo info = (NearbyGoodsInfo) marker.getObject();
                 popupInfo(markerLy, info);
             }
         }
@@ -240,7 +240,7 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
 
 
     //根据info为布局上的控件设置信息
-    protected void popupInfo(RelativeLayout mMarkerLy, NearbyGoogsInfo info) {
+    protected void popupInfo(RelativeLayout mMarkerLy, NearbyGoodsInfo info) {
         mMarkerLy.setVisibility(View.VISIBLE);
         ViewHolder viewHolder = null;
         if (mMarkerLy.getTag() == null) {

@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
-import com.github.xzwj87.mineflea.market.ui.bean.DiscoverInfo;
+import com.github.xzwj87.mineflea.market.model.DiscoverInfo;
 import java.util.List;
 import butterknife.ButterKnife;
 
