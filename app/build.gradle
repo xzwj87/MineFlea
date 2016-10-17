@@ -11,6 +11,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     buildscript {
         repositories {
@@ -49,35 +50,34 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'],dir: 'libs')
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:design:23.4.0'
-
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.1.6'
-
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.google.code.gson:gson:2.7'
-
     compile 'com.jakewharton:butterknife:8.2.1'
     apt 'com.jakewharton:butterknife-compiler:8.2.1'
-
     compile 'com.google.dagger:dagger:2.7'
     apt 'com.google.dagger:dagger-compiler:2.7'
-
     //leanCloud - basic
-    compile ('cn.leancloud.android:avoscloud-sdk:v3.+')
+    compile 'cn.leancloud.android:avoscloud-sdk:v3.+'
     // chat/msg push
-    compile ('cn.leancloud.android:avoscloud-push:v3.+@aar'){transitive = true}
+    compile('cn.leancloud.android:avoscloud-push:v3.+@aar') { transitive = true }
     //3rd party login
-    compile ('cn.leancloud.android:avoscloud-sns:v3.+@aar')
-    compile ('cn.leancloud.android:qq-sdk:1.6.1-leancloud')
-
+    compile 'cn.leancloud.android:avoscloud-sns:v3.+@aar'
+    compile 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
     compile 'com.droidninja:filepicker:1.0.6'
     compile 'com.makeramen:roundedimageview:2.2.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'com.android.support:cardview-v7:23.+'
+    compile files('libs/AMap_Android_SDK_All/Amap_2DMap_V2.9.1_20160825.jar')
+    compile files('libs/AMap_Android_SDK_All/AMapSearch/AMap_Search_V3.5.0_20160927.jar')
+    compile files('libs/AMap_Android_SDK_All/AMap3DMap/AMap_3DMap_V4.0.1_20160923.jar')
+    compile files('libs/AMap_Android_SDK_All/AMap_Location_V3.0.0_20160922.jar')
 
     //compile files('libs/Amap_2DMap_V2.9.1_20160825.jar')
     //compile files('libs/AMap_3DMap_V4.0.1_20160923.jar')
