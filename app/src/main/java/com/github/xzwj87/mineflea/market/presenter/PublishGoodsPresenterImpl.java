@@ -6,7 +6,6 @@ import android.util.Log;
 import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
-import com.github.xzwj87.mineflea.market.presenter.callback.PublishCallBack;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.PublishGoodsView;
 
@@ -20,8 +19,7 @@ import javax.inject.Named;
  */
 
 @PerActivity
-public class PublishGoodsPresenterImpl implements PublishGoodsPresenter,
-        PublishCallBack{
+public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     public static final String TAG = PublishGoodsPresenterImpl.class.getSimpleName();
 
     private MineFleaRepository mRepository;
@@ -42,7 +40,7 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter,
     public void init() {
         mGoodsInfo = new PublishGoodsInfo();
         mRepository.init();
-        mRepository.setPublishCallback(this);
+        mRepository.setPresenterCallback(this);
     }
 
     @Override

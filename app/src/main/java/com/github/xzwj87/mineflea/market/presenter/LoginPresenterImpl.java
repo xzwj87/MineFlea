@@ -7,7 +7,6 @@ import com.avos.avoscloud.AVUser;
 import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
-import com.github.xzwj87.mineflea.market.presenter.callback.LoginCallback;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.LoginView;
 import com.github.xzwj87.mineflea.utils.UserInfoUtils;
@@ -20,7 +19,7 @@ import javax.inject.Named;
  * Created by jason on 10/16/16.
  */
 @PerActivity
-public class LoginPresenterImpl implements LoginPresenter,LoginCallback{
+public class LoginPresenterImpl extends LoginPresenter{
 
     public static final String TAG = LoginPresenterImpl.class.getSimpleName();
 
@@ -64,7 +63,7 @@ public class LoginPresenterImpl implements LoginPresenter,LoginCallback{
     public void init() {
         mUserInfo = new UserInfo();
         mDataRepo.init();
-        mDataRepo.setLoginCallback(this);
+        mDataRepo.setPresenterCallback(this);
     }
 
     @Override

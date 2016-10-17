@@ -8,9 +8,9 @@ import com.github.xzwj87.mineflea.market.data.remote.MineFleaCloudSource;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
-import com.github.xzwj87.mineflea.market.presenter.callback.LoginCallback;
-import com.github.xzwj87.mineflea.market.presenter.callback.PublishCallBack;
-import com.github.xzwj87.mineflea.market.presenter.callback.RegisterCallBack;
+import com.github.xzwj87.mineflea.market.presenter.PresenterCallback;
+
+import java.util.HashMap;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -26,10 +26,8 @@ public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.Cl
 
     private MineFleaLocalSource mLocalSrc;
     @Inject MineFleaCloudSource mCloudSrc;
-
-    private PublishCallBack mPublishCb;
-    private RegisterCallBack mRegisterCb;
-    private LoginCallback mLoginCb;
+    //private HashMap<String,PresenterCallback> mPresenterCbs;
+    private PresenterCallback mCb;
 
     private PublishGoodsInfo mGoodsInfo;
 
@@ -64,18 +62,8 @@ public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.Cl
     }
 
     @Override
-    public void setPublishCallback(PublishCallBack callback) {
-        mPublishCb = callback;
-    }
-
-    @Override
-    public void setRegisterCallback(RegisterCallBack callback) {
-        mRegisterCb = callback;
-    }
-
-    @Override
-    public void setLoginCallback(LoginCallback callback) {
-        mLoginCb = callback;
+    public void setPresenterCallback(PresenterCallback callback) {
+        mCb = callback;
     }
 
 
@@ -88,18 +76,18 @@ public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.Cl
             mLocalSrc.publishGoods(mGoodsInfo);
         }
 
-        mPublishCb.onPublishComplete(message);
+        mCb.onPublishComplete(message);
     }
 
     @Override
     public void registerComplete(Message message) {
         Log.v(TAG,"registerComplete(): message " + message.obj);
 
-        mRegisterCb.onRegisterComplete(message);
+        mCb.onRegisterComplete(message);
     }
 
     @Override
     public void loginComplete(Message message) {
-        mLoginCb.loginComplete(message);
+        mCb.loginComplete(message);
     }
 }

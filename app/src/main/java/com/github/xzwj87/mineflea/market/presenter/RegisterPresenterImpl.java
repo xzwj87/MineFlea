@@ -7,7 +7,6 @@ import android.widget.TextView;
 import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
-import com.github.xzwj87.mineflea.market.presenter.callback.RegisterCallBack;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.RegisterView;
 import com.github.xzwj87.mineflea.utils.UserInfoUtils;
@@ -20,8 +19,7 @@ import javax.inject.Named;
  */
 
 @PerActivity
-public class RegisterPresenterImpl implements RegisterPresenter,
-        RegisterCallBack{
+public class RegisterPresenterImpl extends RegisterPresenter{
     public static final String TAG = RegisterPresenterImpl.class.getSimpleName();
 
     private MineFleaRepository mRepository;
@@ -99,7 +97,7 @@ public class RegisterPresenterImpl implements RegisterPresenter,
     public void init() {
         mUserInfo = new UserInfo();
         mRepository.init();
-        mRepository.setRegisterCallback(this);
+        mRepository.setPresenterCallback(this);
     }
 
     @Override

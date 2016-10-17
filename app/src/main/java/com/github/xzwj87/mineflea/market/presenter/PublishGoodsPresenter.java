@@ -1,5 +1,7 @@
 package com.github.xzwj87.mineflea.market.presenter;
 
+import android.os.Message;
+
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 
 import java.util.List;
@@ -8,13 +10,25 @@ import java.util.List;
  * Created by jason on 9/27/16.
  */
 
-public interface PublishGoodsPresenter extends BasePresenter{
-    void publishGoods();
+public abstract class PublishGoodsPresenter implements BasePresenter,
+                    PresenterCallback{
+    public abstract void publishGoods();
 
-    void setGoodsName(String name);
-    void setGoodsLowPrice(double price);
-    void setGoodsHighPrice(double price);
-    void setGoodsNote(String note);
-    void setLocation(String loc);
-    void setGoodsImgUrl(List<String> url);
+    public abstract void setGoodsName(String name);
+    public abstract void setGoodsLowPrice(double price);
+    public abstract void setGoodsHighPrice(double price);
+    public abstract void setGoodsNote(String note);
+    public abstract void setLocation(String loc);
+    public abstract void setGoodsImgUrl(List<String> url);
+
+    public abstract void onPublishComplete(Message message);
+
+
+    public void loginComplete(Message message){
+        throw new UnsupportedOperationException("not supported operation");
+    }
+
+    public void onRegisterComplete(Message message){
+        throw new UnsupportedOperationException("not supported operation");
+    }
 }
