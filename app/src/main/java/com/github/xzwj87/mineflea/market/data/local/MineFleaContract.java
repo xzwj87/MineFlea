@@ -95,8 +95,8 @@ public class MineFleaContract {
         public static final String COL_CREDITS = "credits";
     }
 
-    public static final class PublishedGoodsEntry implements BaseColumns{
-        public static final String TABLE_PUBLISHER_GOODS = "published_goods";
+    public static final class PublishGoodsEntry implements BaseColumns{
+        public static final String TABLE_PUBLISHER_GOODS = "publish_goods";
 
         public static final Uri CONTENT_URI_PUBLISHED = PROVIDER_BASE_URI.buildUpon().
                 appendPath(TABLE_PUBLISHER_GOODS).build();
@@ -107,20 +107,17 @@ public class MineFleaContract {
                 "/" + PROVIDER_AUTHORITY + "/" + PATH_PUBLISHED_GOODS;
 
         public static final String COL_PUBLISHER_ID = "id";
-        public static final String COL_PUBLISHER_NAME = "publisher";
-        public static final String COL_TELEPHONE_NUMBER = "tel_number";
-
         public static final String COL_GOODS_ID = "goods_id";
         public static final String COL_GOODS_NAME = "goods_name";
         /* estimated price */
-        public static final String COL_HIGH_PRICE = "high_price";
         public static final String COL_LOW_PRICE = "low_price";
+        public static final String COL_HIGH_PRICE = "high_price";
         /* where to be released */
-        public static final String COL_PLACE = "place";
-        /* when */
-        public static final String COL_RELEASE_DATE = "release_date";
+        public static final String COL_LOCATION = "place";
 
         public static final String COL_NOTE = "note";
+        /* when */
+        public static final String COL_RELEASE_DATE = "release_date";
 
     }
 

@@ -28,6 +28,8 @@ public class PublishGoodsInfo {
 
     private long mReleasedDate;
 
+    private String mLoc;
+
     private List<String> mImageUri;
 
     public PublishGoodsInfo(){
@@ -89,6 +91,14 @@ public class PublishGoodsInfo {
 
     public void setReleasedDate(long date){
         mReleasedDate = date;
+    }
+
+    public void setLocation(String location){
+        mLoc = location;
+    }
+
+    public String getLocation(){
+        return mLoc;
     }
 
     public List<String> getImageUri(){

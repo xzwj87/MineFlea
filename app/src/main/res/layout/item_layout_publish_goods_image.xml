@@ -14,7 +14,8 @@
         app:riv_oval="false"
         app:riv_tile_mode="repeat"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"/>
 
     <ImageButton android:id="@+id/btn_remove"
         android:layout_width="32dp"

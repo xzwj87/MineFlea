@@ -8,8 +8,10 @@ import android.support.v7.widget.Toolbar;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 
 import com.github.xzwj87.mineflea.R;
@@ -17,6 +19,7 @@ import com.github.xzwj87.mineflea.market.ui.adapter.SectionsPageAdapter;
 
 public class MineFleaHomeActivity extends AppCompatActivity {
 
+    private static final String TAG = MineFleaHomeActivity.class.getSimpleName();
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -85,5 +88,12 @@ public class MineFleaHomeActivity extends AppCompatActivity {
     private void startPublishActivity(){
         Intent intent = new Intent(this,PublishGoodsActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onActivityResult(int request,int result, Intent data){
+        super.onActivityResult(request,result,data);
+
+        Log.v(TAG,"onActivityResult(): request = " + request);
     }
 }

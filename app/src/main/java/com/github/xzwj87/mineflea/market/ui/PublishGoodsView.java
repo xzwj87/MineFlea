@@ -8,7 +8,7 @@ import java.util.List;
  * Created by jason on 9/28/16.
  */
 
-public interface PublishGoodsView {
+public interface PublishGoodsView extends BaseView{
     void publishGoods();
-    void finishView();
+    void onPublishComplete(boolean success);
 }

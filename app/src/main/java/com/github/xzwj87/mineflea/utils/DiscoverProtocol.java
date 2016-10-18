@@ -1,6 +1,6 @@
-package com.github.xzwj87.mineflea.market.ui.protocol;
+package com.github.xzwj87.mineflea.utils;
 
-import com.github.xzwj87.mineflea.market.ui.bean.DiscoverInfo;
+import com.github.xzwj87.mineflea.market.model.DiscoverInfo;
 
 import java.util.ArrayList;
 import java.util.List;

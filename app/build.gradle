@@ -41,6 +41,12 @@ android {
     lintOptions {
         abortOnError false
     }
+    // Amap
+    sourceSets{
+        main{
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }
 
 dependencies {
@@ -68,8 +74,8 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.android.support:cardview-v7:23.+'
-    compile files('libs/AMap_Android_SDK_All/Amap_2DMap_V2.9.1_20160825.jar')
-    compile files('libs/AMap_Android_SDK_All/AMapSearch/AMap_Search_V3.5.0_20160927.jar')
-    compile files('libs/AMap_Android_SDK_All/AMap3DMap/AMap_3DMap_V4.0.1_20160923.jar')
-    compile files('libs/AMap_Android_SDK_All/AMap_Location_V3.0.0_20160922.jar')
+
+    //compile files('libs/Amap_2DMap_V2.9.1_20160825.jar')
+    //compile files('libs/AMap_3DMap_V4.0.1_20160923.jar')
+    //compile files('libs/AMap_Search_V3.5.0_20160927.jar')
 }

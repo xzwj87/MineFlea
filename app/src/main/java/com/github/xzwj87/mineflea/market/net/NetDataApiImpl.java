@@ -8,6 +8,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.SaveCallback;
 import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
+import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.ModelConstants;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.PublisherInfo;
@@ -18,6 +19,8 @@ import com.github.xzwj87.mineflea.utils.NetConnectionUtils;
 import java.net.MalformedURLException;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import rx.Observable;
 import rx.Subscriber;
 
@@ -25,6 +28,7 @@ import rx.Subscriber;
  * Created by jason on 9/25/16.
  */
 
+@PerActivity
 public class NetDataApiImpl implements NetDataApi{
     public static final String TAG = NetDataApiImpl.class.getSimpleName();
 
@@ -36,6 +40,7 @@ public class NetDataApiImpl implements NetDataApi{
     private NetDataCallback mNetCb;
 
     // TODO: we may want to cache data using disk
+    @Inject
     public NetDataApiImpl(){
     }
 
