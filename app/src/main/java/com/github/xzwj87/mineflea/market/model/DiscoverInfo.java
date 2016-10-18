@@ -1,4 +1,4 @@
-package com.github.xzwj87.mineflea.market.ui.bean;
+package com.github.xzwj87.mineflea.market.model;
 
 /**
  * Created by linhai on 2016/10/16.

@@ -4,6 +4,7 @@ import android.os.Message;
 
 import com.github.xzwj87.mineflea.market.model.PublisherInfo;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
+import com.github.xzwj87.mineflea.market.model.UserInfo;
 
 import java.util.List;
 
@@ -15,51 +16,18 @@ import rx.Observable;
 public interface DataSource {
 
     /**
-     * release goods
+     * publish goods
      * @source: local and remote
      */
     void publishGoods(PublishGoodsInfo goods);
 
-    /**
-     * query the detail of a goods
-     * @source: local
+    /*
+     * register account
      */
-    Observable<PublishGoodsInfo> queryPublishedGoodsDetail(long id);
+    void register(UserInfo userInfo);
 
-    Observable<List<PublishGoodsInfo>> queryPublishedGoodsList();
-
-    /**
-     * add goods to a favorite one
-     * @source: local
+    /*
+     * login
      */
-    Observable<RepoResponseCode> favorGoods(PublishGoodsInfo goods);
-
-    /**
-     * query the detail info of a favored goods
-     * @source: local
-     */
-    Observable<PublishGoodsInfo> queryFavorGoodsDetail(long id);
-
-    Observable<List<PublishGoodsInfo>> queryFavorGoodsList();
-
-
-    /**
-     * query the info of a publisher
-     * @source: remote
-     */
-    Observable<PublisherInfo> queryPublisherDetail(long id);
-
-    Observable<List<PublisherInfo>> queryPublisherList();
-
-    /**
-     * query latest goods list
-     * @source: remote
-     */
-    Observable<List<PublishGoodsInfo>> queryLatestGoodsList();
-
-    /**
-     * follow some publisher
-     * @source: remote
-     */
-    Observable<RepoResponseCode> followPublisher(PublisherInfo publisher);
+    void login(UserInfo info);
 }

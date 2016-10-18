@@ -15,19 +15,28 @@
     <string name="goods_high_price">$High</string>
     <string name="note_hint">Please write anything about this goods</string>
     <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_register">Register your account</string>
+
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
+    <string name="prompt_name">User Name</string>
+    <string name="prompt_tel_number">Mobile Phone Number</string>
+    <string name="prompt_email_register">Email</string>
+    <string name="prompt_email_login">Email or User Name</string>
     <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_register">Register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_invalid_user_name">This user name is invalid</string>
+    <string name="error_invalid_user_tel">Telephone number should be 11 digits</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
     <string name="add_pictures">Add pictures</string>
     <string name="logout">Logout</string>
     <string name="published_goods">Published Goods</string>
@@ -42,4 +51,9 @@
 
     <string name="clear_map">clear_map</string>
     <string name="reset_map">reset_map</string>
+    <string name="button_ok">OK</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="register_progress_info">Registering, please wait for a while</string>
+    <string name="error_publish_fail">Fail to publish goods</string>
+    <string name="prompt_login_incorrect_email_password">Incorrect Name or password</string>
 </resources>

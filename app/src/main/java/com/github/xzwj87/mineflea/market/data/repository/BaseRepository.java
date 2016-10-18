@@ -2,14 +2,11 @@ package com.github.xzwj87.mineflea.market.data.repository;
 
 import android.os.Message;
 
-import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
-import com.github.xzwj87.mineflea.market.interactor.UseCase;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
-import com.github.xzwj87.mineflea.market.model.PublisherInfo;
+import com.github.xzwj87.mineflea.market.model.UserInfo;
+import com.github.xzwj87.mineflea.market.presenter.PresenterCallback;
 
 import java.util.List;
-
-import rx.Observable;
 
 /**
  * Created by jason on 10/11/16.
@@ -21,55 +18,19 @@ public interface BaseRepository {
      */
     void publishGoods(PublishGoodsInfo goods);
 
-    /**
-     * get a published goods detail by its id
-     */
-    Observable<PublishGoodsInfo> getPublishedGoodsDetail(long id);
 
-    /**
-     * get published goods list
+    /*
+     * register user
      */
-    Observable<List<PublishGoodsInfo>> getPublishedGoodsList();
+    void register(UserInfo userInfo);
 
-    /**
-     * get latest goods list
+    /*
+     * login
      */
-    Observable<List<PublishGoodsInfo>> getLatestGoodsList();
+    void login(UserInfo info);
 
-    /**
-     * favor a goods
+    /*
+     * Callback of Presenter:this must be called in Presenter
      */
-    Observable<RepoResponseCode> favorGoods(PublishGoodsInfo goods);
-
-    /**
-     * get favored goods detail
-     */
-    Observable<PublishGoodsInfo> getFavorGoodsDetail(long id);
-
-    /**
-     * get favored goods list
-     */
-    Observable<List<PublishGoodsInfo>> getFavorGoodsList();
-
-
-    /* for publisher */
-    /**
-     * get the detail of a publisher
-     */
-    Observable<PublisherInfo> getPublisherDetail(long id);
-
-    /**
-     * get a favor publisher detail
-     */
-    Observable<PublisherInfo> getFavorPublisherDetail(long id);
-
-    /**
-     * get the favorite publisher list
-     */
-    Observable<List<PublisherInfo>> getFavorPublisherList();
-
-    /**
-     * follow a publisher
-     */
-    Observable<RepoResponseCode> followPublisher(PublisherInfo publisher);
+    void setPresenterCallback(PresenterCallback callback);
 }

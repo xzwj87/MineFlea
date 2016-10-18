@@ -1,4 +1,4 @@
-package com.github.xzwj87.mineflea.market.ui.bean;
+package com.github.xzwj87.mineflea.market.model;
 
 import com.amap.api.maps2d.model.LatLng;
 
@@ -9,16 +9,16 @@ import java.util.List;
  * Created by linhai on 2016/10/15.
  */
 
-public class NearbyGoogsInfo {
+public class NearbyGoodsInfo {
     private LatLng latlng;
     private int imgId;
     private String name;
     private String distance;
     private int zan;
 
-    public static List<NearbyGoogsInfo> infos = new ArrayList<>();
+    public static List<NearbyGoodsInfo> infos = new ArrayList<>();
 
-    public NearbyGoogsInfo(LatLng latlng, int imgId, String name, String distance, int zan) {
+    public NearbyGoodsInfo(LatLng latlng, int imgId, String name, String distance, int zan) {
         this.latlng = latlng;
         this.imgId = imgId;
         this.name = name;
@@ -68,7 +68,7 @@ public class NearbyGoogsInfo {
 
     @Override
     public String toString() {
-        return "NearbyGoogsInfo{" +
+        return "NearbyGoodsInfo{" +
                 "latlng=" + latlng +
                 ", imgId=" + imgId +
                 ", name='" + name + '\'' +

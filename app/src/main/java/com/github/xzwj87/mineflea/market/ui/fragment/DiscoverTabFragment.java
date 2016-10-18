@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.ui.adapter.DiscoverRecylerViewAdapter;
-import com.github.xzwj87.mineflea.market.ui.bean.DiscoverInfo;
-import com.github.xzwj87.mineflea.market.ui.protocol.DiscoverProtocol;
+import com.github.xzwj87.mineflea.market.model.DiscoverInfo;
+import com.github.xzwj87.mineflea.utils.DiscoverProtocol;
 
 import java.util.List;
 

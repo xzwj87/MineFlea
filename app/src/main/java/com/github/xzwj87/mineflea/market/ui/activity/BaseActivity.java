@@ -2,6 +2,7 @@ package com.github.xzwj87.mineflea.market.ui.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.internal.di.component.AppComponent;
@@ -18,6 +19,10 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedState);
 
         getAppComponent().inject(this);
+    }
+
+    public void showToast(String msg){
+        Toast.makeText(this,msg,Toast.LENGTH_LONG).show();
     }
 
     public AppComponent getAppComponent() {
