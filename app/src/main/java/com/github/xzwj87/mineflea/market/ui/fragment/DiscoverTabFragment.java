@@ -1,11 +1,13 @@
 package com.github.xzwj87.mineflea.market.ui.fragment;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
@@ -31,6 +33,8 @@ public class DiscoverTabFragment extends BaseFragment {
 
     @BindView(R.id.discover_recycler_view)
     RecyclerView discoverRecyclerView;
+    @BindView(R.id.swipe_container)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     public DiscoverTabFragment() {
     }
@@ -57,6 +61,24 @@ public class DiscoverTabFragment extends BaseFragment {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         discoverRecyclerView.setLayoutManager(layoutManager);
         discoverRecyclerView.setAdapter(recylerViewAdapter);
+        setSwipeLayout();
+    }
+
+    //设置下拉刷新
+    private void setSwipeLayout() {
+        swipeRefreshLayout.setColorSchemeResources(R.color.blue);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                AppGlobals.getHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
+                        Toast.makeText(AppGlobals.getAppContext(), "刷新成功", Toast.LENGTH_SHORT).show();
+                    }
+                }, 3000);
+            }
+        });
     }
 
 }

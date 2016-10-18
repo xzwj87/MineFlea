@@ -28,8 +28,8 @@ import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.maps2d.model.MyLocationStyle;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
-import com.github.xzwj87.mineflea.market.ui.activity.NearbyGoodsActivity;
 import com.github.xzwj87.mineflea.market.model.NearbyGoodsInfo;
+import com.github.xzwj87.mineflea.market.ui.activity.NearbyGoodsActivity;
 import com.github.xzwj87.mineflea.utils.NearbyProtocol;
 
 import java.util.List;
