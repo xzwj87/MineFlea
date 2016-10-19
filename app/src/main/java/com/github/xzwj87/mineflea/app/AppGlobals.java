@@ -3,6 +3,7 @@ package com.github.xzwj87.mineflea.app;
 import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.RemoteException;
 import android.util.Log;
 
@@ -44,9 +45,16 @@ public class AppGlobals extends Application
                 .appModule(new AppModule(this))
                 .build();
 
-        initLeanCloudService();
-        initFileDir();
-        initMap();
+        // in case of UI delay rendering
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                initLeanCloudService();
+                initFileDir();
+                initMap();
+            }
+        },500);
+
     }
 
     private void initMap() {

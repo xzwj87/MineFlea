@@ -44,11 +44,10 @@
 
                 <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/user_header_picker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_alignParentEnd="true"
                     android:src="@drawable/ic_camera_grey_48dp"
-                    android:scaleType="fitCenter"
                     android:adjustViewBounds="true" />
 
             </RelativeLayout>

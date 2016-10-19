@@ -56,4 +56,5 @@
     <string name="register_progress_info">Registering, please wait for a while</string>
     <string name="error_publish_fail">Fail to publish goods</string>
     <string name="prompt_login_incorrect_email_password">Incorrect Name or password</string>
+    <string name="pictures_over_max_count_hints">only 5 pictures should be picked</string>
 </resources>

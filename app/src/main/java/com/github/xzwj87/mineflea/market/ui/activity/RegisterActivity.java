@@ -2,6 +2,7 @@ package com.github.xzwj87.mineflea.market.ui.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.AutoCompleteTextView;
@@ -18,6 +19,7 @@ import com.github.xzwj87.mineflea.market.ui.RegisterView;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -25,8 +27,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import droidninja.filepicker.FilePickerBuilder;
-import droidninja.filepicker.FilePickerConst;
+import me.iwf.photopicker.PhotoPicker;
 
 /**
  * Created by jason on 10/13/16.
@@ -96,10 +97,17 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
     public void pickHeadIcon(){
         Log.v(TAG,"pickHeadIcon()");
 
-        FilePickerBuilder builder = FilePickerBuilder.getInstance();
+/*        FilePickerBuilder builder = FilePickerBuilder.getInstance();
         builder.setMaxCount(1)
                .setSelectedFiles(mHeadIconUrl)
-               .pickPhoto(this);
+               .pickPhoto(this);*/
+        PhotoPicker.builder()
+                   .setPhotoCount(1)
+                   .setPreviewEnabled(true)
+                   .setShowCamera(true)
+                   .setShowGif(true)
+                   .start(this,PhotoPicker.REQUEST_CODE);
+
     }
 
     @Override
@@ -175,7 +183,7 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
 
     private void init(){
         mPresenter.init();
-        mHeadIconUrl = new ArrayList<>(1);
+        mHeadIconUrl = null;
     }
 
     private void initInjector(){
@@ -198,13 +206,21 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
         Log.v(TAG,"onActivityResult(): result = " + result);
 
         if(result == RESULT_OK && data != null){
-            mHeadIconUrl = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_PHOTOS);
-            Log.v(TAG,mHeadIconUrl.size() + " photos are picked");
-            Picasso.with(this)
-                   .load(mHeadIconUrl.get(0))
-                   .resize(48,48)
-                   .centerInside()
-                   .into(mHeaderPicker);
+            switch (request){
+                case PhotoPicker.REQUEST_CODE:
+                    mHeadIconUrl = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+                    break;
+            }
+            Log.v(TAG,mHeadIconUrl.size() + " photos are picked: url " + mHeadIconUrl.get(0));
+
+            if(mHeadIconUrl != null) {
+                Picasso.with(this)
+                       .load(Uri.fromFile(new File(mHeadIconUrl.get(0))))
+                       .resize(512,512) // pixels
+                       .centerCrop()
+                       .into(mHeaderPicker);
+
+            }
         }
     }
 }

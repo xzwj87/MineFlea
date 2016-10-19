@@ -1,9 +1,7 @@
 package com.github.xzwj87.mineflea.market.ui.adapter;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -17,20 +15,18 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import com.github.xzwj87.mineflea.BuildConfig;
 import com.github.xzwj87.mineflea.R;
+import com.github.xzwj87.mineflea.app.AppGlobals;
+import com.github.xzwj87.mineflea.market.ui.fragment.PublishGoodsFragment;
 import com.github.xzwj87.mineflea.utils.FileManager;
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
 
 import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by jason on 10/7/16.
@@ -38,18 +34,15 @@ import butterknife.OnClick;
 
 public class PublishGoodsImageAdapter extends RecyclerView.Adapter<PublishGoodsImageAdapter.ImageViewHolder>{
 
-    private static int MAX_IMG_COLS = 3;
-    private int mItemSize;
+    private static int MAX_COLS = 3;
     private ArrayList<String> mImgPath;
-    private int mImgSize;
     private Context mContext;
     private ItemClickListener mListener;
+    private static Bitmap sAddBitmap = decodeAddBitmap();
 
     public PublishGoodsImageAdapter(Context context, ArrayList<String> filePath){
         mImgPath = filePath;
         mContext = context;
-        mItemSize = mImgPath.size();
-        setColumnNumber(context,MAX_IMG_COLS);
     }
 
     public interface ItemClickListener{
@@ -75,44 +68,28 @@ public class PublishGoodsImageAdapter extends RecyclerView.Adapter<PublishGoodsI
 
     @Override
     public void onBindViewHolder(ImageViewHolder holder, int position) {
+        Log.v(PublishGoodsImageAdapter.class.getSimpleName(),
+                "onBindViewHolder(): pos = " + position);
         String path = mImgPath.get(position);
 
-        if(path != null) {
+        if(position != (getItemCount()-1)) {
             Uri imgUri = Uri.fromFile(new File(path));
             Picasso.with(mContext)
                     .load(imgUri)
-                    .resize(mImgSize, mImgSize)
+                    .resize(512,512)
+                    .centerCrop()
                     .into(holder.imgView);
 
             holder.mBtnRemove.setVisibility(View.VISIBLE);
         }else{
-            Drawable drawable;
-            if(Build.VERSION.SDK_INT >= 21){
-                drawable = mContext.getDrawable(R.drawable.ic_add_grey_100dp);
-            }else{
-                drawable = mContext.
-                        getResources().getDrawable(R.drawable.ic_add_grey_100dp);
-            }
-
-            Bitmap bitmap = FileManager.drawableToBitmap(drawable,mImgSize,mImgSize);
-            if(bitmap != null) {
-                holder.imgView.setImageBitmap(bitmap);
-            }
-            holder.imgView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            holder.imgView.setImageBitmap(sAddBitmap);
+            holder.mBtnRemove.setVisibility(View.GONE);
         }
     }
 
     @Override
     public int getItemCount() {
         return mImgPath.size();
-    }
-
-    public void setColumnNumber(Context context,int cols){
-        WindowManager winMgr = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics metrics = new DisplayMetrics();
-        winMgr.getDefaultDisplay().getMetrics(metrics);
-
-        mImgSize = metrics.widthPixels/cols;
     }
 
     public class ImageViewHolder extends RecyclerView.ViewHolder{
@@ -152,5 +129,28 @@ public class PublishGoodsImageAdapter extends RecyclerView.Adapter<PublishGoodsI
                 }
             });
         }
+    }
+
+    private static int getImgSize(){
+        WindowManager winMgr = (WindowManager)AppGlobals.getAppContext().
+                getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics metrics = new DisplayMetrics();
+        winMgr.getDefaultDisplay().getMetrics(metrics);
+
+        return metrics.widthPixels/MAX_COLS;
+    }
+
+
+    private static Bitmap decodeAddBitmap(){
+        Drawable drawable;
+        if(Build.VERSION.SDK_INT >= 21){
+            drawable = AppGlobals.getAppContext().getDrawable(R.drawable.ic_add_grey_100dp);
+        }else{
+            drawable = AppGlobals.getAppContext().
+                    getResources().getDrawable(R.drawable.ic_add_grey_100dp);
+        }
+
+        int size = getImgSize();
+        return FileManager.drawableToBitmap(drawable,size,size);
     }
 }

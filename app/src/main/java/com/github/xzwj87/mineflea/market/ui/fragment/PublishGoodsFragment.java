@@ -3,9 +3,11 @@ package com.github.xzwj87.mineflea.market.ui.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,8 +29,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import droidninja.filepicker.FilePickerBuilder;
-import droidninja.filepicker.FilePickerConst;
+import me.iwf.photopicker.PhotoPicker;
 
 /**
  * Created by jason on 10/7/16.
@@ -38,6 +39,9 @@ public class PublishGoodsFragment extends BaseFragment
         implements PublishGoodsView,PublishGoodsImageAdapter.ItemClickListener{
     public static final String TAG = PublishGoodsFragment.class.getSimpleName();
 
+    private static final int IMG_COL_NUMBER = 3;
+    private static final int MAX_NUM_PICTURES = 5;
+
     @BindView(R.id.rv_goods_image) RecyclerView mRvGoodsImg;
     @BindView(R.id.et_goods_name) EditText mEtGoodsName;
     @BindView(R.id.et_goods_high_price) EditText mEtHighPrice;
@@ -46,7 +50,8 @@ public class PublishGoodsFragment extends BaseFragment
 
     @Inject
     PublishGoodsPresenterImpl mPresenter;
-    private ArrayList<String> mFilePath = null;
+    private ArrayList<String> mFilePath;
+    private PublishGoodsImageAdapter mGoodsImgAdapter;
 
     public PublishGoodsFragment(){}
 
@@ -140,7 +145,6 @@ public class PublishGoodsFragment extends BaseFragment
         mPresenter.init();
 
         mFilePath = new ArrayList<>();
-        // add a dummy value
         mFilePath.add(null);
 
         setupRecycleView();
@@ -151,10 +155,15 @@ public class PublishGoodsFragment extends BaseFragment
         Log.v(TAG,"addImgToView()");
 
         if(mRvGoodsImg != null){
-            PublishGoodsImageAdapter adapter = new PublishGoodsImageAdapter(getContext(),mFilePath);
+/*            PublishGoodsImageAdapter adapter = new PublishGoodsImageAdapter(getContext(),mFilePath);
             adapter.setClickListener(this);
 
-            mRvGoodsImg.setAdapter(adapter);
+            mRvGoodsImg.setAdapter(adapter);*/
+
+            mGoodsImgAdapter = new PublishGoodsImageAdapter(getContext(),mFilePath);
+            mGoodsImgAdapter.setClickListener(this);
+
+            mRvGoodsImg.setAdapter(mGoodsImgAdapter);
         }
 
     }
@@ -163,7 +172,8 @@ public class PublishGoodsFragment extends BaseFragment
         Log.v(TAG,"setupRecycleView()");
 
         if(mRvGoodsImg != null) {
-            GridLayoutManager gridLayoutMgr = new GridLayoutManager(getActivity(), 3);
+            StaggeredGridLayoutManager gridLayoutMgr = new
+                    StaggeredGridLayoutManager(IMG_COL_NUMBER, OrientationHelper.VERTICAL);
             mRvGoodsImg.setLayoutManager(gridLayoutMgr);
             mRvGoodsImg.setItemAnimator(new DefaultItemAnimator());
         }
@@ -173,20 +183,32 @@ public class PublishGoodsFragment extends BaseFragment
     public void onItemClickListener(int pos) {
         Log.v(TAG,"onItemClickListener(): pos = " + pos);
 
-        FilePickerBuilder.getInstance().setMaxCount(5)
-                .setSelectedFiles(mFilePath)
-                .setActivityTheme(R.style.AppTheme)
-                .pickPhoto(this);
+        if(mFilePath.size() < (MAX_NUM_PICTURES+1)) {
+            PhotoPicker.builder()
+                    .setPhotoCount(MAX_NUM_PICTURES)
+                    .setPreviewEnabled(true)
+                    .setShowGif(true)
+                    .setShowCamera(true)
+                    .start(getActivity(), this, PhotoPicker.REQUEST_CODE);
+        }else{
+            showToast(getString(R.string.pictures_over_max_count_hints));
+        }
     }
 
     @Override
     public void onItemLongClickListener(int pos) {
         Log.v(TAG,"onItemLongClickListener(): pos = " + pos);
 
-        FilePickerBuilder.getInstance().setMaxCount(3)
-                .setSelectedFiles(mFilePath)
-                .setActivityTheme(R.style.AppTheme)
-                .pickPhoto(this);
+        if(mFilePath.size() < (MAX_NUM_PICTURES+1)) {
+            PhotoPicker.builder()
+                    .setPhotoCount(MAX_NUM_PICTURES)
+                    .setPreviewEnabled(true)
+                    .setShowGif(true)
+                    .setShowCamera(true)
+                    .start(getActivity(), this, PhotoPicker.REQUEST_CODE);
+        }else{
+            showToast(getString(R.string.__picker_over_max_count_tips));
+        }
     }
 
     @Override
@@ -195,27 +217,39 @@ public class PublishGoodsFragment extends BaseFragment
 
         mFilePath.remove(pos);
 
-        addImgToView();
+        //addImgToView();
+        if(mGoodsImgAdapter != null){
+            mGoodsImgAdapter.notifyDataSetChanged();
+        }else {
+            addImgToView();
+        }
     }
 
     @Override
     public void onActivityResult(int request, int result, Intent data){
         Log.v(TAG,"onActivityResult(): result = " + result);
         switch (request){
-            case FilePickerConst.REQUEST_CODE_PHOTO:
+            case PhotoPicker.REQUEST_CODE:
                 if(result == Activity.RESULT_OK && data != null){
-                    ArrayList<String> copy = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_PHOTOS);
+                    ArrayList<String> copy = data.
+                            getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
                     for(int idx = 0; idx < copy.size(); ++idx) {
                         if(!mFilePath.contains(copy.get(idx))) {
                             mFilePath.add(0, copy.get(idx));
                         }
                     }
                     Log.v(TAG,mFilePath.size()-1 + " pictures picked");
+
+                    //addImgToView();
+                    if(mGoodsImgAdapter != null){
+                        mGoodsImgAdapter.notifyDataSetChanged();
+                    }else {
+                        addImgToView();
+                    }
                 }
 
-                addImgToView();
-
                 break;
+
             default:
                 break;
         }

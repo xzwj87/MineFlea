@@ -119,6 +119,8 @@ public class UserCenterFragment extends BaseFragment{
             if(!TextUtils.isEmpty(headIcon)) {
                 Picasso.with(getActivity())
                         .load(headIcon)
+                        .fit()
+                        .centerInside()
                         .into(mCivHeader);
             }else{
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
