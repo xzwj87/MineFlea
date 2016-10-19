@@ -23,4 +23,8 @@ public abstract class RegisterPresenter implements BasePresenter,PresenterCallba
     public void onPublishComplete(Message message){
         throw new UnsupportedOperationException("not supported operation");
     }
+
+    public void updateUploadProcess(int count){
+        throw new UnsupportedOperationException("not supported operation");
+    }
 }

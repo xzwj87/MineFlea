@@ -24,6 +24,8 @@ public class RepoResponseCode {
 
     public static final int RESP_LOGIN_FAIL = 0x08;
 
+    public static final int RESP_AV_SAVED_SUCCESS = 0x10;
+
     private int mCode = RESP_SUCCESS;
 
     public RepoResponseCode(){}

@@ -113,8 +113,6 @@ public class UserCenterFragment extends BaseFragment{
             mTvNickName.setText(UserPrefsUtil.getString(UserInfo.USER_NICK_NAME, ""));
             mTvUserEmail.setText(UserPrefsUtil.getString(UserInfo.UER_EMAIL,""));
 
-            //TODO: we may want to use custom ImageView to display head icon
-            // for Picasso seems to make image 变形
             String headIcon = UserPrefsUtil.getString(UserInfo.USER_HEAD_ICON,"");
             if(!TextUtils.isEmpty(headIcon)) {
                 Picasso.with(getActivity())

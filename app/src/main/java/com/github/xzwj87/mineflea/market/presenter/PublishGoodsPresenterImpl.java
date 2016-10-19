@@ -26,6 +26,11 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     private PublishGoodsView mView;
     private PublishGoodsInfo mGoodsInfo;
 
+    private int mUploadImgCount;
+    private int mCurrentProcess;
+    private static int sImgNumber;
+    private List<String> mImgUris;
+
     @Inject
     public PublishGoodsPresenterImpl(@Named("dataRepository") MineFleaRepository repository){
         mRepository = repository;
@@ -41,14 +46,20 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
         mGoodsInfo = new PublishGoodsInfo();
         mRepository.init();
         mRepository.setPresenterCallback(this);
+
+        mCurrentProcess = 0;
+        mUploadImgCount = 0;
     }
 
     @Override
     public void publishGoods() {
 
         mRepository.publishGoods(mGoodsInfo);
-
-        mView.finishView();
+        sImgNumber = mGoodsInfo.getImageUri().size();
+        mImgUris = mGoodsInfo.getImageUri();
+        mUploadImgCount = 0;
+        mCurrentProcess = 0;
+        mRepository.uploadImage(mImgUris.get(mUploadImgCount));
     }
 
     @Override
@@ -82,6 +93,11 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     }
 
     @Override
+    public void setPublisherName(String name) {
+        mGoodsInfo.setPublisher(name);
+    }
+
+    @Override
     public void onPause() {
     }
 
@@ -93,9 +109,25 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     @Override
     public void onPublishComplete(Message message) {
         if(message.obj == null){
-
+            mView.onPublishComplete(false);
         }else{
-
+            mView.onPublishComplete(true);
         }
+    }
+
+    @Override
+    public void updateUploadProcess(int count) {
+        if((count == 100) && (++mUploadImgCount < sImgNumber)){
+            mRepository.uploadImage(mImgUris.get(mUploadImgCount));
+        }else if(mUploadImgCount == sImgNumber){
+            mView.onPublishComplete(true);
+            mUploadImgCount = 0;
+            mCurrentProcess = 0;
+            return;
+        }
+
+        mCurrentProcess = (count/sImgNumber) + mUploadImgCount*100/sImgNumber;
+        Log.v(TAG,"updateUploadProcess(): count = " + mCurrentProcess);
+        mView.updateUploadProcess(mCurrentProcess);
     }
 }

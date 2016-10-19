@@ -28,4 +28,8 @@ public abstract  class LoginPresenter implements
     public void onRegisterComplete(Message message){
         throw new UnsupportedOperationException("not supported operation");
     }
+
+    public void updateUploadProcess(int count){
+        throw new UnsupportedOperationException("not supported operation");
+    }
 }

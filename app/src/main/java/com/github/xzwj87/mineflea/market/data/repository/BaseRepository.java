@@ -33,4 +33,9 @@ public interface BaseRepository {
      * Callback of Presenter:this must be called in Presenter
      */
     void setPresenterCallback(PresenterCallback callback);
+
+    /*
+     * upload image
+     */
+    void uploadImage(String imgUri);
 }

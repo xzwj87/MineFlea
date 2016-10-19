@@ -10,8 +10,6 @@ import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.PresenterCallback;
 
-import java.util.HashMap;
-
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -66,6 +64,11 @@ public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.Cl
         mCb = callback;
     }
 
+    @Override
+    public void uploadImage(String imgUri) {
+        mCloudSrc.uploadImg(imgUri);
+    }
+
 
     @Override
     public void publishComplete(Message message) {
@@ -85,6 +88,13 @@ public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.Cl
 
         mCb.onRegisterComplete(message);
     }
+
+    @Override
+    public void updateProcess(int count) {
+        Log.v(TAG,"updateProcess(): count = " + count);
+        mCb.updateUploadProcess(count);
+    }
+
 
     @Override
     public void loginComplete(Message message) {

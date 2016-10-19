@@ -20,6 +20,7 @@ public abstract class PublishGoodsPresenter implements BasePresenter,
     public abstract void setGoodsNote(String note);
     public abstract void setLocation(String loc);
     public abstract void setGoodsImgUrl(List<String> url);
+    public abstract void setPublisherName(String name);
 
     public abstract void onPublishComplete(Message message);
 

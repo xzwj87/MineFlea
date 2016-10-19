@@ -4,30 +4,26 @@ import android.os.Message;
 import android.util.Log;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogInCallback;
+import com.avos.avoscloud.ProgressCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.github.xzwj87.mineflea.market.data.DataSource;
 import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
-import com.github.xzwj87.mineflea.market.data.repository.BaseRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.ModelConstants;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
-import com.github.xzwj87.mineflea.market.model.PublisherInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
-import com.github.xzwj87.mineflea.market.net.NetDataApi;
 import com.github.xzwj87.mineflea.market.net.NetDataApiImpl;
 import com.github.xzwj87.mineflea.utils.NetConnectionUtils;
 
-import java.util.List;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
-
-import butterknife.BindView;
-import rx.Observable;
 
 /**
  * Created by JasonWang on 2016/9/20.
@@ -61,6 +57,7 @@ public class MineFleaCloudSource implements DataSource{
     public interface CloudSourceCallback{
         void publishComplete(Message message);
         void registerComplete(Message message);
+        void updateProcess(int count);
         void loginComplete(Message message);
     }
 
@@ -88,18 +85,17 @@ public class MineFleaCloudSource implements DataSource{
                     Log.v(TAG,"saveInBackground(): done");
 
                     final Message msg = new Message();
-                    int code = RepoResponseCode.RESP_SUCCESS;
-                    if(e == null){
-                        msg.obj = avObject.getObjectId();
-                    }else{
+                    if(e != null){
                         msg.obj = null;
-                        code = RepoResponseCode.RESP_AV_SAVED_FAILURE;
+                        msg.arg1 = RepoResponseCode.RESP_AV_SAVED_FAILURE;
+                        mCloudCallback.publishComplete(msg);
+                        return;
                     }
 
-                    Log.v(TAG,"publishGoods(): goods = " + goods);
-
-
-                    msg.arg1 = code;
+                    String id = avObject.getObjectId();
+                    msg.arg1 = RepoResponseCode.RESP_AV_SAVED_SUCCESS;
+                    msg.obj = id;
+                    Log.v(TAG,"publishGoods(): goods = " + id);
                     mCloudCallback.publishComplete(msg);
                 }
             });
@@ -160,5 +156,35 @@ public class MineFleaCloudSource implements DataSource{
                 mCloudCallback.loginComplete(message);
             }
         });
+    }
+
+
+    public void uploadImg(final String imgUri){
+        Log.v(TAG,"uploadImg(): img = " + imgUri);
+            try {
+                final File file = new File(imgUri);
+                AVFile avFile = AVFile.withAbsoluteLocalPath(file.getName(),file.getPath());
+
+                avFile.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(AVException e) {
+                        if(e != null){
+                            Log.e(TAG,"fail to upload image: " + file.getPath());
+                        }
+                        Log.v(TAG,"saveInBackground(): done");
+                        //mCloudCallback.updateProcess(100);
+                    }
+                }, new ProgressCallback() {
+                    @Override
+                    public void done(Integer integer) {
+                        Log.v(TAG,"uploadImg(): current process = " + integer);
+                        mCloudCallback.updateProcess(integer);
+                    }
+                });
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                mCloudCallback.updateProcess(100);
+            }
+
     }
 }

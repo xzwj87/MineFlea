@@ -40,4 +40,7 @@
     <string name="prompt_login_incorrect_email_password">邮箱或密码有误</string>
     <string name="pictures_over_max_count_hints">最多可选５张图片</string>
 
+    <string name="publish_goods_success">发布成功</string>
+    <string name="publish_goods_error">发布失败</string>
+
 </resources>

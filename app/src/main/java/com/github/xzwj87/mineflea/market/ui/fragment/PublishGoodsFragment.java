@@ -17,11 +17,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
+import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.PublishGoodsPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.PublishGoodsView;
 import com.github.xzwj87.mineflea.market.ui.adapter.PublishGoodsImageAdapter;
+import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 
 import java.util.ArrayList;
 
@@ -47,6 +50,7 @@ public class PublishGoodsFragment extends BaseFragment
     @BindView(R.id.et_goods_high_price) EditText mEtHighPrice;
     @BindView(R.id.et_goods_low_price) EditText mEtLowPrice;
     @BindView(R.id.et_note) EditText mEtNote;
+    @BindView(R.id.process_upload_image) NumberProgressBar mProcessBar;
 
     @Inject
     PublishGoodsPresenterImpl mPresenter;
@@ -76,6 +80,7 @@ public class PublishGoodsFragment extends BaseFragment
         switch (id){
             case R.id.action_publish:
                 publishGoods();
+                return true;
             default:
                 return super.onOptionsItemSelected(menuItem);
         }
@@ -118,8 +123,11 @@ public class PublishGoodsFragment extends BaseFragment
         mPresenter.setGoodsHighPrice(Double.parseDouble(mEtHighPrice.getText().toString()));
         mPresenter.setGoodsNote(mEtNote.getText().toString());
         mPresenter.setGoodsImgUrl(mFilePath.subList(0,mFilePath.size()-1));
+        mPresenter.setPublisherName(UserPrefsUtil.getString(UserInfo.USER_NAME,"dummy"));
 
         mPresenter.publishGoods();
+        mProcessBar.setVisibility(View.VISIBLE);
+        mProcessBar.setProgress(0);
     }
 
     @Override
@@ -127,9 +135,23 @@ public class PublishGoodsFragment extends BaseFragment
         Log.v(TAG,"onPublishComplete(): " + (success ? "success" : "failure"));
 
         // Todo: save those failed info to "draft box"
-        if(!success){
-            showToast(getString(R.string.error_publish_fail));
+        if(getActivity() != null) {
+            if (!success) {
+                showToast(getString(R.string.publish_goods_error));
+            } else {
+                showToast(getString(R.string.publish_goods_success));
+            }
+
+            mProcessBar.setVisibility(View.GONE);
+
+            finishView();
         }
+    }
+
+    @Override
+    public void updateUploadProcess(int count) {
+        Log.v(TAG,"updateUploadProcess(): count = " + count);
+        mProcessBar.setProgress(count);
     }
 
     @Override
