@@ -82,15 +82,18 @@ public class UserCenterFragment extends BaseFragment{
                 if(result == Activity.RESULT_OK && data != null) {
                     UserInfo userInfo = new UserInfo();
                     userInfo.setLoginState(true);
+                    userInfo.setNickName(data.getStringExtra(UserInfo.USER_NICK_NAME));
                     userInfo.setUserName(data.getStringExtra(UserInfo.USER_NAME));
                     userInfo.setHeadIconUrl(data.getStringExtra(UserInfo.USER_HEAD_ICON));
                     userInfo.setUerEmail(data.getStringExtra(UserInfo.UER_EMAIL));
                     userInfo.setUserPwd(data.getStringExtra(UserInfo.USER_PWD));
                     userInfo.setUserTelNumber(data.getStringExtra(UserInfo.USER_TEL));
 
-                    if(TextUtils.isEmpty(userInfo.getHeadIconUrl())) {
+                    if(!TextUtils.isEmpty(userInfo.getHeadIconUrl())) {
                         Picasso.with(getActivity())
                                 .load(userInfo.getHeadIconUrl())
+                                .resize(512,512)
+                                .centerCrop()
                                 .into(mCivHeader);
                     }
                     mTvNickName.setText(userInfo.getNickName());
@@ -107,9 +110,8 @@ public class UserCenterFragment extends BaseFragment{
     }
 
     private void initView(){
-        Boolean isLogin = UserPrefsUtil.getBoolean(UserInfo.IS_LOGIN,false);
-
-        if(isLogin) {
+        Log.v(TAG,"initView()");
+        if(UserPrefsUtil.isLogin()) {
             mTvNickName.setText(UserPrefsUtil.getString(UserInfo.USER_NICK_NAME, ""));
             mTvUserEmail.setText(UserPrefsUtil.getString(UserInfo.UER_EMAIL,""));
 
@@ -117,8 +119,8 @@ public class UserCenterFragment extends BaseFragment{
             if(!TextUtils.isEmpty(headIcon)) {
                 Picasso.with(getActivity())
                         .load(headIcon)
-                        .fit()
-                        .centerInside()
+                        .resize(512,512)
+                        .centerCrop()
                         .into(mCivHeader);
             }else{
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

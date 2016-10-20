@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.data.DataSource;
-import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
+import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.PublisherInfo;
@@ -150,22 +150,22 @@ public class MineFleaLocalSource implements DataSource{
         });
     }
 
-    public Observable<RepoResponseCode> favorGoods(PublishGoodsInfo goods) {
+    public Observable<ResponseCode> favorGoods(PublishGoodsInfo goods) {
         Log.v(TAG,"favorGoods(): goods = " + goods);
         ContentValues cv = GoodsModelMapper.map(goods);
 
         long id = insert(FavorGoodsEntry.TABLE_FAVOR_GOODS,cv);
 
-        int code = RepoResponseCode.RESP_SUCCESS;
+        int code = ResponseCode.RESP_SUCCESS;
         if(id == -1){
-            code = RepoResponseCode.RESP_DATABASE_SQL_ERROR;
+            code = ResponseCode.RESP_DATABASE_SQL_ERROR;
         }
 
-        final RepoResponseCode response = new RepoResponseCode(code);
+        final ResponseCode response = new ResponseCode(code);
 
-        return Observable.create(new Observable.OnSubscribe<RepoResponseCode>() {
+        return Observable.create(new Observable.OnSubscribe<ResponseCode>() {
             @Override
-            public void call(Subscriber<? super RepoResponseCode> subscriber) {
+            public void call(Subscriber<? super ResponseCode> subscriber) {
                 subscriber.onNext(response);
             }
         });
@@ -273,7 +273,7 @@ public class MineFleaLocalSource implements DataSource{
                 "it should be queried in remote data source");
     }
 
-    public Observable<RepoResponseCode> followPublisher(PublisherInfo publisher) {
+    public Observable<ResponseCode> followPublisher(PublisherInfo publisher) {
         throw new UnsupportedOperationException(
                 "it should be called in remote data source");
     }

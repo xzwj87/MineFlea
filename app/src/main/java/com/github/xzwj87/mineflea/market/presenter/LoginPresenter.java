@@ -32,4 +32,8 @@ public abstract  class LoginPresenter implements
     public void updateUploadProcess(int count){
         throw new UnsupportedOperationException("not supported operation");
     }
+
+    public void onImgUploadComplete(Message message){
+        throw new UnsupportedOperationException("not supported operation");
+    }
 }

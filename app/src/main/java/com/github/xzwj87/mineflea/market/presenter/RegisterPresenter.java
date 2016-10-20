@@ -8,10 +8,12 @@ import android.os.Message;
 
 public abstract class RegisterPresenter implements BasePresenter,PresenterCallback{
     public abstract void register();
+    public abstract void onImgUploadComplete(Message msg);
     public abstract void setUserNickName(String name);
     public abstract void setUserEmail(String email);
     public abstract void setUserTel(String tel);
     public abstract void setUserPwd(String pwd);
+    public abstract void setUserIconUrl(String url);
     public abstract boolean validUserInfo();
 
     public abstract void onRegisterComplete(Message message);

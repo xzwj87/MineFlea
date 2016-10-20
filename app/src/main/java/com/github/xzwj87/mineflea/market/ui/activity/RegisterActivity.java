@@ -86,6 +86,11 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
         mPresenter.setUserEmail(email);
         mPresenter.setUserTel(tel);
         mPresenter.setUserPwd(pwd);
+        if(!mHeadIconUrl.isEmpty()) {
+            mPresenter.setUserIconUrl(mHeadIconUrl.get(0));
+        }else{
+            mPresenter.setUserIconUrl("null");
+        }
 
         if(mPresenter.validUserInfo()){
             mPresenter.register();
@@ -97,10 +102,6 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
     public void pickHeadIcon(){
         Log.v(TAG,"pickHeadIcon()");
 
-/*        FilePickerBuilder builder = FilePickerBuilder.getInstance();
-        builder.setMaxCount(1)
-               .setSelectedFiles(mHeadIconUrl)
-               .pickPhoto(this);*/
         PhotoPicker.builder()
                    .setPhotoCount(1)
                    .setPreviewEnabled(true)
@@ -120,18 +121,14 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
 
         Intent data = new Intent();
         Bundle bundle = new Bundle();
-        bundle.putString(UserInfo.USER_NAME,mEtName.getText().toString());
+        bundle.putString(UserInfo.USER_NICK_NAME,mEtName.getText().toString());
         bundle.putString(UserInfo.UER_EMAIL,mAtvEmail.getText().toString());
         bundle.putString(UserInfo.USER_TEL,mEtTelNumber.getText().toString());
         bundle.putString(UserInfo.USER_PWD,mEtPwd.getText().toString());
-        if(mHeadIconUrl != null && mHeadIconUrl.size() >= 1) {
-            bundle.putString(UserInfo.USER_HEAD_ICON, mHeadIconUrl.get(0));
-        }
+        bundle.putString(UserInfo.USER_HEAD_ICON, mHeadIconUrl.get(0));
 
         data.putExtras(bundle);
         setResult(RESULT_OK,data);
-
-        finishView();
     }
 
     @Override

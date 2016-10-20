@@ -59,7 +59,7 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
         mImgUris = mGoodsInfo.getImageUri();
         mUploadImgCount = 0;
         mCurrentProcess = 0;
-        mRepository.uploadImage(mImgUris.get(mUploadImgCount));
+        mRepository.uploadImage(mImgUris.get(mUploadImgCount),true);
     }
 
     @Override
@@ -118,7 +118,7 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     @Override
     public void updateUploadProcess(int count) {
         if((count == 100) && (++mUploadImgCount < sImgNumber)){
-            mRepository.uploadImage(mImgUris.get(mUploadImgCount));
+            mRepository.uploadImage(mImgUris.get(mUploadImgCount),true);
         }else if(mUploadImgCount == sImgNumber){
             mView.onPublishComplete(true);
             mUploadImgCount = 0;

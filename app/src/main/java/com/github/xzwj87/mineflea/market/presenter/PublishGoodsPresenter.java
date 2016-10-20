@@ -32,4 +32,8 @@ public abstract class PublishGoodsPresenter implements BasePresenter,
     public void onRegisterComplete(Message message){
         throw new UnsupportedOperationException("not supported operation");
     }
+
+    public void onImgUploadComplete(Message message){
+        throw new UnsupportedOperationException("not supported operation");
+    }
 }

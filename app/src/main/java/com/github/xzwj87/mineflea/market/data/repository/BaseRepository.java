@@ -37,5 +37,10 @@ public interface BaseRepository {
     /*
      * upload image
      */
-    void uploadImage(String imgUri);
+    void uploadImage(String imgUri,boolean showProcess);
+
+    /*
+     * image is uploaded completely
+     */
+    void onImgUploadComplete(Message msg);
 }

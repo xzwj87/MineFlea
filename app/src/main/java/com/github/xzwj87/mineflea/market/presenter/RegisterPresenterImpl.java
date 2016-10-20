@@ -39,6 +39,17 @@ public class RegisterPresenterImpl extends RegisterPresenter{
     @Override
     public void register() {
         Log.v(TAG,"register()");
+        mRepository.uploadImage(mUserInfo.getHeadIconUrl(),false);
+    }
+
+    @Override
+    public void onImgUploadComplete(Message message) {
+        Log.v(TAG,"onImgUploadComplete(): icon id = " + message.obj);
+        if(message.obj != null) {
+            mUserInfo.setHeadIconUrl((String)message.obj);
+        }else{
+            mUserInfo.setHeadIconUrl("");
+        }
         mRepository.register(mUserInfo);
     }
 
@@ -65,6 +76,11 @@ public class RegisterPresenterImpl extends RegisterPresenter{
     }
 
     @Override
+    public void setUserIconUrl(String url) {
+        mUserInfo.setHeadIconUrl(url);
+    }
+
+    @Override
     public boolean validUserInfo() {
 
         if(!UserInfoUtils.isNameValid(mUserInfo.getUserName())){
@@ -86,9 +102,6 @@ public class RegisterPresenterImpl extends RegisterPresenter{
             mView.showPwdInvalidMsg();
             return false;
         }
-
-
-        //mView.showProgress();
 
         return true;
     }
@@ -119,5 +132,7 @@ public class RegisterPresenterImpl extends RegisterPresenter{
         }else {
             mView.onRegisterComplete(false);
         }
+
+        mView.finishView();
     }
 }

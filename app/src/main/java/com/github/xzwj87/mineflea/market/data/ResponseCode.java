@@ -4,7 +4,7 @@ package com.github.xzwj87.mineflea.market.data;
  * Created by jason on 9/28/16.
  */
 
-public class RepoResponseCode {
+public class ResponseCode {
 
     public static final int RESP_SUCCESS = 0x00;
 
@@ -26,11 +26,13 @@ public class RepoResponseCode {
 
     public static final int RESP_AV_SAVED_SUCCESS = 0x10;
 
+    public static final int RESP_FILE_NOT_FOUND = 0x20;
+
     private int mCode = RESP_SUCCESS;
 
-    public RepoResponseCode(){}
+    public ResponseCode(){}
 
-    public RepoResponseCode(int code){
+    public ResponseCode(int code){
         mCode = code;
     }
 

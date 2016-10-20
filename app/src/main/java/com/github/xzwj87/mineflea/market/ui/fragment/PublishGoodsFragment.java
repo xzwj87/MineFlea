@@ -177,11 +177,6 @@ public class PublishGoodsFragment extends BaseFragment
         Log.v(TAG,"addImgToView()");
 
         if(mRvGoodsImg != null){
-/*            PublishGoodsImageAdapter adapter = new PublishGoodsImageAdapter(getContext(),mFilePath);
-            adapter.setClickListener(this);
-
-            mRvGoodsImg.setAdapter(adapter);*/
-
             mGoodsImgAdapter = new PublishGoodsImageAdapter(getContext(),mFilePath);
             mGoodsImgAdapter.setClickListener(this);
 

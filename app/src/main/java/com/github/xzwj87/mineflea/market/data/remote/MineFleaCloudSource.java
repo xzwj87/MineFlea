@@ -11,13 +11,14 @@ import com.avos.avoscloud.LogInCallback;
 import com.avos.avoscloud.ProgressCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.github.xzwj87.mineflea.market.data.DataSource;
-import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
+import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.ModelConstants;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.net.NetDataApiImpl;
 import com.github.xzwj87.mineflea.utils.NetConnectionUtils;
+import com.tencent.qc.stat.common.User;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -59,6 +60,7 @@ public class MineFleaCloudSource implements DataSource{
         void registerComplete(Message message);
         void updateProcess(int count);
         void loginComplete(Message message);
+        void onImgUploadComplete(Message msg);
     }
 
     /**
@@ -87,13 +89,13 @@ public class MineFleaCloudSource implements DataSource{
                     final Message msg = new Message();
                     if(e != null){
                         msg.obj = null;
-                        msg.arg1 = RepoResponseCode.RESP_AV_SAVED_FAILURE;
+                        msg.arg1 = ResponseCode.RESP_AV_SAVED_FAILURE;
                         mCloudCallback.publishComplete(msg);
                         return;
                     }
 
                     String id = avObject.getObjectId();
-                    msg.arg1 = RepoResponseCode.RESP_AV_SAVED_SUCCESS;
+                    msg.arg1 = ResponseCode.RESP_AV_SAVED_SUCCESS;
                     msg.obj = id;
                     Log.v(TAG,"publishGoods(): goods = " + id);
                     mCloudCallback.publishComplete(msg);
@@ -124,10 +126,10 @@ public class MineFleaCloudSource implements DataSource{
                 final Message msg = new Message();
                 if(e == null){
                     msg.obj = avUser.getObjectId();
-                    msg.arg1 = RepoResponseCode.RESP_REGISTER_SUCCESS;
+                    msg.arg1 = ResponseCode.RESP_REGISTER_SUCCESS;
                 }else{
                     msg.obj = null;
-                    msg.arg1 = RepoResponseCode.RESP_REGISTER_FAIL;
+                    msg.arg1 = ResponseCode.RESP_REGISTER_FAIL;
                 }
 
                 mCloudCallback.registerComplete(msg);
@@ -144,10 +146,10 @@ public class MineFleaCloudSource implements DataSource{
             public void done(AVUser avUser, AVException e) {
                 Message message = new Message();
                 if(e == null){
-                    message.arg1 = RepoResponseCode.RESP_LOGIN_SUCCESS;
+                    message.arg1 = ResponseCode.RESP_LOGIN_SUCCESS;
                     message.obj = avUser;
                 }else{
-                    message.arg1 = RepoResponseCode.RESP_LOGIN_FAIL;
+                    message.arg1 = ResponseCode.RESP_LOGIN_FAIL;
                     message.obj = null;
                 }
 
@@ -159,25 +161,26 @@ public class MineFleaCloudSource implements DataSource{
     }
 
 
-    public void uploadImg(final String imgUri){
+    public void uploadImg(final String imgUri, boolean showProcess){
         Log.v(TAG,"uploadImg(): img = " + imgUri);
+
+        if(showProcess) {
             try {
                 final File file = new File(imgUri);
-                AVFile avFile = AVFile.withAbsoluteLocalPath(file.getName(),file.getPath());
+                AVFile avFile = AVFile.withAbsoluteLocalPath(file.getName(), file.getPath());
 
                 avFile.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(AVException e) {
-                        if(e != null){
-                            Log.e(TAG,"fail to upload image: " + file.getPath());
+                        if (e != null) {
+                            Log.e(TAG, "fail to upload image: " + file.getPath());
                         }
-                        Log.v(TAG,"saveInBackground(): done");
-                        //mCloudCallback.updateProcess(100);
+                        Log.v(TAG, "saveInBackground(): done");
                     }
                 }, new ProgressCallback() {
                     @Override
                     public void done(Integer integer) {
-                        Log.v(TAG,"uploadImg(): current process = " + integer);
+                        Log.v(TAG, "uploadImg(): current process = " + integer);
                         mCloudCallback.updateProcess(integer);
                     }
                 });
@@ -185,6 +188,35 @@ public class MineFleaCloudSource implements DataSource{
                 e.printStackTrace();
                 mCloudCallback.updateProcess(100);
             }
+        }else{
+            try {
+                final File file = new File(imgUri);
+                final AVFile avFile = AVFile.withAbsoluteLocalPath(file.getName(), file.getPath());
+
+                avFile.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(AVException e) {
+                        Log.v(TAG, "saveInBackground(): done");
+                        final Message msg = new Message();
+                        if (e != null) {
+                            msg.arg1 = ResponseCode.RESP_AV_SAVED_FAILURE;
+                            msg.obj = null;
+                            Log.e(TAG, "fail to upload image: " + file.getPath());
+                        }else{
+                            msg.arg1 = ResponseCode.RESP_AV_SAVED_SUCCESS;
+                            msg.obj = avFile.getUrl();
+                        }
+                        mCloudCallback.onImgUploadComplete(msg);
+                    }
+                });
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Message msg = new Message();
+                msg.arg1 = ResponseCode.RESP_FILE_NOT_FOUND;
+                msg.obj = null;
+                mCloudCallback.onImgUploadComplete(msg);
+            }
+        }
 
     }
 }

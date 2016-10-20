@@ -11,4 +11,5 @@ public interface PresenterCallback {
     void onPublishComplete(Message message);
     void onRegisterComplete(Message message);
     void updateUploadProcess(int count);
+    void onImgUploadComplete(Message message);
 }

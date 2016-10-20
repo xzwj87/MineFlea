@@ -24,8 +24,7 @@ public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.Cl
 
     private MineFleaLocalSource mLocalSrc;
     @Inject MineFleaCloudSource mCloudSrc;
-    //private HashMap<String,PresenterCallback> mPresenterCbs;
-    private PresenterCallback mCb;
+    private PresenterCallback mPresenterCb;
 
     private PublishGoodsInfo mGoodsInfo;
 
@@ -61,12 +60,17 @@ public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.Cl
 
     @Override
     public void setPresenterCallback(PresenterCallback callback) {
-        mCb = callback;
+        mPresenterCb = callback;
     }
 
     @Override
-    public void uploadImage(String imgUri) {
-        mCloudSrc.uploadImg(imgUri);
+    public void uploadImage(String imgUri,boolean showProcess) {
+        mCloudSrc.uploadImg(imgUri,showProcess);
+    }
+
+    @Override
+    public void onImgUploadComplete(Message msg) {
+        mPresenterCb.onImgUploadComplete(msg);
     }
 
 
@@ -79,25 +83,25 @@ public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.Cl
             mLocalSrc.publishGoods(mGoodsInfo);
         }
 
-        mCb.onPublishComplete(message);
+        mPresenterCb.onPublishComplete(message);
     }
 
     @Override
     public void registerComplete(Message message) {
         Log.v(TAG,"registerComplete(): message " + message.obj);
 
-        mCb.onRegisterComplete(message);
+        mPresenterCb.onRegisterComplete(message);
     }
 
     @Override
     public void updateProcess(int count) {
         Log.v(TAG,"updateProcess(): count = " + count);
-        mCb.updateUploadProcess(count);
+        mPresenterCb.updateUploadProcess(count);
     }
 
 
     @Override
     public void loginComplete(Message message) {
-        mCb.loginComplete(message);
+        mPresenterCb.loginComplete(message);
     }
 }

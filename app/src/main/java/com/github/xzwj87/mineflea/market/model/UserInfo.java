@@ -105,10 +105,10 @@ public class UserInfo {
     public String toString(){
         StringBuilder builder = new StringBuilder(4);
 
-        builder.append("\nUser Name = " + mUserName + "\n")
-               .append("User Email = " + mUserEmail + "\n")
-               .append("User Telephone number " + mTelNumber + "\n")
-               .append("User head icon url = " + mHeadIconUrl);
+        builder.append("\nNick Name = " + mUserName + "\n")
+               .append("Email = " + mUserEmail + "\n")
+               .append("Telephone number " + mTelNumber + "\n")
+               .append("Head icon url = " + mHeadIconUrl + "\n");
 
         return builder.toString();
     }
