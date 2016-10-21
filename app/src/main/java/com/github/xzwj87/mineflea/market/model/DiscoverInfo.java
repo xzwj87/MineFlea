@@ -54,9 +54,9 @@ public class DiscoverInfo {
     @Override
     public String toString() {
         return "DiscoverInfo{" +
-                "des='" + des + '\'' +
+                "location='" + des + '\'' +
                 ", date='" + date + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
+                ", goodsImg='" + imageUrl + '\'' +
                 ", distance='" + distance + '\'' +
                 '}';
     }

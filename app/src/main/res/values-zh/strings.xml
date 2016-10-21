@@ -42,5 +42,6 @@
 
     <string name="publish_goods_success">发布成功</string>
     <string name="publish_goods_error">发布失败</string>
+    <string name="explore_more">EXPLORE MORE</string>
 
 </resources>

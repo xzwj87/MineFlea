@@ -7,7 +7,7 @@
         android:id="@+id/discover_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorLightGrey">
+        android:layout_margin="@dimen/rv_item_margin">
     </android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>

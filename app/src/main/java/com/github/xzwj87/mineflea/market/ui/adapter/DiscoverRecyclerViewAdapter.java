@@ -9,18 +9,23 @@ import android.widget.TextView;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.model.DiscoverInfo;
+import com.squareup.picasso.Picasso;
+import com.tencent.tauth.bean.Pic;
+
 import java.util.List;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by seaice on 2016/8/22.
  */
-public class DiscoverRecylerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class DiscoverRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<DiscoverInfo> infoList;
     private LayoutInflater mInflate;
 
-    public DiscoverRecylerViewAdapter(List<DiscoverInfo> lists) {
+    public DiscoverRecyclerViewAdapter(List<DiscoverInfo> lists) {
         infoList = lists;
         initData();
     }
@@ -32,7 +37,8 @@ public class DiscoverRecylerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     //绑定不同类型Holder
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflate.inflate(R.layout.item_discover_recyler_view, parent, false);
+        View view = mInflate.inflate(R.layout.item_discover_goods_info, parent, false);
+
         return new DiscoverHolder(view);
     }
 
@@ -41,10 +47,10 @@ public class DiscoverRecylerViewAdapter extends RecyclerView.Adapter<RecyclerVie
     public void onBindViewHolder(RecyclerView.ViewHolder vh, int position) {
         DiscoverInfo info = infoList.get(position);
         DiscoverHolder holder = (DiscoverHolder) vh;
-        holder.distance.setText(info.getDistance());
-        holder.imageUrl.setBackgroundResource(R.mipmap.test_info_iv);
-        holder.date.setText(info.getDate());
-        holder.des.setText(info.getDes());
+        holder.loc.setText(info.getDistance());
+        holder.goodsImg.setBackgroundResource(R.mipmap.iv_test);
+        holder.publisher.setText(info.getDate());
+        holder.title.setText(info.getDes());
     }
 
     @Override
@@ -52,18 +58,23 @@ public class DiscoverRecylerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return infoList.size();
     }
 
-    //显示viewpager的Holder
     public class DiscoverHolder extends RecyclerView.ViewHolder {
-        public ImageView imageUrl;
-        public TextView des;
-        public TextView distance;
-        public TextView date;
+        @BindView(R.id.iv_goods_img) ImageView goodsImg;
+        @BindView(R.id.tv_title) TextView title;
+        @BindView(R.id.tv_likes) TextView likes;
+        @BindView(R.id.tv_location) TextView loc;
+        @BindView(R.id.tv_publisher_date) TextView publisher;
+        @BindView(R.id.tv_price) TextView price;
+        @BindView(R.id.tv_note) TextView note;
+        @BindView(R.id.btn_explore_more) TextView more;
+
         public DiscoverHolder(View view) {
             super(view);
-            imageUrl = ButterKnife.findById(view, R.id.iv_title);
-            des = ButterKnife.findById(view, R.id.tv_title);
-            distance = ButterKnife.findById(view, R.id.tv_distance);
-            date = ButterKnife.findById(view, R.id.tv_date);
+
+            ButterKnife.bind(this,view);
         }
+    }
+
+    private void loadImageView(){
     }
 }

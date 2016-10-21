@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
-import com.github.xzwj87.mineflea.market.ui.adapter.DiscoverRecylerViewAdapter;
+import com.github.xzwj87.mineflea.market.ui.adapter.DiscoverRecyclerViewAdapter;
 import com.github.xzwj87.mineflea.market.model.DiscoverInfo;
 import com.github.xzwj87.mineflea.utils.DiscoverProtocol;
 
@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 public class DiscoverTabFragment extends BaseFragment {
     public static final String TAG = DiscoverTabFragment.class.getSimpleName();
 
-    private DiscoverRecylerViewAdapter recylerViewAdapter;
+    private DiscoverRecyclerViewAdapter recylerViewAdapter;
     private List<DiscoverInfo> disInfolist;
 
 
@@ -52,7 +52,7 @@ public class DiscoverTabFragment extends BaseFragment {
     private void init() {
         DiscoverProtocol protocol = new DiscoverProtocol();
         disInfolist = protocol.loadDiscoverData();
-        recylerViewAdapter = new DiscoverRecylerViewAdapter(disInfolist);
+        recylerViewAdapter = new DiscoverRecyclerViewAdapter(disInfolist);
         LinearLayoutManager layoutManager = new LinearLayoutManager(AppGlobals.getAppContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         discoverRecyclerView.setLayoutManager(layoutManager);

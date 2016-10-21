@@ -13,11 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
-import com.github.xzwj87.mineflea.market.ui.fragment.PublishGoodsFragment;
 import com.github.xzwj87.mineflea.utils.FileManager;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
@@ -61,7 +59,7 @@ public class PublishGoodsImageAdapter extends RecyclerView.Adapter<PublishGoodsI
         Context context = parent.getContext();
 
         View root = LayoutInflater.from(context)
-                .inflate(R.layout.item_layout_publish_goods_image,parent,false);
+                .inflate(R.layout.item_publish_goods_image,parent,false);
 
         return new ImageViewHolder(root);
     }
