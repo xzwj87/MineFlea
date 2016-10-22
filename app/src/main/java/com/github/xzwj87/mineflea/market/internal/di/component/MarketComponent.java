@@ -10,6 +10,7 @@ import com.github.xzwj87.mineflea.market.ui.activity.LoginActivity;
 import com.github.xzwj87.mineflea.market.ui.activity.PublishGoodsActivity;
 import com.github.xzwj87.mineflea.market.ui.activity.RegisterActivity;
 import com.github.xzwj87.mineflea.market.ui.fragment.PublishGoodsFragment;
+import com.github.xzwj87.mineflea.market.ui.fragment.UserDetailFragment;
 
 import dagger.Component;
 
@@ -24,4 +25,5 @@ public interface MarketComponent extends ActivityComponent{
     void inject(PublishGoodsFragment fragment);
     void inject(RegisterActivity activity);
     void inject(LoginActivity activity);
+    void inject(UserDetailFragment fragment);
 }
