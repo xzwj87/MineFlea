@@ -60,18 +60,12 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
 
     private Marker mCurrentMarker;
 
-    @BindView(R.id.map)
-    MapView mapView;
-    @BindView(R.id.clearMap)
-    Button clearMapBtn;
-    @BindView(R.id.resetMap)
-    Button resetMapBtn;
-    @BindView(R.id.iv_zan)
-    ImageView iv_zan;
-    @BindView(R.id.info_img)
-    ImageView iv_info;
-    @BindView(R.id.id_marker_info)
-    RelativeLayout markerLy;
+    @BindView(R.id.map) MapView mapView;
+    @BindView(R.id.clearMap) Button clearMapBtn;
+    @BindView(R.id.resetMap) Button resetMapBtn;
+    @BindView(R.id.iv_zan) ImageView iv_zan;
+    @BindView(R.id.info_img) ImageView iv_info;
+    @BindView(R.id.id_marker_info) RelativeLayout markerLy;
 
     public NearbyTabFragment() {
     }
@@ -284,9 +278,20 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
         mListener = listener;
         if (mlocationClient == null) {
             mlocationClient = new AMapLocationClient(AppGlobals.getAppContext());
-            mLocationOption = new AMapLocationClientOption();
             //设置定位监听
             mlocationClient.setLocationListener(this);
+            //初始化定位参数
+            mLocationOption = new AMapLocationClientOption();
+            //是否需要返回地址
+            mLocationOption.setNeedAddress(true);
+            //设置是否只定位一次，默认为false
+            mLocationOption.setOnceLocation(false);
+            //设置是否强制刷新wifi,默认为强制刷新
+            mLocationOption.setWifiActiveScan(true);
+            //不允许模拟位置
+            mLocationOption.setMockEnable(false);
+            //设置定位间隔，单位毫秒，默认为2000ms
+            mLocationOption.setInterval(2000);
             //设置为高精度定位模式
             mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
             //设置定位参数
