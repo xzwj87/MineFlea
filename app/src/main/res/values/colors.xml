@@ -8,4 +8,5 @@
     <color name="colorLightGrey">#BDBDBD</color>
     <color name="colorVLGrey">#E0E0E0</color>
     <color name="colorTransparent">#00000000</color>
+    <color name="blue">#ff35abde</color>
 </resources>

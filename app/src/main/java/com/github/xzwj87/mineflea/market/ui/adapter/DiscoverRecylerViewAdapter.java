@@ -9,16 +9,19 @@ import android.widget.TextView;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.model.DiscoverInfo;
+import com.github.xzwj87.mineflea.market.ui.DiscoverClickListener;
+
 import java.util.List;
 import butterknife.ButterKnife;
 
 /**
  * Created by seaice on 2016/8/22.
  */
-public class DiscoverRecylerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class DiscoverRecylerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements DiscoverClickListener{
 
     private List<DiscoverInfo> infoList;
     private LayoutInflater mInflate;
+    private DiscoverClickListener discoverClicklistener;
 
     public DiscoverRecylerViewAdapter(List<DiscoverInfo> lists) {
         infoList = lists;
@@ -52,8 +55,13 @@ public class DiscoverRecylerViewAdapter extends RecyclerView.Adapter<RecyclerVie
         return infoList.size();
     }
 
+    @Override
+    public void onDiscoverItemClick(int position) {
+
+    }
+
     //显示viewpager的Holder
-    public class DiscoverHolder extends RecyclerView.ViewHolder {
+    public class DiscoverHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public ImageView imageUrl;
         public TextView des;
         public TextView distance;
@@ -64,6 +72,19 @@ public class DiscoverRecylerViewAdapter extends RecyclerView.Adapter<RecyclerVie
             des = ButterKnife.findById(view, R.id.tv_title);
             distance = ButterKnife.findById(view, R.id.tv_distance);
             date = ButterKnife.findById(view, R.id.tv_date);
+            this.itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            if(discoverClicklistener != null){
+                discoverClicklistener.onDiscoverItemClick(getPosition() - 1);
+            }
+        }
+    }
+
+    //设置条目点击监听器
+    public void setDiscoverClicklistener(DiscoverClickListener listener){
+        this.discoverClicklistener = listener;
     }
 }
