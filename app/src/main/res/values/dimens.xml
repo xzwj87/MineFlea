@@ -16,9 +16,10 @@
     <dimen name="card_view_text_size">14sp</dimen>
     <dimen name="card_view_layout_margin">16dp</dimen>
     <dimen name="rv_item_margin">8dp</dimen>
-    <dimen name="user_detail_appbar_height">160dp</dimen>
-    <dimen name="user_detail_title_margin">24dp</dimen>
+    <dimen name="user_detail_appbar_height">200dp</dimen>
+    <dimen name="user_detail_title_margin">48dp</dimen>
     <dimen name="user_detail_head_icon_size">72dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="user_center_title_margin">16dp</dimen>
+    <dimen name="user_detail_scroll_view_margin">16dp</dimen>
 </resources>
