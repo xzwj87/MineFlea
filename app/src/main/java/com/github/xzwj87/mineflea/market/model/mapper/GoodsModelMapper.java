@@ -14,7 +14,7 @@ public class GoodsModelMapper {
     public static ContentValues map(PublishGoodsInfo data){
         ContentValues cv = new ContentValues();
 
-        cv.put(PublishGoodsEntry.COL_PUBLISHER_ID,data.getPublisher());
+        cv.put(PublishGoodsEntry.COL_PUBLISHER_ID,data.getPublisherId());
         cv.put(PublishGoodsEntry.COL_GOODS_ID,data.getId());
         cv.put(PublishGoodsEntry.COL_GOODS_NAME,data.getName());
         cv.put(PublishGoodsEntry.COL_LOW_PRICE,data.getLowerPrice());

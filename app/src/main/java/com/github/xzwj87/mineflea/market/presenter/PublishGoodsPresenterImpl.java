@@ -94,7 +94,7 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
 
     @Override
     public void setPublisherName(String name) {
-        mGoodsInfo.setPublisher(name);
+        mGoodsInfo.setPublisherId(name);
     }
 
     @Override

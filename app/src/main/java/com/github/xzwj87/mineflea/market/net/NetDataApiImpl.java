@@ -9,7 +9,7 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.SaveCallback;
 import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
-import com.github.xzwj87.mineflea.market.model.ModelConstants;
+import com.github.xzwj87.mineflea.market.model.AvCloudConstants;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.PublisherInfo;
 import com.github.xzwj87.mineflea.market.model.mapper.GoodsJsonMapper;
@@ -58,9 +58,9 @@ public class NetDataApiImpl implements NetDataApi{
 
         if(NetConnectionUtils.isNetworkConnected()) {
 
-            final AVObject avObject = new AVObject(ModelConstants.AV_OBJ_GOODS);
+            final AVObject avObject = new AVObject(AvCloudConstants.AV_OBJ_GOODS);
             avObject.put(PublishGoodsInfo.GOODS_NAME,goods.getName());
-            avObject.put(PublishGoodsInfo.GOODS_PUBLISHER,goods.getPublisher());
+            avObject.put(PublishGoodsInfo.GOODS_PUBLISHER,goods.getPublisherId());
             avObject.put(PublishGoodsInfo.GOODS_LOW_PRICE,goods.getLowerPrice());
             avObject.put(PublishGoodsInfo.GOODS_HIGH_PRICE,goods.getHighPrice());
             avObject.put(PublishGoodsInfo.GOODS_RELEASE_DATE,goods.getReleasedDate());

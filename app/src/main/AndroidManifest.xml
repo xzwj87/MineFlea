@@ -71,9 +71,12 @@
         <activity android:name=".market.ui.activity.RegisterActivity"
             android:label="@string/title_activity_register"
             android:parentActivityName=".market.ui.activity.LoginActivity"
-            android:theme="@style/AppTheme">
-
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
+
+        <activity android:name=".market.ui.activity.UserDetailActivity"
+            android:label=""
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".market.ui.activity.NearbyGoodsActivity">
         </activity>

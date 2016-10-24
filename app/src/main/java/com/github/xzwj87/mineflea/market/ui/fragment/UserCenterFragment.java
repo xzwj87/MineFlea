@@ -2,6 +2,7 @@ package com.github.xzwj87.mineflea.market.ui.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,8 +16,13 @@ import android.widget.TextView;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.ui.activity.LoginActivity;
+import com.github.xzwj87.mineflea.market.ui.activity.UserDetailActivity;
 import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,8 +69,15 @@ public class UserCenterFragment extends BaseFragment{
     public void login(){
         Log.v(TAG,"login()");
 
-        Intent intent = new Intent(getActivity(), LoginActivity.class);
-        startActivityForResult(intent,REQUEST_LOGIN);
+        boolean isLogin = UserPrefsUtil.getBoolean(UserInfo.IS_LOGIN,false);
+
+        if(isLogin){
+            Intent intent = new Intent(getActivity(), UserDetailActivity.class);
+            startActivity(intent);
+        }else {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivityForResult(intent, REQUEST_LOGIN);
+        }
     }
 
     @OnClick(R.id.civ_user_header)
@@ -91,7 +104,7 @@ public class UserCenterFragment extends BaseFragment{
 
                     if(!TextUtils.isEmpty(userInfo.getHeadIconUrl())) {
                         Picasso.with(getActivity())
-                                .load(userInfo.getHeadIconUrl())
+                                .load(Uri.fromFile(new File(userInfo.getHeadIconUrl())))
                                 .resize(512,512)
                                 .centerCrop()
                                 .into(mCivHeader);
@@ -118,7 +131,7 @@ public class UserCenterFragment extends BaseFragment{
             String headIcon = UserPrefsUtil.getString(UserInfo.USER_HEAD_ICON,"");
             if(!TextUtils.isEmpty(headIcon)) {
                 Picasso.with(getActivity())
-                        .load(headIcon)
+                        .load(Uri.fromFile(new File(headIcon)))
                         .resize(512,512)
                         .centerCrop()
                         .into(mCivHeader);

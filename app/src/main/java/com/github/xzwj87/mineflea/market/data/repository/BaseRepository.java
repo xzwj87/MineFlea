@@ -40,7 +40,7 @@ public interface BaseRepository {
     void uploadImage(String imgUri,boolean showProcess);
 
     /*
-     * image is uploaded completely
+     * get current user id
      */
-    void onImgUploadComplete(Message msg);
+    String getCurrentUserId();
 }

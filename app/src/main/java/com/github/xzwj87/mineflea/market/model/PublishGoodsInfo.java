@@ -9,16 +9,22 @@ import java.util.List;
 public class PublishGoodsInfo {
 
     public static final String GOODS_NAME = "name";
-    public static final String GOODS_PUBLISHER = "goods_publisher";
+    public static final String GOODS_PUBLISHER = "publisher_id";
     public static final String GOODS_LOW_PRICE = "low_Price";
     public static final String GOODS_HIGH_PRICE = "high_price";
     public static final String GOODS_RELEASE_DATE = "release_date";
+    public static final String GOODS_LOC = "location";
+    public static final String GOODS_STARS = "stars";
+    public static final String GOODS_IMAGES = "images";
+    public static final String GOODS_NOTE = "note";
+
+    public static final String GOODS_IMG_STRING_SEP = "-";
 
     private String mId;
 
     private String mName;
 
-    private String mPublisher;
+    private String mPublisherId;
 
     private double mHighPrice;
 
@@ -31,6 +37,8 @@ public class PublishGoodsInfo {
     private String mLoc;
 
     private List<String> mImageUri;
+
+    private int mStars;
 
     public PublishGoodsInfo(){
         mReleasedDate = System.currentTimeMillis();
@@ -53,12 +61,12 @@ public class PublishGoodsInfo {
     }
 
 
-    public String getPublisher(){
-        return mPublisher;
+    public String getPublisherId(){
+        return mPublisherId;
     }
 
-    public void setPublisher(String publisher){
-        mPublisher = publisher;
+    public void setPublisherId(String publisher){
+        mPublisherId = publisher;
     }
 
     public double getHighPrice(){
@@ -107,6 +115,14 @@ public class PublishGoodsInfo {
 
     public void setImageUri(List<String> uri){
         mImageUri = uri;
+    }
+
+    public void setStars(int stars){
+        mStars = stars;
+    }
+
+    public int getStars(){
+        return mStars;
     }
 
 

@@ -4,7 +4,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.github.xzwj87.mineflea.market.data.local.MineFleaLocalSource;
-import com.github.xzwj87.mineflea.market.data.remote.MineFleaCloudSource;
+import com.github.xzwj87.mineflea.market.data.remote.MineFleaRemoteSource;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
@@ -19,18 +19,19 @@ import javax.inject.Named;
 
 // TODO: Create/Query/Update/Delete
 @PerActivity
-public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.CloudSourceCallback{
+public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.CloudSourceCallback{
     public static final String TAG = MineFleaRepository.class.getSimpleName();
 
     private MineFleaLocalSource mLocalSrc;
-    @Inject MineFleaCloudSource mCloudSrc;
+    @Inject
+    MineFleaRemoteSource mCloudSrc;
     private PresenterCallback mPresenterCb;
 
     private PublishGoodsInfo mGoodsInfo;
 
     @Inject
     public MineFleaRepository(@Named("localResource") MineFleaLocalSource localSource,
-                              @Named("remoteResource") MineFleaCloudSource cloudSource){
+                              @Named("remoteResource") MineFleaRemoteSource cloudSource){
         Log.v(TAG,"Constructor()");
         mCloudSrc = cloudSource;
         mLocalSrc = localSource;
@@ -69,8 +70,22 @@ public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.Cl
     }
 
     @Override
+    public String getCurrentUserId() {
+        return mCloudSrc.getCurrentUserId();
+    }
+
     public void onImgUploadComplete(Message msg) {
         mPresenterCb.onImgUploadComplete(msg);
+    }
+
+    @Override
+    public void onGetUserInfoDone(Message msg) {
+
+    }
+
+    @Override
+    public void onGetGoodsListDone(Message msg) {
+
     }
 
 

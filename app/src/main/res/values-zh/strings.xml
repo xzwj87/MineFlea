@@ -43,5 +43,9 @@
     <string name="publish_goods_success">发布成功</string>
     <string name="publish_goods_error">发布失败</string>
     <string name="explore_more">EXPLORE MORE</string>
+    <string name="get_user_detail_progress_hint">loading data,please wait for a while</string>
+    <string name="check_user_goods_list">Check User Goods List</string>
+    <string name="error_get_user_info">Fail to get user info</string>
+    <string name="error_get_goods_list">Fail to get goods list</string>
 
 </resources>
