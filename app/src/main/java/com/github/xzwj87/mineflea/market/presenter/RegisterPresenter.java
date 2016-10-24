@@ -15,6 +15,7 @@ public abstract class RegisterPresenter implements BasePresenter,PresenterCallba
     public abstract void setUserPwd(String pwd);
     public abstract void setUserIconUrl(String url);
     public abstract boolean validUserInfo();
+    public abstract String getUserIconUrl();
 
     public abstract void onRegisterComplete(Message message);
 

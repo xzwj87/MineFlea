@@ -1,6 +1,7 @@
 package com.github.xzwj87.mineflea.market.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,6 +46,8 @@ public class UserInfo {
 
     public static final String USER_LOCATION = "location";
 
+    public static final String USER_LOGIN_DATE = "login_date";
+
     private String mId;
     private boolean mIsLogin;
     private String mNickName;
@@ -56,6 +59,7 @@ public class UserInfo {
     private int mFollowers;
     private int mFollowees;
     private String mLoc;
+    private Date mLoginDate;
 
     public void setUserId(String id){
         mId = id;
@@ -120,7 +124,7 @@ public class UserInfo {
     }
 
     public void setFollowers(int followers){
-        mFollowees = followers;
+        mFollowers = followers;
     }
 
     public int getFollowers(){
@@ -143,6 +147,14 @@ public class UserInfo {
         return mLoc;
     }
 
+    public void setLoginDate(Date date){
+        mLoginDate = date;
+    }
+
+    public Date getLoginDate(){
+        return mLoginDate;
+    }
+
     @Override
     public String toString(){
         StringBuilder builder = new StringBuilder(4);
@@ -153,5 +165,10 @@ public class UserInfo {
                .append("Head icon url = " + mHeadIconUrl + "\n");
 
         return builder.toString();
+    }
+
+    private void setDefaultValue(){
+        mIsLogin = false;
+        mLoc = "xxxx";
     }
 }

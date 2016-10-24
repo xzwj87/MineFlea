@@ -9,10 +9,12 @@ import android.util.Log;
 
 import com.amap.api.maps2d.MapsInitializer;
 import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.AVUser;
 import com.github.xzwj87.mineflea.market.internal.di.HasComponent;
 import com.github.xzwj87.mineflea.market.internal.di.component.AppComponent;
 import com.github.xzwj87.mineflea.market.internal.di.component.DaggerAppComponent;
 import com.github.xzwj87.mineflea.market.internal.di.module.AppModule;
+import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 
 import java.io.File;
 
@@ -52,6 +54,7 @@ public class AppGlobals extends Application
                 initLeanCloudService();
                 initFileDir();
                 initMap();
+                checkLoginState();
             }
         },500);
 
@@ -95,6 +98,14 @@ public class AppGlobals extends Application
         }else {
             Log.v(TAG, "fail to create directory " + FILE_DIR_MISC);
         }
+    }
 
+    private void checkLoginState(){
+        AVUser user = AVUser.getCurrentUser();
+        if(user == null){
+            UserPrefsUtil.setLoginState(false);
+        }else{
+            UserPrefsUtil.setLoginState(true);
+        }
     }
 }

@@ -1,8 +1,8 @@
 package com.github.xzwj87.mineflea.market.presenter;
 
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
@@ -10,6 +10,7 @@ import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.RegisterView;
 import com.github.xzwj87.mineflea.utils.UserInfoUtils;
+import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -39,7 +40,11 @@ public class RegisterPresenterImpl extends RegisterPresenter{
     @Override
     public void register() {
         Log.v(TAG,"register()");
-        mRepository.uploadImage(mUserInfo.getHeadIconUrl(),false);
+        if(!TextUtils.isEmpty(mUserInfo.getHeadIconUrl())) {
+            mRepository.uploadImage(mUserInfo.getHeadIconUrl(), false);
+        }else{
+            mRepository.register(mUserInfo);
+        }
     }
 
     @Override
@@ -50,6 +55,7 @@ public class RegisterPresenterImpl extends RegisterPresenter{
         }else{
             mUserInfo.setHeadIconUrl("");
         }
+
         mRepository.register(mUserInfo);
     }
 
@@ -103,7 +109,16 @@ public class RegisterPresenterImpl extends RegisterPresenter{
             return false;
         }
 
+        if(TextUtils.isEmpty(mUserInfo.getHeadIconUrl())){
+            mView.showHeadIconNullDialog();
+        }
+
         return true;
+    }
+
+    @Override
+    public String getUserIconUrl() {
+        return mUserInfo.getHeadIconUrl();
     }
 
     @Override
@@ -125,14 +140,22 @@ public class RegisterPresenterImpl extends RegisterPresenter{
 
     @Override
     public void onRegisterComplete(Message message) {
-        Log.v(TAG,"onRegisterComplete(): user id " + message.obj);
+        Log.v(TAG,"onRegisterComplete(): user id " + (String)message.obj);
 
         if(message.obj != null){
             mView.onRegisterComplete(true);
+            mUserInfo.setUserId((String)message.obj);
+            mUserInfo.setLoginState(true);
         }else {
             mView.onRegisterComplete(false);
+            mUserInfo.setLoginState(false);
         }
 
+        saveUserInfo();
         mView.finishView();
+    }
+
+    private void saveUserInfo(){
+        UserPrefsUtil.saveUserLoginInfo(mUserInfo);
     }
 }

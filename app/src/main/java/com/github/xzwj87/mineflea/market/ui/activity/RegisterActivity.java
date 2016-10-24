@@ -1,13 +1,17 @@
 package com.github.xzwj87.mineflea.market.ui.activity;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.internal.di.HasComponent;
@@ -86,10 +90,11 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
         mPresenter.setUserEmail(email);
         mPresenter.setUserTel(tel);
         mPresenter.setUserPwd(pwd);
-        if(!mHeadIconUrl.isEmpty()) {
+
+        if(mHeadIconUrl != null) {
             mPresenter.setUserIconUrl(mHeadIconUrl.get(0));
         }else{
-            mPresenter.setUserIconUrl("null");
+            mPresenter.setUserIconUrl("");
         }
 
         if(mPresenter.validUserInfo()){
@@ -119,16 +124,23 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
             mProgress.dismiss();
         }
 
-        Intent data = new Intent();
-        Bundle bundle = new Bundle();
-        bundle.putString(UserInfo.USER_NICK_NAME,mEtName.getText().toString());
-        bundle.putString(UserInfo.UER_EMAIL,mAtvEmail.getText().toString());
-        bundle.putString(UserInfo.USER_TEL,mEtTelNumber.getText().toString());
-        bundle.putString(UserInfo.USER_PWD,mEtPwd.getText().toString());
-        bundle.putString(UserInfo.USER_HEAD_ICON, mHeadIconUrl.get(0));
+        if(success) {
+            Intent data = new Intent();
+            Bundle bundle = new Bundle();
+            bundle.putString(UserInfo.USER_NICK_NAME, mEtName.getText().toString());
+            bundle.putString(UserInfo.UER_EMAIL, mAtvEmail.getText().toString());
+            bundle.putString(UserInfo.USER_TEL, mEtTelNumber.getText().toString());
+            bundle.putString(UserInfo.USER_PWD, mEtPwd.getText().toString());
 
-        data.putExtras(bundle);
-        setResult(RESULT_OK,data);
+            if (mHeadIconUrl != null) {
+                bundle.putString(UserInfo.USER_HEAD_ICON, mHeadIconUrl.get(0));
+            }
+
+            data.putExtras(bundle);
+            setResult(RESULT_OK, data);
+        }else{
+            setResult(RESULT_CANCELED);
+        }
     }
 
     @Override
@@ -165,6 +177,13 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
         mEtPwd.setError(getString(R.string.error_invalid_password));
         mEtPwd.requestFocus();
         //mEtPwd.setError("");
+    }
+
+    @Override
+    public void showHeadIconNullDialog() {
+        Log.v(TAG,"showHeadIconNullDialog()");
+
+        showToast(getString(R.string.assure_not_pick_head_icon));
     }
 
     @Override

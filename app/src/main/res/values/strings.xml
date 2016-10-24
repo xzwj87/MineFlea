@@ -64,4 +64,5 @@
     <string name="check_user_goods_list">Check User Goods List</string>
     <string name="error_get_user_info">Fail to get user info</string>
     <string name="error_get_goods_list">Fail to get goods list</string>
+    <string name="assure_not_pick_head_icon">No head icon picked</string>
 </resources>

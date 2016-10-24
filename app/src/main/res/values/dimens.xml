@@ -20,4 +20,5 @@
     <dimen name="user_detail_title_margin">24dp</dimen>
     <dimen name="user_detail_head_icon_size">72dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="user_center_title_margin">16dp</dimen>
 </resources>

@@ -43,4 +43,9 @@ public interface BaseRepository {
      * get current user id
      */
     String getCurrentUserId();
+
+    /*
+     * get current user information
+     */
+    UserInfo getCurrentUser();
 }

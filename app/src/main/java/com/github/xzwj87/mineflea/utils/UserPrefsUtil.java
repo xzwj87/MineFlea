@@ -30,6 +30,13 @@ public class UserPrefsUtil {
         return prefs.getBoolean(key,defaultVal);
     }
 
+    public static void setLoginState(boolean state){
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(UserInfo.IS_LOGIN,state);
+
+        editor.apply();
+    }
+
     public static String getString(String key, String defaultVal){
 
         return prefs.getString(key,defaultVal);

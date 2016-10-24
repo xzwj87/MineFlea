@@ -22,6 +22,7 @@ import com.github.xzwj87.mineflea.market.net.NetDataApiImpl;
 import com.github.xzwj87.mineflea.utils.NetConnectionUtils;
 import com.github.xzwj87.mineflea.utils.PublishGoodsUtils;
 import com.github.xzwj87.mineflea.utils.UserInfoUtils;
+import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -73,7 +74,7 @@ public class MineFleaRemoteSource implements RemoteSource{
 
     //Todo: we may want to cache info
     @Override
-    public void getUserInfo(String id) {
+    public void getUserInfoById(String id) {
         AVQuery<AVUser> query = new AVQuery<>(AvCloudConstants.AV_OBJ_USER);
 
         query.getInBackground(id, new GetCallback<AVUser>() {
@@ -131,6 +132,16 @@ public class MineFleaRemoteSource implements RemoteSource{
         }
 
         return user.getObjectId();
+    }
+
+    @Override
+    public UserInfo getCurrentUser() {
+        AVUser user = AVUser.getCurrentUser();
+        if(user == null){
+            return null;
+        }
+
+        return UserInfoUtils.fromAvUser(user);
     }
 
     /**
@@ -202,6 +213,8 @@ public class MineFleaRemoteSource implements RemoteSource{
                     msg.obj = avUser.getObjectId();
                     msg.arg1 = ResponseCode.RESP_REGISTER_SUCCESS;
                 }else{
+                    Log.v(TAG,"avException = " + e.toString());
+                    e.printStackTrace();
                     msg.obj = null;
                     msg.arg1 = ResponseCode.RESP_REGISTER_FAIL;
                 }
