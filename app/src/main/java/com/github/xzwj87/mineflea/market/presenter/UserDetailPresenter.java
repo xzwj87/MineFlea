@@ -16,9 +16,13 @@ public abstract class UserDetailPresenter implements BasePresenter,PresenterCall
 
     public abstract void updateFollowers();
 
-    public abstract List<PublishGoodsInfo> getGoodsList(String userId);
+    public abstract void getGoodsList(String userId);
 
     public abstract String getCurrentUserId();
+
+    public abstract List<PublishGoodsInfo> getGoodsList();
+
+    public abstract int getGoodsNumber();
 
     @Override
     public void onRegisterComplete(Message message) {

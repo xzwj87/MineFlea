@@ -47,5 +47,7 @@
     <string name="check_user_goods_list">Check User Goods List</string>
     <string name="error_get_user_info">Fail to get user info</string>
     <string name="error_get_goods_list">Fail to get goods list</string>
+    <string name="hint_login_success">Success to login</string>
+    <string name="user_head_icon">User Head Icon</string>
 
 </resources>

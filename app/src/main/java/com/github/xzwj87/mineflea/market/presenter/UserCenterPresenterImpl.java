@@ -38,6 +38,15 @@ public class UserCenterPresenterImpl extends UserCenterPresenter {
     }
 
     @Override
+    public String getUserId() {
+        if(mUserInfo == null){
+            return mRepository.getCurrentUserId();
+        }
+
+        return mUserInfo.getUserId();
+    }
+
+    @Override
     public void init() {
         mRepository.init();
     }

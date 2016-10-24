@@ -1,5 +1,6 @@
 package com.github.xzwj87.mineflea.market.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -46,14 +47,16 @@ public class UserDetailActivity extends BaseActivity
                 findFragmentByTag(UserDetailFragment.TAG);
 
         if(fragment == null){
-            String userId = getIntent().getStringExtra(UserInfo.USER_ID);
-            fragment = UserDetailFragment.newInstance(userId);
+            Intent intent = getIntent();
+            String userId = intent.getStringExtra(UserInfo.USER_ID);
+            boolean isCurrentUser = intent.getBooleanExtra(UserInfo.CURRENT_USER,false);
+            fragment = UserDetailFragment.newInstance(userId,isCurrentUser);
             fragmentMgr.beginTransaction()
-                       .add(fragment,UserDetailFragment.TAG)
+                       .add(R.id.fragment_container,fragment,UserDetailFragment.TAG)
                        .commit();
-
-            mMarketComponent.inject(fragment);
         }
+
+        mMarketComponent.inject(fragment);
     }
 
     private void initInjector(){

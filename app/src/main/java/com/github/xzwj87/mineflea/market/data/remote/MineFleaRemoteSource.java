@@ -75,23 +75,31 @@ public class MineFleaRemoteSource implements RemoteSource{
     //Todo: we may want to cache info
     @Override
     public void getUserInfoById(String id) {
-        AVQuery<AVUser> query = new AVQuery<>(AvCloudConstants.AV_OBJ_USER);
+        UserInfo user = getCurrentUser();
+        if(user != null && user.getUserId().equals(id)){
+            final  Message msg = new Message();
+            msg.obj = user;
+            msg.what = ResponseCode.RESP_GET_USER_INFO_SUCCESS;
+            mCloudCallback.onGetUserInfoDone(msg);
+        }else {
+            AVQuery<AVUser> query = new AVQuery<>(AvCloudConstants.AV_OBJ_USER);
 
-        query.getInBackground(id, new GetCallback<AVUser>() {
-            @Override
-            public void done(AVUser avUser, AVException e) {
-                final  Message msg = new Message();
-                if(e != null){
-                    msg.obj = UserInfoUtils.fromAvUser(avUser);
-                    msg.what = ResponseCode.RESP_GET_USER_INFO_SUCCESS;
-                }else{
-                    msg.obj = null;
-                    msg.what = ResponseCode.RESP_GET_USER_INFO_ERROR;
+            query.getInBackground(id, new GetCallback<AVUser>() {
+                @Override
+                public void done(AVUser avUser, AVException e) {
+                    final Message msg = new Message();
+                    if (e == null) {
+                        msg.obj = UserInfoUtils.fromAvUser(avUser);
+                        msg.what = ResponseCode.RESP_GET_USER_INFO_SUCCESS;
+                    } else {
+                        msg.obj = null;
+                        msg.what = ResponseCode.RESP_GET_USER_INFO_ERROR;
+                    }
+
+                    mCloudCallback.onGetUserInfoDone(msg);
                 }
-
-                mCloudCallback.onGetUserInfoDone(msg);
-            }
-        });
+            });
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -234,7 +242,7 @@ public class MineFleaRemoteSource implements RemoteSource{
                 Message message = new Message();
                 if(e == null){
                     message.arg1 = ResponseCode.RESP_LOGIN_SUCCESS;
-                    message.obj = avUser;
+                    message.obj = UserInfoUtils.fromAvUser(avUser);
                 }else{
                     message.arg1 = ResponseCode.RESP_LOGIN_FAIL;
                     message.obj = null;

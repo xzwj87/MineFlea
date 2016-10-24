@@ -26,6 +26,7 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
 
     private MineFleaRepository mDataRepo;
     private UserDetailView mView;
+    private List<PublishGoodsInfo> mGoodsList;
 
     @Inject
     public UserDetailPresenterImpl(@Named("dataRepository")MineFleaRepository repository){
@@ -34,7 +35,7 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
 
     @Override
     public void getUserInfoById(String id) {
-        ;
+        mDataRepo.getUserInfoById(id);
     }
 
     @Override
@@ -43,8 +44,9 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
     }
 
     @Override
-    public List<PublishGoodsInfo> getGoodsList(String userId) {
-        return null;
+    public void getGoodsList(String userId) {
+        Log.v(TAG,"getGoodsList(): id = " + userId);
+        mDataRepo.getGoodsListByUserId(userId);
     }
 
     @Override
@@ -53,8 +55,19 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
     }
 
     @Override
+    public List<PublishGoodsInfo> getGoodsList() {
+        return mGoodsList;
+    }
+
+    @Override
+    public int getGoodsNumber() {
+        return mGoodsList.size();
+    }
+
+    @Override
     public void init() {
         mDataRepo.init();
+        mDataRepo.setPresenterCallback(this);
     }
 
     @Override
@@ -74,7 +87,7 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
 
     @Override
     public void onGetUserInfoComplete(Message message) {
-        Log.v(TAG,"onGetUserInfoComplete()");
+        Log.v(TAG,"onGetUserInfoComplete(): user info = " + message.obj);
         if(message.obj != null){
             mView.onGetUserInfoComplete((UserInfo)message.obj);
         }else{
@@ -88,7 +101,8 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
     public void onGetGoodsListDone(Message message) {
         Log.v(TAG,"onGetGoodsListDone()");
         if(message != null){
-            mView.onGetGoodsListDone((List<PublishGoodsInfo>)message.obj);
+            mGoodsList = (List<PublishGoodsInfo>)message.obj;
+            mView.onGetGoodsListDone(mGoodsList);
         }else{
             mView.showGetGoodsListFail();
             mView.showGetGoodsListFail();

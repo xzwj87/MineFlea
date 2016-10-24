@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/user_detail_scroll_view_margin"
     android:layout_marginLeft="@dimen/activity_vertical_margin"
@@ -16,11 +16,9 @@
 
     <TextView android:id="@+id/tv_followers"
         style="@style/UserDetailTextView"
-        android:drawableStart="@drawable/ic_my_followees_grey_24dp"/>
+        android:drawableStart="@drawable/ic_my_followers_grey_24dp"/>
 
     <TextView android:id="@+id/tv_goods"
         style="@style/UserDetailTextView"
         android:drawableStart="@drawable/ic_publish_goods_grey_24dp"/>
-
-
 </LinearLayout>

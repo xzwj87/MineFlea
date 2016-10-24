@@ -39,9 +39,11 @@ public class UserInfoUtils {
         UserInfo userInfo = new UserInfo();
 
         userInfo.setUserId(avUser.getObjectId());
+        userInfo.setUserName(avUser.getUsername());
+        userInfo.setUerEmail(avUser.getEmail());
+        userInfo.setUserTelNumber(avUser.getMobilePhoneNumber());
+
         userInfo.setNickName((String)avUser.get(UserInfo.USER_NICK_NAME));
-        userInfo.setUserName((String)avUser.get(UserInfo.USER_NAME));
-        userInfo.setUerEmail((String)avUser.get(UserInfo.UER_EMAIL));
         userInfo.setHeadIconUrl((String)avUser.get(UserInfo.USER_HEAD_ICON));
         userInfo.setFollowers((int)avUser.get(UserInfo.USER_FOLLOWERS));
         userInfo.setFollowees((int)avUser.get(UserInfo.USER_FOLLOWEES));

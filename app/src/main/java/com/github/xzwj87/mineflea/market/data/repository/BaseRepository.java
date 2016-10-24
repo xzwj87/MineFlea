@@ -48,4 +48,14 @@ public interface BaseRepository {
      * get current user information
      */
     UserInfo getCurrentUser();
+
+    /*
+     * get user info by id
+     */
+    void getUserInfoById(String id);
+
+    /*
+     * get goods list by user id
+     */
+    void getGoodsListByUserId(String id);
 }

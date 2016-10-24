@@ -79,18 +79,28 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
         return mCloudSrc.getCurrentUser();
     }
 
+    @Override
+    public void getUserInfoById(String id) {
+        mCloudSrc.getUserInfoById(id);
+    }
+
+    @Override
+    public void getGoodsListByUserId(String id) {
+        mCloudSrc.getGoodsListByUserId(id);
+    }
+
     public void onImgUploadComplete(Message msg) {
         mPresenterCb.onImgUploadComplete(msg);
     }
 
     @Override
     public void onGetUserInfoDone(Message msg) {
-
+        mPresenterCb.onGetUserInfoComplete(msg);
     }
 
     @Override
     public void onGetGoodsListDone(Message msg) {
-
+        mPresenterCb.onGetGoodsListDone(msg);
     }
 
 

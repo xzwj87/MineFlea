@@ -8,4 +8,5 @@ import com.github.xzwj87.mineflea.market.model.UserInfo;
 
 public abstract class UserCenterPresenter implements BasePresenter{
     public abstract void loadUserInfo();
+    public abstract String getUserId();
 }

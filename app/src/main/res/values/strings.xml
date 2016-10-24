@@ -65,4 +65,6 @@
     <string name="error_get_user_info">Fail to get user info</string>
     <string name="error_get_goods_list">Fail to get goods list</string>
     <string name="assure_not_pick_head_icon">No head icon picked</string>
+    <string name="hint_login_success">Success to login</string>
+    <string name="user_head_icon">User Head Icon</string>
 </resources>

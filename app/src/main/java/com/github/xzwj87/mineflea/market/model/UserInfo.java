@@ -48,6 +48,8 @@ public class UserInfo {
 
     public static final String USER_LOGIN_DATE = "login_date";
 
+    public static final String CURRENT_USER = "current_user";
+
     private String mId;
     private boolean mIsLogin;
     private String mNickName;
@@ -159,7 +161,7 @@ public class UserInfo {
     public String toString(){
         StringBuilder builder = new StringBuilder(4);
 
-        builder.append("\nNick Name = " + mUserName + "\n")
+        builder.append("\nNick Name = " + mNickName + "\n")
                .append("Email = " + mUserEmail + "\n")
                .append("Telephone number " + mTelNumber + "\n")
                .append("Head icon url = " + mHeadIconUrl + "\n");

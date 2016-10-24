@@ -4,21 +4,19 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.UserDetailPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.UserDetailView;
-import com.github.xzwj87.mineflea.market.ui.activity.UserDetailActivity;
-import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -26,7 +24,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by jason on 10/22/16.
@@ -37,23 +34,30 @@ public class UserDetailFragment extends BaseFragment implements UserDetailView{
 
     private CollapsingToolbarLayout mToolbarLayout;
     private FloatingActionButton mFab;
+    private ImageView mIvHeadIcon;
     private String mUserId;
 
-    private boolean mIsMe;
+    private boolean mIsCurrentUser;
     private ProgressDialog mProgressDlg;
-    @BindView(R.id.tv_email) TextView mEmail;
-    @BindView(R.id.tv_tel) TextView mTel;
-    @BindView(R.id.tv_followers) TextView mFollowers;
-    @BindView(R.id.tv_goods) TextView mGoods;
+/*    @BindView(R.id.tv_email) TextView mTvEmail;
+    @BindView(R.id.tv_tel) TextView mTvTel;
+    @BindView(R.id.tv_followers) TextView mTvFollowers;
+    @BindView(R.id.tv_goods) TextView mTvGoods;*/
+
+    private TextView mTvEmail;
+    private TextView mTvTel;
+    private TextView mTvFollowers;
+    private TextView mTvGoods;
 
     @Inject UserDetailPresenterImpl mPresenter;
 
     public UserDetailFragment(){}
 
-    public static UserDetailFragment newInstance(String userId){
+    public static UserDetailFragment newInstance(String userId,boolean isCurrentUser){
         UserDetailFragment fragment = new UserDetailFragment();
         Bundle bundle = new Bundle();
         bundle.putString(UserInfo.USER_ID,userId);
+        bundle.putBoolean(UserInfo.CURRENT_USER,isCurrentUser);
         fragment.setArguments(bundle);
 
         return fragment;
@@ -65,12 +69,18 @@ public class UserDetailFragment extends BaseFragment implements UserDetailView{
                              Bundle savedState){
         View root = inflater.inflate(R.layout.fragment_user_detail,container,false);
 
-        ButterKnife.bind(this,root);
+        //ButterKnife.bind(this,root);
+
+        mTvEmail = (TextView)root.findViewById(R.id.tv_email);
+        mTvTel = (TextView)root.findViewById(R.id.tv_tel);
+        mTvFollowers = (TextView)root.findViewById(R.id.tv_followers);
+        mTvGoods = (TextView)root.findViewById(R.id.tv_goods);
 
         mUserId = getArguments().getString(UserInfo.USER_ID);
+        mIsCurrentUser = getArguments().getBoolean(UserInfo.CURRENT_USER,false);
 
-        init();
         initView();
+        init();
 
         return root;
     }
@@ -97,11 +107,21 @@ public class UserDetailFragment extends BaseFragment implements UserDetailView{
 
     @Override
     public void onGetUserInfoComplete(UserInfo userInfo) {
+        Log.v(TAG,"onGetUserInfoComplete(): user info " + userInfo);
+
         mToolbarLayout.setTitle(userInfo.getNickName());
-        mEmail.setText(userInfo.getUserEmail());
-        mTel.setText(userInfo.getUserTelNumber());
-        mFollowers.setText(userInfo.getFollowees());
-        mGoods.setText(getString(R.string.check_user_goods_list));
+        mTvEmail.setText(userInfo.getUserEmail());
+        mTvTel.setText(userInfo.getUserTelNumber());
+        mTvFollowers.setText(String.valueOf(userInfo.getFollowers()));
+        mTvGoods.setText(R.string.check_user_goods_list);
+
+        Log.v(TAG,"email view = " + mTvEmail.getText());
+
+        Picasso.with(getActivity())
+               .load(userInfo.getHeadIconUrl())
+               .resize(1024,1024)
+               .centerCrop()
+               .into(mIvHeadIcon);
     }
 
     @Override
@@ -130,23 +150,14 @@ public class UserDetailFragment extends BaseFragment implements UserDetailView{
                 findViewById(R.id.user_detail_toolbar_layout);
         mFab = (FloatingActionButton)getActivity().
                 findViewById(R.id.user_detail_fab);
+        mIvHeadIcon = (ImageView)getActivity().findViewById(R.id.head_icon);
 
-        String userId = UserPrefsUtil.getString(UserInfo.USER_ID,"");
-        if(TextUtils.isEmpty(userId)){
-            userId = mPresenter.getCurrentUserId();
-            if(!TextUtils.isEmpty(userId) && userId.equals(mUserId)) {
-                mFab.setImageResource(R.drawable.ic_edit_white_24dp);
-                mIsMe = true;
-            }else {
-                mFab.setImageResource(R.drawable.ic_favorite_white_24dp);
-                mIsMe = false;
-            }
-        }else if(userId.equals(mUserId)){
+        if(mIsCurrentUser){
             mFab.setImageResource(R.drawable.ic_edit_white_24dp);
-            mIsMe = true;
+            mIsCurrentUser = true;
         }else{
             mFab.setImageResource(R.drawable.ic_favorite_white_24dp);
-            mIsMe = false;
+            mIsCurrentUser = false;
         }
 
         mFab.setOnClickListener(new View.OnClickListener() {
