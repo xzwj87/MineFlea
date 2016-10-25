@@ -10,10 +10,10 @@
     <string name="action_publish">Publish</string>
 
     <string name="goods_name">Name</string>
-    <string name="goods_price">Price Range</string>
+    <string name="goods_price">Price</string>
     <string name="goods_low_Price">$Low</string>
     <string name="goods_high_price">$High</string>
-    <string name="note_hint">Please write anything about this goods</string>
+    <string name="goods_description">Descriptions</string>
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_register">Register your account</string>
 
@@ -37,7 +37,7 @@
         completions."
     </string>
 
-    <string name="add_pictures">Add pictures</string>
+    <string name="add_pictures">Pictures</string>
     <string name="logout">Logout</string>
     <string name="published_goods">Published Goods</string>
     <string name="my_followees">My Followees</string>
@@ -67,4 +67,5 @@
     <string name="assure_not_pick_head_icon">No head icon picked</string>
     <string name="hint_login_success">Success to login</string>
     <string name="user_head_icon">User Head Icon</string>
+    <string name="none"> </string>
 </resources>

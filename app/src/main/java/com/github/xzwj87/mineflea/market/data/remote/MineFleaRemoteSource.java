@@ -22,12 +22,10 @@ import com.github.xzwj87.mineflea.market.net.NetDataApiImpl;
 import com.github.xzwj87.mineflea.utils.NetConnectionUtils;
 import com.github.xzwj87.mineflea.utils.PublishGoodsUtils;
 import com.github.xzwj87.mineflea.utils.UserInfoUtils;
-import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -166,8 +164,7 @@ public class MineFleaRemoteSource implements RemoteSource{
             final AVObject avObject = new AVObject(AvCloudConstants.AV_OBJ_GOODS);
             avObject.put(PublishGoodsInfo.GOODS_NAME,goods.getName());
             avObject.put(PublishGoodsInfo.GOODS_PUBLISHER,goods.getPublisherId());
-            avObject.put(PublishGoodsInfo.GOODS_LOW_PRICE,goods.getLowerPrice());
-            avObject.put(PublishGoodsInfo.GOODS_HIGH_PRICE,goods.getHighPrice());
+            avObject.put(PublishGoodsInfo.GOODS_PRICE,goods.getPrice());
             avObject.put(PublishGoodsInfo.GOODS_RELEASE_DATE,goods.getReleasedDate());
             avObject.put(PublishGoodsInfo.GOODS_LOC,goods.getLocation());
 

@@ -61,7 +61,7 @@ public class NetDataApiImpl implements NetDataApi{
             final AVObject avObject = new AVObject(AvCloudConstants.AV_OBJ_GOODS);
             avObject.put(PublishGoodsInfo.GOODS_NAME,goods.getName());
             avObject.put(PublishGoodsInfo.GOODS_PUBLISHER,goods.getPublisherId());
-            avObject.put(PublishGoodsInfo.GOODS_LOW_PRICE,goods.getLowerPrice());
+            avObject.put(PublishGoodsInfo.GOODS_PRICE,goods.getPrice());
             avObject.put(PublishGoodsInfo.GOODS_HIGH_PRICE,goods.getHighPrice());
             avObject.put(PublishGoodsInfo.GOODS_RELEASE_DATE,goods.getReleasedDate());
 

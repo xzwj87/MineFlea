@@ -3,7 +3,7 @@ package com.github.xzwj87.mineflea.market.ui.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -45,12 +45,13 @@ public class PublishGoodsFragment extends BaseFragment
     private static final int IMG_COL_NUMBER = 3;
     private static final int MAX_NUM_PICTURES = 5;
 
-    @BindView(R.id.rv_goods_image) RecyclerView mRvGoodsImg;
-    @BindView(R.id.et_goods_name) EditText mEtGoodsName;
-    @BindView(R.id.et_goods_high_price) EditText mEtHighPrice;
-    @BindView(R.id.et_goods_low_price) EditText mEtLowPrice;
     @BindView(R.id.et_note) EditText mEtNote;
+    @BindView(R.id.rv_goods_image) RecyclerView mRvGoodsImg;
     @BindView(R.id.process_upload_image) NumberProgressBar mProcessBar;
+
+    CollapsingToolbarLayout mCollapsingToolbar;
+    EditText mEtGoodsName;
+    EditText mEtPrice;
 
     @Inject
     PublishGoodsPresenterImpl mPresenter;
@@ -108,6 +109,7 @@ public class PublishGoodsFragment extends BaseFragment
         View rootView = inflater.inflate(R.layout.fragment_publish_goods,container,false);
         ButterKnife.bind(this,rootView);
 
+        initView();
         init();
 
         return rootView;
@@ -119,8 +121,7 @@ public class PublishGoodsFragment extends BaseFragment
         Log.v(TAG,"publishGoods()");
 
         mPresenter.setGoodsName(mEtGoodsName.getText().toString());
-        mPresenter.setGoodsLowPrice(Double.parseDouble(mEtLowPrice.getText().toString()));
-        mPresenter.setGoodsHighPrice(Double.parseDouble(mEtHighPrice.getText().toString()));
+        mPresenter.setGoodsPrice(Double.parseDouble(mEtPrice.getText().toString()));
         mPresenter.setGoodsNote(mEtNote.getText().toString());
         mPresenter.setGoodsImgUrl(mFilePath.subList(0,mFilePath.size()-1));
         mPresenter.setPublisherName(UserPrefsUtil.getString(UserInfo.USER_NAME,"dummy"));
@@ -270,6 +271,12 @@ public class PublishGoodsFragment extends BaseFragment
             default:
                 break;
         }
+    }
+
+    private void initView(){
+        mCollapsingToolbar = (CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar);
+        mEtGoodsName = (EditText) mCollapsingToolbar.findViewById(R.id.et_goods_name);
+        mEtPrice = (EditText)mCollapsingToolbar.findViewById(R.id.et_goods_price);
     }
 
 }

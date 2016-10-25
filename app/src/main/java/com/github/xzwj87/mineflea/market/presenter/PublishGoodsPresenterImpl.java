@@ -68,8 +68,8 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     }
 
     @Override
-    public void setGoodsLowPrice(double price) {
-        mGoodsInfo.setLowerPrice(price);
+    public void setGoodsPrice(double price) {
+        mGoodsInfo.setPrice(price);
     }
 
     @Override

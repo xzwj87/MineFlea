@@ -15,8 +15,7 @@ public abstract class PublishGoodsPresenter implements BasePresenter,
     public abstract void publishGoods();
 
     public abstract void setGoodsName(String name);
-    public abstract void setGoodsLowPrice(double price);
-    public abstract void setGoodsHighPrice(double price);
+    public abstract void setGoodsPrice(double price);
     public abstract void setGoodsNote(String note);
     public abstract void setLocation(String loc);
     public abstract void setGoodsImgUrl(List<String> url);

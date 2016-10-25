@@ -3,7 +3,6 @@ package com.github.xzwj87.mineflea.utils;
 import com.avos.avoscloud.AVObject;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,7 +17,7 @@ public class PublishGoodsUtils {
 
         goodsInfo.setId(object.getObjectId());
         goodsInfo.setName((String)object.get(PublishGoodsInfo.GOODS_NAME));
-        goodsInfo.setLowerPrice((double)object.get(PublishGoodsInfo.GOODS_LOW_PRICE));
+        goodsInfo.setPrice((double)object.get(PublishGoodsInfo.GOODS_PRICE));
         goodsInfo.setHighPrice((double)object.get(PublishGoodsInfo.GOODS_HIGH_PRICE));
         goodsInfo.setNote((String)object.get(PublishGoodsInfo.GOODS_NOTE));
         goodsInfo.setLocation((String)object.get(PublishGoodsInfo.GOODS_LOC));

@@ -10,7 +10,7 @@ public class PublishGoodsInfo {
 
     public static final String GOODS_NAME = "name";
     public static final String GOODS_PUBLISHER = "publisher_id";
-    public static final String GOODS_LOW_PRICE = "low_Price";
+    public static final String GOODS_PRICE = "Price";
     public static final String GOODS_HIGH_PRICE = "high_price";
     public static final String GOODS_RELEASE_DATE = "release_date";
     public static final String GOODS_LOC = "location";
@@ -28,7 +28,7 @@ public class PublishGoodsInfo {
 
     private double mHighPrice;
 
-    private double mLowPrice;
+    private double mPrice;
 
     private String mNote;
 
@@ -77,12 +77,12 @@ public class PublishGoodsInfo {
         mHighPrice = price;
     }
 
-    public double getLowerPrice(){
-        return mLowPrice;
+    public double getPrice(){
+        return mPrice;
     }
 
-    public void setLowerPrice(double price){
-        mLowPrice = price;
+    public void setPrice(double price){
+        mPrice = price;
     }
 
     public void setNote(String note){
@@ -134,7 +134,7 @@ public class PublishGoodsInfo {
         sb.append("id = " + mId + "\n");
         sb.append("name = " + mName + "\n");
         sb.append("high price = " + mHighPrice + "\n");
-        sb.append("lower price = " + mLowPrice + "\n");
+        sb.append("lower price = " + mPrice + "\n");
         sb.append("released date = " + new Date(mReleasedDate) + "\n");
         sb.append("-------------------------------\n");
 

@@ -23,4 +23,8 @@
     <dimen name="user_center_title_margin">16dp</dimen>
     <dimen name="user_detail_scroll_view_margin">16dp</dimen>
     <dimen name="user_detail_title_margin_end">64dp</dimen>
+    <dimen name="publish_goods_appbar_height">280dp</dimen>
+    <dimen name="toolbar_margin">32dp</dimen>
+    <dimen name="toolbar_margin_top">64dp</dimen>
+    <dimen name="publish_goods_text_margin">24dp</dimen>
 </resources>
