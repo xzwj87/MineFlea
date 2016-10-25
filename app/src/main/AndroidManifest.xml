@@ -74,12 +74,12 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
+        <activity android:name=".market.ui.activity.NearbyGoodsActivity"></activity>
+        <activity android:name=".market.ui.activity.DiscoverGoodsActivity"></activity>
         <activity android:name=".market.ui.activity.UserDetailActivity"
             android:label=""
             android:theme="@style/AppTheme.NoActionBar"/>
 
-        <activity android:name=".market.ui.activity.NearbyGoodsActivity">
-        </activity>
 
         <activity android:name="me.iwf.photopicker.PhotoPickerActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
