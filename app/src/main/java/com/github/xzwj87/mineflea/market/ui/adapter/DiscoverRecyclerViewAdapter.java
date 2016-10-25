@@ -30,6 +30,10 @@ public class DiscoverRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         initData();
     }
 
+    public interface DiscoverClickListener {
+        void onDiscoverItemClick(int position);
+    }
+
     private void initData() {
         mInflate = LayoutInflater.from(AppGlobals.getAppContext());
     }
