@@ -41,6 +41,7 @@ import butterknife.ButterKnife;
  * Created by jason on 10/9/16.
  */
 
+// TODO: separate application logic from UI
 public class NearbyTabFragment extends BaseFragment implements View.OnClickListener, AMap.OnMarkerClickListener,
         AMap.OnInfoWindowClickListener, AMap.OnMarkerDragListener, AMap.OnMapLoadedListener,
         AMap.InfoWindowAdapter, LocationSource,

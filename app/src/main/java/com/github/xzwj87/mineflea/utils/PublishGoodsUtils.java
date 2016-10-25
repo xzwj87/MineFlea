@@ -17,8 +17,7 @@ public class PublishGoodsUtils {
 
         goodsInfo.setId(object.getObjectId());
         goodsInfo.setName((String)object.get(PublishGoodsInfo.GOODS_NAME));
-        goodsInfo.setPrice((double)object.get(PublishGoodsInfo.GOODS_PRICE));
-        goodsInfo.setHighPrice((double)object.get(PublishGoodsInfo.GOODS_HIGH_PRICE));
+        goodsInfo.setPrice((String)object.get(PublishGoodsInfo.GOODS_PRICE));
         goodsInfo.setNote((String)object.get(PublishGoodsInfo.GOODS_NOTE));
         goodsInfo.setLocation((String)object.get(PublishGoodsInfo.GOODS_LOC));
         goodsInfo.setPublisherId((String)object.get(PublishGoodsInfo.GOODS_PUBLISHER));

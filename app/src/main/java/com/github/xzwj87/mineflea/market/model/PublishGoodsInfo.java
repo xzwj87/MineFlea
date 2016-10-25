@@ -8,6 +8,7 @@ import java.util.List;
  */
 public class PublishGoodsInfo {
 
+    public static final int MAX_NAME_SIZE = 30;
     public static final String GOODS_NAME = "name";
     public static final String GOODS_PUBLISHER = "publisher_id";
     public static final String GOODS_PRICE = "Price";
@@ -28,7 +29,7 @@ public class PublishGoodsInfo {
 
     private double mHighPrice;
 
-    private double mPrice;
+    private String mPrice;
 
     private String mNote;
 
@@ -77,11 +78,11 @@ public class PublishGoodsInfo {
         mHighPrice = price;
     }
 
-    public double getPrice(){
+    public String getPrice(){
         return mPrice;
     }
 
-    public void setPrice(double price){
+    public void setPrice(String price){
         mPrice = price;
     }
 

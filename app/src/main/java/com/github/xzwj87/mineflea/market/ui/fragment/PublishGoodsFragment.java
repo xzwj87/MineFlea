@@ -121,14 +121,16 @@ public class PublishGoodsFragment extends BaseFragment
         Log.v(TAG,"publishGoods()");
 
         mPresenter.setGoodsName(mEtGoodsName.getText().toString());
-        mPresenter.setGoodsPrice(Double.parseDouble(mEtPrice.getText().toString()));
+        mPresenter.setGoodsPrice(mEtPrice.getText().toString());
         mPresenter.setGoodsNote(mEtNote.getText().toString());
         mPresenter.setGoodsImgUrl(mFilePath.subList(0,mFilePath.size()-1));
         mPresenter.setPublisherName(UserPrefsUtil.getString(UserInfo.USER_NAME,"dummy"));
 
-        mPresenter.publishGoods();
-        mProcessBar.setVisibility(View.VISIBLE);
-        mProcessBar.setProgress(0);
+        if(mPresenter.validGoodsInfo()) {
+            mPresenter.publishGoods();
+            mProcessBar.setVisibility(View.VISIBLE);
+            mProcessBar.setProgress(0);
+        }
     }
 
     @Override
@@ -153,6 +155,26 @@ public class PublishGoodsFragment extends BaseFragment
     public void updateUploadProcess(int count) {
         Log.v(TAG,"updateUploadProcess(): count = " + count);
         mProcessBar.setProgress(count);
+    }
+
+    @Override
+    public void showNameInvalidMsg() {
+        showToast(getString(R.string.error_invalid_goods_name));
+    }
+
+    @Override
+    public void showPriceInvalidMsg() {
+        showToast(getString(R.string.error_invalid_goods_price));
+    }
+
+    @Override
+    public void showNoteInvalidMsg() {
+        showToast(getString(R.string.error_no_note));
+    }
+
+    @Override
+    public void showNoPicturesMsg() {
+        showToast(getString(R.string.error_no_pictures));
     }
 
     @Override

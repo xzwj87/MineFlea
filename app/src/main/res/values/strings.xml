@@ -68,4 +68,8 @@
     <string name="hint_login_success">Success to login</string>
     <string name="user_head_icon">User Head Icon</string>
     <string name="none"> </string>
+    <string name="error_invalid_goods_name">name is too long or empty</string>
+    <string name="error_invalid_goods_price">invalid number</string>
+    <string name="error_no_note">no input note</string>
+    <string name="error_no_pictures">No pictures added</string>
 </resources>

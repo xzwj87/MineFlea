@@ -1,6 +1,7 @@
 package com.github.xzwj87.mineflea.market.presenter;
 
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
@@ -68,13 +69,8 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     }
 
     @Override
-    public void setGoodsPrice(double price) {
+    public void setGoodsPrice(String price) {
         mGoodsInfo.setPrice(price);
-    }
-
-    @Override
-    public void setGoodsHighPrice(double price) {
-        mGoodsInfo.setHighPrice(price);
     }
 
     @Override
@@ -95,6 +91,33 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     @Override
     public void setPublisherName(String name) {
         mGoodsInfo.setPublisherId(name);
+    }
+
+    @Override
+    public boolean validGoodsInfo() {
+        if(TextUtils.isEmpty(mGoodsInfo.getName())
+            || mGoodsInfo.getName().length() > PublishGoodsInfo.MAX_NAME_SIZE){
+            mView.showNameInvalidMsg();
+            return false;
+        }
+
+        try {
+            double price = Double.parseDouble(mGoodsInfo.getPrice());
+        }catch (NumberFormatException e){
+            mView.showPriceInvalidMsg();
+            return false;
+        }
+
+        if(mImgUris == null || mImgUris.size() <= 0){
+            mView.showNoPicturesMsg();
+            return false;
+        }
+
+        if(TextUtils.isEmpty(mGoodsInfo.getNote())){
+            mGoodsInfo.setNote("");
+        }
+
+        return true;
     }
 
     @Override
