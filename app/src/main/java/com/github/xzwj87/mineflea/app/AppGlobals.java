@@ -3,6 +3,7 @@ package com.github.xzwj87.mineflea.app;
 import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.RemoteException;
 import android.util.Log;
 
@@ -33,10 +34,15 @@ public class AppGlobals extends Application
     public static final String FILE_DIR_PARENT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/MinFlea";
     public static final String FILE_DIR_MISC = FILE_DIR_PARENT + "/misc";
 
+    private static int mainThreadId;
+    private static Handler handler;
 
     @Override
     public void onCreate(){
         super.onCreate();
+
+        mainThreadId = android.os.Process.myTid();
+        handler = new Handler();
 
         sContext = getApplicationContext();
 
@@ -88,5 +94,13 @@ public class AppGlobals extends Application
             Log.v(TAG, "fail to create directory " + FILE_DIR_MISC);
         }
 
+    }
+
+    public static int getMainThreadId(){
+        return mainThreadId;
+    }
+
+    public static Handler getHandler(){
+        return handler;
     }
 }
