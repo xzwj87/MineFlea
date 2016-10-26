@@ -1,9 +1,8 @@
 package com.github.xzwj87.mineflea.market.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 
@@ -11,8 +10,9 @@ import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.internal.di.HasComponent;
 import com.github.xzwj87.mineflea.market.internal.di.component.DaggerMarketComponent;
 import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
-import com.github.xzwj87.mineflea.market.model.UserInfo;
-import com.github.xzwj87.mineflea.market.ui.fragment.UserDetailFragment;
+import com.github.xzwj87.mineflea.market.ui.adapter.UserDetailPageAdapter;
+
+import butterknife.BindView;
 
 /**
  * Created by jason on 10/22/16.
@@ -23,6 +23,9 @@ public class UserDetailActivity extends BaseActivity
     private static final String TAG = UserDetailActivity.class.getSimpleName();
 
     private MarketComponent mMarketComponent;
+
+    private ViewPager mPage;
+    private UserDetailPageAdapter mPageAdapter;
 
     @Override
     public void onCreate(Bundle savedState){
@@ -39,24 +42,20 @@ public class UserDetailActivity extends BaseActivity
             actionBar.setHomeAsUpIndicator(R.drawable.ic_back_white_24dp);
         }
 
+        mPage = (ViewPager)findViewById(R.id.pager_container);
+        mPageAdapter = new UserDetailPageAdapter(this,getSupportFragmentManager());
+        mPage.setAdapter(mPageAdapter);
 
-        initInjector();
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.user_detail_tab);
+        tabLayout.setTabMode(TabLayout.MODE_FIXED);
+        tabLayout.setupWithViewPager(mPage);
 
-        FragmentManager fragmentMgr = getSupportFragmentManager();
-        UserDetailFragment fragment = (UserDetailFragment)fragmentMgr.
-                findFragmentByTag(UserDetailFragment.TAG);
-
-        if(fragment == null){
-            Intent intent = getIntent();
-            String userId = intent.getStringExtra(UserInfo.USER_ID);
-            boolean isCurrentUser = intent.getBooleanExtra(UserInfo.CURRENT_USER,false);
-            fragment = UserDetailFragment.newInstance(userId,isCurrentUser);
-            fragmentMgr.beginTransaction()
-                       .add(R.id.fragment_container,fragment,UserDetailFragment.TAG)
-                       .commit();
+        for(int i = 0; i < tabLayout.getTabCount(); ++i){
+            TabLayout.Tab tab = tabLayout.getTabAt(i);
+            tab.setCustomView(mPageAdapter.getTabView(i));
         }
 
-        mMarketComponent.inject(fragment);
+        initInjector();
     }
 
     private void initInjector(){

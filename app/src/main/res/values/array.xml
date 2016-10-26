@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="user_detail_tab_name">
+        <item>Published</item>
+        <item>Favorites</item>
+        <item>Followers</item>
+        <item>Followees</item>
+    </string-array>
+</resources>

@@ -56,11 +56,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".market.ui.activity.PublishGoodsActivity"
             android:label=""
             android:parentActivityName=".market.ui.activity.MineFleaHomeActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
         <activity
             android:name=".market.ui.activity.LoginActivity"
             android:label="@string/title_activity_login"
@@ -71,15 +74,18 @@
         <activity android:name=".market.ui.activity.RegisterActivity"
             android:label="@string/title_activity_register"
             android:parentActivityName=".market.ui.activity.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
         </activity>
 
-        <activity android:name=".market.ui.activity.NearbyGoodsActivity"></activity>
-        <activity android:name=".market.ui.activity.DiscoverGoodsActivity"></activity>
+        <activity android:name=".market.ui.activity.NearbyGoodsActivity">
+        </activity>
+
+        <activity android:name=".market.ui.activity.DiscoverGoodsActivity">
+        </activity>
+
         <activity android:name=".market.ui.activity.UserDetailActivity"
             android:label=""
             android:theme="@style/AppTheme.NoActionBar"/>
-
 
         <activity android:name="me.iwf.photopicker.PhotoPickerActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
