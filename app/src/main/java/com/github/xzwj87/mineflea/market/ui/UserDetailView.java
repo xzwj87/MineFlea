@@ -13,6 +13,12 @@ public interface UserDetailView extends BaseView{
     void showLoadProcess(boolean stop);
     void showGetUserInfoFail();
     void showGetGoodsListFail();
-    void onGetUserInfoComplete(UserInfo userInfo);
+    void onGetUserInfoSuccess();
     void onGetGoodsListDone(List<PublishGoodsInfo> goodsList);
+
+    void renderHeadIcon(String iconUrl);
+
+    void renderNickName(String name);
+
+    void renderEmail(String email);
 }

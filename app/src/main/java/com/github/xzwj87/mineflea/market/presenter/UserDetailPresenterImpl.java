@@ -1,8 +1,8 @@
 package com.github.xzwj87.mineflea.market.presenter;
 
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
@@ -27,6 +27,7 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
     private MineFleaRepository mDataRepo;
     private UserDetailView mView;
     private List<PublishGoodsInfo> mGoodsList;
+    private UserInfo mUserInfo;
 
     @Inject
     public UserDetailPresenterImpl(@Named("dataRepository")MineFleaRepository repository){
@@ -87,9 +88,12 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
 
     @Override
     public void onGetUserInfoComplete(Message message) {
-        Log.v(TAG,"onGetUserInfoComplete(): user info = " + message.obj);
+        Log.v(TAG,"onGetUserInfoSuccess(): user info = " + message.obj);
         if(message.obj != null){
-            mView.onGetUserInfoComplete((UserInfo)message.obj);
+            mView.onGetUserInfoSuccess();
+            mUserInfo = (UserInfo)message.obj;
+
+            renderView();
         }else{
             mView.showGetUserInfoFail();
             mView.finishView();
@@ -106,6 +110,20 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
         }else{
             mView.showGetGoodsListFail();
             mView.showGetGoodsListFail();
+        }
+    }
+
+    private void renderView(){
+        if(!TextUtils.isEmpty(mUserInfo.getHeadIconUrl())) {
+            mView.renderHeadIcon(mUserInfo.getHeadIconUrl());
+        }
+
+        if(!TextUtils.isEmpty(mUserInfo.getNickName())){
+            mView.renderNickName(mUserInfo.getNickName());
+        }
+
+        if(!TextUtils.isEmpty(mUserInfo.getUserEmail())){
+            mView.renderEmail(mUserInfo.getUserEmail());
         }
     }
 }

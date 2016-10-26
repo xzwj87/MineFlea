@@ -62,7 +62,7 @@ public class UserDetailPageAdapter extends FragmentPagerAdapter{
 
     @Override
     public CharSequence getPageTitle(int pos){
-        return mTabNames[pos];
+        return null;
     }
 
 

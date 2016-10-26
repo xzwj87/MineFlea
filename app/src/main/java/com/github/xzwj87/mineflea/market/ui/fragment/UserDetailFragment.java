@@ -33,7 +33,7 @@ public class UserDetailFragment extends BaseFragment implements UserDetailView{
     public static final String TAG = UserDetailFragment.class.getSimpleName();
 
     private CollapsingToolbarLayout mToolbarLayout;
-    private FloatingActionButton mFab;
+    //private FloatingActionButton mFab;
     private ImageView mIvHeadIcon;
     private String mUserId;
 
@@ -49,7 +49,7 @@ public class UserDetailFragment extends BaseFragment implements UserDetailView{
     private TextView mTvFollowers;
     private TextView mTvGoods;
 
-    @Inject UserDetailPresenterImpl mPresenter;
+    private UserDetailPresenterImpl mPresenter;
 
     public UserDetailFragment(){}
 
@@ -106,8 +106,12 @@ public class UserDetailFragment extends BaseFragment implements UserDetailView{
     }
 
     @Override
+    public void onGetUserInfoSuccess() {
+
+    }
+
     public void onGetUserInfoComplete(UserInfo userInfo) {
-        Log.v(TAG,"onGetUserInfoComplete(): user info " + userInfo);
+        Log.v(TAG,"onGetUserInfoSuccess(): user info " + userInfo);
 
         mToolbarLayout.setTitle(userInfo.getNickName());
         mTvEmail.setText(userInfo.getUserEmail());
@@ -130,6 +134,21 @@ public class UserDetailFragment extends BaseFragment implements UserDetailView{
     }
 
     @Override
+    public void renderHeadIcon(String iconUrl) {
+
+    }
+
+    @Override
+    public void renderNickName(String name) {
+
+    }
+
+    @Override
+    public void renderEmail(String email) {
+
+    }
+
+    @Override
     public void finishView() {
         getActivity().finish();
     }
@@ -148,11 +167,9 @@ public class UserDetailFragment extends BaseFragment implements UserDetailView{
     private void initView(){
         mToolbarLayout = (CollapsingToolbarLayout)getActivity().
                 findViewById(R.id.user_detail_toolbar_layout);
-        mFab = (FloatingActionButton)getActivity().
-                findViewById(R.id.user_detail_fab);
         mIvHeadIcon = (ImageView)getActivity().findViewById(R.id.head_icon);
 
-        if(mIsCurrentUser){
+/*        if(mIsCurrentUser){
             mFab.setImageResource(R.drawable.ic_edit_white_24dp);
             mIsCurrentUser = true;
         }else{
@@ -165,7 +182,7 @@ public class UserDetailFragment extends BaseFragment implements UserDetailView{
             public void onClick(View v) {
                 getGoodsList();
             }
-        });
+        });*/
     }
 
 
