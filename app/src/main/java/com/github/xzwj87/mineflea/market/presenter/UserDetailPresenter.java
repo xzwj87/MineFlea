@@ -24,6 +24,8 @@ public abstract class UserDetailPresenter implements BasePresenter,PresenterCall
 
     public abstract int getGoodsNumber();
 
+    public abstract boolean isMe(String userId);
+
     @Override
     public void onRegisterComplete(Message message) {
         throw new UnsupportedOperationException("not supported operation");

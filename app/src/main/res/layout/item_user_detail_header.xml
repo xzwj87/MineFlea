@@ -35,7 +35,7 @@
             android:textSize="@dimen/user_detail_text_size"/>
     </LinearLayout>
 
-    <TextView
+    <TextView android:id="@+id/tv_user_action"
         android:background="@drawable/item_rect_background"
         android:drawableStart="@drawable/ic_edit_white_24dp"
         android:drawablePadding="8dp"

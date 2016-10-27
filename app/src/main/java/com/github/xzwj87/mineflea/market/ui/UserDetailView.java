@@ -11,10 +11,7 @@ import java.util.List;
 
 public interface UserDetailView extends BaseView{
     void showLoadProcess(boolean stop);
-    void showGetUserInfoFail();
-    void showGetGoodsListFail();
-    void onGetUserInfoSuccess();
-    void onGetGoodsListDone(List<PublishGoodsInfo> goodsList);
+    void onGetUserInfoDone(boolean success);
 
     void renderHeadIcon(String iconUrl);
 

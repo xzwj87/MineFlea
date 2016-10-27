@@ -10,6 +10,7 @@ import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.UserDetailView;
+import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 
 import java.util.List;
 
@@ -66,6 +67,11 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
     }
 
     @Override
+    public boolean isMe(String userId) {
+        return userId.equals(UserPrefsUtil.getString(UserInfo.USER_ID,""));
+    }
+
+    @Override
     public void init() {
         mDataRepo.init();
         mDataRepo.setPresenterCallback(this);
@@ -88,14 +94,14 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
 
     @Override
     public void onGetUserInfoComplete(Message message) {
-        Log.v(TAG,"onGetUserInfoSuccess(): user info = " + message.obj);
+        Log.v(TAG,"onGetUserInfoDone(): user info = " + message.obj);
         if(message.obj != null){
-            mView.onGetUserInfoSuccess();
+            mView.onGetUserInfoDone(true);
             mUserInfo = (UserInfo)message.obj;
 
             renderView();
         }else{
-            mView.showGetUserInfoFail();
+            mView.onGetUserInfoDone(false);
             mView.finishView();
         }
     }
@@ -104,13 +110,6 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
     @Override
     public void onGetGoodsListDone(Message message) {
         Log.v(TAG,"onGetGoodsListDone()");
-        if(message != null){
-            mGoodsList = (List<PublishGoodsInfo>)message.obj;
-            mView.onGetGoodsListDone(mGoodsList);
-        }else{
-            mView.showGetGoodsListFail();
-            mView.showGetGoodsListFail();
-        }
     }
 
     private void renderView(){

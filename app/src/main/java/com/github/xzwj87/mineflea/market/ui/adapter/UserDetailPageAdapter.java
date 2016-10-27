@@ -25,6 +25,7 @@ public class UserDetailPageAdapter extends FragmentPagerAdapter{
     private Context mContext;
     private TextView mTvCount;
     private String[] mTabNames;
+    private String mUserId;
 
     private static final int MA_TABS = 4;
 
@@ -33,8 +34,10 @@ public class UserDetailPageAdapter extends FragmentPagerAdapter{
     private static final int TAB_FOLLOWER = 2;
     private static final int TAB_FOLLOWEE = 3;
 
-    public UserDetailPageAdapter(Context context, FragmentManager fm){
+    public UserDetailPageAdapter(String userId,Context context, FragmentManager fm){
         super(fm);
+
+        mUserId = userId;
         mContext = context;
         mTabNames = mContext.getResources().getStringArray(R.array.user_detail_tab_name);
     }
@@ -43,7 +46,7 @@ public class UserDetailPageAdapter extends FragmentPagerAdapter{
     public Fragment getItem(int position) {
         switch (position){
             case TAB_PUBLISHED:
-                return UserPublishedGoodsFragment.newInstance();
+                return UserPublishedGoodsFragment.newInstance(mUserId);
             case TAB_FAVORITE:
                 return UserFavoritesFragment.newInstance();
             case TAB_FOLLOWER:

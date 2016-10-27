@@ -56,5 +56,7 @@
     <string name="error_no_note">no input note</string>
     <string name="error_no_pictures">No pictures added</string>
     <string name="edit">编辑</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_favorite">Favorite</string>
 
 </resources>

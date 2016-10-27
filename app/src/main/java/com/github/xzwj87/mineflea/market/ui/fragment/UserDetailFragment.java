@@ -87,31 +87,21 @@ public class UserDetailFragment extends BaseFragment implements UserDetailView{
 
     @Override
     public void showLoadProcess(boolean stop) {
-        if(stop && mProgressDlg.isShowing()){
+        if (stop && mProgressDlg.isShowing()) {
             mProgressDlg.dismiss();
-        }else {
+        } else {
             mProgressDlg = ProgressDialog.show(getActivity(), "",
                     getString(R.string.get_user_detail_progress_hint));
         }
     }
 
     @Override
-    public void showGetUserInfoFail() {
-        showToast(getString(R.string.error_get_user_info));
-    }
-
-    @Override
-    public void showGetGoodsListFail() {
-        showToast(getString(R.string.error_get_goods_list));
-    }
-
-    @Override
-    public void onGetUserInfoSuccess() {
+    public void onGetUserInfoDone(boolean success) {
 
     }
 
     public void onGetUserInfoComplete(UserInfo userInfo) {
-        Log.v(TAG,"onGetUserInfoSuccess(): user info " + userInfo);
+        Log.v(TAG,"onGetUserInfoDone(): user info " + userInfo);
 
         mToolbarLayout.setTitle(userInfo.getNickName());
         mTvEmail.setText(userInfo.getUserEmail());
@@ -126,11 +116,6 @@ public class UserDetailFragment extends BaseFragment implements UserDetailView{
                .resize(1024,1024)
                .centerCrop()
                .into(mIvHeadIcon);
-    }
-
-    @Override
-    public void onGetGoodsListDone(List<PublishGoodsInfo> goodsList) {
-        Log.v(TAG,"onGetGoodsListDone(): goods size = " + goodsList.size());
     }
 
     @Override
