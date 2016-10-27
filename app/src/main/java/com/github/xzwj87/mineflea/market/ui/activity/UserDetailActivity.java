@@ -32,8 +32,7 @@ import butterknife.ButterKnife;
  * Created by jason on 10/22/16.
  */
 
-public class UserDetailActivity extends BaseActivity
-            implements HasComponent<MarketComponent>,UserDetailView{
+public class UserDetailActivity extends BaseActivity implements UserDetailView{
     private static final String TAG = UserDetailActivity.class.getSimpleName();
 
     private MarketComponent mMarketComponent;
@@ -92,11 +91,6 @@ public class UserDetailActivity extends BaseActivity
     }
 
     private void initInjector(){
-        mMarketComponent =
-                DaggerMarketComponent.builder()
-                                     .appComponent(getAppComponent())
-                                     .activityModule(getActivityModule())
-                                     .build();
         mMarketComponent.inject(this);
     }
 

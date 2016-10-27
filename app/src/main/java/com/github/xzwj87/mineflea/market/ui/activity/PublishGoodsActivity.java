@@ -18,13 +18,10 @@ import butterknife.ButterKnife;
  * Created by jason on 9/27/16.
  */
 
-public class PublishGoodsActivity extends BaseActivity
-        implements HasComponent<MarketComponent> {
+public class PublishGoodsActivity extends BaseActivity {
     public static final String TAG = PublishGoodsActivity.class.getSimpleName();
 
     @BindView(R.id.toolbar) Toolbar mToolBar;
-
-    private MarketComponent mMarketComponent;
 
     @Override
     public void onCreate(Bundle bundle){
@@ -39,8 +36,6 @@ public class PublishGoodsActivity extends BaseActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_clear_white_24dp);
         }
-
-        initInjector();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         PublishGoodsFragment fragment = (PublishGoodsFragment) fragmentManager.findFragmentByTag(PublishGoodsFragment.TAG);
@@ -71,15 +66,4 @@ public class PublishGoodsActivity extends BaseActivity
         super.onDestroy();
     }
 
-    @Override
-    public MarketComponent getComponent() {
-        return mMarketComponent;
-    }
-
-    private void initInjector(){
-        mMarketComponent = DaggerMarketComponent.builder()
-                .appComponent(getAppComponent())
-                .activityModule(getActivityModule())
-                .build();
-    }
 }

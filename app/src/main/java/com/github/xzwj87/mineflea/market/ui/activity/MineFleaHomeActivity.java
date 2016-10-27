@@ -52,7 +52,6 @@ public class MineFleaHomeActivity extends BaseActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        initInjector();
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPageAdapter(getSupportFragmentManager());
@@ -103,18 +102,5 @@ public class MineFleaHomeActivity extends BaseActivity
         super.onActivityResult(request,result,data);
 
         Log.v(TAG,"onActivityResult(): request = " + request);
-    }
-
-    @Override
-    public MarketComponent getComponent() {
-        return mMarketComponent;
-    }
-
-    private void initInjector(){
-        mMarketComponent =
-                DaggerMarketComponent.builder()
-                                     .appComponent(getAppComponent())
-                                     .activityModule(getActivityModule())
-                                     .build();
     }
 }

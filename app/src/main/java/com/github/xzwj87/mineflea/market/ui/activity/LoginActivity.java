@@ -346,11 +346,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     }
 
     private void initInjector(){
-        DaggerMarketComponent.builder()
-                             .appComponent(getAppComponent())
-                             .activityModule(getActivityModule())
-                             .build()
-                             .inject(this);
+        mMarketComponent.inject(this);
         mPresenter.setView(this);
     }
 }

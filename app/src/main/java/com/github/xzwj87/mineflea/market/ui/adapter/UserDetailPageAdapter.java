@@ -1,5 +1,6 @@
 package com.github.xzwj87.mineflea.market.ui.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,6 +11,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.github.xzwj87.mineflea.R;
+import com.github.xzwj87.mineflea.market.ui.activity.BaseActivity;
+import com.github.xzwj87.mineflea.market.ui.fragment.BaseFragment;
 import com.github.xzwj87.mineflea.market.ui.fragment.UserFavoritesFragment;
 import com.github.xzwj87.mineflea.market.ui.fragment.UserFolloweeFragment;
 import com.github.xzwj87.mineflea.market.ui.fragment.UserFollowerFragment;
@@ -40,13 +43,19 @@ public class UserDetailPageAdapter extends FragmentPagerAdapter{
         mUserId = userId;
         mContext = context;
         mTabNames = mContext.getResources().getStringArray(R.array.user_detail_tab_name);
+
+        if(!(mContext instanceof BaseActivity)){
+            Log.e(TAG,"activity should extend BaseActivity!!!!");
+        }
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position){
             case TAB_PUBLISHED:
-                return UserPublishedGoodsFragment.newInstance(mUserId);
+                UserPublishedGoodsFragment fragment = UserPublishedGoodsFragment.newInstance(mUserId);
+                ((BaseActivity)mContext).getComponent().inject(fragment);
+                return fragment;
             case TAB_FAVORITE:
                 return UserFavoritesFragment.newInstance();
             case TAB_FOLLOWER:
@@ -54,6 +63,7 @@ public class UserDetailPageAdapter extends FragmentPagerAdapter{
             case TAB_FOLLOWEE:
                 return UserFolloweeFragment.newInstance();
         }
+
 
         return null;
     }

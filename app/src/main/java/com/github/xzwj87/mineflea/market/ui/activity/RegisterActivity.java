@@ -37,8 +37,7 @@ import me.iwf.photopicker.PhotoPicker;
  * Created by jason on 10/13/16.
  */
 
-public class RegisterActivity extends BaseActivity implements RegisterView ,
-        HasComponent<MarketComponent>{
+public class RegisterActivity extends BaseActivity implements RegisterView{
     public static final String TAG = RegisterActivity.class.getSimpleName();
 
     @BindView(R.id.et_user_name) EditText mEtName;
@@ -203,18 +202,9 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
     }
 
     private void initInjector(){
-        mMarketComponent = DaggerMarketComponent.builder()
-                             .appComponent(getAppComponent())
-                             .activityModule(getActivityModule())
-                             .build();
         mMarketComponent.inject(this);
 
         mPresenter.setView(this);
-    }
-
-    @Override
-    public MarketComponent getComponent() {
-        return mMarketComponent;
     }
 
     @Override
