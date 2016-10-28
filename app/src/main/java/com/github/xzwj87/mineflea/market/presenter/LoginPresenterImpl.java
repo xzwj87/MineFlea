@@ -11,6 +11,7 @@ import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.LoginView;
 import com.github.xzwj87.mineflea.utils.UserInfoUtils;
 import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
+import com.tencent.qc.stat.common.User;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -86,12 +87,13 @@ public class LoginPresenterImpl extends LoginPresenter{
         Log.v(TAG,"loginComplete(): user detail = " + message.obj);
 
         if(message.obj != null){
-            UserPrefsUtil.updateUserInfoBoolean(UserInfo.IS_LOGIN,true);
+            UserInfo user = (UserInfo) message.obj;
+            user.setLoginState(true);
+            UserPrefsUtil.saveUserLoginInfo(user);
 
-            AVUser avUser = (AVUser)message.obj;
-            mView.updateUserEmail(avUser.getEmail());
-            mView.updateUserNickName((String)avUser.get(UserInfo.USER_NICK_NAME));
-            mView.updateUserHeadIcon((String)avUser.get(UserInfo.USER_HEAD_ICON));
+            mView.updateUserEmail(user.getUserEmail());
+            mView.updateUserNickName(user.getNickName());
+            mView.updateUserHeadIcon(user.getHeadIconUrl());
 
             mView.onLoginSuccess();
         }else{

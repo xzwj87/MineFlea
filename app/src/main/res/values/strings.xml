@@ -10,10 +10,10 @@
     <string name="action_publish">Publish</string>
 
     <string name="goods_name">Name</string>
-    <string name="goods_price">Price Range</string>
+    <string name="goods_price">Price</string>
     <string name="goods_low_Price">$Low</string>
     <string name="goods_high_price">$High</string>
-    <string name="note_hint">Please write anything about this goods</string>
+    <string name="goods_description">Descriptions</string>
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_register">Register your account</string>
 
@@ -37,7 +37,7 @@
         completions."
     </string>
 
-    <string name="add_pictures">Add pictures</string>
+    <string name="add_pictures">Pictures</string>
     <string name="logout">Logout</string>
     <string name="published_goods">Published Goods</string>
     <string name="my_followees">My Followees</string>
@@ -56,4 +56,23 @@
     <string name="register_progress_info">Registering, please wait for a while</string>
     <string name="error_publish_fail">Fail to publish goods</string>
     <string name="prompt_login_incorrect_email_password">Incorrect Name or password</string>
+    <string name="pictures_over_max_count_hints">only 5 pictures should be picked</string>
+    <string name="iv_share_description">Share</string>
+    <string name="iv_goods_img">Goods Image</string>
+    <string name="explore_more">EXPLORE MORE</string>
+    <string name="get_user_detail_progress_hint">loading data,please wait for a while</string>
+    <string name="check_user_goods_list">Check User Goods List</string>
+    <string name="error_get_user_info">Fail to get user info</string>
+    <string name="error_get_goods_list">Fail to get goods list</string>
+    <string name="assure_not_pick_head_icon">No head icon picked</string>
+    <string name="hint_login_success">Success to login</string>
+    <string name="user_head_icon">User Head Icon</string>
+    <string name="none"> </string>
+    <string name="error_invalid_goods_name">name is too long or empty</string>
+    <string name="error_invalid_goods_price">invalid number</string>
+    <string name="error_no_note">no input note</string>
+    <string name="error_no_pictures">No pictures added</string>
+    <string name="edit">Edit</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_favorite">Favorite</string>
 </resources>

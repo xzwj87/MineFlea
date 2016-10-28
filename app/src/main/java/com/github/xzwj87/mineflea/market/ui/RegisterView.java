@@ -14,5 +14,6 @@ public interface RegisterView extends BaseView{
     void showEmailInvalidMsg();
     void showTelInvalidMsg();
     void showPwdInvalidMsg();
+    void showHeadIconNullDialog();
     void showProgress();
 }

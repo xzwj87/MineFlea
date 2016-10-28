@@ -1,16 +1,13 @@
 package com.github.xzwj87.mineflea.market.internal.di.module;
 
-import android.content.Context;
-
 import com.github.xzwj87.mineflea.market.data.local.MineFleaLocalSource;
-import com.github.xzwj87.mineflea.market.data.remote.MineFleaCloudSource;
+import com.github.xzwj87.mineflea.market.data.remote.MineFleaRemoteSource;
 import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
 import com.github.xzwj87.mineflea.market.executor.JobExecutor;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.net.NetDataApiImpl;
 
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -44,14 +41,14 @@ public class MarketModule {
 
     @PerActivity @Provides
     @Named("remoteResource")
-    MineFleaCloudSource provideRemoteResource(NetDataApiImpl netApi){
-        return new MineFleaCloudSource(netApi);
+    MineFleaRemoteSource provideRemoteResource(NetDataApiImpl netApi){
+        return new MineFleaRemoteSource(netApi);
     }
 
     @PerActivity @Provides
     @Named("dataRepository")
     MineFleaRepository provideRepository(MineFleaLocalSource localSource,
-                                         MineFleaCloudSource cloudSource){
+                                         MineFleaRemoteSource cloudSource){
         return new MineFleaRepository(localSource,cloudSource);
     }
 }

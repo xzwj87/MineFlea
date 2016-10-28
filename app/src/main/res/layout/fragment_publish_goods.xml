@@ -1,67 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:scrollbars="horizontal"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_margin="@dimen/goods_item_margin"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <EditText android:id="@+id/et_goods_name"
-        style="@style/InputEditText"
-        android:inputType="text"
-        android:maxLines="1"
-        android:hint="@string/goods_name"
-        android:layout_marginBottom="@dimen/goods_item_margin"/>
+    <LinearLayout android:orientation="horizontal"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <RelativeLayout
+        <ImageView android:src="@drawable/ic_label_grey_24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:hint="@string/goods_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/input_text_size"
+            android:layout_marginStart="@dimen/publish_goods_text_margin"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+    <LinearLayout android:orientation="horizontal"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView android:src="@drawable/ic_label_grey_24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_gravity="center"/>
+
+        <EditText android:id="@+id/et_note"
+            android:hint="@string/none"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/input_text_size"
+            android:layout_marginStart="@dimen/publish_goods_text_margin"
+            android:maxLines="2"
+            android:layout_marginEnd="@dimen/publish_goods_text_margin"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_margin="@dimen/activity_vertical_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="@dimen/goods_item_margin">
+        android:orientation="vertical">
 
-        <EditText android:id="@+id/et_goods_low_price"
-            style="@style/InputEditText"
+        <TextView
             android:layout_width="wrap_content"
-            android:inputType="numberDecimal"
-            android:minWidth="120dp"
-            android:layout_marginRight="32dp"
-            android:hint="@string/goods_low_Price"/>
+            android:layout_height="wrap_content"
+            android:text="@string/add_pictures"
+            android:textSize="@dimen/input_text_size"
+            android:drawablePadding="@dimen/publish_goods_text_margin"
+            android:drawableStart="@drawable/ic_insert_photo_black_24dp"
+            android:layout_marginBottom="@dimen/goods_item_margin"/>
 
-        <EditText android:id="@+id/et_goods_high_price"
-            android:layout_toRightOf="@id/et_goods_low_price"
-            android:layout_alignParentRight="true"
-            style="@style/InputEditText"
-            android:layout_width="wrap_content"
-            android:inputType="numberDecimal"
-            android:minWidth="120dp"
-            android:hint="@string/goods_high_price"/>
-    </RelativeLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_goods_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            tools:listItem="@layout/item_layout_publish_goods_image">
 
-    <EditText android:id="@+id/et_note"
-        style="@style/InputEditText"
+        </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+
+    <com.daimajia.numberprogressbar.NumberProgressBar
+        android:id="@+id/process_upload_image"
+        android:visibility="invisible"
         android:layout_width="match_parent"
-        android:maxLines="2"
-        android:hint="@string/note_hint"
-        android:layout_marginBottom="@dimen/goods_item_margin"/>
-
-    <TextView
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/add_pictures"
-        android:textSize="@dimen/input_text_size"
-        android:drawablePadding="16dp"
-        android:drawableLeft="@drawable/ic_insert_photo_black_24dp"
-        android:layout_marginTop="@dimen/goods_item_margin"
-        android:layout_marginBottom="@dimen/goods_item_margin"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_goods_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipChildren="false"
-        tools:listItem="@layout/item_layout_publish_goods_image">
+        custom:progress_unreached_color="#CCCCCC"
+        custom:progress_reached_color="#3498DB"
 
-    </android.support.v7.widget.RecyclerView>
+        custom:progress_unreached_bar_height="0.75dp"
+        custom:progress_reached_bar_height="1.5dp"
+
+        custom:progress_text_size="10sp"
+        custom:progress_text_color="#3498DB"
+        custom:progress_text_offset="1dp"
+        custom:progress_text_visibility="visible"
+        custom:max="100"/>
 
 </LinearLayout>

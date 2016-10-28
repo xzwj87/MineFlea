@@ -12,10 +12,9 @@ import android.widget.Toast;
 
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
+import com.github.xzwj87.mineflea.market.ui.adapter.DiscoverRecyclerViewAdapter;
 import com.github.xzwj87.mineflea.market.model.DiscoverInfo;
-import com.github.xzwj87.mineflea.market.ui.DiscoverClickListener;
 import com.github.xzwj87.mineflea.market.ui.activity.DiscoverGoodsActivity;
-import com.github.xzwj87.mineflea.market.ui.adapter.DiscoverRecylerViewAdapter;
 import com.github.xzwj87.mineflea.utils.DiscoverProtocol;
 
 import java.util.List;
@@ -27,10 +26,11 @@ import butterknife.ButterKnife;
  * Created by jason on 10/9/16.
  */
 
-public class DiscoverTabFragment extends BaseFragment implements DiscoverClickListener{
+public class DiscoverTabFragment extends BaseFragment
+            implements DiscoverRecyclerViewAdapter.DiscoverClickListener{
     public static final String TAG = DiscoverTabFragment.class.getSimpleName();
 
-    private DiscoverRecylerViewAdapter recylerViewAdapter;
+    private DiscoverRecyclerViewAdapter recylerViewAdapter;
     private List<DiscoverInfo> disInfolist;
 
 
@@ -59,8 +59,7 @@ public class DiscoverTabFragment extends BaseFragment implements DiscoverClickLi
     private void init() {
         DiscoverProtocol protocol = new DiscoverProtocol();
         disInfolist = protocol.loadDiscoverData();
-        recylerViewAdapter = new DiscoverRecylerViewAdapter(disInfolist);
-        recylerViewAdapter.setDiscoverClicklistener(this);
+        recylerViewAdapter = new DiscoverRecyclerViewAdapter(disInfolist);
         LinearLayoutManager layoutManager = new LinearLayoutManager(AppGlobals.getAppContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         discoverRecyclerView.setLayoutManager(layoutManager);
@@ -70,7 +69,7 @@ public class DiscoverTabFragment extends BaseFragment implements DiscoverClickLi
 
     //设置下拉刷新
     private void setSwipeLayout() {
-        swipeRefreshLayout.setColorSchemeResources(R.color.blue);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

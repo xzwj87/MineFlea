@@ -1,12 +1,17 @@
 package com.github.xzwj87.mineflea.market.ui.activity;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.internal.di.HasComponent;
@@ -18,6 +23,7 @@ import com.github.xzwj87.mineflea.market.ui.RegisterView;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -25,15 +31,13 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import droidninja.filepicker.FilePickerBuilder;
-import droidninja.filepicker.FilePickerConst;
+import me.iwf.photopicker.PhotoPicker;
 
 /**
  * Created by jason on 10/13/16.
  */
 
-public class RegisterActivity extends BaseActivity implements RegisterView ,
-        HasComponent<MarketComponent>{
+public class RegisterActivity extends BaseActivity implements RegisterView{
     public static final String TAG = RegisterActivity.class.getSimpleName();
 
     @BindView(R.id.et_user_name) EditText mEtName;
@@ -86,6 +90,12 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
         mPresenter.setUserTel(tel);
         mPresenter.setUserPwd(pwd);
 
+        if(mHeadIconUrl != null) {
+            mPresenter.setUserIconUrl(mHeadIconUrl.get(0));
+        }else{
+            mPresenter.setUserIconUrl("");
+        }
+
         if(mPresenter.validUserInfo()){
             mPresenter.register();
             showProgress();
@@ -96,10 +106,13 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
     public void pickHeadIcon(){
         Log.v(TAG,"pickHeadIcon()");
 
-        FilePickerBuilder builder = FilePickerBuilder.getInstance();
-        builder.setMaxCount(1)
-               .setSelectedFiles(mHeadIconUrl)
-               .pickPhoto(this);
+        PhotoPicker.builder()
+                   .setPhotoCount(1)
+                   .setPreviewEnabled(true)
+                   .setShowCamera(true)
+                   .setShowGif(true)
+                   .start(this,PhotoPicker.REQUEST_CODE);
+
     }
 
     @Override
@@ -110,20 +123,23 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
             mProgress.dismiss();
         }
 
-        Intent data = new Intent();
-        Bundle bundle = new Bundle();
-        bundle.putString(UserInfo.USER_NAME,mEtName.getText().toString());
-        bundle.putString(UserInfo.UER_EMAIL,mAtvEmail.getText().toString());
-        bundle.putString(UserInfo.USER_TEL,mEtTelNumber.getText().toString());
-        bundle.putString(UserInfo.USER_PWD,mEtPwd.getText().toString());
-        if(mHeadIconUrl != null && mHeadIconUrl.size() >= 1) {
-            bundle.putString(UserInfo.USER_HEAD_ICON, mHeadIconUrl.get(0));
+        if(success) {
+            Intent data = new Intent();
+            Bundle bundle = new Bundle();
+            bundle.putString(UserInfo.USER_NICK_NAME, mEtName.getText().toString());
+            bundle.putString(UserInfo.UER_EMAIL, mAtvEmail.getText().toString());
+            bundle.putString(UserInfo.USER_TEL, mEtTelNumber.getText().toString());
+            bundle.putString(UserInfo.USER_PWD, mEtPwd.getText().toString());
+
+            if (mHeadIconUrl != null) {
+                bundle.putString(UserInfo.USER_HEAD_ICON, mHeadIconUrl.get(0));
+            }
+
+            data.putExtras(bundle);
+            setResult(RESULT_OK, data);
+        }else{
+            setResult(RESULT_CANCELED);
         }
-
-        data.putExtras(bundle);
-        setResult(RESULT_OK,data);
-
-        finishView();
     }
 
     @Override
@@ -163,6 +179,13 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
     }
 
     @Override
+    public void showHeadIconNullDialog() {
+        Log.v(TAG,"showHeadIconNullDialog()");
+
+        showToast(getString(R.string.assure_not_pick_head_icon));
+    }
+
+    @Override
     public void showProgress() {
         mProgress = ProgressDialog.
                 show(this,"",getString(R.string.register_progress_info));
@@ -175,22 +198,13 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
 
     private void init(){
         mPresenter.init();
-        mHeadIconUrl = new ArrayList<>(1);
+        mHeadIconUrl = null;
     }
 
     private void initInjector(){
-        mMarketComponent = DaggerMarketComponent.builder()
-                             .appComponent(getAppComponent())
-                             .activityModule(getActivityModule())
-                             .build();
         mMarketComponent.inject(this);
 
         mPresenter.setView(this);
-    }
-
-    @Override
-    public MarketComponent getComponent() {
-        return mMarketComponent;
     }
 
     @Override
@@ -198,13 +212,21 @@ public class RegisterActivity extends BaseActivity implements RegisterView ,
         Log.v(TAG,"onActivityResult(): result = " + result);
 
         if(result == RESULT_OK && data != null){
-            mHeadIconUrl = data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_PHOTOS);
-            Log.v(TAG,mHeadIconUrl.size() + " photos are picked");
-            Picasso.with(this)
-                   .load(mHeadIconUrl.get(0))
-                   .resize(48,48)
-                   .centerInside()
-                   .into(mHeaderPicker);
+            switch (request){
+                case PhotoPicker.REQUEST_CODE:
+                    mHeadIconUrl = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+                    break;
+            }
+            Log.v(TAG,mHeadIconUrl.size() + " photos are picked: url " + mHeadIconUrl.get(0));
+
+            if(mHeadIconUrl != null) {
+                Picasso.with(this)
+                       .load(Uri.fromFile(new File(mHeadIconUrl.get(0))))
+                       .resize(512,512) // pixels
+                       .centerCrop()
+                       .into(mHeaderPicker);
+
+            }
         }
     }
 }

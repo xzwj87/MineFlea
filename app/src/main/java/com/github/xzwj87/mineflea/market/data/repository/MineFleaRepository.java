@@ -4,13 +4,11 @@ import android.os.Message;
 import android.util.Log;
 
 import com.github.xzwj87.mineflea.market.data.local.MineFleaLocalSource;
-import com.github.xzwj87.mineflea.market.data.remote.MineFleaCloudSource;
+import com.github.xzwj87.mineflea.market.data.remote.MineFleaRemoteSource;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.PresenterCallback;
-
-import java.util.HashMap;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -21,19 +19,19 @@ import javax.inject.Named;
 
 // TODO: Create/Query/Update/Delete
 @PerActivity
-public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.CloudSourceCallback{
+public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.CloudSourceCallback{
     public static final String TAG = MineFleaRepository.class.getSimpleName();
 
     private MineFleaLocalSource mLocalSrc;
-    @Inject MineFleaCloudSource mCloudSrc;
-    //private HashMap<String,PresenterCallback> mPresenterCbs;
-    private PresenterCallback mCb;
+    @Inject
+    MineFleaRemoteSource mCloudSrc;
+    private PresenterCallback mPresenterCb;
 
     private PublishGoodsInfo mGoodsInfo;
 
     @Inject
     public MineFleaRepository(@Named("localResource") MineFleaLocalSource localSource,
-                              @Named("remoteResource") MineFleaCloudSource cloudSource){
+                              @Named("remoteResource") MineFleaRemoteSource cloudSource){
         Log.v(TAG,"Constructor()");
         mCloudSrc = cloudSource;
         mLocalSrc = localSource;
@@ -63,7 +61,46 @@ public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.Cl
 
     @Override
     public void setPresenterCallback(PresenterCallback callback) {
-        mCb = callback;
+        mPresenterCb = callback;
+    }
+
+    @Override
+    public void uploadImage(String imgUri,boolean showProcess) {
+        mCloudSrc.uploadImg(imgUri,showProcess);
+    }
+
+    @Override
+    public String getCurrentUserId() {
+        return mCloudSrc.getCurrentUserId();
+    }
+
+    @Override
+    public UserInfo getCurrentUser() {
+        return mCloudSrc.getCurrentUser();
+    }
+
+    @Override
+    public void getUserInfoById(String id) {
+        mCloudSrc.getUserInfoById(id);
+    }
+
+    @Override
+    public void getGoodsListByUserId(String id) {
+        mCloudSrc.getGoodsListByUserId(id);
+    }
+
+    public void onImgUploadComplete(Message msg) {
+        mPresenterCb.onImgUploadComplete(msg);
+    }
+
+    @Override
+    public void onGetUserInfoDone(Message msg) {
+        mPresenterCb.onGetUserInfoComplete(msg);
+    }
+
+    @Override
+    public void onGetGoodsListDone(Message msg) {
+        mPresenterCb.onGetGoodsListDone(msg);
     }
 
 
@@ -76,18 +113,25 @@ public class MineFleaRepository implements BaseRepository,MineFleaCloudSource.Cl
             mLocalSrc.publishGoods(mGoodsInfo);
         }
 
-        mCb.onPublishComplete(message);
+        mPresenterCb.onPublishComplete(message);
     }
 
     @Override
     public void registerComplete(Message message) {
         Log.v(TAG,"registerComplete(): message " + message.obj);
 
-        mCb.onRegisterComplete(message);
+        mPresenterCb.onRegisterComplete(message);
     }
 
     @Override
+    public void updateProcess(int count) {
+        Log.v(TAG,"updateProcess(): count = " + count);
+        mPresenterCb.updateUploadProcess(count);
+    }
+
+
+    @Override
     public void loginComplete(Message message) {
-        mCb.loginComplete(message);
+        mPresenterCb.loginComplete(message);
     }
 }

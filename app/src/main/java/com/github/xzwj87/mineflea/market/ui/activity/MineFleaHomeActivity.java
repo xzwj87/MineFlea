@@ -15,11 +15,20 @@ import android.widget.TextView;
 
 
 import com.github.xzwj87.mineflea.R;
+import com.github.xzwj87.mineflea.market.internal.di.HasComponent;
+import com.github.xzwj87.mineflea.market.internal.di.component.DaggerMarketComponent;
+import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
 import com.github.xzwj87.mineflea.market.ui.adapter.SectionsPageAdapter;
+import com.github.xzwj87.mineflea.market.ui.fragment.UserCenterFragment;
 
-public class MineFleaHomeActivity extends AppCompatActivity {
+import static com.github.xzwj87.mineflea.market.ui.adapter.SectionsPageAdapter.FRAGMENT_USER_CENTER_TAB;
+
+public class MineFleaHomeActivity extends BaseActivity
+            implements HasComponent<MarketComponent>{
 
     private static final String TAG = MineFleaHomeActivity.class.getSimpleName();
+
+    private MarketComponent mMarketComponent;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -42,10 +51,11 @@ public class MineFleaHomeActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPageAdapter(getSupportFragmentManager());
-
+        mSectionsPagerAdapter.setMarketComponent(mMarketComponent);
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         if(mViewPager != null) {
@@ -54,9 +64,6 @@ public class MineFleaHomeActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-
-        //testLeanCloud();
-
     }
 
     @Override

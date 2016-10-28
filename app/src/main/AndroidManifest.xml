@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!--允许程序访问WiFi网络信息-->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <!--允许程序读写手机状态和身份-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!--允许程序访问CellID或WiFi热点来获取粗略的位置-->
@@ -55,11 +56,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".market.ui.activity.PublishGoodsActivity"
             android:label=""
             android:parentActivityName=".market.ui.activity.MineFleaHomeActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
         <activity
             android:name=".market.ui.activity.LoginActivity"
             android:label="@string/title_activity_login"
@@ -71,11 +75,24 @@
             android:label="@string/title_activity_register"
             android:parentActivityName=".market.ui.activity.LoginActivity"
             android:theme="@style/AppTheme">
-
         </activity>
 
-        <activity android:name=".market.ui.activity.NearbyGoodsActivity"></activity>
-        <activity android:name=".market.ui.activity.DiscoverGoodsActivity"></activity>
+        <activity android:name=".market.ui.activity.NearbyGoodsActivity">
+        </activity>
+
+        <activity android:name=".market.ui.activity.DiscoverGoodsActivity">
+        </activity>
+
+        <activity android:name=".market.ui.activity.UserDetailActivity"
+            android:label=""
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name="me.iwf.photopicker.PhotoPickerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
+
+        <activity android:name="me.iwf.photopicker.PhotoPagerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
         <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
         <service android:name="com.amap.api.location.APSService"></service>

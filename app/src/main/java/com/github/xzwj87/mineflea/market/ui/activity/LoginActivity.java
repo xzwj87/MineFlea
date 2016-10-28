@@ -270,6 +270,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         Log.v(TAG,"onLoginSuccess()");
 
         showProgress(false);
+        showToast(getString(R.string.hint_login_success));
 
         Intent intent = new Intent();
         intent.putExtra(UserInfo.IS_LOGIN,true);
@@ -345,11 +346,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     }
 
     private void initInjector(){
-        DaggerMarketComponent.builder()
-                             .appComponent(getAppComponent())
-                             .activityModule(getActivityModule())
-                             .build()
-                             .inject(this);
+        mMarketComponent.inject(this);
         mPresenter.setView(this);
     }
 }

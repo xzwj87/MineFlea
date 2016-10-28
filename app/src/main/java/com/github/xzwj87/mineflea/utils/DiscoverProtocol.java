@@ -18,7 +18,7 @@ public class DiscoverProtocol {
         List<DiscoverInfo> list = new ArrayList<>();
         DiscoverInfo info = new DiscoverInfo("第一个物品", "2016年10月12日", "image url", "1000米");
         list.add(info);
-        info = new DiscoverInfo("第一个物品", "2016年10月12日", "image url", "1000米");
+        info = new DiscoverInfo("第1物品", "2016年10月12日", "image url", "1000米");
         list.add(info);
         info = new DiscoverInfo("第2个物品", "2016年10月12日", "image url", "1000米");
         list.add(info);

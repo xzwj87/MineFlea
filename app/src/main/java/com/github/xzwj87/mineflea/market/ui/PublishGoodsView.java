@@ -1,9 +1,5 @@
 package com.github.xzwj87.mineflea.market.ui;
 
-import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
-
-import java.util.List;
-
 /**
  * Created by jason on 9/28/16.
  */
@@ -11,4 +7,10 @@ import java.util.List;
 public interface PublishGoodsView extends BaseView{
     void publishGoods();
     void onPublishComplete(boolean success);
+    void updateUploadProcess(int count);
+
+    void showNameInvalidMsg();
+    void showPriceInvalidMsg();
+    void showNoteInvalidMsg();
+    void showNoPicturesMsg();
 }

@@ -7,9 +7,9 @@ import android.util.Log;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.SaveCallback;
-import com.github.xzwj87.mineflea.market.data.RepoResponseCode;
+import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
-import com.github.xzwj87.mineflea.market.model.ModelConstants;
+import com.github.xzwj87.mineflea.market.model.AvCloudConstants;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.PublisherInfo;
 import com.github.xzwj87.mineflea.market.model.mapper.GoodsJsonMapper;
@@ -53,15 +53,15 @@ public class NetDataApiImpl implements NetDataApi{
     }
 
     @Override
-    public Observable<RepoResponseCode> publishGoods(final PublishGoodsInfo goods) {
+    public Observable<ResponseCode> publishGoods(final PublishGoodsInfo goods) {
         Log.v(TAG,"publishGoods(): goods = " + goods);
 
         if(NetConnectionUtils.isNetworkConnected()) {
 
-            final AVObject avObject = new AVObject(ModelConstants.AV_OBJ_GOODS);
+            final AVObject avObject = new AVObject(AvCloudConstants.AV_OBJ_GOODS);
             avObject.put(PublishGoodsInfo.GOODS_NAME,goods.getName());
-            avObject.put(PublishGoodsInfo.GOODS_PUBLISHER,goods.getPublisher());
-            avObject.put(PublishGoodsInfo.GOODS_LOW_PRICE,goods.getLowerPrice());
+            avObject.put(PublishGoodsInfo.GOODS_PUBLISHER,goods.getPublisherId());
+            avObject.put(PublishGoodsInfo.GOODS_PRICE,goods.getPrice());
             avObject.put(PublishGoodsInfo.GOODS_HIGH_PRICE,goods.getHighPrice());
             avObject.put(PublishGoodsInfo.GOODS_RELEASE_DATE,goods.getReleasedDate());
 
@@ -70,12 +70,12 @@ public class NetDataApiImpl implements NetDataApi{
                 public void done(AVException e) {
                     Log.v(TAG,"saveInBackground(): done");
 
-                    int code = RepoResponseCode.RESP_SUCCESS;
+                    int code = ResponseCode.RESP_SUCCESS;
                     if(e == null){
                         goods.setId(avObject.getObjectId());
                     }else{
                         goods.setId("");
-                        code = RepoResponseCode.RESP_AV_SAVED_FAILURE;
+                        code = ResponseCode.RESP_AV_SAVED_FAILURE;
                     }
 
                     Log.v(TAG,"publishGoods(): goods = " + goods);
@@ -85,10 +85,10 @@ public class NetDataApiImpl implements NetDataApi{
 
         }
 
-        final RepoResponseCode response = new RepoResponseCode(RepoResponseCode.RESP_NETWORK_NOT_CONNECTED);
-        return Observable.create(new Observable.OnSubscribe<RepoResponseCode>() {
+        final ResponseCode response = new ResponseCode(ResponseCode.RESP_NETWORK_NOT_CONNECTED);
+        return Observable.create(new Observable.OnSubscribe<ResponseCode>() {
             @Override
-            public void call(Subscriber<? super RepoResponseCode> subscriber) {
+            public void call(Subscriber<? super ResponseCode> subscriber) {
                 subscriber.onNext(response);
             }
         });
@@ -152,28 +152,28 @@ public class NetDataApiImpl implements NetDataApi{
     }
 
     @Override
-    public Observable<RepoResponseCode> followPublisher(PublisherInfo publisher) {
+    public Observable<ResponseCode> followPublisher(PublisherInfo publisher) {
         Log.v(TAG,"followPublisher(): publisher = " + publisher);
 
-        int responseCode = RepoResponseCode.RESP_SUCCESS;
+        int responseCode = ResponseCode.RESP_SUCCESS;
         if(NetConnectionUtils.isNetworkConnected()) {
             HttpUrlApi httpApi = createHttpApi(BASE_URL);
             if (httpApi != null) {
                 String resp = httpApi.postData(PublisherJsonMapper.map(publisher));
 
                 if(TextUtils.isEmpty(resp)){
-                    responseCode = RepoResponseCode.RESP_NETWORK_ERROR;
+                    responseCode = ResponseCode.RESP_NETWORK_ERROR;
                 }
             }
         }else{
-            responseCode = RepoResponseCode.RESP_NETWORK_NOT_CONNECTED;
+            responseCode = ResponseCode.RESP_NETWORK_NOT_CONNECTED;
         }
 
-        final RepoResponseCode response = new RepoResponseCode(responseCode);
+        final ResponseCode response = new ResponseCode(responseCode);
 
-        return Observable.create(new Observable.OnSubscribe<RepoResponseCode>() {
+        return Observable.create(new Observable.OnSubscribe<ResponseCode>() {
             @Override
-            public void call(Subscriber<? super RepoResponseCode> subscriber) {
+            public void call(Subscriber<? super ResponseCode> subscriber) {
                 subscriber.onNext(response);
             }
         });

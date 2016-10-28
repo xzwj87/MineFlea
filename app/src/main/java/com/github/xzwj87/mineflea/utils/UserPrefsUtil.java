@@ -22,8 +22,19 @@ public class UserPrefsUtil {
     private static SharedPreferences prefs = AppGlobals.getAppContext().
             getSharedPreferences(USER_INFO, Context.MODE_PRIVATE);
 
+    public static boolean isLogin(){
+        return getBoolean(UserInfo.IS_LOGIN,false);
+    }
+
     public static boolean getBoolean(String key,boolean defaultVal){
         return prefs.getBoolean(key,defaultVal);
+    }
+
+    public static void setLoginState(boolean state){
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(UserInfo.IS_LOGIN,state);
+
+        editor.apply();
     }
 
     public static String getString(String key, String defaultVal){
@@ -49,6 +60,7 @@ public class UserPrefsUtil {
         SharedPreferences.Editor editor = prefs.edit();
 
         editor.putBoolean(UserInfo.IS_LOGIN,info.getLoginState());
+        editor.putString(UserInfo.USER_NICK_NAME,info.getNickName());
         editor.putString(UserInfo.USER_NAME,info.getUserName());
         editor.putString(UserInfo.UER_EMAIL,info.getUserEmail());
         editor.putString(UserInfo.USER_PWD,info.getUserPwd());

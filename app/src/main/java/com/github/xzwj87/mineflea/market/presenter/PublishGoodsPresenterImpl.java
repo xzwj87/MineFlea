@@ -1,6 +1,7 @@
 package com.github.xzwj87.mineflea.market.presenter;
 
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
@@ -26,6 +27,11 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     private PublishGoodsView mView;
     private PublishGoodsInfo mGoodsInfo;
 
+    private int mUploadImgCount;
+    private int mCurrentProcess;
+    private static int sImgNumber;
+    private List<String> mImgUris;
+
     @Inject
     public PublishGoodsPresenterImpl(@Named("dataRepository") MineFleaRepository repository){
         mRepository = repository;
@@ -41,14 +47,20 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
         mGoodsInfo = new PublishGoodsInfo();
         mRepository.init();
         mRepository.setPresenterCallback(this);
+
+        mCurrentProcess = 0;
+        mUploadImgCount = 0;
     }
 
     @Override
     public void publishGoods() {
 
         mRepository.publishGoods(mGoodsInfo);
-
-        mView.finishView();
+        sImgNumber = mGoodsInfo.getImageUri().size();
+        mImgUris = mGoodsInfo.getImageUri();
+        mUploadImgCount = 0;
+        mCurrentProcess = 0;
+        mRepository.uploadImage(mImgUris.get(mUploadImgCount),true);
     }
 
     @Override
@@ -57,13 +69,8 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     }
 
     @Override
-    public void setGoodsLowPrice(double price) {
-        mGoodsInfo.setLowerPrice(price);
-    }
-
-    @Override
-    public void setGoodsHighPrice(double price) {
-        mGoodsInfo.setHighPrice(price);
+    public void setGoodsPrice(String price) {
+        mGoodsInfo.setPrice(price);
     }
 
     @Override
@@ -82,6 +89,38 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     }
 
     @Override
+    public void setPublisherName(String name) {
+        mGoodsInfo.setPublisherId(name);
+    }
+
+    @Override
+    public boolean validGoodsInfo() {
+        if(TextUtils.isEmpty(mGoodsInfo.getName())
+            || mGoodsInfo.getName().length() > PublishGoodsInfo.MAX_NAME_SIZE){
+            mView.showNameInvalidMsg();
+            return false;
+        }
+
+        try {
+            double price = Double.parseDouble(mGoodsInfo.getPrice());
+        }catch (NumberFormatException e){
+            mView.showPriceInvalidMsg();
+            return false;
+        }
+
+        if(mImgUris == null || mImgUris.size() <= 0){
+            mView.showNoPicturesMsg();
+            return false;
+        }
+
+        if(TextUtils.isEmpty(mGoodsInfo.getNote())){
+            mGoodsInfo.setNote("");
+        }
+
+        return true;
+    }
+
+    @Override
     public void onPause() {
     }
 
@@ -93,9 +132,25 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     @Override
     public void onPublishComplete(Message message) {
         if(message.obj == null){
-
+            mView.onPublishComplete(false);
         }else{
-
+            mView.onPublishComplete(true);
         }
+    }
+
+    @Override
+    public void updateUploadProcess(int count) {
+        if((count == 100) && (++mUploadImgCount < sImgNumber)){
+            mRepository.uploadImage(mImgUris.get(mUploadImgCount),true);
+        }else if(mUploadImgCount == sImgNumber){
+            mView.onPublishComplete(true);
+            mUploadImgCount = 0;
+            mCurrentProcess = 0;
+            return;
+        }
+
+        mCurrentProcess = (count/sImgNumber) + mUploadImgCount*100/sImgNumber;
+        Log.v(TAG,"updateUploadProcess(): count = " + mCurrentProcess);
+        mView.updateUploadProcess(mCurrentProcess);
     }
 }
