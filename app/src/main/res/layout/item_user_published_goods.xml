@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_margin="@dimen/activity_vertical_margin">
+
+    <TextView android:id="@+id/tv_goods_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/user_detail_fragment_title_size"
+        android:textColor="@color/colorDarkGrey"
+        android:layout_marginBottom="@dimen/user_detail_margin"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"/>
+
+    <TextView android:id="@+id/tv_goods_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/user_detail_fragment_text_size"
+        android:textColor="@color/colorDarkGrey"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="@dimen/user_detail_margin"
+        android:layout_below="@id/tv_goods_name"/>
+
+    <TextView android:id="@+id/tv_likes"
+        android:drawableStart="@drawable/ic_favorite_grey_24dp"
+        android:drawablePadding="@dimen/user_detail_drawable_padding"
+        android:layout_below="@id/tv_goods_price"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="@dimen/user_detail_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView android:id="@+id/iv_goods_image"
+        android:contentDescription="@string/iv_goods_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/tv_likes"
+        android:minWidth="@dimen/user_detail_image_size"
+        android:minHeight="@dimen/user_detail_image_size"
+        android:layout_margin="@dimen/user_detail_image_margin"
+        android:layout_alignParentEnd="true"/>
+
+</RelativeLayout>

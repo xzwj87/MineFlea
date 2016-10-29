@@ -14,8 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.xzwj87.mineflea.R;
-import com.github.xzwj87.mineflea.market.internal.di.HasComponent;
-import com.github.xzwj87.mineflea.market.internal.di.component.DaggerMarketComponent;
 import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.UserDetailPresenterImpl;
@@ -34,8 +32,6 @@ import butterknife.ButterKnife;
 
 public class UserDetailActivity extends BaseActivity implements UserDetailView{
     private static final String TAG = UserDetailActivity.class.getSimpleName();
-
-    private MarketComponent mMarketComponent;
 
     private ViewPager mPage;
     private UserDetailPageAdapter mPageAdapter;
@@ -159,7 +155,7 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
 
         int id = item.getItemId();
         switch (id){
-            case R.id.home:
+            case android.R.id.home:
                 finishView();
                 break;
             case R.id.edit:
@@ -182,13 +178,13 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
         if(mPresenter != null){
             if(mPresenter.isMe(mUserId)){
                 mInflateMenuId = R.menu.menu_user_detail_me;
-                mTvAction.setText(R.string.action_favorite);
+                mTvAction.setText(R.string.action_edit);
 
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mTvAction.setCompoundDrawables(getDrawable(R.drawable.ic_favorite_white_24dp),
+                    mTvAction.setCompoundDrawables(getDrawable(R.drawable.ic_edit_white_24dp),
                             null, null, null);
                 }else{
-                    mTvAction.setCompoundDrawables(getResources().getDrawable(R.drawable.ic_favorite_white_24dp),
+                    mTvAction.setCompoundDrawables(getResources().getDrawable(R.drawable.ic_edit_white_24dp),
                             null, null, null);
                 }
             }

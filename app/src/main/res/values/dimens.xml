@@ -31,4 +31,11 @@
     <dimen name="user_detail_title_size">24sp</dimen>
     <dimen name="user_detail_text_size">14sp</dimen>
     <dimen name="user_detail_text_margin">42dp</dimen>
+    <dimen name="user_detail_margin">12dp</dimen>
+    <dimen name="user_detail_fragment_title_size">14sp</dimen>
+    <dimen name="user_detail_fragment_text_size">12sp</dimen>
+    <dimen name="user_detail_drawable_padding">8dp</dimen>
+    <dimen name="user_detail_image_margin">12dp</dimen>
+    <dimen name="user_detail_image_size">72dp</dimen>
+    <dimen name="blank_hint_text_size">32sp</dimen>
 </resources>

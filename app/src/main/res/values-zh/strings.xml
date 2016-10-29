@@ -44,19 +44,23 @@
     <string name="publish_goods_success">发布成功</string>
     <string name="publish_goods_error">发布失败</string>
     <string name="explore_more">更多</string>
-    <string name="get_user_detail_progress_hint">loading data,please wait for a while</string>
-    <string name="check_user_goods_list">Check User Goods List</string>
-    <string name="error_get_user_info">Fail to get user info</string>
-    <string name="error_get_goods_list">Fail to get goods list</string>
-    <string name="hint_login_success">Success to login</string>
-    <string name="user_head_icon">User Head Icon</string>
+    <string name="get_user_detail_progress_hint">加载中,请稍等&#8230;</string>
+    <string name="check_user_goods_list">确认物品列表</string>
+    <string name="error_get_user_info">获取用户信息失败</string>
+    <string name="error_get_goods_list">获取物品列表失败</string>
+    <string name="hint_login_success">登陆成功</string>
+    <string name="user_head_icon">用户头像</string>
     <string name="none"> </string>
-    <string name="error_invalid_goods_name">name is too long</string>
-    <string name="error_invalid_goods_price">invalid number</string>
-    <string name="error_no_note">no input note</string>
-    <string name="error_no_pictures">No pictures added</string>
+    <string name="error_invalid_goods_name">物品名太长</string>
+    <string name="error_invalid_goods_price">输入的价格信息不正确</string>
+    <string name="error_no_note">没有物品描述</string>
+    <string name="error_no_pictures">没有添加图片</string>
     <string name="edit">编辑</string>
-    <string name="action_edit">Edit</string>
-    <string name="action_favorite">Favorite</string>
+    <string name="action_edit">编辑</string>
+    <string name="action_like">收藏</string>
+    <string name="blank_hint_no_published_goods">尚未发布任何物品</string>
+    <string name="blank_hint_no_favorite_goods">没有收藏的物品</string>
+    <string name="blank_hint_no_followers">还没有关注的人</string>
+    <string name="blank_hint_no_followees">还没有关注者</string>
 
 </resources>
