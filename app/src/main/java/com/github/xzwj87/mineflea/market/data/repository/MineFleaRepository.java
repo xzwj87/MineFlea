@@ -12,13 +12,14 @@ import com.github.xzwj87.mineflea.market.presenter.PresenterCallback;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 /**
  * Created by JasonWang on 2016/9/20.
  */
 
 // TODO: Create/Query/Update/Delete
-@PerActivity
+@Singleton
 public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.CloudSourceCallback{
     public static final String TAG = MineFleaRepository.class.getSimpleName();
 
@@ -90,17 +91,23 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
     }
 
     public void onImgUploadComplete(Message msg) {
-        mPresenterCb.onImgUploadComplete(msg);
+        if(mPresenterCb != null) {
+            mPresenterCb.onImgUploadComplete(msg);
+        }
     }
 
     @Override
     public void onGetUserInfoDone(Message msg) {
-        mPresenterCb.onGetUserInfoComplete(msg);
+        if(mPresenterCb != null) {
+            mPresenterCb.onGetUserInfoComplete(msg);
+        }
     }
 
     @Override
     public void onGetGoodsListDone(Message msg) {
-        mPresenterCb.onGetGoodsListDone(msg);
+        if(mPresenterCb != null) {
+            mPresenterCb.onGetGoodsListDone(msg);
+        }
     }
 
 
@@ -113,25 +120,33 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
             mLocalSrc.publishGoods(mGoodsInfo);
         }
 
-        mPresenterCb.onPublishComplete(message);
+        if(mPresenterCb != null) {
+            mPresenterCb.onPublishComplete(message);
+        }
     }
 
     @Override
     public void registerComplete(Message message) {
         Log.v(TAG,"registerComplete(): message " + message.obj);
 
-        mPresenterCb.onRegisterComplete(message);
+        if(mPresenterCb != null) {
+            mPresenterCb.onRegisterComplete(message);
+        }
     }
 
     @Override
     public void updateProcess(int count) {
         Log.v(TAG,"updateProcess(): count = " + count);
-        mPresenterCb.updateUploadProcess(count);
-    }
 
+        if(mPresenterCb != null) {
+            mPresenterCb.updateUploadProcess(count);
+        }
+    }
 
     @Override
     public void loginComplete(Message message) {
-        mPresenterCb.loginComplete(message);
+        if(mPresenterCb != null) {
+            mPresenterCb.loginComplete(message);
+        }
     }
 }
