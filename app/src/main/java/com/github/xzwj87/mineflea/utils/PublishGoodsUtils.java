@@ -17,12 +17,12 @@ public class PublishGoodsUtils {
 
         goodsInfo.setId(object.getObjectId());
         goodsInfo.setName((String)object.get(PublishGoodsInfo.GOODS_NAME));
-        goodsInfo.setPrice((String)object.get(PublishGoodsInfo.GOODS_PRICE));
+        goodsInfo.setPrice(object.getDouble(PublishGoodsInfo.GOODS_PRICE));
         goodsInfo.setNote((String)object.get(PublishGoodsInfo.GOODS_NOTE));
         goodsInfo.setLocation((String)object.get(PublishGoodsInfo.GOODS_LOC));
         goodsInfo.setPublisherId((String)object.get(PublishGoodsInfo.GOODS_PUBLISHER));
         goodsInfo.setReleasedDate((long)object.get(PublishGoodsInfo.GOODS_RELEASE_DATE));
-        goodsInfo.setStars((int)object.get(PublishGoodsInfo.GOODS_STARS));
+        goodsInfo.setStars((int)object.get(PublishGoodsInfo.GOODS_LIKES));
 
         return goodsInfo;
     }

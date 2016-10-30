@@ -100,6 +100,16 @@ public class MineFleaLocalSource implements DataSource{
 
     }
 
+    @Override
+    public void favor(PublishGoodsInfo goodsInfo) {
+
+    }
+
+    @Override
+    public void queryFavoriteGoodsList(String userId) {
+
+    }
+
     public Observable<PublishGoodsInfo> queryPublishedGoodsDetail(long id) {
         Log.v(TAG,"queryPublishedGoodsDetail(): id = " + id);
 

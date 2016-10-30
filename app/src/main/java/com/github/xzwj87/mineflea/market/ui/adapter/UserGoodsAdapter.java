@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
  * Created by jason on 10/27/16.
  */
 
-public class UserPublishedGoodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class UserGoodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private UserGoodsInfo mGoods;
     private PublishedGoodsCallback mCb;
@@ -30,14 +30,18 @@ public class UserPublishedGoodsAdapter extends RecyclerView.Adapter<RecyclerView
         UserGoodsInfo getGoodsAtPos(int pos);
     }
 
-    public UserPublishedGoodsAdapter(){}
+    public UserGoodsAdapter(){}
+
+    public void setCallback(PublishedGoodsCallback cb){
+        mCb = cb;
+    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         mContext = parent.getContext();
         View root = LayoutInflater.from(parent.getContext())
-                                  .inflate(R.layout.item_user_published_goods,parent,false);
+                                  .inflate(R.layout.item_user_goods,parent,false);
 
         return new GoodsViewHolder(root);
     }

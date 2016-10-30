@@ -5,8 +5,14 @@ package com.github.xzwj87.mineflea.market.model;
  */
 
 public interface AvCloudConstants {
+    String AV_RELATION_USER_GOODS = "userFavorGoods";
+
     String AV_OBJ_GOODS = "publishGoods";
+    String AV_USER_FAVOR = "favorGoods";
+
+    String AV_FAVOR_GOODS = "favor_goods";
 
     String AV_USER_ID = "objectId";
     String AV_OBJ_USER = "_User";
+    String AV_GOODS_NAME = "goodsName";
 }

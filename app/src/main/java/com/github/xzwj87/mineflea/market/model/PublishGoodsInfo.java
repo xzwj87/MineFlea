@@ -1,5 +1,7 @@
 package com.github.xzwj87.mineflea.market.model;
 
+import com.avos.avoscloud.AVObject;
+
 import java.util.Date;
 import java.util.List;
 
@@ -9,13 +11,14 @@ import java.util.List;
 public class PublishGoodsInfo {
 
     public static final int MAX_NAME_SIZE = 30;
+    public static final String GOODS_ID = "id";
     public static final String GOODS_NAME = "name";
     public static final String GOODS_PUBLISHER = "publisher_id";
     public static final String GOODS_PRICE = "Price";
     public static final String GOODS_HIGH_PRICE = "high_price";
     public static final String GOODS_RELEASE_DATE = "release_date";
     public static final String GOODS_LOC = "location";
-    public static final String GOODS_STARS = "stars";
+    public static final String GOODS_LIKES = "likes";
     public static final String GOODS_IMAGES = "images";
     public static final String GOODS_NOTE = "note";
 
@@ -29,7 +32,7 @@ public class PublishGoodsInfo {
 
     private double mHighPrice;
 
-    private String mPrice;
+    private double mPrice;
 
     private String mNote;
 
@@ -43,6 +46,30 @@ public class PublishGoodsInfo {
 
     public PublishGoodsInfo(){
         mReleasedDate = System.currentTimeMillis();
+    }
+
+    public static AVObject toAvObject(PublishGoodsInfo info){
+        AVObject avObject = new AVObject(info.getId());
+        avObject.put(GOODS_NAME,info.getName());
+        avObject.put(GOODS_PUBLISHER,info.getPublisherId());
+        avObject.put(GOODS_PRICE,info.getPrice());
+        avObject.put(GOODS_LIKES,info.getStars());
+        avObject.put(GOODS_IMAGES,info.getImageUri());
+
+        return avObject;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static PublishGoodsInfo fromAvObject(AVObject object){
+        PublishGoodsInfo info = new PublishGoodsInfo();
+        info.setId(object.getClassName());
+        info.setName((String)object.get(GOODS_NAME));
+        info.setPublisherId((String)object.get(GOODS_PUBLISHER));
+        info.setPrice(object.getDouble(GOODS_PRICE));
+        info.setStars(object.getInt(GOODS_LIKES));
+        info.setImageUri(object.getList(GOODS_IMAGES));
+
+        return info;
     }
 
     public String getId(){
@@ -78,11 +105,11 @@ public class PublishGoodsInfo {
         mHighPrice = price;
     }
 
-    public String getPrice(){
+    public double getPrice(){
         return mPrice;
     }
 
-    public void setPrice(String price){
+    public void setPrice(double price){
         mPrice = price;
     }
 

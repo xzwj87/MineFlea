@@ -90,6 +90,11 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
         mCloudSrc.getGoodsListByUserId(id);
     }
 
+    @Override
+    public void queryGoodsListByUserId(String id) {
+        mCloudSrc.queryFavoriteGoodsList(id);
+    }
+
     public void onImgUploadComplete(Message msg) {
         if(mPresenterCb != null) {
             mPresenterCb.onImgUploadComplete(msg);

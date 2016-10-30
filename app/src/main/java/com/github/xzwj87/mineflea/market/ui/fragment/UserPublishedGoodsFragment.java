@@ -13,9 +13,9 @@ import android.view.ViewGroup;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.model.UserGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
-import com.github.xzwj87.mineflea.market.presenter.UserPublishedGoodsPresenterImpl;
+import com.github.xzwj87.mineflea.market.presenter.UserGoodsPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.UserPublishedGoodsView;
-import com.github.xzwj87.mineflea.market.ui.adapter.UserPublishedGoodsAdapter;
+import com.github.xzwj87.mineflea.market.ui.adapter.UserGoodsAdapter;
 
 import javax.inject.Inject;
 
@@ -26,10 +26,10 @@ import butterknife.ButterKnife;
  */
 
 public class UserPublishedGoodsFragment extends BaseFragment
-                implements UserPublishedGoodsAdapter.PublishedGoodsCallback,UserPublishedGoodsView{
+                implements UserGoodsAdapter.PublishedGoodsCallback,UserPublishedGoodsView{
 
-    @Inject UserPublishedGoodsPresenterImpl mPresenter;
-    private UserPublishedGoodsAdapter mAdapter;
+    @Inject UserGoodsPresenterImpl mPresenter;
+    private UserGoodsAdapter mAdapter;
     private RecyclerView mRvGoodsList;
     private SwipeRefreshLayout mSrLayout;
 
@@ -59,7 +59,7 @@ public class UserPublishedGoodsFragment extends BaseFragment
         mRvGoodsList.setLayoutManager(layoutMgr);
         mRvGoodsList.setItemAnimator(new DefaultItemAnimator());
 
-        mAdapter = new UserPublishedGoodsAdapter();
+        mAdapter = new UserGoodsAdapter();
 
         init();
 
@@ -93,6 +93,7 @@ public class UserPublishedGoodsFragment extends BaseFragment
     @Override
     public void renderView() {
         mRvGoodsList.setAdapter(mAdapter);
+        mAdapter.setCallback(this);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.github.xzwj87.mineflea.market.presenter;
 
 import android.os.Message;
+import android.util.Log;
+import android.widget.TextView;
 
 import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
@@ -19,14 +21,14 @@ import javax.inject.Named;
  */
 
 @PerActivity
-public class UserPublishedGoodsPresenterImpl extends UserPublishedGoodsPresenter {
+public class UserGoodsPresenterImpl extends UserGoodsPresenter {
 
     private MineFleaRepository mRepo;
     private UserPublishedGoodsView mView;
     private List<PublishGoodsInfo> mGoodsList;
 
     @Inject
-    public UserPublishedGoodsPresenterImpl(@Named("dataRepository")MineFleaRepository repository){
+    public UserGoodsPresenterImpl(@Named("dataRepository")MineFleaRepository repository){
         mRepo = repository;
     }
 
@@ -67,10 +69,13 @@ public class UserPublishedGoodsPresenterImpl extends UserPublishedGoodsPresenter
     public UserGoodsInfo getGoodsAtPos(int pos) {
         UserGoodsInfo goods = new UserGoodsInfo();
 
-        goods.setName(mGoodsList.get(pos).getName());
-        goods.setPrice(Double.parseDouble(mGoodsList.get(pos).getPrice()));
-        goods.setLikes(mGoodsList.get(pos).getStars());
-        goods.setGoodsImgUrl(mGoodsList.get(pos).getImageUri());
+        if(mGoodsList != null) {
+
+            goods.setName(mGoodsList.get(pos).getName());
+            goods.setPrice(mGoodsList.get(pos).getPrice());
+            goods.setLikes(mGoodsList.get(pos).getStars());
+            goods.setGoodsImgUrl(mGoodsList.get(pos).getImageUri());
+        }
 
         return goods;
     }
@@ -93,4 +98,10 @@ public class UserPublishedGoodsPresenterImpl extends UserPublishedGoodsPresenter
     private void renderView(){
         mView.renderView();
     }
+
+    @Override
+    public void onGetUserInfoComplete(Message message) {
+
+    }
+
 }

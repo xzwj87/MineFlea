@@ -5,13 +5,12 @@ import android.os.Message;
 import com.github.xzwj87.mineflea.market.model.UserGoodsInfo;
 
 /**
- * Created by jason on 10/27/16.
+ * Created by jason on 10/30/16.
  */
 
-public abstract class UserPublishedGoodsPresenter
-        implements BasePresenter, PresenterCallback{
+public abstract class UserFavorGoodsPresenter implements BasePresenter,PresenterCallback{
 
-    public abstract void getGoodsListByUserId(String userId);
+    public abstract void getFavorGoodsList(String id);
     public abstract int getGoodsCount();
     public abstract UserGoodsInfo getGoodsAtPos(int pos);
 
@@ -44,5 +43,4 @@ public abstract class UserPublishedGoodsPresenter
     public void onGetUserInfoComplete(Message message) {
 
     }
-
 }

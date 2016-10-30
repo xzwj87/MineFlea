@@ -63,6 +63,8 @@ public class UserInfo {
     }
 
     public UserInfo(String nickName,String userName,String email,String iconUrl){
+        this();
+
         mNickName = nickName;
         mUserEmail = email;
         mUserName = userName;

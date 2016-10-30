@@ -58,4 +58,9 @@ public interface BaseRepository {
      * get goods list by user id
      */
     void getGoodsListByUserId(String id);
+
+    /*
+     * query favorite goods list by user id
+     */
+    void queryGoodsListByUserId(String id);
 }

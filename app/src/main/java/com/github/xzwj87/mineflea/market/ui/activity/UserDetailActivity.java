@@ -176,15 +176,15 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
         mInflateMenuId = R.menu.menu_user_detail_others;
 
         if(mPresenter != null){
-            if(mPresenter.isMe(mUserId)){
+            if(mPresenter.isMe()){
                 mInflateMenuId = R.menu.menu_user_detail_me;
                 mTvAction.setText(R.string.action_edit);
 
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mTvAction.setCompoundDrawables(getDrawable(R.drawable.ic_edit_white_24dp),
+                    mTvAction.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_edit_white_24dp),
                             null, null, null);
                 }else{
-                    mTvAction.setCompoundDrawables(getResources().getDrawable(R.drawable.ic_edit_white_24dp),
+                    mTvAction.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_edit_white_24dp),
                             null, null, null);
                 }
             }

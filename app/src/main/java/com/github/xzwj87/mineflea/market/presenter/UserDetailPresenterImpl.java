@@ -67,8 +67,11 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
     }
 
     @Override
-    public boolean isMe(String userId) {
-        return userId.equals(UserPrefsUtil.getString(UserInfo.USER_ID,""));
+    public boolean isMe() {
+        String id = mUserInfo.getUserId();
+        String currentId = getCurrentUserId();
+
+        return id != null && id.equals(currentId);
     }
 
     @Override

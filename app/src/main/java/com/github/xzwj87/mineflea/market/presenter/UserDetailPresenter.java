@@ -24,7 +24,7 @@ public abstract class UserDetailPresenter implements BasePresenter,PresenterCall
 
     public abstract int getGoodsNumber();
 
-    public abstract boolean isMe(String userId);
+    public abstract boolean isMe();
 
     @Override
     public void onRegisterComplete(Message message) {

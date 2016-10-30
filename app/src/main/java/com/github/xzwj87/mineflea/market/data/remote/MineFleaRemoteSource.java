@@ -6,7 +6,9 @@ import android.util.Log;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVPowerfulUtils;
 import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVRelation;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
@@ -248,6 +250,56 @@ public class MineFleaRemoteSource implements RemoteSource{
                 Log.v(TAG,"AVUser detail = " + avUser);
 
                 mCloudCallback.loginComplete(message);
+            }
+        });
+    }
+
+    @Override
+    public void favor(PublishGoodsInfo goodsInfo) {
+        Log.v(TAG,"favor(): goods id = " + goodsInfo.getId());
+
+        final AVUser user = AVUser.getCurrentUser();
+
+        final AVObject object = PublishGoodsInfo.toAvObject(goodsInfo);
+        object.put(AvCloudConstants.AV_GOODS_NAME,goodsInfo.getName());
+
+        object.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                AVRelation<AVObject> relation = user.getRelation(AvCloudConstants.AV_RELATION_USER_GOODS);
+                relation.add(object);
+                user.saveInBackground();
+            }
+        });
+    }
+
+    @Override
+    public void queryFavoriteGoodsList(String userId) {
+        Log.v(TAG,"queryFavorGoodsList() : user id = " + userId);
+
+        AVUser user = (AVUser)AVUser.createWithoutData(AVPowerfulUtils.
+                getAVClassName(AVUser.class.getSimpleName()),userId);
+        AVRelation<AVObject> relation = user.getRelation(AvCloudConstants.AV_RELATION_USER_GOODS);
+
+        AVQuery<AVObject> query = relation.getQuery();
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                final Message msg = new Message();
+                if(e == null){
+                    List<PublishGoodsInfo> goodsList = new ArrayList<PublishGoodsInfo>();
+                    for(int i = 0; i < list.size(); ++i){
+                        goodsList.add(PublishGoodsInfo.fromAvObject(list.get(i)));
+                    }
+
+                    msg.obj = goodsList;
+                    msg.what = ResponseCode.RESP_QUERY_FAVORITE_GOODS_LIST_SUCCESS;
+                }else{
+                    msg.obj = null;
+                    msg.what = ResponseCode.RESP_QUERY_FAVORITE_GOODS_LIST_ERROR;
+                }
+
+                mCloudCallback.onGetGoodsListDone(msg);
             }
         });
     }
