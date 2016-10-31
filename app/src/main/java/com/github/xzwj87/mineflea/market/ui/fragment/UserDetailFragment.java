@@ -134,6 +134,11 @@ public class UserDetailFragment extends BaseFragment implements UserDetailView{
     }
 
     @Override
+    public void updateActionButton(boolean isFollowee) {
+
+    }
+
+    @Override
     public void finishView() {
         getActivity().finish();
     }

@@ -61,7 +61,6 @@ public class UserFolloweeFragment extends BaseFragment
         init();
     }
 
-
     @Override
     public void showProgress(boolean show) {
         if(mSrLayout.isRefreshing()){

@@ -49,4 +49,9 @@ public abstract class UserFollowerPresenter implements BasePresenter,PresenterCa
 
     }
 
+    @Override
+    public void onGetUserFolloweeDone(Message message) {
+
+    }
+
 }

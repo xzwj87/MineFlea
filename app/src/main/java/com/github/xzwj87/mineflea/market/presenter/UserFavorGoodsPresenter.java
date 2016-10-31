@@ -48,4 +48,14 @@ public abstract class UserFavorGoodsPresenter implements BasePresenter,Presenter
     public void onGetUserFollowListDone(Message message) {
 
     }
+
+    @Override
+    public void onGetUserFolloweeDone(Message message) {
+
+    }
+
+    @Override
+    public void onGetUserFollowerDone(Message message) {
+
+    }
 }

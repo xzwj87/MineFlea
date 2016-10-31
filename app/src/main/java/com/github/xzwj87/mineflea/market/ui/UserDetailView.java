@@ -18,4 +18,6 @@ public interface UserDetailView extends BaseView{
     void renderNickName(String name);
 
     void renderEmail(String email);
+
+    void updateActionButton(boolean isFollowee);
 }

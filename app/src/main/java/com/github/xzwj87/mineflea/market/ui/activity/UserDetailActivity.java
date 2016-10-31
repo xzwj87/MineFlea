@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by jason on 10/22/16.
@@ -41,10 +43,11 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
     @BindView(R.id.head_icon) ImageView mIvHeadIcon;
     @BindView(R.id.tv_user_nick_name) TextView mTvNickName;
     @BindView(R.id.tv_user_email) TextView mTvEmail;
-    @BindView(R.id.tv_user_action) TextView mTvAction;
+    @BindView(R.id.btn_user_action) Button mBtnAction;
 
     private String mUserId;
     private int mInflateMenuId;
+    private boolean mIsMe;
 
     @Override
     public void onCreate(Bundle savedState){
@@ -138,6 +141,23 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
     }
 
     @Override
+    public void updateActionButton(boolean isFollowee) {
+        if(isFollowee){
+            mBtnAction.setText(R.string.action_already_followee);
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mBtnAction.setCompoundDrawablesWithIntrinsicBounds(
+                        getDrawable(R.drawable.ic_done_white_24dp),
+                        null, null, null);
+            }else{
+                mBtnAction.setCompoundDrawablesWithIntrinsicBounds(
+                        getResources().getDrawable(R.drawable.ic_done_white_24dp),
+                        null, null, null);
+            }
+        }
+    }
+
+    @Override
     public void finishView() {
         finish();
     }
@@ -167,6 +187,19 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
         return super.onOptionsItemSelected(item);
     }
 
+    @OnClick(R.id.btn_user_action)
+    public void editOrFavor(){
+        if(mIsMe){
+            //TODO: start user edit activity
+        }else{
+            if(mPresenter.isMyFollowee(mUserId)){
+                mPresenter.unFollow(mUserId);
+            }else{
+                mPresenter.follow(mUserId);
+            }
+        }
+    }
+
     private void getUserInfo(){
         mPresenter.getUserInfoById(mUserId);
     }
@@ -175,16 +208,18 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
 
         mInflateMenuId = R.menu.menu_user_detail_others;
 
+        mIsMe = false;
         if(mPresenter != null){
             if(mPresenter.isMe()){
+                mIsMe = true;
                 mInflateMenuId = R.menu.menu_user_detail_me;
-                mTvAction.setText(R.string.action_edit);
+                mBtnAction.setText(R.string.action_edit);
 
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mTvAction.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_edit_white_24dp),
+                    mBtnAction.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_edit_white_24dp),
                             null, null, null);
                 }else{
-                    mTvAction.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_edit_white_24dp),
+                    mBtnAction.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_edit_white_24dp),
                             null, null, null);
                 }
             }

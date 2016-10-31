@@ -62,5 +62,6 @@
     <string name="blank_hint_no_favorite_goods">没有收藏的物品</string>
     <string name="blank_hint_no_followers">还没有关注的人</string>
     <string name="blank_hint_no_followees">还没有关注者</string>
+    <string name="action_already_followee">Already Follow</string>
 
 </resources>

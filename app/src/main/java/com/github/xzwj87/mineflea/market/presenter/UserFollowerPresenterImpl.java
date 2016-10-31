@@ -82,4 +82,9 @@ public class UserFollowerPresenterImpl extends UserFollowerPresenter {
 
         mView.showProgress(false);
     }
+
+    @Override
+    public void onGetUserFollowerDone(Message message) {
+
+    }
 }

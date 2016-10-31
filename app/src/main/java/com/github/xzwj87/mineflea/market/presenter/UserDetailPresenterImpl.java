@@ -4,6 +4,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.avos.avoscloud.AVUser;
 import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
@@ -28,6 +29,7 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
     private MineFleaRepository mDataRepo;
     private UserDetailView mView;
     private List<PublishGoodsInfo> mGoodsList;
+    private List<AVUser> mFolloweeList;
     private UserInfo mUserInfo;
 
     @Inject
@@ -41,8 +43,26 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
     }
 
     @Override
-    public void updateFollowers() {
+    public void follow(String userId) {
 
+    }
+
+    @Override
+    public void unFollow(String userId) {
+
+    }
+
+    @Override
+    public boolean isMyFollowee(String userId) {
+        if(mFolloweeList != null){
+            for(int i = 0; i < mFolloweeList.size(); ++i){
+                if(mFolloweeList.get(i).getObjectId().equals(userId)){
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -102,6 +122,8 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
             mView.onGetUserInfoDone(true);
             mUserInfo = (UserInfo)message.obj;
 
+            mDataRepo.queryUserFolloweeListByUserId(mUserInfo.getUserId());
+
             renderView();
         }else{
             mView.onGetUserInfoDone(false);
@@ -111,8 +133,13 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
 
     @SuppressWarnings("unchecked")
     @Override
-    public void onGetGoodsListDone(Message message) {
-        Log.v(TAG,"onGetGoodsListDone()");
+    public void onGetUserFolloweeDone(Message message) {
+        if(message.obj != null){
+            mFolloweeList = (List<AVUser>)message.obj;
+            mView.updateActionButton(true);
+        }else{
+            mView.updateActionButton(false);
+        }
     }
 
     private void renderView(){

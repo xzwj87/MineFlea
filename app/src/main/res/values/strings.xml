@@ -79,4 +79,5 @@
     <string name="blank_hint_no_favorite_goods">No Favorite Goods</string>
     <string name="blank_hint_no_followers">No Followers</string>
     <string name="blank_hint_no_followees">No Followees</string>
+    <string name="action_already_followee">Already Follow</string>
 </resources>

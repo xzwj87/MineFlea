@@ -15,4 +15,7 @@ public interface AvCloudConstants {
     String AV_USER_ID = "objectId";
     String AV_OBJ_USER = "_User";
     String AV_GOODS_NAME = "goodsName";
+
+    String AV_USER_FOLLOWERS = "follower";
+    String AV_USER_FOLLOWEES = "followee";
 }

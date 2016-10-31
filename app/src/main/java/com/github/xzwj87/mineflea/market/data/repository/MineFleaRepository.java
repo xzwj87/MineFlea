@@ -124,6 +124,16 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
         }
     }
 
+    @Override
+    public void onGetUserFolloweeDone(Message message) {
+        mPresenterCb.onGetUserFolloweeDone(message);
+    }
+
+    @Override
+    public void onGetUserFollowerDone(Message message) {
+        mPresenterCb.onGetUserFollowerDone(message);
+    }
+
 
     @Override
     public void publishComplete(Message message) {

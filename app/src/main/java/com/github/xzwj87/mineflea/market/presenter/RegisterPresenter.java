@@ -43,4 +43,14 @@ public abstract class RegisterPresenter implements BasePresenter,PresenterCallba
     public void onGetUserFollowListDone(Message message) {
 
     }
+
+    @Override
+    public void onGetUserFolloweeDone(Message message) {
+
+    }
+
+    @Override
+    public void onGetUserFollowerDone(Message message) {
+
+    }
 }

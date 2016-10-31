@@ -56,16 +56,19 @@ public class UserFavoritesFragment  extends BaseFragment
 
     @Override
     public void onStart(){
+        super.onStart();
         init();
     }
 
     @Override
     public void onPause(){
+        super.onPause();
         mPresenter.onPause();
     }
 
     @Override
     public void onDestroy(){
+        super.onDestroy();
         mPresenter.onDestroy();
         mAdapter = null;
     }
