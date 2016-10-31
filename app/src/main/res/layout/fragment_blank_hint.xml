@@ -5,6 +5,7 @@
 
     <TextView
         android:text="@string/blank_hint_no_published_goods"
+        android:layout_margin="@dimen/user_detail_title_margin"
         android:textSize="@dimen/blank_hint_text_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

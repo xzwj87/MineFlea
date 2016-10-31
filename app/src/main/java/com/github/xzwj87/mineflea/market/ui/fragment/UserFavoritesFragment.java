@@ -10,21 +10,18 @@ import android.view.ViewGroup;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.model.UserGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
-import com.github.xzwj87.mineflea.market.presenter.UserFavorGoodsPresenter;
 import com.github.xzwj87.mineflea.market.presenter.UserFavorGoodsPresenterImpl;
-import com.github.xzwj87.mineflea.market.ui.UserFavoriteView;
+import com.github.xzwj87.mineflea.market.ui.UserGoodsView;
 import com.github.xzwj87.mineflea.market.ui.adapter.UserGoodsAdapter;
 
 import javax.inject.Inject;
-
-import butterknife.ButterKnife;
 
 /**
  * Created by jason on 10/26/16.
  */
 
 public class UserFavoritesFragment  extends BaseFragment
-            implements UserGoodsAdapter.PublishedGoodsCallback,UserFavoriteView{
+            implements UserGoodsAdapter.UserGoodsCallback,UserGoodsView{
 
     @Inject UserFavorGoodsPresenterImpl mPresenter;
     private UserGoodsAdapter mAdapter;
@@ -32,6 +29,8 @@ public class UserFavoritesFragment  extends BaseFragment
     private SwipeRefreshLayout mSrLayout;
 
     private String mUserId;
+    // there is no query result,show blank page
+    private ViewGroup mFragContainer;
 
     public UserFavoritesFragment(){}
 
@@ -46,8 +45,9 @@ public class UserFavoritesFragment  extends BaseFragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState){
-        View rootView = inflater.inflate(R.layout.fragment_user_favorites,container,false);
+        View rootView = inflater.inflate(R.layout.fragment_user_goods,container,false);
 
+        mFragContainer = container;
         mRvGoodsList = (RecyclerView)rootView.findViewById(R.id.rv_container);
         mSrLayout = (SwipeRefreshLayout)rootView.findViewById(R.id.srl_container);
 
@@ -89,7 +89,10 @@ public class UserFavoritesFragment  extends BaseFragment
 
     @Override
     public void showBlankPage() {
-
+        mSrLayout.removeAllViewsInLayout();
+        View root = LayoutInflater.from(getContext())
+                    .inflate(R.layout.fragment_blank_hint,mFragContainer,false);
+        mSrLayout.addView(root);
     }
 
     @Override
@@ -97,6 +100,7 @@ public class UserFavoritesFragment  extends BaseFragment
         mAdapter = new UserGoodsAdapter();
         mAdapter.setCallback(this);
         mRvGoodsList.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
     }
 
     private void init(){

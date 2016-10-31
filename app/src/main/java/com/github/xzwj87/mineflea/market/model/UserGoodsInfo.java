@@ -1,5 +1,6 @@
 package com.github.xzwj87.mineflea.market.model;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -14,6 +15,11 @@ public class UserGoodsInfo {
     private List<String> mGoodsImgUrl;
     private String mReleaseDate;
 
+
+    public UserGoodsInfo(){
+        mReleaseDate = (new Date()).toString();
+        mGoodsLikes = 0;
+    }
 
     /**
      * getters

@@ -47,4 +47,9 @@ public abstract class UserDetailPresenter implements BasePresenter,PresenterCall
     public void updateUploadProcess(int count){
         throw new UnsupportedOperationException("not supported operation");
     }
+
+    @Override
+    public void onGetUserFollowListDone(Message message) {
+
+    }
 }

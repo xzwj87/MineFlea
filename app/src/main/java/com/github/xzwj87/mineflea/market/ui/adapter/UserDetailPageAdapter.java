@@ -60,10 +60,14 @@ public class UserDetailPageAdapter extends FragmentPagerAdapter{
                 UserFavoritesFragment fragment1 = UserFavoritesFragment.newInstance(mUserId);
                 ((BaseActivity)mContext).getComponent().inject(fragment1);
                 return fragment1;
-            case TAB_FOLLOWER:
-                return UserFollowerFragment.newInstance();
             case TAB_FOLLOWEE:
-                return UserFolloweeFragment.newInstance();
+                UserFolloweeFragment fragment2 = UserFolloweeFragment.newInstance(mUserId);
+                ((BaseActivity)mContext).getComponent().inject(fragment2);
+                return fragment2;
+            case TAB_FOLLOWER:
+                UserFollowerFragment fragment3 = UserFollowerFragment.newInstance(mUserId);
+                ((BaseActivity)mContext).getComponent().inject(fragment3);
+                return fragment3;
         }
 
 

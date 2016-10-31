@@ -18,7 +18,6 @@ import javax.inject.Singleton;
  * Created by JasonWang on 2016/9/20.
  */
 
-// TODO: Create/Query/Update/Delete
 @Singleton
 public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.CloudSourceCallback{
     public static final String TAG = MineFleaRepository.class.getSimpleName();
@@ -91,8 +90,18 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
     }
 
     @Override
-    public void queryGoodsListByUserId(String id) {
+    public void queryFavorGoodsListByUserId(String id) {
         mCloudSrc.queryFavoriteGoodsList(id);
+    }
+
+    @Override
+    public void queryUserFollowerListByUserId(String id) {
+
+    }
+
+    @Override
+    public void queryUserFolloweeListByUserId(String id) {
+
     }
 
     public void onImgUploadComplete(Message msg) {

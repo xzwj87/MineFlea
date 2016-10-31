@@ -44,4 +44,9 @@ public abstract  class LoginPresenter implements
     public void onGetGoodsListDone(Message message){
         throw new UnsupportedOperationException("not supported operation");
     }
+
+    @Override
+    public void onGetUserFollowListDone(Message message) {
+
+    }
 }

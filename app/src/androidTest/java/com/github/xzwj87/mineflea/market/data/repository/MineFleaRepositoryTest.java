@@ -101,6 +101,11 @@ public class MineFleaRepositoryTest extends TestCase{
         public void onGetGoodsListDone(Message message) {
 
         }
+
+        @Override
+        public void onGetUserFollowListDone(Message message) {
+
+        }
     }
 }
 

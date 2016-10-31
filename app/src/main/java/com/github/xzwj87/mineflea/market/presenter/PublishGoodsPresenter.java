@@ -44,4 +44,9 @@ public abstract class PublishGoodsPresenter implements BasePresenter,
     public void onGetGoodsListDone(Message message){
         throw new UnsupportedOperationException("not supported operation");
     }
+
+    @Override
+    public void onGetUserFollowListDone(Message message) {
+
+    }
 }

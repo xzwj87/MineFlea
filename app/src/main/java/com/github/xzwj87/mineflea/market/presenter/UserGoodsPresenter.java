@@ -39,4 +39,9 @@ public abstract class UserGoodsPresenter
     public void onImgUploadComplete(Message message) {
 
     }
+
+    @Override
+    public void onGetUserFollowListDone(Message message) {
+
+    }
 }

@@ -9,12 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.model.UserGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.UserGoodsPresenterImpl;
-import com.github.xzwj87.mineflea.market.ui.UserPublishedGoodsView;
+import com.github.xzwj87.mineflea.market.ui.UserGoodsView;
 import com.github.xzwj87.mineflea.market.ui.adapter.UserGoodsAdapter;
 
 import javax.inject.Inject;
@@ -26,7 +28,7 @@ import butterknife.ButterKnife;
  */
 
 public class UserPublishedGoodsFragment extends BaseFragment
-                implements UserGoodsAdapter.PublishedGoodsCallback,UserPublishedGoodsView{
+                implements UserGoodsAdapter.UserGoodsCallback,UserGoodsView {
 
     @Inject UserGoodsPresenterImpl mPresenter;
     private UserGoodsAdapter mAdapter;
@@ -48,18 +50,15 @@ public class UserPublishedGoodsFragment extends BaseFragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState){
-        View root = inflater.inflate(R.layout.fragment_user_published_goods,container,false);
+        View root = inflater.inflate(R.layout.fragment_user_goods,container,false);
 
         ButterKnife.bind(this,root);
 
         mSrLayout = (SwipeRefreshLayout)root.findViewById(R.id.srl_container);
 
         mRvGoodsList = (RecyclerView)root.findViewById(R.id.rv_container);
-        LinearLayoutManager layoutMgr = new LinearLayoutManager(getContext(), OrientationHelper.VERTICAL,false);
-        mRvGoodsList.setLayoutManager(layoutMgr);
-        mRvGoodsList.setItemAnimator(new DefaultItemAnimator());
 
-        mAdapter = new UserGoodsAdapter();
+        setupRecycleView();
 
         init();
 
@@ -88,6 +87,11 @@ public class UserPublishedGoodsFragment extends BaseFragment
         if(mSrLayout.isRefreshing()){
             mSrLayout.setRefreshing(false);
         }
+
+        mRvGoodsList.removeAllViewsInLayout();
+
+        View blank = View.inflate(getContext(),R.layout.fragment_blank_hint,null);
+        mRvGoodsList.addView(blank);
     }
 
     @Override
@@ -107,5 +111,13 @@ public class UserPublishedGoodsFragment extends BaseFragment
 
         mUserId = (String)getArguments().get(UserInfo.USER_ID);
         mPresenter.getGoodsListByUserId(mUserId);
+    }
+
+    private void setupRecycleView(){
+        LinearLayoutManager layoutMgr = new LinearLayoutManager(getContext(), OrientationHelper.VERTICAL,false);
+        mRvGoodsList.setLayoutManager(layoutMgr);
+        mRvGoodsList.setItemAnimator(new DefaultItemAnimator());
+
+        mAdapter = new UserGoodsAdapter();
     }
 }

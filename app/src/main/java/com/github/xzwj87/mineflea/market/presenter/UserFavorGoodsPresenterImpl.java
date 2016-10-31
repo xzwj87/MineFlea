@@ -2,14 +2,13 @@ package com.github.xzwj87.mineflea.market.presenter;
 
 import android.os.Message;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserGoodsInfo;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
-import com.github.xzwj87.mineflea.market.ui.UserFavoriteView;
+import com.github.xzwj87.mineflea.market.ui.UserGoodsView;
 
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class UserFavorGoodsPresenterImpl extends UserFavorGoodsPresenter{
     private static final String TAG = UserFavorGoodsPresenterImpl.class.getSimpleName();
 
     private MineFleaRepository mRepo;
-    private UserFavoriteView mView;
+    private UserGoodsView mView;
     private List<PublishGoodsInfo> mGoodsList;
 
     @Inject
@@ -52,7 +51,7 @@ public class UserFavorGoodsPresenterImpl extends UserFavorGoodsPresenter{
 
     @Override
     public void setView(BaseView view) {
-        mView = (UserFavoriteView)view;
+        mView = (UserGoodsView) view;
     }
 
     @Override
@@ -72,7 +71,7 @@ public class UserFavorGoodsPresenterImpl extends UserFavorGoodsPresenter{
 
     @Override
     public void getFavorGoodsList(String id) {
-        mRepo.queryGoodsListByUserId(id);
+        mRepo.queryFavorGoodsListByUserId(id);
     }
 
     @Override

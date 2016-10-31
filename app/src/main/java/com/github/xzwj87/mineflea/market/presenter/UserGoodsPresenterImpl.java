@@ -1,15 +1,13 @@
 package com.github.xzwj87.mineflea.market.presenter;
 
 import android.os.Message;
-import android.util.Log;
-import android.widget.TextView;
 
 import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserGoodsInfo;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
-import com.github.xzwj87.mineflea.market.ui.UserPublishedGoodsView;
+import com.github.xzwj87.mineflea.market.ui.UserGoodsView;
 
 import java.util.List;
 
@@ -24,7 +22,7 @@ import javax.inject.Named;
 public class UserGoodsPresenterImpl extends UserGoodsPresenter {
 
     private MineFleaRepository mRepo;
-    private UserPublishedGoodsView mView;
+    private UserGoodsView mView;
     private List<PublishGoodsInfo> mGoodsList;
 
     @Inject
@@ -51,7 +49,7 @@ public class UserGoodsPresenterImpl extends UserGoodsPresenter {
 
     @Override
     public void setView(BaseView view) {
-        mView = (UserPublishedGoodsView)view;
+        mView = (UserGoodsView)view;
     }
 
     @Override
