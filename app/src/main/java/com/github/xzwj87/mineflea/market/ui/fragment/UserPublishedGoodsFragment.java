@@ -30,6 +30,8 @@ import butterknife.ButterKnife;
 public class UserPublishedGoodsFragment extends BaseFragment
                 implements UserGoodsAdapter.UserGoodsCallback,UserGoodsView {
 
+    public static final String TAG = UserPublishedGoodsFragment.class.getSimpleName();
+
     @Inject UserGoodsPresenterImpl mPresenter;
     private UserGoodsAdapter mAdapter;
     private RecyclerView mRvGoodsList;

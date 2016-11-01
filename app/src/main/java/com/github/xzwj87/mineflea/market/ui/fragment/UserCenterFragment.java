@@ -25,6 +25,7 @@ import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.UserCenterView;
 import com.github.xzwj87.mineflea.market.ui.activity.LoginActivity;
 import com.github.xzwj87.mineflea.market.ui.activity.UserDetailActivity;
+import com.github.xzwj87.mineflea.market.ui.activity.UserGoodsActivity;
 import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 import com.squareup.picasso.Picasso;
 
@@ -51,8 +52,11 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
     @BindView(R.id.header_container) LinearLayout mHeaderLayout;
     @BindView(R.id.tv_user_nick_name) TextView mTvNickName;
     @BindView(R.id.tv_user_email) TextView mTvUserEmail;
+    @BindView(R.id.tv_published_goods) TextView mTvPublishedGoods;
+    @BindView(R.id.tv_favorite_goods) TextView mTvFavorGoods;
 
     private boolean mIsIconSet = false;
+    private String mUserId;
 
     @Inject UserCenterPresenterImpl mPresenter;
 
@@ -167,11 +171,36 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
         }
     }
 
+    @OnClick({R.id.tv_favorite_goods,R.id.tv_published_goods,R.id.tv_settings})
+    public void doAction(TextView tv){
+        int id = tv.getId();
+
+        Intent intent = null;
+        switch (id){
+            case R.id.tv_favorite_goods:
+                intent = new Intent(getActivity(),UserGoodsActivity.class);
+                intent.putExtra("FragmentTag",UserFavoritesFragment.TAG);
+                intent.putExtra("UserId",mUserId);
+                startActivity(intent);
+                break;
+            case R.id.tv_published_goods:
+                intent = new Intent(getActivity(),UserGoodsActivity.class);
+                intent.putExtra("FragmentTag",UserPublishedGoodsFragment.class);
+                intent.putExtra("UserId",mUserId);
+                startActivity(intent);
+                break;
+            case R.id.tv_settings:
+                break;
+        }
+    }
+
     private void init(){
         if(mPresenter != null) {
             mPresenter.init();
             mPresenter.setView(this);
             mPresenter.loadUserInfo();
+
+            mUserId = mPresenter.getUserId();
         }
     }
 

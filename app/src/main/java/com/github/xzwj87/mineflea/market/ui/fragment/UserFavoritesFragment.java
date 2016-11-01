@@ -23,6 +23,8 @@ import javax.inject.Inject;
 public class UserFavoritesFragment  extends BaseFragment
             implements UserGoodsAdapter.UserGoodsCallback,UserGoodsView{
 
+    public static final String TAG = UserFavoritesFragment.class.getSimpleName();
+
     @Inject UserFavorGoodsPresenterImpl mPresenter;
     private UserGoodsAdapter mAdapter;
     private RecyclerView mRvGoodsList;
