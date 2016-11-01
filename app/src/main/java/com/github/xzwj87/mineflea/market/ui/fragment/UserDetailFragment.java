@@ -2,6 +2,7 @@ package com.github.xzwj87.mineflea.market.ui.fragment;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
@@ -33,6 +34,7 @@ public class UserDetailFragment extends BaseFragment implements UserDetailView{
     public static final String TAG = UserDetailFragment.class.getSimpleName();
 
     private CollapsingToolbarLayout mToolbarLayout;
+    private AppBarLayout mAppBar;
     //private FloatingActionButton mFab;
     private ImageView mIvHeadIcon;
     private String mUserId;
@@ -157,22 +159,9 @@ public class UserDetailFragment extends BaseFragment implements UserDetailView{
     private void initView(){
         mToolbarLayout = (CollapsingToolbarLayout)getActivity().
                 findViewById(R.id.user_detail_toolbar_layout);
+        mAppBar = (AppBarLayout)getActivity().
+                findViewById(R.id.user_detail_appbar);
         mIvHeadIcon = (ImageView)getActivity().findViewById(R.id.head_icon);
-
-/*        if(mIsCurrentUser){
-            mFab.setImageResource(R.drawable.ic_edit_white_24dp);
-            mIsCurrentUser = true;
-        }else{
-            mFab.setImageResource(R.drawable.ic_favorite_white_24dp);
-            mIsCurrentUser = false;
-        }
-
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getGoodsList();
-            }
-        });*/
     }
 
 

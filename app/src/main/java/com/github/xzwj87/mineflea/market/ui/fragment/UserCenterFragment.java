@@ -185,7 +185,7 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
                 break;
             case R.id.tv_published_goods:
                 intent = new Intent(getActivity(),UserGoodsActivity.class);
-                intent.putExtra("FragmentTag",UserPublishedGoodsFragment.class);
+                intent.putExtra("FragmentTag",UserPublishedGoodsFragment.TAG);
                 intent.putExtra("UserId",mUserId);
                 startActivity(intent);
                 break;

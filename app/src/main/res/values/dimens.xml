@@ -38,4 +38,5 @@
     <dimen name="user_detail_image_margin">12dp</dimen>
     <dimen name="user_detail_image_size">72dp</dimen>
     <dimen name="blank_hint_text_size">32sp</dimen>
+    <dimen name="user_detail_button_maring">24dp</dimen>
 </resources>

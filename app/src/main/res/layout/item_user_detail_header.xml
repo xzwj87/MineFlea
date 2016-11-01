@@ -35,14 +35,15 @@
             android:textSize="@dimen/user_detail_text_size"/>
     </LinearLayout>
 
-    <Button android:id="@+id/btn_user_action"
+    <TextView android:id="@+id/btn_user_action"
         android:background="@drawable/item_rect_background"
-        android:drawableStart="@drawable/ic_favorite_white_24dp"
-        android:drawablePadding="8dp"
+        android:drawableStart="@drawable/ic_favorite_white_16dp"
+        android:textSize="@dimen/user_detail_fragment_text_size"
+        android:drawablePadding="@dimen/user_detail_drawable_padding"
         android:text="@string/action_like"
         android:textColor="@color/colorWhite"
         android:layout_marginBottom="@dimen/user_detail_text_margin"
-        android:layout_marginEnd="@dimen/user_center_title_margin"
+        android:layout_marginEnd="@dimen/user_detail_button_maring"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"/>

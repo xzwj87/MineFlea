@@ -3,6 +3,9 @@ package com.github.xzwj87.mineflea.market.ui.activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -10,7 +13,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,7 +45,9 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
     @BindView(R.id.head_icon) ImageView mIvHeadIcon;
     @BindView(R.id.tv_user_nick_name) TextView mTvNickName;
     @BindView(R.id.tv_user_email) TextView mTvEmail;
-    @BindView(R.id.btn_user_action) Button mBtnAction;
+    @BindView(R.id.btn_user_action) TextView mTvAction;
+    @BindView(R.id.user_detail_toolbar_layout) CollapsingToolbarLayout mToolbarLayout;
+    @BindView(R.id.user_detail_appbar) AppBarLayout mAppBar;
 
     private String mUserId;
     private int mInflateMenuId;
@@ -143,14 +147,14 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
     @Override
     public void updateActionButton(boolean isFollowee) {
         if(isFollowee){
-            mBtnAction.setText(R.string.action_already_followee);
+            mTvAction.setText(R.string.action_already_followee);
 
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mBtnAction.setCompoundDrawablesWithIntrinsicBounds(
+                mTvAction.setCompoundDrawablesWithIntrinsicBounds(
                         getDrawable(R.drawable.ic_done_white_24dp),
                         null, null, null);
             }else{
-                mBtnAction.setCompoundDrawablesWithIntrinsicBounds(
+                mTvAction.setCompoundDrawablesWithIntrinsicBounds(
                         getResources().getDrawable(R.drawable.ic_done_white_24dp),
                         null, null, null);
             }
@@ -213,16 +217,30 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
             if(mPresenter.isMe()){
                 mIsMe = true;
                 mInflateMenuId = R.menu.menu_user_detail_me;
-                mBtnAction.setText(R.string.action_edit);
+                mTvAction.setText(R.string.action_edit);
 
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mBtnAction.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_edit_white_24dp),
+                    mTvAction.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_edit_white_16dp),
                             null, null, null);
                 }else{
-                    mBtnAction.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_edit_white_24dp),
+                    mTvAction.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_edit_white_16dp),
                             null, null, null);
                 }
             }
         }
+
+        mAppBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (Math.abs(verticalOffset) >= mAppBar.getTotalScrollRange()) {
+                    // ok, collapsed
+                    mToolbarLayout.setTitleEnabled(true);
+                    mToolbarLayout.setTitle(mTvNickName.getText());
+                    mToolbarLayout.setCollapsedTitleTextAppearance(android.R.style.TextAppearance_DeviceDefault);
+                }else{
+                    mToolbarLayout.setTitleEnabled(false);
+                }
+            }
+        });
     }
 }

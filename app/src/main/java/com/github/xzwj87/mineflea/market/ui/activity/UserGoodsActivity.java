@@ -39,17 +39,25 @@ public class UserGoodsActivity extends BaseActivity{
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_back_white_24dp);
-            actionBar.setTitle(mFragmentTag);
         }
 
         // new fragment
         FragmentManager fragmentMgr = getSupportFragmentManager();
         BaseFragment fragment = (BaseFragment)fragmentMgr.findFragmentByTag(mFragmentTag);
-        if(fragment == null){
+        if(fragment == null && mFragmentTag != null){
             if(mFragmentTag.equals(UserPublishedGoodsFragment.TAG)){
                 fragment = UserPublishedGoodsFragment.newInstance(mUserId);
+                if(actionBar != null){
+                    actionBar.setTitle(R.string.my_favorites);
+                }
+                //init injector
+                getComponent().inject((UserPublishedGoodsFragment)fragment);
             }else if(mFragmentTag.equals(UserFavoritesFragment.TAG)){
                 fragment = UserFavoritesFragment.newInstance(mUserId);
+                getComponent().inject((UserFavoritesFragment)fragment);
+                if(actionBar != null){
+                    actionBar.setTitle(R.string.published_goods);
+                }
             }
         }
 
