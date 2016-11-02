@@ -3,6 +3,9 @@ package com.github.xzwj87.mineflea.market.ui.activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -14,8 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.xzwj87.mineflea.R;
-import com.github.xzwj87.mineflea.market.internal.di.HasComponent;
-import com.github.xzwj87.mineflea.market.internal.di.component.DaggerMarketComponent;
 import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.UserDetailPresenterImpl;
@@ -27,6 +28,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by jason on 10/22/16.
@@ -34,8 +36,6 @@ import butterknife.ButterKnife;
 
 public class UserDetailActivity extends BaseActivity implements UserDetailView{
     private static final String TAG = UserDetailActivity.class.getSimpleName();
-
-    private MarketComponent mMarketComponent;
 
     private ViewPager mPage;
     private UserDetailPageAdapter mPageAdapter;
@@ -45,10 +45,13 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
     @BindView(R.id.head_icon) ImageView mIvHeadIcon;
     @BindView(R.id.tv_user_nick_name) TextView mTvNickName;
     @BindView(R.id.tv_user_email) TextView mTvEmail;
-    @BindView(R.id.tv_user_action) TextView mTvAction;
+    @BindView(R.id.btn_user_action) TextView mTvAction;
+    @BindView(R.id.user_detail_toolbar_layout) CollapsingToolbarLayout mToolbarLayout;
+    @BindView(R.id.user_detail_appbar) AppBarLayout mAppBar;
 
     private String mUserId;
     private int mInflateMenuId;
+    private boolean mIsMe;
 
     @Override
     public void onCreate(Bundle savedState){
@@ -142,6 +145,23 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
     }
 
     @Override
+    public void updateActionButton(boolean isFollowee) {
+        if(isFollowee){
+            mTvAction.setText(R.string.action_already_followee);
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mTvAction.setCompoundDrawablesWithIntrinsicBounds(
+                        getDrawable(R.drawable.ic_done_white_24dp),
+                        null, null, null);
+            }else{
+                mTvAction.setCompoundDrawablesWithIntrinsicBounds(
+                        getResources().getDrawable(R.drawable.ic_done_white_24dp),
+                        null, null, null);
+            }
+        }
+    }
+
+    @Override
     public void finishView() {
         finish();
     }
@@ -159,7 +179,7 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
 
         int id = item.getItemId();
         switch (id){
-            case R.id.home:
+            case android.R.id.home:
                 finishView();
                 break;
             case R.id.edit:
@@ -171,6 +191,19 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
         return super.onOptionsItemSelected(item);
     }
 
+    @OnClick(R.id.btn_user_action)
+    public void editOrFavor(){
+        if(mIsMe){
+            //TODO: start user edit activity
+        }else{
+            if(mPresenter.isMyFollowee(mUserId)){
+                mPresenter.unFollow(mUserId);
+            }else{
+                mPresenter.follow(mUserId);
+            }
+        }
+    }
+
     private void getUserInfo(){
         mPresenter.getUserInfoById(mUserId);
     }
@@ -179,19 +212,35 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
 
         mInflateMenuId = R.menu.menu_user_detail_others;
 
+        mIsMe = false;
         if(mPresenter != null){
-            if(mPresenter.isMe(mUserId)){
+            if(mPresenter.isMe()){
+                mIsMe = true;
                 mInflateMenuId = R.menu.menu_user_detail_me;
-                mTvAction.setText(R.string.action_favorite);
+                mTvAction.setText(R.string.action_edit);
 
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mTvAction.setCompoundDrawables(getDrawable(R.drawable.ic_favorite_white_24dp),
+                    mTvAction.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_edit_white_16dp),
                             null, null, null);
                 }else{
-                    mTvAction.setCompoundDrawables(getResources().getDrawable(R.drawable.ic_favorite_white_24dp),
+                    mTvAction.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_edit_white_16dp),
                             null, null, null);
                 }
             }
         }
+
+        mAppBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (Math.abs(verticalOffset) >= mAppBar.getTotalScrollRange()) {
+                    // ok, collapsed
+                    mToolbarLayout.setTitleEnabled(true);
+                    mToolbarLayout.setTitle(mTvNickName.getText());
+                    mToolbarLayout.setCollapsedTitleTextAppearance(android.R.style.TextAppearance_DeviceDefault);
+                }else{
+                    mToolbarLayout.setTitleEnabled(false);
+                }
+            }
+        });
     }
 }

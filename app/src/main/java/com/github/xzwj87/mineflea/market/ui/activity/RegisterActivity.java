@@ -48,7 +48,6 @@ public class RegisterActivity extends BaseActivity implements RegisterView{
 
     @Inject RegisterPresenterImpl mPresenter;
     private ProgressDialog mProgress;
-    private MarketComponent mMarketComponent;
     private ArrayList<String> mHeadIconUrl;
 
     @Override

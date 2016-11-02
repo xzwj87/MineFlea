@@ -74,5 +74,10 @@
     <string name="error_no_pictures">No pictures added</string>
     <string name="edit">Edit</string>
     <string name="action_edit">Edit</string>
-    <string name="action_favorite">Favorite</string>
+    <string name="action_like">关注</string>
+    <string name="blank_hint_no_published_goods">No Published Goods</string>
+    <string name="blank_hint_no_favorite_goods">No Favorite Goods</string>
+    <string name="blank_hint_no_followers">No Followers</string>
+    <string name="blank_hint_no_followees">No Followees</string>
+    <string name="action_already_followee">Already Follow</string>
 </resources>

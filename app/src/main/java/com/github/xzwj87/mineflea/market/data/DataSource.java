@@ -30,4 +30,14 @@ public interface DataSource {
      * login
      */
     void login(UserInfo info);
+
+    /*
+     * favorite a goods
+     */
+    void favor(PublishGoodsInfo goodsInfo);
+
+    /*
+     * query user favorite goods list
+     */
+    void queryFavoriteGoodsList(String userId);
 }

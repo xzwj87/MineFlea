@@ -1,6 +1,7 @@
 package com.github.xzwj87.mineflea.market.presenter;
 
 import android.os.Message;
+import android.util.Log;
 
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
@@ -14,7 +15,11 @@ import java.util.List;
 public abstract class UserDetailPresenter implements BasePresenter,PresenterCallback{
     public abstract void getUserInfoById(String id);
 
-    public abstract void updateFollowers();
+    public abstract void follow(String userId);
+
+    public abstract void unFollow(String userId);
+
+    public abstract boolean isMyFollowee(String userId);
 
     public abstract void getGoodsList(String userId);
 
@@ -24,7 +29,7 @@ public abstract class UserDetailPresenter implements BasePresenter,PresenterCall
 
     public abstract int getGoodsNumber();
 
-    public abstract boolean isMe(String userId);
+    public abstract boolean isMe();
 
     @Override
     public void onRegisterComplete(Message message) {
@@ -46,5 +51,19 @@ public abstract class UserDetailPresenter implements BasePresenter,PresenterCall
 
     public void updateUploadProcess(int count){
         throw new UnsupportedOperationException("not supported operation");
+    }
+
+    @Override
+    public void onGetUserFollowListDone(Message message) {
+
+    }
+
+    @Override
+    public void onGetUserFollowerDone(Message message) {
+
+    }
+
+    @Override
+    public void onGetGoodsListDone(Message message) {
     }
 }

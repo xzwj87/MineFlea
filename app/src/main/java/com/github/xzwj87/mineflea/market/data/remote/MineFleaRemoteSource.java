@@ -2,13 +2,17 @@ package com.github.xzwj87.mineflea.market.data.remote;
 
 import android.os.Message;
 import android.util.Log;
+import android.view.MotionEvent;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVPowerfulUtils;
 import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVRelation;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.FollowCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.LogInCallback;
 import com.avos.avoscloud.ProgressCallback;
@@ -68,6 +72,8 @@ public class MineFleaRemoteSource implements RemoteSource{
         void onImgUploadComplete(Message msg);
         void onGetUserInfoDone(Message msg);
         void onGetGoodsListDone(Message msg);
+        void onGetUserFolloweeDone(Message message);
+        void onGetUserFollowerDone(Message message);
     }
 
     //Todo: we may want to cache info
@@ -148,6 +154,109 @@ public class MineFleaRemoteSource implements RemoteSource{
         }
 
         return UserInfoUtils.fromAvUser(user);
+    }
+
+    @Override
+    public void follow(String userId) {
+        AVUser current = AVUser.getCurrentUser();
+        current.followInBackground(userId, new FollowCallback() {
+            @Override
+            public void done(AVObject object, AVException e) {
+                if(e == null){
+                    Log.v(TAG,"follow successfully");
+                }else if(e.getCode() == AVException.DUPLICATE_VALUE){
+                    Log.v(TAG,"already followed");
+                }else{
+                    // followed error
+                }
+            }
+        });
+    }
+
+    @Override
+    public void unFollow(String userId) {
+        AVUser user = AVUser.getCurrentUser();
+
+        user.unfollowInBackground(userId, new FollowCallback() {
+            @Override
+            public void done(AVObject object, AVException e) {
+                if(e == null){
+                    Log.v(TAG,"unfollow successfully");
+                }else{
+                    Log.v(TAG,"fail to unfollow");
+                }
+            }
+        });
+    }
+
+    @Override
+    public void getMyFollowee(String userId) {
+        if(userId == null) return;
+
+        AVUser user = AVUser.getCurrentUser();
+        AVQuery<AVUser> query = AVUser.followeeQuery(user.getObjectId(),AVUser.class);
+        query.whereEqualTo(AvCloudConstants.AV_USER_ID,userId);
+
+        query.findInBackground(new FindCallback<AVUser>() {
+            @Override
+            public void done(List<AVUser> list, AVException e) {
+                final  Message msg = new Message();
+                if(e == null){
+                    msg.obj = list;
+                    msg.what = ResponseCode.RESP_QUERY_FOLLOWEES_SUCCESS;
+                }else{
+                    msg.obj = null;
+                    msg.what = ResponseCode.RESP_QUERY_FOLLOWEES_ERROR;
+                }
+
+                mCloudCallback.onGetUserFolloweeDone(msg);
+            }
+        });
+    }
+
+    @Override
+    public void getFolloweeList(String userId) {
+        AVQuery<AVUser> query = AVUser.followeeQuery(userId,AVUser.class);
+        query.include(AvCloudConstants.AV_USER_FOLLOWEES);
+
+        query.findInBackground(new FindCallback<AVUser>() {
+            @Override
+            public void done(List<AVUser> list, AVException e) {
+                final Message message = new Message();
+                if(e == null){
+                    message.obj = list;
+                    message.what = ResponseCode.RESP_QUERY_FOLLOWEES_SUCCESS;
+                }else{
+                    message.obj = null;
+                    message.what = ResponseCode.RESP_QUERY_FOLLOWEES_ERROR;
+                }
+
+                mCloudCallback.onGetUserFolloweeDone(message);
+            }
+        });
+    }
+
+    @Override
+    public void getFollowerList(String userId) {
+        AVQuery<AVUser> query = AVUser.followerQuery(userId,AVUser.class);
+        query.include(AvCloudConstants.AV_USER_FOLLOWERS);
+
+        query.findInBackground(new FindCallback<AVUser>() {
+            @Override
+            public void done(List<AVUser> list, AVException e) {
+                final Message message = new Message();
+                if(e == null){
+                    message.obj = list;
+                    message.what = ResponseCode.RESP_QUERY_FOLLOWEES_SUCCESS;
+                }else{
+                    message.obj = null;
+                    message.what = ResponseCode.RESP_QUERY_FOLLOWEES_ERROR;
+                }
+
+                mCloudCallback.onGetUserFollowerDone(message);
+            }
+        });
+
     }
 
     /**
@@ -248,6 +357,56 @@ public class MineFleaRemoteSource implements RemoteSource{
                 Log.v(TAG,"AVUser detail = " + avUser);
 
                 mCloudCallback.loginComplete(message);
+            }
+        });
+    }
+
+    @Override
+    public void favor(PublishGoodsInfo goodsInfo) {
+        Log.v(TAG,"favor(): goods id = " + goodsInfo.getId());
+
+        final AVUser user = AVUser.getCurrentUser();
+
+        final AVObject object = PublishGoodsInfo.toAvObject(goodsInfo);
+        object.put(AvCloudConstants.AV_GOODS_NAME,goodsInfo.getName());
+
+        object.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                AVRelation<AVObject> relation = user.getRelation(AvCloudConstants.AV_RELATION_USER_GOODS);
+                relation.add(object);
+                user.saveInBackground();
+            }
+        });
+    }
+
+    @Override
+    public void queryFavoriteGoodsList(String userId) {
+        Log.v(TAG,"queryFavorGoodsList() : user id = " + userId);
+
+        AVObject user = AVUser.createWithoutData(AVPowerfulUtils.
+                getAVClassName(AVUser.class.getSimpleName()),userId);
+        AVRelation<AVObject> relation = user.getRelation(AvCloudConstants.AV_RELATION_USER_GOODS);
+
+        AVQuery<AVObject> query = relation.getQuery();
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                final Message msg = new Message();
+                if(e == null){
+                    List<PublishGoodsInfo> goodsList = new ArrayList<PublishGoodsInfo>();
+                    for(int i = 0; i < list.size(); ++i){
+                        goodsList.add(PublishGoodsInfo.fromAvObject(list.get(i)));
+                    }
+
+                    msg.obj = goodsList;
+                    msg.what = ResponseCode.RESP_QUERY_FAVORITE_GOODS_LIST_SUCCESS;
+                }else{
+                    msg.obj = null;
+                    msg.what = ResponseCode.RESP_QUERY_FAVORITE_GOODS_LIST_ERROR;
+                }
+
+                mCloudCallback.onGetGoodsListDone(msg);
             }
         });
     }

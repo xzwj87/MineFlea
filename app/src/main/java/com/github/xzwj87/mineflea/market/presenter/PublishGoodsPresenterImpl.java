@@ -70,7 +70,7 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
 
     @Override
     public void setGoodsPrice(String price) {
-        mGoodsInfo.setPrice(price);
+        mGoodsInfo.setPrice(Double.parseDouble(price));
     }
 
     @Override
@@ -102,7 +102,7 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
         }
 
         try {
-            double price = Double.parseDouble(mGoodsInfo.getPrice());
+            double price = mGoodsInfo.getPrice();
         }catch (NumberFormatException e){
             mView.showPriceInvalidMsg();
             return false;

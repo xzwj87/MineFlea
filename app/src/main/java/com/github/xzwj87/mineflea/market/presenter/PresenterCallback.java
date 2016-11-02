@@ -16,5 +16,8 @@ public interface PresenterCallback {
     void onImgUploadComplete(Message message);
     void onGetUserInfoComplete(Message message);
     void onGetGoodsListDone(Message message);
+    void onGetUserFollowListDone(Message message);
+    void onGetUserFolloweeDone(Message message);
+    void onGetUserFollowerDone(Message message);
 
 }
