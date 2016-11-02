@@ -6,4 +6,9 @@
         <item>关注</item>
         <item>关注者</item>
     </string-array>
+
+    <string-array name="user_head_icon_capture">
+        <item>相机</item>
+        <item>从文件中选取</item>
+    </string-array>
 </resources>

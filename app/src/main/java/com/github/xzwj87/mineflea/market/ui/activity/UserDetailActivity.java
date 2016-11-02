@@ -239,6 +239,7 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
                     mToolbarLayout.setCollapsedTitleTextAppearance(android.R.style.TextAppearance_DeviceDefault);
                 }else{
                     mToolbarLayout.setTitleEnabled(false);
+                    mToolbarLayout.setTitle("");
                 }
             }
         });

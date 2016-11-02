@@ -69,4 +69,11 @@
         <item name="android:drawablePadding">8dp</item>
     </style>
 
+    <style name="PersonalInfoEditTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/personal_info_title_size</item>
+        <item name="android:textColor">@color/colorDarkGrey</item>
+    </style>
+
 </resources>

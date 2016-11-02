@@ -49,7 +49,7 @@
     <string name="error_get_user_info">获取用户信息失败</string>
     <string name="error_get_goods_list">获取物品列表失败</string>
     <string name="hint_login_success">登陆成功</string>
-    <string name="user_head_icon">用户头像</string>
+    <string name="user_head_icon">头像</string>
     <string name="none"> </string>
     <string name="error_invalid_goods_name">物品名太长</string>
     <string name="error_invalid_goods_price">输入的价格信息不正确</string>
@@ -63,5 +63,8 @@
     <string name="blank_hint_no_followers">还没有关注的人</string>
     <string name="blank_hint_no_followees">还没有关注者</string>
     <string name="action_already_followee">Already Follow</string>
+    <string name="edit_personal_info">Edit Personal Info</string>
+    <string name="user_nick_name">Nick Name</string>
+    <string name="edit_nick_name">Edit Nick Name</string>
 
 </resources>

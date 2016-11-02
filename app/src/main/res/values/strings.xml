@@ -80,4 +80,7 @@
     <string name="blank_hint_no_followers">No Followers</string>
     <string name="blank_hint_no_followees">No Followees</string>
     <string name="action_already_followee">Already Follow</string>
+    <string name="edit_personal_info">Edit Personal Info</string>
+    <string name="user_nick_name">Nick Name</string>
+    <string name="edit_nick_name">Edit Nick Name</string>
 </resources>
