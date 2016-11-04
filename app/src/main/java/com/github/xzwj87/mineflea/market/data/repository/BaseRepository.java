@@ -30,6 +30,11 @@ public interface BaseRepository {
     void login(UserInfo info);
 
     /*
+     * logout
+     */
+    void logout();
+
+    /*
      * Callback of Presenter:this must be called in Presenter
      */
     void setPresenterCallback(PresenterCallback callback);

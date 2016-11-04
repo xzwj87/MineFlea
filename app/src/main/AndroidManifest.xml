@@ -91,6 +91,11 @@
             android:label="@string/edit_personal_info"
             android:theme="@style/AppTheme.NoActionBar"/>
 
+        <activity android:name=".market.ui.settings.SettingsActivity"
+            android:label="@string/action_settings"
+            android:theme="@style/AppTheme">
+        </activity>
+
         <activity android:name="me.iwf.photopicker.PhotoPickerActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             />

@@ -19,6 +19,7 @@ import com.github.xzwj87.mineflea.market.ui.fragment.UserFavoritesFragment;
 import com.github.xzwj87.mineflea.market.ui.fragment.UserFolloweeFragment;
 import com.github.xzwj87.mineflea.market.ui.fragment.UserFollowerFragment;
 import com.github.xzwj87.mineflea.market.ui.fragment.UserPublishedGoodsFragment;
+import com.github.xzwj87.mineflea.market.ui.settings.SettingsFragment;
 
 import dagger.Component;
 
@@ -41,4 +42,5 @@ public interface MarketComponent extends ActivityComponent{
     void inject(UserFollowerFragment fragment);
     void inject(UserFolloweeFragment fragment);
     void inject(EditPersonalInfoActivity activity);
+    void inject(SettingsFragment fragment);
 }

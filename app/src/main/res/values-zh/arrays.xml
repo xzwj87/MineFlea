@@ -11,4 +11,8 @@
         <item>相机</item>
         <item>从文件中选取</item>
     </string-array>
+
+    <string-array name="dummy">dummy</string-array>
+    <string-array name="dummy_values">dummy_values</string-array>
+    <string-array name="data_sync_frequency">3h a time</string-array>
 </resources>

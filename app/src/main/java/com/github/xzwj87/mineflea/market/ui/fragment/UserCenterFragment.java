@@ -26,6 +26,8 @@ import com.github.xzwj87.mineflea.market.ui.UserCenterView;
 import com.github.xzwj87.mineflea.market.ui.activity.LoginActivity;
 import com.github.xzwj87.mineflea.market.ui.activity.UserDetailActivity;
 import com.github.xzwj87.mineflea.market.ui.activity.UserGoodsActivity;
+import com.github.xzwj87.mineflea.market.ui.settings.SettingsActivity;
+import com.github.xzwj87.mineflea.utils.SharePrefsHelper;
 import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 import com.squareup.picasso.Picasso;
 
@@ -76,17 +78,22 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
 
         ButterKnife.bind(this,root);
 
+        return root;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
         initView();
         init();
-
-        return root;
     }
 
     @OnClick(R.id.header_container)
     public void login(){
         Log.v(TAG,"login()");
 
-        boolean isLogin = UserPrefsUtil.getBoolean(UserInfo.IS_LOGIN,false);
+        boolean isLogin = SharePrefsHelper.getInstance(getActivity()).getLoginState();
         if(isLogin){
             Intent intent = new Intent(getActivity(), UserDetailActivity.class);
             intent.putExtra(UserInfo.USER_ID,mUserId);
@@ -146,8 +153,10 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
     private void initView(){
         Log.v(TAG,"initView()");
 
-        if(UserPrefsUtil.isLogin()) {
+        boolean login = SharePrefsHelper.getInstance(getContext()).getLoginState();
+        if(login) {
             Log.v(TAG,"initView(): login!!!");
+            mTvUserEmail.setVisibility(View.VISIBLE);
             mTvNickName.setText(UserPrefsUtil.getString(UserInfo.USER_NICK_NAME, ""));
             mTvUserEmail.setText(UserPrefsUtil.getString(UserInfo.UER_EMAIL,""));
 
@@ -167,6 +176,17 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
                     mCivHeader.setImageDrawable(
                             getResources().getDrawable(R.drawable.ic_account_circle_grey_72dp));
                 }
+            }
+        // logout state
+        }else{
+            mTvUserEmail.setVisibility(View.INVISIBLE);
+            mTvNickName.setText(getString(R.string.logout));
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mCivHeader.setImageDrawable(
+                        getResources().getDrawable(R.drawable.ic_account_circle_grey_72dp, null));
+            }else{
+                mCivHeader.setImageDrawable(
+                        getResources().getDrawable(R.drawable.ic_account_circle_grey_72dp));
             }
         }
     }
@@ -190,6 +210,8 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
                 startActivity(intent);
                 break;
             case R.id.tv_settings:
+                intent = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(intent);
                 break;
         }
     }

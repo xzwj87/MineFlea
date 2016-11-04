@@ -74,7 +74,7 @@
     <string name="error_no_pictures">No pictures added</string>
     <string name="edit">Edit</string>
     <string name="action_edit">Edit</string>
-    <string name="action_like">关注</string>
+    <string name="action_like">Like</string>
     <string name="blank_hint_no_published_goods">No Published Goods</string>
     <string name="blank_hint_no_favorite_goods">No Favorite Goods</string>
     <string name="blank_hint_no_followers">No Followers</string>
@@ -91,4 +91,28 @@
     <string name="user_tel_number">Telephone Number</string>
     <string name="user_email">Email</string>
     <string name="say_something_about_yourself">Say something about yourself</string>
+    <string name="settings_about">About</string>
+    <string name="settings_about_sum">know more about authors</string>
+    <string name="settings_about_mineflea">About MineFlea</string>
+    <string name="about_mineflea">This app is created by Jason and Icesea</string>
+    <string name="button_remove">Remove an image</string>
+    <string name="pref_data_sync">Data Sync</string>
+    <string name="wifi_only_sync">Sync only wifi connected</string>
+    <string name="pref_theme_color">Change Theme Color</string>
+    <string name="change_theme_color">Change your theme color</string>
+    <string name="choose_color_you_like">Choose Color You Like</string>
+    <string name="pref_data_sync_frequency">Data Sync frequency</string>
+    <string name="change_data_sync_frequency">Change Data Sync Frequency</string>
+    <string name="choose_sync_frequency">Choose Sync Frequency</string>
+    <string name="key_pref_wifi_only_sync">key_wifi_only_sync</string>
+    <string name="network_connected_sync">Network Connencted Sync</string>
+    <string name="key_login_state">key_login_state</string>
+    <string name="settings_logout">Logout this account</string>
+    <string name="sure_to_logout">Are you sure to logout</string>
+    <string name="key_feedback">key_feedback</string>
+    <string name="issue_feedback">Issue Feedback</string>
+    <string name="write_down_your_advice">Feedack your advice to us</string>
+    <string name="hint_logining">Logining,please wait for a while</string>
+    <string name="string_false">false</string>
+    <string name="hint_logout_success">Logout Success</string>
 </resources>

@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/input_text_size"
             android:layout_marginStart="@dimen/publish_goods_text_margin"
-            android:maxLines="2"
+            android:maxLines="1"
             android:layout_marginEnd="@dimen/publish_goods_text_margin"
             android:layout_gravity="center"/>
 

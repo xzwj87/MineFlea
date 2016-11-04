@@ -3,6 +3,7 @@ package com.github.xzwj87.mineflea.market.ui.activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -38,6 +39,7 @@ import com.github.xzwj87.mineflea.market.internal.di.component.DaggerMarketCompo
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.LoginPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.LoginView;
+import com.github.xzwj87.mineflea.utils.SharePrefsHelper;
 
 import javax.inject.Inject;
 
@@ -61,10 +63,11 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
     @BindView(R.id.atv_email) AutoCompleteTextView mEmailView;
     @BindView(R.id.et_password) EditText mPasswordView;
-    @BindView(R.id.progress_login) View mProgressView;
     @BindView(R.id.form_login) View mLoginFormView;
     @BindView(R.id.btn_register) Button mBtnRegister;
     @BindView(R.id.btn_sign_in) Button mBtnEmailSignIn;
+
+    private ProgressDialog mProgress;
 
     @Inject LoginPresenterImpl mPresenter;
     private String mHeadIconUrl;
@@ -196,6 +199,12 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
 
+        if(show) {
+            mProgress = ProgressDialog.show(this, "", getString(R.string.hint_logining));
+        }else if(mProgress.isShowing()){
+            mProgress.dismiss();
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
@@ -208,16 +217,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                 }
             });
 
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
         } else {
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
@@ -277,6 +277,9 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         intent.putExtra(UserInfo.USER_NICK_NAME,mNickName);
         intent.putExtra(UserInfo.UER_EMAIL,mEmail);
         intent.putExtra(UserInfo.USER_HEAD_ICON,mHeadIconUrl);
+
+        // save pref value of login state
+        SharePrefsHelper.getInstance(this).updateLogState(true);
 
         setResult(RESULT_OK,intent);
 

@@ -60,6 +60,11 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
     }
 
     @Override
+    public void logout() {
+        mCloudSrc.logOut();;
+    }
+
+    @Override
     public void setPresenterCallback(PresenterCallback callback) {
         mPresenterCb = callback;
     }
