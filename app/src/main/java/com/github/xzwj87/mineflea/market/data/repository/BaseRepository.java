@@ -49,6 +49,12 @@ public interface BaseRepository {
      */
     UserInfo getCurrentUser();
 
+
+    /*
+     * update current user info
+     */
+    void updateCurrentUserInfo(String key, String val);
+
     /*
      * get user info by id
      */

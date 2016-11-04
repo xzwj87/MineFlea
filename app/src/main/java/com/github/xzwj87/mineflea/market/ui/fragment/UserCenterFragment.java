@@ -89,7 +89,7 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
         boolean isLogin = UserPrefsUtil.getBoolean(UserInfo.IS_LOGIN,false);
         if(isLogin){
             Intent intent = new Intent(getActivity(), UserDetailActivity.class);
-            intent.putExtra(UserInfo.USER_ID,mPresenter.getUserId());
+            intent.putExtra(UserInfo.USER_ID,mUserId);
             intent.putExtra(UserInfo.CURRENT_USER,true);
             startActivity(intent);
         }else {

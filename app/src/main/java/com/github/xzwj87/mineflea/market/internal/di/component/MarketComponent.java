@@ -6,6 +6,7 @@ import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.internal.di.module.ActivityModule;
 import com.github.xzwj87.mineflea.market.internal.di.module.AppModule;
 import com.github.xzwj87.mineflea.market.internal.di.module.MarketModule;
+import com.github.xzwj87.mineflea.market.ui.activity.EditPersonalInfoActivity;
 import com.github.xzwj87.mineflea.market.ui.activity.LoginActivity;
 import com.github.xzwj87.mineflea.market.ui.activity.MineFleaHomeActivity;
 import com.github.xzwj87.mineflea.market.ui.activity.PublishGoodsActivity;
@@ -39,4 +40,5 @@ public interface MarketComponent extends ActivityComponent{
     void inject(UserFavoritesFragment fragment);
     void inject(UserFollowerFragment fragment);
     void inject(UserFolloweeFragment fragment);
+    void inject(EditPersonalInfoActivity activity);
 }

@@ -6,4 +6,9 @@
         <item>Followers</item>
         <item>Followees</item>
     </string-array>
+
+    <string-array name="user_head_icon_capture">
+        <item>Camera</item>
+        <item>From File</item>
+    </string-array>
 </resources>

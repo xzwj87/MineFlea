@@ -36,6 +36,7 @@
     </LinearLayout>
 
     <TextView android:id="@+id/btn_user_action"
+        android:clickable="true"
         android:background="@drawable/item_rect_background"
         android:drawableStart="@drawable/ic_favorite_white_16dp"
         android:textSize="@dimen/user_detail_fragment_text_size"
