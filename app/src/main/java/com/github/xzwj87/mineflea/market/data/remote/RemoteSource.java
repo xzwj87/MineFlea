@@ -12,6 +12,7 @@ public interface RemoteSource extends DataSource {
     void getGoodsListByUserId(String id);
     String getCurrentUserId();
     UserInfo getCurrentUser();
+    void updateCurrentUserInfo(String key, String val);
     void follow(String userId);
     void unFollow(String userId);
     void getMyFollowee(String userId);

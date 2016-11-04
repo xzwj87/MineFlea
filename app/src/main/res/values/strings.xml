@@ -83,4 +83,12 @@
     <string name="edit_personal_info">Edit Personal Info</string>
     <string name="user_nick_name">Nick Name</string>
     <string name="edit_nick_name">Edit Nick Name</string>
+    <string name="edit_email">Edit Email</string>
+    <string name="edit_tel_number">Edit Telephone Number</string>
+    <string name="edit_intro">Edit Self Introduction</string>
+    <string name="error_invalid_input">Cannot be empty for this field</string>
+    <string name="user_intro">Introduction</string>
+    <string name="user_tel_number">Telephone Number</string>
+    <string name="user_email">Email</string>
+    <string name="say_something_about_yourself">Say something about yourself</string>
 </resources>

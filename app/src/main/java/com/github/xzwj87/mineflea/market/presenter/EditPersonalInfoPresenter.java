@@ -35,11 +35,6 @@ public abstract class EditPersonalInfoPresenter implements BasePresenter,Present
     }
 
     @Override
-    public void onImgUploadComplete(Message message) {
-
-    }
-
-    @Override
     public void onGetUserInfoComplete(Message message) {
 
     }

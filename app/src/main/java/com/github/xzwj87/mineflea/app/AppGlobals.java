@@ -52,11 +52,11 @@ public class AppGlobals extends Application
                 .appModule(new AppModule(this))
                 .build();
 
+        initLeanCloudService();
         // in case of UI delay rendering
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                initLeanCloudService();
                 initFileDir();
                 initMap();
                 checkLoginState();

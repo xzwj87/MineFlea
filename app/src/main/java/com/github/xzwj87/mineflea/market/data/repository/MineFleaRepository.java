@@ -80,6 +80,11 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
     }
 
     @Override
+    public void updateCurrentUserInfo(String key, String val) {
+        mCloudSrc.updateCurrentUserInfo(key,val);
+    }
+
+    @Override
     public void getUserInfoById(String id) {
         mCloudSrc.getUserInfoById(id);
     }

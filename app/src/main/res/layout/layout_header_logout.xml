@@ -1,41 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
+<RelativeLayout android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingTop="8dp"
-    android:orientation="horizontal"
     android:paddingBottom="8dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/civ_user_header"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+        android:layout_width="@dimen/user_center_head_size"
+        android:layout_height="@dimen/user_center_head_size"
+        android:layout_centerInParent="true"
+        android:layout_alignParentStart="true"
         android:src="@drawable/ic_account_circle_grey_72dp"
         app:civ_border_color="@color/colorWhite" />
 
     <LinearLayout
-        android:layout_gravity="start|center"
         android:layout_marginStart="@dimen/user_center_title_margin"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/civ_user_header"
+        android:layout_centerInParent="true"
         android:orientation="vertical">
         <TextView
             android:id="@+id/tv_user_nick_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/logout"
-            android:layout_gravity="start"
-            android:textSize="14sp"
-            android:layout_marginTop="12dp" />
+            android:textColor="@color/colorDarkGrey"
+            android:textSize="@dimen/user_center_title_size" />
 
         <TextView
             android:id="@+id/tv_user_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:visibility="invisible"
+            android:textColor="@color/colorLightGrey"
             android:text="@string/logout"
-            android:textSize="14sp" />
+            android:textSize="@dimen/user_center_sub_title_size" />
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

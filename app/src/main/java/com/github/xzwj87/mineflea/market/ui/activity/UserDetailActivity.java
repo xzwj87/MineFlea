@@ -183,6 +183,8 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
                 finishView();
                 break;
             case R.id.edit:
+                Intent intent = new Intent(this,EditPersonalInfoActivity.class);
+                startActivity(intent);
                 break;
             case R.id.favorite:
                 break;
@@ -194,7 +196,8 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
     @OnClick(R.id.btn_user_action)
     public void editOrFavor(){
         if(mIsMe){
-            //TODO: start user edit activity
+            Intent intent = new Intent(this,EditPersonalInfoActivity.class);
+            startActivity(intent);
         }else{
             if(mPresenter.isMyFollowee(mUserId)){
                 mPresenter.unFollow(mUserId);

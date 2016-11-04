@@ -4,19 +4,21 @@
     <string name="tab_nearby">附近</string>
     <string name="tab_mine">我的</string>
     <string name="action_publish">发布</string>
-    <string name="goods_price">出价</string>
+    <string name="goods_price">价格</string>
     <string name="goods_name">物品名称</string>
     <string name="goods_low_Price">￥低价</string>
     <string name="goods_high_price">￥高价</string>
     <string name="goods_description">描述</string>
     <string name="add_pictures">图片</string>
     <string name="logout">未登录</string>
-    <string name="published_goods">已发布物品</string>
-    <string name="my_favorites">我的收藏</string>
+    <string name="published_goods">已发布</string>
+    <string name="my_favorites">收藏</string>
     <string name="my_followees">我的粉丝</string>
     <string name="my_followers">我的关注</string>
     <string name="about">关于</string>
     <string name="settings">设置</string>
+    <string name="button_ok">确定</string>
+    <string name="button_cancel">取消</string>
 
     <!-- Strings related to login -->
     <string name="prompt_name">用户名(昵称)</string>
@@ -62,9 +64,17 @@
     <string name="blank_hint_no_favorite_goods">没有收藏的物品</string>
     <string name="blank_hint_no_followers">还没有关注的人</string>
     <string name="blank_hint_no_followees">还没有关注者</string>
-    <string name="action_already_followee">Already Follow</string>
-    <string name="edit_personal_info">Edit Personal Info</string>
-    <string name="user_nick_name">Nick Name</string>
-    <string name="edit_nick_name">Edit Nick Name</string>
+    <string name="action_already_followee">已关注</string>
+    <string name="edit_personal_info">修改个人信息</string>
+    <string name="user_nick_name">昵称</string>
+    <string name="edit_nick_name">修改昵称</string>
+    <string name="edit_email">修改邮箱</string>
+    <string name="edit_tel_number">修改电话号码</string>
+    <string name="edit_intro">修改简介</string>
+    <string name="error_invalid_input">此选项不能为空</string>
+    <string name="user_intro">简介</string>
+    <string name="user_email">邮箱</string>
+    <string name="user_tel_number">手机号</string>
+    <string name="say_something_about_yourself">简要的介绍自己</string>
 
 </resources>

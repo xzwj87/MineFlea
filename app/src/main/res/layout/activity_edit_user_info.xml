@@ -5,27 +5,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:background="@color/colorPrimary"
-            android:title="@string/edit_personal_info"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
-
-        </android.support.v7.widget.Toolbar>
-
-    </android.support.design.widget.AppBarLayout>
-
-    <FrameLayout android:id="@+id/item_container"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <include layout="@layout/item_edit_user_info"/>
-    </FrameLayout>
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:background="@color/colorPrimary"
+                android:title="@string/edit_personal_info"
+                app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            </android.support.v7.widget.Toolbar>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <FrameLayout android:id="@+id/item_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <include layout="@layout/item_edit_user_info"/>
+        </FrameLayout>
+
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>
