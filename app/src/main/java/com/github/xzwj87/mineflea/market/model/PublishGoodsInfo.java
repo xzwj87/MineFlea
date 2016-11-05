@@ -28,7 +28,7 @@ public class PublishGoodsInfo {
 
     private String mName;
 
-    private String mPublisherId;
+    private String mUserId;
 
     private double mHighPrice;
 
@@ -43,6 +43,8 @@ public class PublishGoodsInfo {
     private List<String> mImageUri;
 
     private int mStars;
+    //users who likes me
+    private List<String> mFavorUserList;
 
     public PublishGoodsInfo(){
         mReleasedDate = System.currentTimeMillis();
@@ -90,11 +92,11 @@ public class PublishGoodsInfo {
 
 
     public String getPublisherId(){
-        return mPublisherId;
+        return mUserId;
     }
 
     public void setPublisherId(String publisher){
-        mPublisherId = publisher;
+        mUserId = publisher;
     }
 
     public double getHighPrice(){
@@ -150,7 +152,21 @@ public class PublishGoodsInfo {
     }
 
     public int getStars(){
-        return mStars;
+        if(mFavorUserList == null) return 0;
+
+        return mFavorUserList.size();
+    }
+
+    public void addFavorUser(String id){
+        if(mFavorUserList == null) return;
+
+        mFavorUserList.add(id);
+    }
+
+    public void removeFavorUser(String id){
+        if(mFavorUserList == null) return;
+
+        mFavorUserList.remove(id);
     }
 
 

@@ -2,7 +2,6 @@ package com.github.xzwj87.mineflea.market.data.remote;
 
 import android.os.Message;
 import android.util.Log;
-import android.view.MotionEvent;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
@@ -319,8 +318,8 @@ public class MineFleaRemoteSource implements RemoteSource{
         avUser.put(UserInfo.USER_NICK_NAME,userInfo.getNickName());
         avUser.put(UserInfo.USER_HEAD_ICON,userInfo.getHeadIconUrl());
         avUser.put(UserInfo.USER_LOCATION,userInfo.getLocation());
-        avUser.put(UserInfo.USER_FOLLOWERS,userInfo.getFollowers());
-        avUser.put(UserInfo.USER_FOLLOWEES,userInfo.getFollowees());
+        avUser.put(UserInfo.USER_FOLLOWERS,userInfo.getFollowersCount());
+        avUser.put(UserInfo.USER_FOLLOWEES,userInfo.getFolloweesCount());
         avUser.put(UserInfo.USER_INTRO,userInfo.getIntro());
         avUser.setUsername(userInfo.getUserEmail());
         avUser.setEmail(userInfo.getUserEmail());

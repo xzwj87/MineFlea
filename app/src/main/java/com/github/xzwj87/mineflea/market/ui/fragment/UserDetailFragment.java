@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,18 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.xzwj87.mineflea.R;
-import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.UserDetailPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.UserDetailView;
 import com.squareup.picasso.Picasso;
-
-import java.util.List;
-
-import javax.inject.Inject;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by jason on 10/22/16.
@@ -108,7 +99,7 @@ public class UserDetailFragment extends BaseFragment implements UserDetailView{
         mToolbarLayout.setTitle(userInfo.getNickName());
         mTvEmail.setText(userInfo.getUserEmail());
         mTvTel.setText(userInfo.getUserTelNumber());
-        mTvFollowers.setText(String.valueOf(userInfo.getFollowers()));
+        mTvFollowers.setText(String.valueOf(userInfo.getFollowersCount()));
         mTvGoods.setText(R.string.check_user_goods_list);
 
         Log.v(TAG,"email view = " + mTvEmail.getText());

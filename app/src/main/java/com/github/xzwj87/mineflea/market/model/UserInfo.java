@@ -53,16 +53,20 @@ public class UserInfo {
     private String mTelNumber;
     private String mUserPwd;
     private String mHeadIconUrl;
-    private int mFollowers;
-    private int mFollowees;
+    private List<String> mGoodsList;
+    private List<String> mFollowerList;
+    private List<String> mFolloweeList;
     private String mLoc;
     private Date mLoginDate;
     private String mIntro;
 
     public UserInfo(){
         mLoginDate = new Date();
-        mFollowees = 0;
-        mFollowers = 0;
+
+        mFolloweeList = new ArrayList<>();
+        mFollowerList = new ArrayList<>();
+        // published goods list
+        mGoodsList = new ArrayList<>();
     }
 
     public UserInfo(String nickName,String userName,String email,String iconUrl){
@@ -137,19 +141,65 @@ public class UserInfo {
     }
 
     public void setFollowers(int followers){
-        mFollowers = followers;
+
     }
 
-    public int getFollowers(){
-        return mFollowers;
+    public int getFollowersCount(){
+        if(mFollowerList == null) return 0;
+
+        return mFollowerList.size();
+    }
+
+    public void addFollower(String userId){
+        if(mFollowerList == null) return;
+
+        mFollowerList.add(userId);
+    }
+
+    public void removeFollower(String userId){
+        if(mFollowerList == null) return;
+
+        mFollowerList.remove(userId);
     }
 
     public void setFollowees(int followees){
-        mFollowees = followees;
+
     }
 
-    public int getFollowees(){
-        return mFollowees;
+    public int getFolloweesCount(){
+        if(mFolloweeList == null) return 0;
+
+        return mFolloweeList.size();
+    }
+
+    public void addFollowee(String userId){
+        if(mFolloweeList == null) return;
+
+        mFolloweeList.add(userId);
+    }
+
+    public void removeFollowee(String userId){
+        if(mFolloweeList == null) return;
+
+        mFolloweeList.remove(userId);
+    }
+
+    public int getGoodsCount(){
+        if(mGoodsList == null) return 0;
+
+        return mGoodsList.size();
+    }
+
+    public void addGoods(String goodsId){
+        if(mGoodsList == null) return;
+
+        mGoodsList.add(goodsId);
+    }
+
+    public void removeGoods(String goodsId){
+        if(mGoodsList == null) return;
+
+        mGoodsList.remove(goodsId);
     }
 
     public void setLocation(String location){
