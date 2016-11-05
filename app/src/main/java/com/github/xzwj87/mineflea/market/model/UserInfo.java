@@ -43,6 +43,8 @@ public class UserInfo {
 
     public static final String CURRENT_USER = "current_user";
 
+    public static final String USER_INTRO = "introduction";
+
     private String mId;
     private boolean mIsLogin;
     private String mNickName;
@@ -55,6 +57,7 @@ public class UserInfo {
     private int mFollowees;
     private String mLoc;
     private Date mLoginDate;
+    private String mIntro;
 
     public UserInfo(){
         mLoginDate = new Date();
@@ -165,6 +168,14 @@ public class UserInfo {
         return mLoginDate;
     }
 
+    public void setIntro(String intro){
+        mIntro = intro;
+    }
+
+    public String getIntro(){
+        return mIntro;
+    }
+
     @Override
     public String toString(){
         StringBuilder builder = new StringBuilder(4);
@@ -175,10 +186,5 @@ public class UserInfo {
                .append("Head icon url = " + mHeadIconUrl + "\n");
 
         return builder.toString();
-    }
-
-    private void setDefaultValue(){
-        mIsLogin = false;
-        mLoc = "xxxx";
     }
 }

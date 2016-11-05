@@ -48,7 +48,7 @@ public class UserGoodsActivity extends BaseActivity{
             if(mFragmentTag.equals(UserPublishedGoodsFragment.TAG)){
                 fragment = UserPublishedGoodsFragment.newInstance(mUserId);
                 if(actionBar != null){
-                    actionBar.setTitle(R.string.my_favorites);
+                    actionBar.setTitle(R.string.published_goods);
                 }
                 //init injector
                 getComponent().inject((UserPublishedGoodsFragment)fragment);
@@ -56,7 +56,7 @@ public class UserGoodsActivity extends BaseActivity{
                 fragment = UserFavoritesFragment.newInstance(mUserId);
                 getComponent().inject((UserFavoritesFragment)fragment);
                 if(actionBar != null){
-                    actionBar.setTitle(R.string.published_goods);
+                    actionBar.setTitle(R.string.my_favorites);
                 }
             }
         }

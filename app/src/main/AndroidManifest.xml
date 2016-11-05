@@ -87,6 +87,10 @@
             android:label=""
             android:theme="@style/AppTheme.NoActionBar"/>
 
+        <activity android:name=".market.ui.activity.EditPersonalInfoActivity"
+            android:label="@string/edit_personal_info"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity android:name="me.iwf.photopicker.PhotoPickerActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             />

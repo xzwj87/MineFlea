@@ -157,6 +157,13 @@ public class MineFleaRemoteSource implements RemoteSource{
     }
 
     @Override
+    public void updateCurrentUserInfo(String key, String val) {
+        AVUser user = AVUser.getCurrentUser();
+        user.put(key,val);
+        user.saveInBackground();
+    }
+
+    @Override
     public void follow(String userId) {
         AVUser current = AVUser.getCurrentUser();
         current.followInBackground(userId, new FollowCallback() {
@@ -314,6 +321,7 @@ public class MineFleaRemoteSource implements RemoteSource{
         avUser.put(UserInfo.USER_LOCATION,userInfo.getLocation());
         avUser.put(UserInfo.USER_FOLLOWERS,userInfo.getFollowers());
         avUser.put(UserInfo.USER_FOLLOWEES,userInfo.getFollowees());
+        avUser.put(UserInfo.USER_INTRO,userInfo.getIntro());
         avUser.setUsername(userInfo.getUserEmail());
         avUser.setEmail(userInfo.getUserEmail());
         avUser.setMobilePhoneNumber(userInfo.getUserTelNumber());
