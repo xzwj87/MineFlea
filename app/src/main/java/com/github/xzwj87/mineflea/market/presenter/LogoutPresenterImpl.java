@@ -18,10 +18,10 @@ public class LogoutPresenterImpl extends LogoutPresenter{
 
     private static final String TAG = LogoutPresenterImpl.class.getSimpleName();
 
-    private MineFleaRepository mRepo;
+    @Inject MineFleaRepository mRepo;
 
     @Inject
-    public LogoutPresenterImpl(@Named("dataRepository") MineFleaRepository repository){
+    public LogoutPresenterImpl(MineFleaRepository repository){
         mRepo = repository;
     }
 

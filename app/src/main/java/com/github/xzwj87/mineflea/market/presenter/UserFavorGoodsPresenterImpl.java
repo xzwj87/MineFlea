@@ -24,12 +24,12 @@ public class UserFavorGoodsPresenterImpl extends UserFavorGoodsPresenter{
 
     private static final String TAG = UserFavorGoodsPresenterImpl.class.getSimpleName();
 
-    private MineFleaRepository mRepo;
+    @Inject MineFleaRepository mRepo;
     private UserGoodsView mView;
     private List<PublishGoodsInfo> mGoodsList;
 
     @Inject
-    public UserFavorGoodsPresenterImpl(@Named("dataRepository")MineFleaRepository repository){
+    public UserFavorGoodsPresenterImpl(MineFleaRepository repository){
         mRepo = repository;
     }
 

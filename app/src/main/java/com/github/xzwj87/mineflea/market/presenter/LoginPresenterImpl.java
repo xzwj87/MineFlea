@@ -24,13 +24,13 @@ public class LoginPresenterImpl extends LoginPresenter{
 
     public static final String TAG = LoginPresenterImpl.class.getSimpleName();
 
-    private MineFleaRepository mDataRepo;
+    @Inject MineFleaRepository mDataRepo;
     private UserInfo mUserInfo;
     private LoginView mView;
     private boolean mIsEmail;
 
     @Inject
-    public LoginPresenterImpl(@Named("dataRepository")MineFleaRepository repository){
+    public LoginPresenterImpl(MineFleaRepository repository){
         mDataRepo = repository;
     }
 

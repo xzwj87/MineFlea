@@ -3,9 +3,9 @@ package com.github.xzwj87.mineflea.market.data.repository;
 import android.os.Message;
 import android.util.Log;
 
-import com.github.xzwj87.mineflea.market.data.local.MineFleaLocalSource;
+import com.github.xzwj87.mineflea.market.data.cache.FileCache;
+import com.github.xzwj87.mineflea.market.data.cache.FileCacheImpl;
 import com.github.xzwj87.mineflea.market.data.remote.MineFleaRemoteSource;
-import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.PresenterCallback;
@@ -22,19 +22,16 @@ import javax.inject.Singleton;
 public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.CloudSourceCallback{
     public static final String TAG = MineFleaRepository.class.getSimpleName();
 
-    private MineFleaLocalSource mLocalSrc;
-    @Inject
-    MineFleaRemoteSource mCloudSrc;
+    @Inject FileCacheImpl mCache;
+    @Inject MineFleaRemoteSource mCloudSrc;
     private PresenterCallback mPresenterCb;
 
     private PublishGoodsInfo mGoodsInfo;
 
     @Inject
-    public MineFleaRepository(@Named("localResource") MineFleaLocalSource localSource,
-                              @Named("remoteResource") MineFleaRemoteSource cloudSource){
-        Log.v(TAG,"Constructor()");
+    public MineFleaRepository(FileCacheImpl cache, MineFleaRemoteSource cloudSource){
         mCloudSrc = cloudSource;
-        mLocalSrc = localSource;
+        mCache = cache;
     }
 
     public void init(){
@@ -46,16 +43,23 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
         Log.v(TAG,"publishGoods(): goods = " + goods);
 
         mGoodsInfo = goods;
+
+        if(!mCache.isCached(goods.getId(), FileCache.CACHE_TYPE_GOODS)){
+            mCache.saveToFile(goods);
+        }
+
         mCloudSrc.publishGoods(goods);
     }
 
     @Override
     public void register(UserInfo userInfo) {
+        mCache.saveToFile(userInfo);
         mCloudSrc.register(userInfo);
     }
 
     @Override
     public void login(UserInfo info) {
+
         mCloudSrc.login(info);
     }
 
@@ -70,7 +74,16 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
     }
 
     @Override
-    public void uploadImage(String imgUri,boolean showProcess) {
+    public void uploadImageById(String id, String imgUri, boolean isUser, boolean showProcess) {
+        String type = FileCache.CACHE_TYPE_USER;
+        if(!isUser){
+          type = FileCache.CACHE_TYPE_GOODS;
+        }
+
+        if(!mCache.isCached(id,type)){
+            mCache.saveImgToFile(imgUri,type);
+        }
+
         mCloudSrc.uploadImg(imgUri,showProcess);
     }
 
@@ -151,7 +164,6 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
 
         if(message.obj != null) {
             mGoodsInfo.setId((String) message.obj);
-            mLocalSrc.publishGoods(mGoodsInfo);
         }
 
         if(mPresenterCb != null) {

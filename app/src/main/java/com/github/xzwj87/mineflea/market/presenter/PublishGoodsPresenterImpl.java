@@ -23,7 +23,7 @@ import javax.inject.Named;
 public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     public static final String TAG = PublishGoodsPresenterImpl.class.getSimpleName();
 
-    private MineFleaRepository mRepository;
+    @Inject MineFleaRepository mRepository;
     private PublishGoodsView mView;
     private PublishGoodsInfo mGoodsInfo;
 
@@ -33,7 +33,7 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     private List<String> mImgUris;
 
     @Inject
-    public PublishGoodsPresenterImpl(@Named("dataRepository") MineFleaRepository repository){
+    public PublishGoodsPresenterImpl(MineFleaRepository repository){
         mRepository = repository;
     }
 
@@ -60,7 +60,9 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
         mImgUris = mGoodsInfo.getImageUri();
         mUploadImgCount = 0;
         mCurrentProcess = 0;
-        mRepository.uploadImage(mImgUris.get(mUploadImgCount),true);
+        mRepository.uploadImageById(mGoodsInfo.getId(),
+                mImgUris.get(0),false,true);
+        //mRepository.uploadImage(mImgUris.get(mUploadImgCount),true);
     }
 
     @Override
@@ -86,11 +88,12 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     @Override
     public void setGoodsImgUrl(List<String> urls) {
         mGoodsInfo.setImageUri(urls);
+        mImgUris = urls;
     }
 
     @Override
     public void setPublisherName(String name) {
-        mGoodsInfo.setPublisherId(name);
+        mGoodsInfo.setUserId(name);
     }
 
     @Override
@@ -122,11 +125,13 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
 
     @Override
     public void onPause() {
+
     }
 
     @Override
     public void onDestroy() {
         mGoodsInfo = null;
+        mImgUris = null;
     }
 
     @Override
@@ -141,7 +146,9 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     @Override
     public void updateUploadProcess(int count) {
         if((count == 100) && (++mUploadImgCount < sImgNumber)){
-            mRepository.uploadImage(mImgUris.get(mUploadImgCount),true);
+            mRepository.uploadImageById(mGoodsInfo.getId(),
+                    mImgUris.get(mUploadImgCount),false,true);
+            //mRepository.uploadImage(mImgUris.get(mUploadImgCount),true);
         }else if(mUploadImgCount == sImgNumber){
             mView.onPublishComplete(true);
             mUploadImgCount = 0;

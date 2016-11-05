@@ -9,10 +9,11 @@ import android.os.Message;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.SmallTest;
 
-import com.github.xzwj87.mineflea.market.data.local.MineFleaLocalSource;
+import com.github.xzwj87.mineflea.market.data.cache.CacheManager;
+import com.github.xzwj87.mineflea.market.data.cache.FileCacheImpl;
 import com.github.xzwj87.mineflea.market.data.remote.MineFleaRemoteSource;
+import com.github.xzwj87.mineflea.market.executor.JobExecutor;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
-import com.github.xzwj87.mineflea.market.net.NetDataApiImpl;
 import com.github.xzwj87.mineflea.market.presenter.PresenterCallback;
 
 import junit.framework.TestCase;
@@ -39,7 +40,8 @@ public class MineFleaRepositoryTest extends TestCase{
 
     @Before
     public void setUp(){
-        mRepo = new MineFleaRepository(MineFleaLocalSource.getInstance(),new MineFleaRemoteSource(new NetDataApiImpl()));
+        mRepo = new MineFleaRepository(new FileCacheImpl(new CacheManager(),new JobExecutor()),
+                new MineFleaRemoteSource());
         mRepo.init();
 
         mRepo.setPresenterCallback(new RemoteSrcCallback());
@@ -52,7 +54,6 @@ public class MineFleaRepositoryTest extends TestCase{
         UserInfo user = new UserInfo("妮子","qaz123@163.com","qaz123@163.com",mIconUrl);
         user.setUserTelNumber("18923233233");
         user.setLoginDate(new Date());
-        mRepo.uploadImage(mIconUrl,false);
         mRepo.register(user);
     }
 

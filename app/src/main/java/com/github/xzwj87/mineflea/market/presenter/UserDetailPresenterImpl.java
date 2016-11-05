@@ -26,14 +26,14 @@ import javax.inject.Named;
 public class UserDetailPresenterImpl extends UserDetailPresenter{
     private static final String TAG = UserDetailPresenterImpl.class.getSimpleName();
 
-    private MineFleaRepository mDataRepo;
+    @Inject MineFleaRepository mDataRepo;
     private UserDetailView mView;
     private List<PublishGoodsInfo> mGoodsList;
     private List<AVUser> mFolloweeList;
     private UserInfo mUserInfo;
 
     @Inject
-    public UserDetailPresenterImpl(@Named("dataRepository")MineFleaRepository repository){
+    public UserDetailPresenterImpl(MineFleaRepository repository){
         mDataRepo = repository;
     }
 

@@ -23,12 +23,12 @@ import javax.inject.Named;
 public class RegisterPresenterImpl extends RegisterPresenter{
     public static final String TAG = RegisterPresenterImpl.class.getSimpleName();
 
-    private MineFleaRepository mRepository;
+    @Inject MineFleaRepository mRepository;
     private RegisterView mView;
     private UserInfo mUserInfo;
 
     @Inject
-    public RegisterPresenterImpl(@Named("dataRepository") MineFleaRepository repository){
+    public RegisterPresenterImpl(MineFleaRepository repository){
         mRepository = repository;
     }
 
@@ -41,10 +41,12 @@ public class RegisterPresenterImpl extends RegisterPresenter{
     public void register() {
         Log.v(TAG,"register()");
         if(!TextUtils.isEmpty(mUserInfo.getHeadIconUrl())) {
-            mRepository.uploadImage(mUserInfo.getHeadIconUrl(), false);
-        }else{
-            mRepository.register(mUserInfo);
+            mRepository.uploadImageById(mUserInfo.getUserId(),
+                    mUserInfo.getHeadIconUrl(),true,false);
+            //mRepository.uploadImage(mUserInfo.getHeadIconUrl(), false);
         }
+
+        mRepository.register(mUserInfo);
     }
 
     @Override
@@ -56,7 +58,7 @@ public class RegisterPresenterImpl extends RegisterPresenter{
             mUserInfo.setHeadIconUrl("");
         }
 
-        mRepository.register(mUserInfo);
+        mRepository.updateCurrentUserInfo(UserInfo.USER_HEAD_ICON,mUserInfo.getHeadIconUrl());
     }
 
     @Override

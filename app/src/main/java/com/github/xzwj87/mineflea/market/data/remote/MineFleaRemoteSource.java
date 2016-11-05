@@ -21,7 +21,6 @@ import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.AvCloudConstants;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
-import com.github.xzwj87.mineflea.market.net.NetDataApiImpl;
 import com.github.xzwj87.mineflea.utils.NetConnectionUtils;
 import com.github.xzwj87.mineflea.utils.PublishGoodsUtils;
 import com.github.xzwj87.mineflea.utils.UserInfoUtils;
@@ -32,35 +31,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
+import javax.inject.Singleton;
 
 /**
  * Created by JasonWang on 2016/9/20.
  */
 
-@PerActivity
+@Singleton
 public class MineFleaRemoteSource implements RemoteSource{
     public static final String TAG = MineFleaRemoteSource.class.getSimpleName();
 
-    private NetDataApiImpl mNetApi;
     private static MineFleaRemoteSource sInstance;
     private CloudSourceCallback mCloudCallback;
 
     @Inject
-    public MineFleaRemoteSource(@Named("netApi") NetDataApiImpl netApi){
-        mNetApi = netApi;
+    public MineFleaRemoteSource(){
     }
 
     public void setCloudCallback(CloudSourceCallback callback){
         mCloudCallback = callback;
-    }
-
-    public static MineFleaRemoteSource getInstance(){
-        if(sInstance == null){
-            sInstance = new MineFleaRemoteSource(new NetDataApiImpl());
-        }
-
-        return sInstance;
     }
 
     public interface CloudSourceCallback{
@@ -75,7 +64,6 @@ public class MineFleaRemoteSource implements RemoteSource{
         void onGetUserFollowerDone(Message message);
     }
 
-    //Todo: we may want to cache info
     @Override
     public void getUserInfoById(String id) {
         UserInfo user = getCurrentUser();
@@ -84,7 +72,7 @@ public class MineFleaRemoteSource implements RemoteSource{
             msg.obj = user;
             msg.what = ResponseCode.RESP_GET_USER_INFO_SUCCESS;
             mCloudCallback.onGetUserInfoDone(msg);
-        }else {
+        }else{
             AVQuery<AVUser> query = new AVQuery<>(AvCloudConstants.AV_OBJ_USER);
 
             query.getInBackground(id, new GetCallback<AVUser>() {
@@ -278,7 +266,7 @@ public class MineFleaRemoteSource implements RemoteSource{
 
             final AVObject avObject = new AVObject(AvCloudConstants.AV_OBJ_GOODS);
             avObject.put(PublishGoodsInfo.GOODS_NAME,goods.getName());
-            avObject.put(PublishGoodsInfo.GOODS_PUBLISHER,goods.getPublisherId());
+            avObject.put(PublishGoodsInfo.GOODS_PUBLISHER,goods.getUserId());
             avObject.put(PublishGoodsInfo.GOODS_PRICE,goods.getPrice());
             avObject.put(PublishGoodsInfo.GOODS_RELEASE_DATE,goods.getReleasedDate());
             avObject.put(PublishGoodsInfo.GOODS_LOC,goods.getLocation());
@@ -318,9 +306,10 @@ public class MineFleaRemoteSource implements RemoteSource{
         avUser.put(UserInfo.USER_NICK_NAME,userInfo.getNickName());
         avUser.put(UserInfo.USER_HEAD_ICON,userInfo.getHeadIconUrl());
         avUser.put(UserInfo.USER_LOCATION,userInfo.getLocation());
-        avUser.put(UserInfo.USER_FOLLOWERS,userInfo.getFollowersCount());
-        avUser.put(UserInfo.USER_FOLLOWEES,userInfo.getFolloweesCount());
+        avUser.put(UserInfo.USER_FOLLOWERS,userInfo.getFollowerList());
+        avUser.put(UserInfo.USER_FOLLOWEES,userInfo.getFolloweeList());
         avUser.put(UserInfo.USER_INTRO,userInfo.getIntro());
+        avUser.put(UserInfo.PUBLISHED_GOODS,userInfo.getGoodsList());
         avUser.setUsername(userInfo.getUserEmail());
         avUser.setEmail(userInfo.getUserEmail());
         avUser.setMobilePhoneNumber(userInfo.getUserTelNumber());

@@ -21,12 +21,12 @@ import javax.inject.Named;
 @PerActivity
 public class UserGoodsPresenterImpl extends UserGoodsPresenter {
 
-    private MineFleaRepository mRepo;
+    @Inject MineFleaRepository mRepo;
     private UserGoodsView mView;
     private List<PublishGoodsInfo> mGoodsList;
 
     @Inject
-    public UserGoodsPresenterImpl(@Named("dataRepository")MineFleaRepository repository){
+    public UserGoodsPresenterImpl(MineFleaRepository repository){
         mRepo = repository;
     }
 

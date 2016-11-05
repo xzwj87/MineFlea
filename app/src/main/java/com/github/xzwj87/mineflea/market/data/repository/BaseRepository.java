@@ -40,9 +40,9 @@ public interface BaseRepository {
     void setPresenterCallback(PresenterCallback callback);
 
     /*
-     * upload image
+     * upload image by user id or goods id
      */
-    void uploadImage(String imgUri,boolean showProcess);
+    void uploadImageById(String id,String imgUri,boolean isUser,boolean showProcess);
 
     /*
      * get current user id

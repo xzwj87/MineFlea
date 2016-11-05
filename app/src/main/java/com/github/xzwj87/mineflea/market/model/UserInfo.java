@@ -45,6 +45,8 @@ public class UserInfo {
 
     public static final String USER_INTRO = "introduction";
 
+    public static final String PUBLISHED_GOODS = "published_goods";
+
     private String mId;
     private boolean mIsLogin;
     private String mNickName;
@@ -140,14 +142,18 @@ public class UserInfo {
         return mHeadIconUrl;
     }
 
-    public void setFollowers(int followers){
-
-    }
-
     public int getFollowersCount(){
         if(mFollowerList == null) return 0;
 
         return mFollowerList.size();
+    }
+
+    public void setFollowerList(List<String> follower){
+        mFollowerList = follower;
+    }
+
+    public List<String> getFollowerList(){
+        return mFollowerList;
     }
 
     public void addFollower(String userId){
@@ -162,8 +168,12 @@ public class UserInfo {
         mFollowerList.remove(userId);
     }
 
-    public void setFollowees(int followees){
+    public void setFolloweeList(List<String> followee){
+        mFolloweeList = followee;
+    }
 
+    public List<String> getFolloweeList(){
+        return mFolloweeList;
     }
 
     public int getFolloweesCount(){
@@ -182,6 +192,14 @@ public class UserInfo {
         if(mFolloweeList == null) return;
 
         mFolloweeList.remove(userId);
+    }
+
+    public void setGoodsList(List<String> goodsList){
+        mGoodsList = goodsList;
+    }
+
+    public List<String> getGoodsList(){
+        return mGoodsList;
     }
 
     public int getGoodsCount(){

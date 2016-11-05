@@ -24,11 +24,11 @@ public class UserFollowerPresenterImpl extends UserFollowerPresenter {
     private static final String TAG = UserFollowerPresenterImpl.class.getSimpleName();
 
     private UserFollowView mView;
-    private MineFleaRepository mRepo;
+    @Inject MineFleaRepository mRepo;
     private List<UserFollowInfo> mUserFollowList;
 
     @Inject
-    public UserFollowerPresenterImpl(@Named("dataRepository")MineFleaRepository repository){
+    public UserFollowerPresenterImpl(MineFleaRepository repository){
         mRepo = repository;
     }
 

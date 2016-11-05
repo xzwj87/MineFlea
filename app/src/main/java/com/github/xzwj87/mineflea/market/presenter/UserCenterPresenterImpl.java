@@ -17,12 +17,12 @@ import javax.inject.Named;
 public class UserCenterPresenterImpl extends UserCenterPresenter {
     public static final String TAG = UserCenterPresenterImpl.class.getSimpleName();
 
-    private MineFleaRepository mRepository;
+    @Inject MineFleaRepository mRepository;
     private UserInfo mUserInfo;
     private UserCenterView mView;
 
     @Inject
-    public UserCenterPresenterImpl(@Named("dataRepository") MineFleaRepository repository){
+    public UserCenterPresenterImpl(MineFleaRepository repository){
         mRepository = repository;
     }
 

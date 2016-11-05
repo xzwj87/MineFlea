@@ -53,7 +53,7 @@ public class PublishGoodsInfo {
     public static AVObject toAvObject(PublishGoodsInfo info){
         AVObject avObject = new AVObject(info.getId());
         avObject.put(GOODS_NAME,info.getName());
-        avObject.put(GOODS_PUBLISHER,info.getPublisherId());
+        avObject.put(GOODS_PUBLISHER,info.getUserId());
         avObject.put(GOODS_PRICE,info.getPrice());
         avObject.put(GOODS_LIKES,info.getStars());
         avObject.put(GOODS_IMAGES,info.getImageUri());
@@ -66,7 +66,7 @@ public class PublishGoodsInfo {
         PublishGoodsInfo info = new PublishGoodsInfo();
         info.setId(object.getClassName());
         info.setName((String)object.get(GOODS_NAME));
-        info.setPublisherId((String)object.get(GOODS_PUBLISHER));
+        info.setUserId((String)object.get(GOODS_PUBLISHER));
         info.setPrice(object.getDouble(GOODS_PRICE));
         info.setStars(object.getInt(GOODS_LIKES));
         info.setImageUri(object.getList(GOODS_IMAGES));
@@ -91,11 +91,11 @@ public class PublishGoodsInfo {
     }
 
 
-    public String getPublisherId(){
+    public String getUserId(){
         return mUserId;
     }
 
-    public void setPublisherId(String publisher){
+    public void setUserId(String publisher){
         mUserId = publisher;
     }
 

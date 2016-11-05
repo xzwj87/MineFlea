@@ -19,11 +19,11 @@ import javax.inject.Named;
 public class EditPersonalInfoPresenterImpl extends EditPersonalInfoPresenter{
 
     private EditPersonalInfoView mView;
-    private MineFleaRepository mRepo;
+    @Inject MineFleaRepository mRepo;
     private UserInfo mCurrent;
 
     @Inject
-    public EditPersonalInfoPresenterImpl(@Named("dataRepository")MineFleaRepository repository){
+    public EditPersonalInfoPresenterImpl(MineFleaRepository repository){
         mRepo = repository;
     }
 
@@ -61,7 +61,8 @@ public class EditPersonalInfoPresenterImpl extends EditPersonalInfoPresenter{
     @Override
     public void setHeadIcon(String iconUrl) {
         mCurrent.setHeadIconUrl(iconUrl);
-        mRepo.uploadImage(iconUrl,false);
+        mRepo.uploadImageById(mCurrent.getUserId(),iconUrl,true,false);
+        //mRepo.uploadImage(iconUrl,false);
         mView.updateHeadIcon(iconUrl);
     }
 
