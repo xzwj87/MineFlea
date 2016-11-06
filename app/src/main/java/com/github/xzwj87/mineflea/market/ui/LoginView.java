@@ -8,11 +8,18 @@ import android.os.Message;
 
 public interface LoginView extends BaseView{
     void onLoginSuccess();
+
     void onLoginFail();
+
     void showAccountInvalidMsg();
+
     void showPwdInvalidMsg();
 
+    void showProgress(boolean show);
+
     void updateUserHeadIcon(String url);
+
     void updateUserNickName(String nickName);
+
     void updateUserEmail(String email);
 }

@@ -1,13 +1,16 @@
 package com.github.xzwj87.mineflea.market.ui.fragment;
 
 import android.app.ProgressDialog;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +19,8 @@ import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.UserDetailPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.UserDetailView;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 /**
  * Created by jason on 10/22/16.
@@ -89,41 +94,35 @@ public class UserDetailFragment extends BaseFragment implements UserDetailView{
     }
 
     @Override
-    public void onGetUserInfoDone(boolean success) {
-
-    }
-
-    public void onGetUserInfoComplete(UserInfo userInfo) {
-        Log.v(TAG,"onGetUserInfoDone(): user info " + userInfo);
-
-        mToolbarLayout.setTitle(userInfo.getNickName());
-        mTvEmail.setText(userInfo.getUserEmail());
-        mTvTel.setText(userInfo.getUserTelNumber());
-        mTvFollowers.setText(String.valueOf(userInfo.getFollowersCount()));
-        mTvGoods.setText(R.string.check_user_goods_list);
-
-        Log.v(TAG,"email view = " + mTvEmail.getText());
-
-        Picasso.with(getActivity())
-               .load(userInfo.getHeadIconUrl())
-               .resize(1024,1024)
-               .centerCrop()
-               .into(mIvHeadIcon);
+    public void showGetInfoFailMsg() {
+        showToast(getString(R.string.error_get_user_info));
     }
 
     @Override
     public void renderHeadIcon(String iconUrl) {
-
+/*        if(URLUtil.isNetworkUrl(iconUrl)){
+            Picasso.with(getActivity())
+                    .load(iconUrl)
+                    .resize(1024,1024)
+                    .centerCrop()
+                    .into(mIvHeadIcon);
+        }else{
+            Picasso.with(getActivity())
+                    .load(Uri.fromFile(new File(iconUrl)))
+                    .resize(1024,1024)
+                    .centerCrop()
+                    .into(mIvHeadIcon);
+        }*/
     }
 
     @Override
     public void renderNickName(String name) {
-
+        //mToolbarLayout.setTitle(name);
     }
 
     @Override
     public void renderEmail(String email) {
-
+        //mTvEmail.setText(email);
     }
 
     @Override

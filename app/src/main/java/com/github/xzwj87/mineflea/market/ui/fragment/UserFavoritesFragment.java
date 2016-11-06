@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.xzwj87.mineflea.R;
+import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.model.UserGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.UserFavorGoodsPresenterImpl;
@@ -95,7 +96,7 @@ public class UserFavoritesFragment  extends BaseFragment
     @Override
     public void showBlankPage() {
         mSrLayout.removeAllViewsInLayout();
-        View root = LayoutInflater.from(getContext())
+        View root = LayoutInflater.from(AppGlobals.getAppContext())
                     .inflate(R.layout.fragment_blank_hint,mFragContainer,false);
         mSrLayout.addView(root);
     }

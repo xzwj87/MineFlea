@@ -1,6 +1,7 @@
 package com.github.xzwj87.mineflea.market.ui.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
@@ -23,6 +24,8 @@ import com.github.xzwj87.mineflea.market.presenter.UserDetailPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.UserDetailView;
 import com.github.xzwj87.mineflea.market.ui.adapter.UserDetailPageAdapter;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 import javax.inject.Inject;
 
@@ -115,12 +118,9 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
 
     }
 
-
     @Override
-    public void onGetUserInfoDone(boolean success) {
-        if(!success){
-            showToast(getString(R.string.error_get_user_info));
-        }
+    public void showGetInfoFailMsg() {
+        showToast(getString(R.string.error_get_user_info));
     }
 
     @Override
@@ -128,6 +128,12 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
         if(!TextUtils.isEmpty(iconUrl)) {
             Picasso.with(this)
                     .load(iconUrl)
+                    .resize(1024, 1024)
+                    .centerCrop()
+                    .into(mIvHeadIcon);
+        }else{
+            Picasso.with(this)
+                    .load(Uri.fromFile(new File(iconUrl)))
                     .resize(1024, 1024)
                     .centerCrop()
                     .into(mIvHeadIcon);

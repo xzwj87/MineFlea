@@ -63,6 +63,8 @@ public class PublishGoodsInfo {
 
     @SuppressWarnings("unchecked")
     public static PublishGoodsInfo fromAvObject(AVObject object){
+        if(object == null) return null;
+
         PublishGoodsInfo info = new PublishGoodsInfo();
         info.setId(object.getClassName());
         info.setName((String)object.get(GOODS_NAME));

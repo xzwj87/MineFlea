@@ -3,6 +3,8 @@ package com.github.xzwj87.mineflea.market.data.cache;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.IntDef;
+import android.text.TextUtils;
+import android.webkit.URLUtil;
 
 import com.alibaba.fastjson.JSON;
 import com.avos.avoscloud.AVUser;
@@ -14,6 +16,14 @@ import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.tencent.qc.stat.common.Env;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.channels.FileChannel;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -29,11 +39,9 @@ public class FileCacheImpl implements FileCache{
     private static final long MAX_EXPIRATION_TIME = 12*60*60*1000;
     private static final int MAX_CACHE_SIZE = 50; //50MB
 
-    private static String FILE_DIR_PARENT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/MinFlea";
+    private static String FILE_DIR_PARENT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/MinFlea/cache";
     // for saving current user info in case of being removed
     private static final String DIR_USER_DATA = "userdata";
-    // for saving head icon etc
-    private static final String DIR_IMAGE = "image";
 
     private static final String USER_CACHE_NAME = "_user";
     private static final String GOODS_CACHE_NAME = "_goods";
@@ -49,15 +57,45 @@ public class FileCacheImpl implements FileCache{
         mExecutor = executor;
 
         if(isExternalStorageWritable()) {
-            mCacheDir = AppGlobals.getAppContext().getExternalCacheDir();
+            mCacheDir = new File(FILE_DIR_PARENT);
         }else{
-            mCacheDir = AppGlobals.getAppContext().getCacheDir();
             FILE_DIR_PARENT = AppGlobals.getAppContext().getFilesDir().getPath();
+            mCacheDir = new File(FILE_DIR_PARENT);
+        }
+
+        if(!mCacheDir.exists()){
+            mCacheDir.mkdirs();
+        }
+
+        // make dirs for cache
+        File user = new File(getUserCacheDir());
+        File goods = new File(getGoodsCacheDir());
+        File userImg = new File((getImgCacheDir() + File.separator + CACHE_TYPE_USER));
+        File goodsImg = new File((getImgCacheDir() + File.separator + CACHE_TYPE_GOODS));
+
+        if(!user.exists()){
+            user.mkdir();
+        }
+
+        if(!goods.exists()){
+            goods.mkdir();
+        }
+
+        if(!userImg.exists()){
+            userImg.mkdirs();
+        }
+
+        if(!goodsImg.exists()){
+            goodsImg.mkdirs();
         }
     }
 
     @Override
     public boolean isCached(String id, @CacheType String type) {
+        if(TextUtils.isEmpty(id)){
+            return false;
+        }
+
         File file;
         if(type.equals(CACHE_TYPE_USER) && isCurrentUser(id)){
             file = buildUserDataFile(id);
@@ -69,11 +107,30 @@ public class FileCacheImpl implements FileCache{
     }
 
     @Override
+    public boolean isImageCached(String imgName, @CacheType String type) {
+        if(TextUtils.isEmpty(imgName)){
+            return false;
+        }
+
+        File file = buildImageFile(imgName,type);
+
+        return mCacheMgr.exist(file);
+    }
+
+    @Override
     public void saveToFile(UserInfo user) {
         String json = JsonSerializer.toJson(user);
         File file = buildUserFile(user.getUserId());
 
-        executeAsync(new CacheWriter(mCacheMgr,file,json));
+        executeAsync(new CacheWriter(mCacheMgr,file,json,false));
+    }
+
+    @Override
+    public void updateFile(UserInfo info) {
+        String json = JsonSerializer.toJson(info);
+        File file = buildUserFile(info.getUserId());
+
+        executeAsync(new CacheWriter(mCacheMgr,file,json,true));
     }
 
     @Override
@@ -81,17 +138,29 @@ public class FileCacheImpl implements FileCache{
         String json = JsonSerializer.toJson(goods);
         File file = buildGoodsFile(goods.getId());
 
-        executeAsync(new CacheWriter(mCacheMgr,file,json));
+        executeAsync(new CacheWriter(mCacheMgr,file,json,false));
     }
 
     @Override
-    public void saveImgToFile(String imgUri,@CacheType String type) {
-        File in = new File(imgUri);
-        if(in.exists()) {
+    public String saveImgToFile(String imgUri,@CacheType String type) {
 
-            File out = buildImageFile(in.getName(),type);
+        if(!URLUtil.isNetworkUrl(imgUri)) {
+            File in = new File(imgUri);
+            File out = buildImageFile(in.getName(), type);
 
-            mCacheMgr.writeImgToFile(in,out);
+            if (in.exists()) {
+                mCacheMgr.writeImgToFile(in, out);
+            }
+
+            return out.getPath();
+        //ok,from network
+        }else{
+            String imgName = URLUtil.guessFileName(imgUri,null,null);
+            File out = buildImageFile(imgName,type);
+
+            executeAsync(new ImageDownloader(out,imgUri));
+
+            return out.getPath();
         }
     }
 
@@ -112,7 +181,18 @@ public class FileCacheImpl implements FileCache{
     }
 
     @Override
+    public String getImageCachePath(String name, @CacheType String type) {
+        File file = buildImageFile(name,type);
+
+        return file.getPath();
+    }
+
+    @Override
     public boolean isExpired(String id, @CacheType String type) {
+        if(TextUtils.isEmpty(id)){
+            return true;
+        }
+
         File file;
         if (type.equals(CACHE_TYPE_USER)) {
             file = buildUserFile(id);
@@ -177,34 +257,30 @@ public class FileCacheImpl implements FileCache{
 
     private File buildUserFile(String id){
         String str = getUserCacheDir();
-        str += (File.separator + id);
 
-        return new File(str);
+        return new File(str,id);
     }
 
     private File buildGoodsFile(String id){
         String str = getGoodsCacheDir();
-        str += (File.separator + id);
 
-        return new File(str);
+        return new File(new File(str),id);
     }
 
     private File buildUserDataFile(String id){
         String str = FILE_DIR_PARENT + File.separator +
-                DIR_USER_DATA + File.separator + id;
+                DIR_USER_DATA;
 
-        return new File(str);
+        return new File(new File(str),id);
     }
 
     /*
      * for images, we keep them on external storage
      */
     private File buildImageFile(String imgName,@CacheType String type){
-        String str = FILE_DIR_PARENT + File.separator +
-                DIR_IMAGE + File.separator +
-                type + File.separator + imgName;
+        String str = getImgCacheDir() + File.separator + type;
 
-        return new File(str);
+        return new File(new File(str),imgName);
     }
 
     private boolean isCurrentUser(String id){
@@ -227,20 +303,28 @@ public class FileCacheImpl implements FileCache{
                 File.separator + GOODS_CACHE_NAME;
     }
 
+    private String getImgCacheDir(){
+        return mCacheDir.getPath() +
+                File.separator + IMAGE_CACHE_NAME;
+    }
+
     private static class CacheWriter implements Runnable{
         private final CacheManager cacheMgr;
         private final File fileToWrite;
         private final String fileContent;
+        private boolean isUpdate = false;
 
-        public CacheWriter(CacheManager cacheManager,File writer,String content){
+        public CacheWriter(CacheManager cacheManager,File writer,String content,
+                           boolean update){
             cacheMgr = cacheManager;
             fileToWrite = writer;
             fileContent = content;
+            isUpdate = update;
         }
 
         @Override
         public void run() {
-            cacheMgr.writeToFile(fileToWrite,fileContent);
+            cacheMgr.writeToFile(fileToWrite,fileContent,isUpdate);
         }
     }
 
@@ -257,6 +341,52 @@ public class FileCacheImpl implements FileCache{
         @Override
         public void run() {
             cacheMgr.cleanDir(cleanDir);
+        }
+    }
+
+    protected static class ImageDownloader implements Runnable{
+        private File file;
+        private String url;
+
+        public ImageDownloader(File dest, String imgUrl){
+            this.file = dest;
+            this.url = imgUrl;
+        }
+
+        @Override
+        public void run() {
+            downloadImg(file,url);
+        }
+
+        private void downloadImg(File dest, String imgUrl){
+            if(dest == null || imgUrl == null) return;
+
+            try {
+                URL url = new URL(imgUrl);
+
+                HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
+                urlConnection.setDoOutput(true);
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                FileOutputStream fos = new FileOutputStream(dest);
+                InputStream fis =  urlConnection.getInputStream();
+
+                int bufferLen = 0;
+                byte[] buffer= new byte[1024];
+
+                while((bufferLen = fis.read(buffer)) > 0){
+                    fos.write(buffer,0,bufferLen);
+                }
+
+                fos.close();
+                fis.close();
+
+            }catch (MalformedURLException e){
+                e.printStackTrace();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
         }
     }
 

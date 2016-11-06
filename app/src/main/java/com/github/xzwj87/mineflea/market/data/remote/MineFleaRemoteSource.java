@@ -17,7 +17,6 @@ import com.avos.avoscloud.LogInCallback;
 import com.avos.avoscloud.ProgressCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.github.xzwj87.mineflea.market.data.ResponseCode;
-import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.AvCloudConstants;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
@@ -59,6 +58,7 @@ public class MineFleaRemoteSource implements RemoteSource{
         void loginComplete(Message message);
         void onImgUploadComplete(Message msg);
         void onGetUserInfoDone(Message msg);
+        void onGetGoodsInfoDone(Message msg);
         void onGetGoodsListDone(Message msg);
         void onGetUserFolloweeDone(Message message);
         void onGetUserFollowerDone(Message message);
@@ -119,6 +119,30 @@ public class MineFleaRemoteSource implements RemoteSource{
                 }
 
                 mCloudCallback.onGetGoodsListDone(msg);
+            }
+        });
+    }
+
+    @Override
+    public void getGoodsById(String id) {
+        Log.v(TAG,"getGoodsById()");
+        AVQuery query = new AVQuery(AvCloudConstants.AV_OBJ_GOODS);
+        query.whereEqualTo(AvCloudConstants.AV_OBJ_ID,id);
+
+        query.getInBackground(id, new GetCallback() {
+            @Override
+            public void done(AVObject object, AVException e) {
+                PublishGoodsInfo goodsInfo = PublishGoodsInfo.fromAvObject(object);
+
+                final Message message = new Message();
+                message.obj = goodsInfo;
+                if(goodsInfo != null){
+                    message.what = ResponseCode.RESP_GET_GOODS_SUCCESS;
+                }else{
+                    message.what = ResponseCode.RESP_GET_GOODS_ERROR;
+                }
+
+                mCloudCallback.onGetUserInfoDone(message);
             }
         });
     }
@@ -189,7 +213,7 @@ public class MineFleaRemoteSource implements RemoteSource{
 
         AVUser user = AVUser.getCurrentUser();
         AVQuery<AVUser> query = AVUser.followeeQuery(user.getObjectId(),AVUser.class);
-        query.whereEqualTo(AvCloudConstants.AV_USER_ID,userId);
+        query.whereEqualTo(AvCloudConstants.AV_OBJ_ID,userId);
 
         query.findInBackground(new FindCallback<AVUser>() {
             @Override

@@ -29,13 +29,21 @@ public class CacheManager {
 
 
     public boolean exist(File file){
+        if(file == null) return false;
+
         return file.exists();
     }
 
-    public void writeToFile(File file, String content){
+    public void writeToFile(File file, String content,boolean isUpdate){
+        if(file == null || content == null) return;
+
+        if(isUpdate){
+            updateFileContent(file,content);
+            return;
+        }
+
         if(!file.exists()){
-            long current = System.currentTimeMillis();
-            sCacheTime.put(file,current);
+            setCachedTime(file);
             try {
                 FileWriter writer = new FileWriter(file);
                 writer.write(content);
@@ -43,6 +51,21 @@ public class CacheManager {
             }catch (IOException e){
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void updateFileContent(File file,String content){
+        if(file == null || content == null) return;
+
+        setCachedTime(file);
+
+        try {
+            FileWriter writer = new FileWriter(file,false);
+            writer.write(content);
+
+            writer.close();
+        }catch (IOException e){
+            e.printStackTrace();
         }
     }
 
@@ -68,6 +91,8 @@ public class CacheManager {
     }
 
     public String readFromFile(File file){
+        if(file == null) return "";
+
         StringBuilder contentBuilder = new StringBuilder();
 
         if(file.exists()){
@@ -92,6 +117,8 @@ public class CacheManager {
     }
 
     public boolean cleanDir(File dir){
+        if(dir == null) return true;
+
         boolean success = false;
 
         if(dir.exists()){
@@ -104,10 +131,14 @@ public class CacheManager {
     }
 
     public long getCachedTime(File file){
-        return sCacheTime.get(file);
+        if(sCacheTime.get(file) != null){
+            return sCacheTime.get(file);
+        }
+
+        return System.currentTimeMillis();
     }
 
     public void setCachedTime(File file){
-        sCacheTime.put(file,System.currentTimeMillis());
+        sCacheTime.put(file,Long.valueOf(System.currentTimeMillis()));
     }
 }

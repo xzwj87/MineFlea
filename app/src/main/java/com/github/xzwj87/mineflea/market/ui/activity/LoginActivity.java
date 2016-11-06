@@ -197,7 +197,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
+    public void showProgress(final boolean show) {
 
         if(show) {
             mProgress = ProgressDialog.show(this, "", getString(R.string.hint_logining));

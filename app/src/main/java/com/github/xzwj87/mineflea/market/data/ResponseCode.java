@@ -36,6 +36,10 @@ public class ResponseCode {
 
     public static final int RESP_GET_GOODS_LIST_ERROR = 0x201;
 
+    public static final int RESP_GET_GOODS_SUCCESS = 0x202;
+
+    public static final int RESP_GET_GOODS_ERROR = 0x203;
+
     public static final int RESP_QUERY_FAVORITE_GOODS_LIST_SUCCESS = 0x202;
 
     public static final int RESP_QUERY_FAVORITE_GOODS_LIST_ERROR = 0x203;

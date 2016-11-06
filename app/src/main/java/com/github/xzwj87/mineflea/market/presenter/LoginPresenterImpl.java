@@ -52,6 +52,8 @@ public class LoginPresenterImpl extends LoginPresenter{
 
         if(UserInfoUtils.isEmailValid(account)){
             mIsEmail = true;
+        }else{
+            mView.showAccountInvalidMsg();
         }
     }
 

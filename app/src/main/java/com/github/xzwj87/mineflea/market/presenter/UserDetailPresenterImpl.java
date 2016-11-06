@@ -119,14 +119,13 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
     public void onGetUserInfoComplete(Message message) {
         Log.v(TAG,"onGetUserInfoDone(): user info = " + message.obj);
         if(message.obj != null){
-            mView.onGetUserInfoDone(true);
             mUserInfo = (UserInfo)message.obj;
 
             mDataRepo.queryUserFolloweeListByUserId(mUserInfo.getUserId());
 
             renderView();
         }else{
-            mView.onGetUserInfoDone(false);
+            mView.showGetInfoFailMsg();
             mView.finishView();
         }
     }

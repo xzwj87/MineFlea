@@ -1,5 +1,7 @@
 package com.github.xzwj87.mineflea.market.presenter;
 
+import android.text.TextUtils;
+
 import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
@@ -31,9 +33,7 @@ public class UserCenterPresenterImpl extends UserCenterPresenter {
         mUserInfo = mRepository.getCurrentUser();
 
         if(mUserInfo != null){
-            mView.updateUserNickName(mUserInfo.getNickName());
-            mView.updateUserEmail(mUserInfo.getUserEmail());
-            mView.updateHeadIcon(mUserInfo.getHeadIconUrl());
+            renderView();
         }
     }
 
@@ -64,5 +64,19 @@ public class UserCenterPresenterImpl extends UserCenterPresenter {
     @Override
     public void setView(BaseView view) {
         mView = (UserCenterView)view;
+    }
+
+    private void renderView(){
+        if(!TextUtils.isEmpty(mUserInfo.getNickName())){
+            mView.updateUserNickName(mUserInfo.getNickName());
+        }
+
+        if (!TextUtils.isEmpty(mUserInfo.getUserEmail())) {
+            mView.updateUserEmail(mUserInfo.getUserEmail());
+        }
+
+        if(!TextUtils.isEmpty(mUserInfo.getHeadIconUrl())) {
+            mView.updateHeadIcon(mUserInfo.getHeadIconUrl());
+        }
     }
 }

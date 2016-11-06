@@ -33,9 +33,19 @@ public interface FileCache {
     boolean isCached(String id,@CacheType String type);
 
     /*
+     * whether an image is cached
+     */
+    boolean isImageCached(String imgName,@CacheType String type);
+
+    /*
      * save a userInfo to cache
      */
     void saveToFile(UserInfo user);
+
+    /*
+     * update user cache
+     */
+    void updateFile(UserInfo info);
 
     /*
      * save a goods info to cache
@@ -44,8 +54,9 @@ public interface FileCache {
 
     /*
      * save image file to user data
+     * @return cache dir of the image
      */
-    void saveImgToFile(String imgUri,@CacheType String type);
+    String saveImgToFile(String imgUri,@CacheType String type);
 
     /*
      * get user cache or goods cache data by id
@@ -56,6 +67,11 @@ public interface FileCache {
      * get goods cache data by id
      */
     PublishGoodsInfo getGoodsCache(String id);
+
+    /*
+     * get image cache dir
+     */
+    String getImageCachePath(String name,@CacheType String type);
 
     /*
      * is expired for time duration too long

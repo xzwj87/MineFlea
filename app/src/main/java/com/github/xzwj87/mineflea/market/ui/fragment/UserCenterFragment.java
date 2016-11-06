@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amap.api.maps.model.Text;
@@ -57,7 +58,6 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
     @BindView(R.id.tv_published_goods) TextView mTvPublishedGoods;
     @BindView(R.id.tv_favorite_goods) TextView mTvFavorGoods;
 
-    private boolean mIsIconSet = false;
     private String mUserId;
 
     @Inject UserCenterPresenterImpl mPresenter;
@@ -157,37 +157,17 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
         if(login) {
             Log.v(TAG,"initView(): login!!!");
             mTvUserEmail.setVisibility(View.VISIBLE);
-            mTvNickName.setText(UserPrefsUtil.getString(UserInfo.USER_NICK_NAME, ""));
-            mTvUserEmail.setText(UserPrefsUtil.getString(UserInfo.UER_EMAIL,""));
-
-            String headIcon = UserPrefsUtil.getString(UserInfo.USER_HEAD_ICON,"");
-            if(!TextUtils.isEmpty(headIcon)) {
-                Picasso.with(getActivity())
-                        .load(headIcon)
-                        .resize(512,512)
-                        .centerCrop()
-                        .into(mCivHeader);
-                mIsIconSet = true;
-            }else{
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mCivHeader.setImageDrawable(
-                            getResources().getDrawable(R.drawable.ic_account_circle_grey_72dp, null));
-                }else{
-                    mCivHeader.setImageDrawable(
-                            getResources().getDrawable(R.drawable.ic_account_circle_grey_72dp));
-                }
-            }
-        // logout state
         }else{
-            mTvUserEmail.setVisibility(View.INVISIBLE);
+            mTvUserEmail.setVisibility(View.GONE);
             mTvNickName.setText(getString(R.string.logout));
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mCivHeader.setImageDrawable(
-                        getResources().getDrawable(R.drawable.ic_account_circle_grey_72dp, null));
-            }else{
-                mCivHeader.setImageDrawable(
-                        getResources().getDrawable(R.drawable.ic_account_circle_grey_72dp));
-            }
+        }
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mCivHeader.setImageDrawable(
+                    getResources().getDrawable(R.drawable.ic_account_circle_grey_72dp, null));
+        }else{
+            mCivHeader.setImageDrawable(
+                    getResources().getDrawable(R.drawable.ic_account_circle_grey_72dp));
         }
     }
 
@@ -228,23 +208,25 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
 
     @Override
     public void updateUserNickName(String nickName) {
-        if(TextUtils.isEmpty(mTvNickName.getText())) {
-            mTvNickName.setText(nickName);
-        }
+        mTvNickName.setText(nickName);
     }
 
     @Override
     public void updateUserEmail(String email) {
-        if(TextUtils.isEmpty(mTvUserEmail.getText())) {
-            mTvUserEmail.setText(email);
-        }
+        mTvUserEmail.setText(email);
     }
 
     @Override
     public void updateHeadIcon(String iconUrl) {
-        if(!mIsIconSet) {
+        if(URLUtil.isNetworkUrl(iconUrl)){
             Picasso.with(getActivity())
                     .load(iconUrl)
+                    .resize(512, 512)
+                    .centerCrop()
+                    .into(mCivHeader);
+        }else{
+            Picasso.with(getActivity())
+                    .load(Uri.fromFile(new File(iconUrl)))
                     .resize(512, 512)
                     .centerCrop()
                     .into(mCivHeader);
