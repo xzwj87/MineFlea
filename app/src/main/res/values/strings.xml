@@ -91,4 +91,6 @@
     <string name="user_tel_number">Telephone Number</string>
     <string name="user_email">Email</string>
     <string name="say_something_about_yourself">Say something about yourself</string>
+
+    <string name="no_result">搜不到路线哦！！</string>
 </resources>
