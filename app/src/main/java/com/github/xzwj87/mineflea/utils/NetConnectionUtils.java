@@ -13,9 +13,13 @@ import com.github.xzwj87.mineflea.app.AppGlobals;
 public class NetConnectionUtils {
 
     public static boolean isNetworkConnected(){
-        boolean isConnected = false;
-
         Context context = AppGlobals.getAppContext();
+        // only wifi connected, we are allowed to sync data
+        if(SharePrefsHelper.getInstance(context).getDataSyncState()){
+           return false;
+        }
+
+        boolean isConnected = false;
 
         ConnectivityManager netMgr = (ConnectivityManager)context.
                 getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -16,7 +16,6 @@ public class SharePrefsHelper {
 
     private static SharePrefsHelper mInstance;
     private SharedPreferences mSharePref;
-    private Context mContext;
     private Resources mResources;
 
 
@@ -29,8 +28,7 @@ public class SharePrefsHelper {
     }
 
     private SharePrefsHelper(Context context){
-        this.mContext = context;
-        this.mResources = mContext.getResources();
+        this.mResources = context.getResources();
         this.mSharePref = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
@@ -55,6 +53,12 @@ public class SharePrefsHelper {
         String key = mResources.getString(R.string.key_login_state);
 
         return Boolean.parseBoolean(mSharePref.getString(key,""));
+    }
+
+    public boolean getDataSyncState(){
+        String key = mResources.getString(R.string.key_pref_wifi_only_sync);
+
+        return mSharePref.getBoolean(key,false);
     }
 
 

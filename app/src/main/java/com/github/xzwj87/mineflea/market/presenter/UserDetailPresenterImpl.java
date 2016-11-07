@@ -88,6 +88,8 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
 
     @Override
     public boolean isMe() {
+        if(mUserInfo == null) return false;
+
         String id = mUserInfo.getUserId();
         String currentId = getCurrentUserId();
 

@@ -55,13 +55,17 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.v(LOG_TAG,"onSharedPreferenceChanged(): key = " + key);
         String keyLogState = getString(R.string.key_login_state);
-        String val = sharedPreferences.getString(key,"");
 
-        if(key.equals(keyLogState) && !Boolean.parseBoolean(val)){
-            mPresenter.logout();
+        if(!key.equals(getString(R.string.key_pref_wifi_only_sync))){
 
-            Toast.makeText(getActivity(),R.string.hint_logout_success,Toast.LENGTH_LONG)
+            String val = sharedPreferences.getString(key, "");
+
+            if (key.equals(keyLogState) && !Boolean.parseBoolean(val)) {
+                mPresenter.logout();
+
+                Toast.makeText(getActivity(), R.string.hint_logout_success, Toast.LENGTH_LONG)
                         .show();
+            }
         }
     }
 }

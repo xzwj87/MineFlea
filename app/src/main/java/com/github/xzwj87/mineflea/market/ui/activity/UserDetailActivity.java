@@ -91,9 +91,9 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
 
         initInjector();
 
-        init();
-
         initView();
+
+        init();
     }
 
     private void initInjector(){
