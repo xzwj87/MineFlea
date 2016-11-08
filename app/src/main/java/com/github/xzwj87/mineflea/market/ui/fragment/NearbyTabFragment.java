@@ -1,15 +1,28 @@
 package com.github.xzwj87.mineflea.market.ui.fragment;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +31,6 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps2d.AMap;
-import com.amap.api.maps2d.AMapUtils;
 import com.amap.api.maps2d.LocationSource;
 import com.amap.api.maps2d.MapView;
 import com.amap.api.maps2d.model.BitmapDescriptorFactory;
@@ -26,31 +38,57 @@ import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.maps2d.model.MyLocationStyle;
+import com.amap.api.maps2d.overlay.WalkRouteOverlay;
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.route.BusRouteResult;
+import com.amap.api.services.route.DrivePath;
+import com.amap.api.services.route.DriveRouteResult;
+import com.amap.api.services.route.RideRouteResult;
+import com.amap.api.services.route.RouteSearch;
+import com.amap.api.services.route.WalkPath;
+import com.amap.api.services.route.WalkRouteResult;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.model.NearbyGoodsInfo;
 import com.github.xzwj87.mineflea.market.ui.activity.NearbyGoodsActivity;
+import com.github.xzwj87.mineflea.market.ui.alimap.BusResultListAdapter;
+import com.github.xzwj87.mineflea.market.ui.alimap.DriveRouteDetailActivity;
+import com.github.xzwj87.mineflea.market.ui.alimap.DrivingRouteOverLay;
+import com.github.xzwj87.mineflea.market.ui.alimap.WalkRouteDetailActivity;
+import com.github.xzwj87.mineflea.utils.AMapUtil;
+import com.github.xzwj87.mineflea.utils.Constants;
+import com.github.xzwj87.mineflea.utils.MyWindowManager;
 import com.github.xzwj87.mineflea.utils.NearbyProtocol;
+import com.github.xzwj87.mineflea.utils.ToastUtil;
+import com.github.xzwj87.mineflea.utils.UiUtils;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
-/**
- * Created by jason on 10/9/16.
- */
-
-// TODO: separate application logic from UI
+//Created by jason on 10/9/16.
 public class NearbyTabFragment extends BaseFragment implements View.OnClickListener, AMap.OnMarkerClickListener,
-        AMap.OnInfoWindowClickListener, AMap.OnMarkerDragListener, AMap.OnMapLoadedListener,
-        AMap.InfoWindowAdapter, LocationSource,
-        AMapLocationListener {
-    public static final String TAG = NearbyTabFragment.class.getSimpleName();
+        AMap.OnInfoWindowClickListener, AMap.OnMarkerDragListener, AMap.OnMapLoadedListener, AMap.InfoWindowAdapter, LocationSource,
+        AMapLocationListener, RouteSearch.OnRouteSearchListener, AMap.OnMapClickListener {
+    public static final String TAG = "[NearbyTabFragment]";
 
-    private MarkerOptions mMarkerOptions;
     private AMap aMap;
-    private LatLng latlng = new LatLng(39.761, 116.434);
+
+    private RouteSearch mRouteSearch;
+    private DriveRouteResult mDriveRouteResult;
+    private BusRouteResult mBusRouteResult;
+    private WalkRouteResult mWalkRouteResult;
+    private final int ROUTE_TYPE_BUS = 1;
+    private final int ROUTE_TYPE_WALK = 3;
+    private final int ROUTE_TYPE_CROSSTOWN = 4;
+
+    private LinearLayout mBusResultLayout;
+    private RelativeLayout mBottomLayout;
+    private TextView mRotueTimeDes, mRouteDetailDes;
+    private ImageView mBus;
+    private ImageView mDrive;
+    private ImageView mWalk;
+    private ListView mBusResultList;
+    private ProgressDialog progDialog = null;// 搜索时进度条
 
     private static final int STROKE_COLOR = Color.argb(180, 3, 145, 255);
     private static final int FILL_COLOR = Color.argb(10, 0, 0, 180);
@@ -59,57 +97,103 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
     private AMapLocationClient mlocationClient;
     private AMapLocationClientOption mLocationOption;
 
-    private Marker mCurrentMarker;
+    private LatLng myLocation;
 
-    @BindView(R.id.map) MapView mapView;
-    @BindView(R.id.clearMap) Button clearMapBtn;
-    @BindView(R.id.resetMap) Button resetMapBtn;
-    @BindView(R.id.iv_zan) ImageView iv_zan;
-    @BindView(R.id.info_img) ImageView iv_info;
-    @BindView(R.id.id_marker_info) RelativeLayout markerLy;
+    private long distance = 0;
+    private int selected = 0;
 
-    public NearbyTabFragment() {
-    }
+    private MapView mapView;
 
-    public static NearbyTabFragment newInstance() {
-        NearbyTabFragment fragment = new NearbyTabFragment();
-        return fragment;
-    }
+    private EditText etSearchDis;
+    private Spinner spinner;
+
+    private List<NearbyGoodsInfo> list;
+    private BroadcastReceiver receiver;
+
+    private static final int KM = 1;
+    private static final int M = 0;
+
+    private LatLonPoint mStartPoint_bus = new LatLonPoint(40.818311, 111.670801);//起点，111.670801,40.818311
+    private LatLonPoint mEndPoint_bus = new LatLonPoint(44.433942, 125.184449);//终点，
+    private String mCurrentCityName = "北京";
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedSate) {
+    public void onMapClick(LatLng latLng) {
+
+    }
+
+    //广播接收器
+    private class Receiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction() == Constants.COM_SEARCH_GOODS_ACTION) {
+                showSearchDialog();
+            }
+        }
+    }
+
+    private LatLonPoint mStartPoint = new LatLonPoint(39.942295, 116.335891);//起点，116.335891,39.942295
+    private LatLonPoint mEndPoint = new LatLonPoint(39.995576, 116.481288);//终点，116.481288,39.995576
+    private final int ROUTE_TYPE_DRIVE = 2;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedSate) {
         View root = inflater.inflate(R.layout.fragment_nearby_tab, container, false);
-        ButterKnife.bind(this, root);
+
+        mapView = (MapView) root.findViewById(R.id.map);
         mapView.onCreate(savedSate);
-        init();
+
+        initView(root);
+        loadData();
         return root;
     }
 
-    private void init() {
-        clearMapBtn.setOnClickListener(this);
-        resetMapBtn.setOnClickListener(this);
-        iv_zan.setOnClickListener(this);
-        iv_info.setOnClickListener(this);
+    //加载数据
+    private void loadData() {
+        NearbyProtocol protocol = new NearbyProtocol();
+        list = protocol.loadNearbyData();
+        addMarkersToMap();
+    }
+
+    private void initView(View root) {
+        setUpMap();
+        setupLocationStyle();
+        registerReceiver();
+        setSearchView(root);
+    }
+
+    private void setSearchView(View root) {
+        mRouteSearch = new RouteSearch(getActivity());
+        mRouteSearch.setRouteSearchListener(this);
+        mBottomLayout = (RelativeLayout) root.findViewById(R.id.bottom_layout);
+        mBusResultLayout = (LinearLayout) root.findViewById(R.id.bus_result);
+        mRotueTimeDes = (TextView) root.findViewById(R.id.firstline);
+        mRouteDetailDes = (TextView) root.findViewById(R.id.secondline);
+        mDrive = (ImageView) root.findViewById(R.id.route_drive);
+        mDrive.setOnClickListener(this);
+        mBus = (ImageView) root.findViewById(R.id.route_bus);
+        mBus.setOnClickListener(this);
+        mWalk = (ImageView) root.findViewById(R.id.route_walk);
+        mWalk.setOnClickListener(this);
+        mBusResultList = (ListView) root.findViewById(R.id.bus_result_list);
+    }
+
+    //设置一些amap的属性
+    private void setUpMap() {
         if (aMap == null) {
             aMap = mapView.getMap();
             aMap.setMapType(AMap.MAP_TYPE_NORMAL);
-            addMarkersToMap();// 往地图上添加marker
         }
         aMap.setOnMarkerDragListener(this);// 设置marker可拖拽事件监听器
         aMap.setOnMapLoadedListener(this);// 设置amap加载成功事件监听器
         aMap.setOnMarkerClickListener(this);// 设置点击marker事件监听器
         aMap.setOnInfoWindowClickListener(this);// 设置点击infoWindow事件监听器
         aMap.setInfoWindowAdapter(this);// 设置自定义InfoWindow样式
-        setUpMap();
-    }
-
-    //设置一些amap的属性
-    private void setUpMap() {
         aMap.setLocationSource(this);// 设置定位监听
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
+        aMap.getUiSettings().setScaleControlsEnabled(true);//显示比例尺控件
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
-        setupLocationStyle();
+        aMap.setOnMapClickListener(this);
     }
 
     //设置定位的类型
@@ -117,8 +201,7 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
         // 自定义系统定位蓝点
         MyLocationStyle myLocationStyle = new MyLocationStyle();
         // 自定义定位蓝点图标
-        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
-                fromResource(R.drawable.gps_point));
+        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.mipmap.gps_point));
         // 自定义精度范围的圆形边框颜色
         myLocationStyle.strokeColor(STROKE_COLOR);
         //自定义精度范围的圆形边框宽度
@@ -129,56 +212,190 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
         aMap.setMyLocationStyle(myLocationStyle);
     }
 
-    //添加地图覆盖物
-    private void addMarkersToMap() {
-        mMarkerOptions = new MarkerOptions().icon(BitmapDescriptorFactory
-                .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-                .position(latlng)
-                .draggable(true);
-        aMap.addMarker(mMarkerOptions);
-        NearbyProtocol protocol = new NearbyProtocol();
-        List<NearbyGoodsInfo> list = protocol.loadNearbyData();
-        for (NearbyGoodsInfo info : list) {
-            MarkerOptions options = new MarkerOptions().icon(BitmapDescriptorFactory
-                    .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-                    .title(info.getName())
-                    .position(info.getLatlng()
-                    ).draggable(true);
-            Marker marker = aMap.addMarker(options);
-            marker.setObject(info);
-        }
+    //注册广播监听
+    private void registerReceiver() {
+        IntentFilter filter = new IntentFilter(Constants.COM_SEARCH_GOODS_ACTION);
+        receiver = new Receiver();
+        getActivity().registerReceiver(receiver, filter);
+    }
 
+    //取消广播监听
+    private void unRegisterReceiver() {
+        getActivity().unregisterReceiver(receiver);
+    }
+
+    //设置搜索的弹框
+    private void showSearchDialog() {
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final AlertDialog dialog = builder.create();
+
+        View searchView = inflater.inflate(R.layout.nearby_fragment_search_dialog, null, false);
+        etSearchDis = (EditText) searchView.findViewById(R.id.etSearchDis);
+        Button btn_ok = (Button) searchView.findViewById(R.id.btn_ok);
+        Button btn_cl = (Button) searchView.findViewById(R.id.btn_cancel);
+        spinner = (Spinner) searchView.findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),               //上下文的引用
+                R.array.planets_array,              //参数引用了string。xml文档中的String数组
+                android.R.layout.simple_spinner_item);//指定Spinner的样式，是一个布局id.由android系统据顶。也可以自己定义
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        dialog.setView(searchView);
+
+        btn_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(etSearchDis.getText().toString())) {
+                    Toast.makeText(getActivity(), "请重新输入", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                dialog.dismiss();
+                distance = Integer.valueOf(etSearchDis.getText().toString());
+                selected = spinner.getSelectedItemPosition();
+                setMarkerInDis(distance, selected);
+            }
+        });
+        btn_cl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                MyWindowManager.getInstance().createSmallWindow(getActivity());
+            }
+        });
+        dialog.show();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            /**
-             * 清空地图上所有已经标注的marker
-             */
-            case R.id.clearMap:
-                if (aMap != null) {
-                    aMap.clear();
-                }
+            case R.id.route_bus:
+                onBusClick();
                 break;
-            /**
-             * 重新标注所有的marker
-             */
-            case R.id.resetMap:
-                if (aMap != null) {
-                    aMap.clear();
-                    addMarkersToMap();
-                }
+            case R.id.route_drive:
+                onDriveClick();
                 break;
-            case R.id.info_img:
-                Intent intent = new Intent(getActivity(), NearbyGoodsActivity.class);
-                startActivity(intent);
+            case R.id.route_walk:
+                onWalkClick();
                 break;
-            case R.id.iv_zan:
-                Toast.makeText(AppGlobals.getAppContext(), "点赞了", Toast.LENGTH_SHORT).show();
+            case R.id.route_cross:
+                onCrosstownBusClick();
                 break;
             default:
                 break;
+        }
+    }
+
+    public void onBusClick() {
+        searchRouteResult(ROUTE_TYPE_BUS, RouteSearch.BusDefault);
+        mDrive.setImageResource(R.drawable.route_drive_normal);
+        mBus.setImageResource(R.drawable.route_bus_select);
+        mWalk.setImageResource(R.drawable.route_walk_normal);
+        mapView.setVisibility(View.GONE);
+        mBusResultLayout.setVisibility(View.VISIBLE);
+    }
+
+    public void onDriveClick() {
+        searchRouteResult(ROUTE_TYPE_DRIVE, RouteSearch.DrivingDefault);
+        mDrive.setImageResource(R.drawable.route_drive_select);
+        mBus.setImageResource(R.drawable.route_bus_normal);
+        mWalk.setImageResource(R.drawable.route_walk_normal);
+        mapView.setVisibility(View.VISIBLE);
+        mBusResultLayout.setVisibility(View.GONE);
+    }
+
+    public void onWalkClick() {
+        searchRouteResult(ROUTE_TYPE_WALK, RouteSearch.WalkDefault);
+        mDrive.setImageResource(R.drawable.route_drive_normal);
+        mBus.setImageResource(R.drawable.route_bus_normal);
+        mWalk.setImageResource(R.drawable.route_walk_select);
+        mapView.setVisibility(View.VISIBLE);
+        mBusResultLayout.setVisibility(View.GONE);
+    }
+
+    public void onCrosstownBusClick() {
+        searchRouteResult(ROUTE_TYPE_CROSSTOWN, RouteSearch.BusDefault);
+        mDrive.setImageResource(R.drawable.route_drive_normal);
+        mBus.setImageResource(R.drawable.route_bus_normal);
+        mWalk.setImageResource(R.drawable.route_walk_normal);
+        mapView.setVisibility(View.GONE);
+        mBusResultLayout.setVisibility(View.VISIBLE);
+    }
+
+    //开始搜索路径规划方案
+    public void searchRouteResult(int routeType, int mode) {
+        if (mStartPoint == null) {
+            ToastUtil.show(AppGlobals.getAppContext(), "起点未设置");
+            return;
+        }
+        if (mEndPoint == null) {
+            ToastUtil.show(AppGlobals.getAppContext(), "终点未设置");
+        }
+        showProgressDialog();
+        final RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(
+                mStartPoint, mEndPoint);
+        if (routeType == ROUTE_TYPE_BUS) {// 公交路径规划
+            RouteSearch.BusRouteQuery query = new RouteSearch.BusRouteQuery(fromAndTo, mode,
+                    mCurrentCityName, 0);// 第一个参数表示路径规划的起点和终点，第二个参数表示公交查询模式，第三个参数表示公交查询城市区号，第四个参数表示是否计算夜班车，0表示不计算
+            mRouteSearch.calculateBusRouteAsyn(query);// 异步路径规划公交模式查询
+        } else if (routeType == ROUTE_TYPE_DRIVE) {// 驾车路径规划
+            RouteSearch.DriveRouteQuery query = new RouteSearch.DriveRouteQuery(fromAndTo, mode, null,
+                    null, "");// 第一个参数表示路径规划的起点和终点，第二个参数表示驾车模式，第三个参数表示途经点，第四个参数表示避让区域，第五个参数表示避让道路
+            mRouteSearch.calculateDriveRouteAsyn(query);// 异步路径规划驾车模式查询
+        } else if (routeType == ROUTE_TYPE_WALK) {// 步行路径规划
+            RouteSearch.WalkRouteQuery query = new RouteSearch.WalkRouteQuery(fromAndTo, mode);
+            mRouteSearch.calculateWalkRouteAsyn(query);// 异步路径规划步行模式查询
+        } else if (routeType == ROUTE_TYPE_CROSSTOWN) {
+            RouteSearch.FromAndTo fromAndTo_bus = new RouteSearch.FromAndTo(
+                    mStartPoint_bus, mEndPoint_bus);
+            RouteSearch.BusRouteQuery query = new RouteSearch.BusRouteQuery(fromAndTo_bus, mode,
+                    "呼和浩特市", 0);// 第一个参数表示路径规划的起点和终点，第二个参数表示公交查询模式，第三个参数表示公交查询城市区号，第四个参数表示是否计算夜班车，0表示不计算
+            query.setCityd("农安县");
+            mRouteSearch.calculateBusRouteAsyn(query);// 异步路径规划公交模式查询
+        }
+    }
+
+    public NearbyTabFragment() {
+    }
+
+    public static NearbyTabFragment newInstance() {
+        NearbyTabFragment fragment = new NearbyTabFragment();
+        return fragment;
+    }
+
+    //添加地图覆盖物
+    private void addMarkersToMap() {
+        for (NearbyGoodsInfo info : list) {
+            MarkerOptions options = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                    .title(info.getName()).position(info.getLatlng()).draggable(true);
+            Marker marker = aMap.addMarker(options);
+            marker.setObject(info);
+        }
+    }
+
+    //搜索指定范围的物品
+    private void setMarkerInDis(long dis, int select) {
+        Log.e(TAG, "setMarkerInDis");
+        if (aMap != null) {
+            aMap.clear();
+            //markerLy.setVisibility(View.INVISIBLE);
+            for (NearbyGoodsInfo info : list) {
+                double l = UiUtils.getDistanceM(myLocation, info.getLatlng());
+                if (select == KM) {
+                    l = UiUtils.getDistanceKm(myLocation, info.getLatlng());
+                }
+                if (l <= dis) {
+                    MarkerOptions options = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                            .title(info.getName()).position(info.getLatlng()).draggable(true);
+                    Marker marker = aMap.addMarker(options);
+                    marker.setObject(info);
+                }
+            }
         }
     }
 
@@ -194,33 +411,79 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-
     }
 
     @Override
     public void onMapLoaded() {
-
     }
 
     //覆盖物点击事件
     @Override
     public boolean onMarkerClick(Marker marker) {
-        if (mCurrentMarker == null) {
-            mCurrentMarker = marker;
-        } else {
-            if (mCurrentMarker.equals(marker)) {
-                markerLy.setVisibility(View.GONE);
-            } else {
-                NearbyGoodsInfo info = (NearbyGoodsInfo) marker.getObject();
-                popupInfo(markerLy, info);
-            }
-        }
+        NearbyGoodsInfo info = (NearbyGoodsInfo) marker.getObject();
+        showGoodsInfoDialog(info);
+        showRoutGuide(marker);
         return false;
+    }
+
+    private void showRoutGuide(Marker marker) {
+        LatLng latlng = marker.getPosition();
+        LatLonPoint start = new LatLonPoint(myLocation.latitude, myLocation.longitude);
+        LatLonPoint end = new LatLonPoint(latlng.latitude, latlng.longitude);
+        RouteSearch.FromAndTo fromTo = new RouteSearch.FromAndTo(start, end);
+    }
+
+    //显示点击物品的信息
+    private void showGoodsInfoDialog(NearbyGoodsInfo info) {
+        MyWindowManager.getInstance().removeWindow(getActivity());
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final AlertDialog dialog = builder.create();
+
+        View searchView = inflater.inflate(R.layout.nearby_fragment_goods_dialog, null, false);
+        ImageView goodsPicIv = (ImageView) searchView.findViewById(R.id.goods_pic_iv);
+        TextView goodsDisTv = (TextView) searchView.findViewById(R.id.goods_dis_tv);
+        TextView goodsPriseTv = (TextView) searchView.findViewById(R.id.goods_prise_tv);
+        TextView goodsNameTv = (TextView) searchView.findViewById(R.id.goods_name_tv);
+        ImageView goodsPriseIv = (ImageView) searchView.findViewById(R.id.goods_prise_iv);
+        Button btnOK = (Button) searchView.findViewById(R.id.goods_btn_ok);
+        ImageButton btnCl = (ImageButton) searchView.findViewById(R.id.goods_btn_cancel);
+
+        goodsPicIv.setImageResource(info.getImgId());
+        DecimalFormat decimalFormat = new DecimalFormat("#.00");
+        goodsDisTv.setText(decimalFormat.format(UiUtils.getDistanceKm(myLocation, info.getLatlng())) + "km");
+        goodsPriseTv.setText(info.getZan() + "");
+        goodsNameTv.setText(info.getName());
+
+        btnOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                Intent intent = new Intent();
+                intent.setClass(getActivity(), NearbyGoodsActivity.class);
+                getActivity().startActivity(intent);
+            }
+        });
+        btnCl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                MyWindowManager.getInstance().createSmallWindow(getActivity());
+            }
+        });
+
+        dialog.setView(searchView);
+        dialog.getWindow().setWindowAnimations(R.style.dialogWindowAnim);
+        dialog.show();
     }
 
     @Override
     public void onMarkerDragStart(Marker marker) {
-
     }
 
     @Override
@@ -233,39 +496,14 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
 
     }
 
-
-    //根据info为布局上的控件设置信息
-    protected void popupInfo(RelativeLayout mMarkerLy, NearbyGoodsInfo info) {
-        mMarkerLy.setVisibility(View.VISIBLE);
-        ViewHolder viewHolder = null;
-        if (mMarkerLy.getTag() == null) {
-            viewHolder = new ViewHolder();
-            viewHolder.infoImg = (ImageView) mMarkerLy
-                    .findViewById(R.id.info_img);
-            viewHolder.infoName = (TextView) mMarkerLy
-                    .findViewById(R.id.info_name);
-            viewHolder.infoDistance = (TextView) mMarkerLy
-                    .findViewById(R.id.info_distance);
-            viewHolder.infoZan = (TextView) mMarkerLy
-                    .findViewById(R.id.info_zan);
-
-            mMarkerLy.setTag(viewHolder);
-        }
-        viewHolder = (ViewHolder) mMarkerLy.getTag();
-        viewHolder.infoImg.setImageResource(info.getImgId());
-        viewHolder.infoDistance.setText(info.getDistance());
-        viewHolder.infoName.setText(info.getName());
-        viewHolder.infoZan.setText(info.getZan() + "");
-    }
-
     @Override
     public void onLocationChanged(AMapLocation amapLocation) {
         if (mListener != null && amapLocation != null) {
-            if (amapLocation != null
-                    && amapLocation.getErrorCode() == 0) {
-                //mLocationErrText.setVisibility(View.GONE);
+            if (amapLocation != null && amapLocation.getErrorCode() == 0) {
+                setupLocationStyle();
                 mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
-                //aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(amapLocation, 18));
+                myLocation = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
+                Log.e(TAG, myLocation.toString());
             } else {
                 String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
                 Log.e("AmapErr", errText);
@@ -292,7 +530,7 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
             //不允许模拟位置
             mLocationOption.setMockEnable(false);
             //设置定位间隔，单位毫秒，默认为2000ms
-            mLocationOption.setInterval(2000);
+            mLocationOption.setInterval(20000);
             //设置为高精度定位模式
             mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
             //设置定位参数
@@ -316,52 +554,183 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
         mlocationClient = null;
     }
 
-    private class ViewHolder {
-        ImageView infoImg;
-        TextView infoName;
-        TextView infoDistance;
-        TextView infoZan;
-    }
-
-    /**
-     * 方法必须重写
-     */
+    //方法必须重写
     @Override
     public void onResume() {
         super.onResume();
         mapView.onResume();
     }
 
-    /**
-     * 方法必须重写
-     */
+    //方法必须重写
     @Override
     public void onPause() {
         super.onPause();
         mapView.onPause();
     }
 
-    /**
-     * 方法必须重写
-     */
+    //方法必须重写
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
     }
 
-    /**
-     * 方法必须重写
-     */
+    //方法必须重写
     @Override
     public void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
+        unRegisterReceiver();
     }
 
-    //获取两点的距离
-    public String getDistance(LatLng l1, LatLng l2) {
-        return AMapUtils.calculateLineDistance(l1, l2) + "";
+    @Override
+    public void onBusRouteSearched(BusRouteResult result, int errorCode) {
+        dissmissProgressDialog();
+        mBottomLayout.setVisibility(View.GONE);
+        aMap.clear();// 清理地图上的所有覆盖物
+        if (errorCode == 1000) {
+            if (result != null && result.getPaths() != null) {
+                if (result.getPaths().size() > 0) {
+                    mBusRouteResult = result;
+                    BusResultListAdapter mBusResultListAdapter = new BusResultListAdapter(getActivity(), mBusRouteResult);
+                    mBusResultList.setAdapter(mBusResultListAdapter);
+                } else if (result != null && result.getPaths() == null) {
+                    ToastUtil.show(AppGlobals.getAppContext(), R.string.no_result);
+                }
+            } else {
+                ToastUtil.show(AppGlobals.getAppContext(), R.string.no_result);
+            }
+        } else {
+            ToastUtil.showerror(AppGlobals.getAppContext(), errorCode);
+        }
+    }
+
+    @Override
+    public void onDriveRouteSearched(DriveRouteResult result, int errorCode) {
+        dissmissProgressDialog();
+        aMap.clear();// 清理地图上的所有覆盖物
+        if (errorCode == 1000) {
+            if (result != null && result.getPaths() != null) {
+                if (result.getPaths().size() > 0) {
+                    mDriveRouteResult = result;
+                    final DrivePath drivePath = mDriveRouteResult.getPaths()
+                            .get(0);
+                    DrivingRouteOverLay drivingRouteOverlay = new DrivingRouteOverLay(
+                            getActivity(), aMap, drivePath,
+                            mDriveRouteResult.getStartPos(),
+                            mDriveRouteResult.getTargetPos(), null);
+                    drivingRouteOverlay.setNodeIconVisibility(false);//设置节点marker是否显示
+                    drivingRouteOverlay.setIsColorfulline(true);//是否用颜色展示交通拥堵情况，默认true
+                    drivingRouteOverlay.removeFromMap();
+                    drivingRouteOverlay.addToMap();
+                    drivingRouteOverlay.zoomToSpan();
+                    mBottomLayout.setVisibility(View.VISIBLE);
+                    int dis = (int) drivePath.getDistance();
+                    int dur = (int) drivePath.getDuration();
+                    String des = AMapUtil.getFriendlyTime(dur)+"("+AMapUtil.getFriendlyLength(dis)+")";
+                    mRotueTimeDes.setText(des);
+                    mRouteDetailDes.setVisibility(View.VISIBLE);
+                    int taxiCost = (int) mDriveRouteResult.getTaxiCost();
+                    mRouteDetailDes.setText("打车约"+taxiCost+"元");
+                    mBottomLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getActivity(),
+                                    DriveRouteDetailActivity.class);
+                            intent.putExtra("drive_path", drivePath);
+                            intent.putExtra("drive_result",
+                                    mDriveRouteResult);
+                            startActivity(intent);
+                        }
+                    });
+                } else if (result != null && result.getPaths() == null) {
+                    ToastUtil.show(AppGlobals.getAppContext(), R.string.no_result);
+                }
+
+            } else {
+                ToastUtil.show(AppGlobals.getAppContext(), R.string.no_result);
+            }
+        } else {
+            ToastUtil.showerror(AppGlobals.getAppContext(), errorCode);
+        }
+    }
+
+    @Override
+    public void onWalkRouteSearched(WalkRouteResult result, int errorCode) {
+        dissmissProgressDialog();
+        aMap.clear();// 清理地图上的所有覆盖物
+        if (errorCode == 1000) {
+            if (result != null && result.getPaths() != null) {
+                if (result.getPaths().size() > 0) {
+                    mWalkRouteResult = result;
+                    final WalkPath walkPath = mWalkRouteResult.getPaths()
+                            .get(0);
+                    WalkRouteOverlay walkRouteOverlay = new WalkRouteOverlay(
+                            getActivity(), aMap, walkPath,
+                            mWalkRouteResult.getStartPos(),
+                            mWalkRouteResult.getTargetPos());
+                    walkRouteOverlay.removeFromMap();
+                    walkRouteOverlay.addToMap();
+                    walkRouteOverlay.zoomToSpan();
+                    mBottomLayout.setVisibility(View.VISIBLE);
+                    int dis = (int) walkPath.getDistance();
+                    int dur = (int) walkPath.getDuration();
+                    String des = AMapUtil.getFriendlyTime(dur)+"("+AMapUtil.getFriendlyLength(dis)+")";
+                    mRotueTimeDes.setText(des);
+                    mRouteDetailDes.setVisibility(View.GONE);
+                    mBottomLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getActivity(),
+                                    WalkRouteDetailActivity.class);
+                            intent.putExtra("walk_path", walkPath);
+                            intent.putExtra("walk_result",
+                                    mWalkRouteResult);
+                            startActivity(intent);
+                        }
+                    });
+                } else if (result != null && result.getPaths() == null) {
+                    ToastUtil.show(AppGlobals.getAppContext(), R.string.no_result);
+                }
+
+            } else {
+                ToastUtil.show(AppGlobals.getAppContext(), R.string.no_result);
+            }
+        } else {
+            ToastUtil.showerror(AppGlobals.getAppContext(), errorCode);
+        }
+    }
+
+    @Override
+    public void onRideRouteSearched(RideRouteResult result, int i) {
+
+    }
+
+    //@Override
+    //public void onRideRouteSearched(RideRouteResult rideRouteResult, int i) {
+
+    //}
+
+    /**
+     * 显示进度框
+     */
+    private void showProgressDialog() {
+        if (progDialog == null)
+            progDialog = new ProgressDialog(getActivity());
+        progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progDialog.setIndeterminate(false);
+        progDialog.setCancelable(true);
+        progDialog.setMessage("正在搜索");
+        progDialog.show();
+    }
+
+    /**
+     * 隐藏进度框
+     */
+    private void dissmissProgressDialog() {
+        if (progDialog != null) {
+            progDialog.dismiss();
+        }
     }
 
 }

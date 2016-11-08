@@ -2,13 +2,10 @@ package com.github.xzwj87.mineflea.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.text.TextUtils;
 
 import com.avos.avoscloud.AVUser;
 import com.github.xzwj87.mineflea.app.AppGlobals;
-import com.github.xzwj87.mineflea.market.model.PublisherInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
-import com.tencent.qc.stat.common.User;
 
 /**
  * Created by jason on 10/6/16.
@@ -95,5 +92,77 @@ public class UserPrefsUtil {
         loginInfo.setUserPwd(pwd);
 
         return loginInfo;
+    }
+
+    private static final String SP_CONFIG = "config";
+
+    public static void setBooleanPref(Context ctx, String key, boolean flag) {
+        SharedPreferences sp = ctx.getSharedPreferences(SP_CONFIG, ctx.MODE_PRIVATE);
+        sp.edit().putBoolean(key, flag).commit();
+    }
+
+    public static boolean getBooleanPref(Context ctx, String key) {
+        SharedPreferences sp = ctx.getSharedPreferences(SP_CONFIG, ctx.MODE_PRIVATE);
+        return sp.getBoolean(key, false);
+    }
+
+    public static void setBooleanPref(String key, boolean flag) {
+        SharedPreferences sp = AppGlobals.getAppContext().getSharedPreferences(SP_CONFIG, AppGlobals.getAppContext().MODE_PRIVATE);
+        sp.edit().putBoolean(key, flag).commit();
+    }
+
+    public static boolean getBooleanPref(String key) {
+        SharedPreferences sp = AppGlobals.getAppContext().getSharedPreferences(SP_CONFIG, AppGlobals.getAppContext().MODE_PRIVATE);
+        return sp.getBoolean(key, false);
+    }
+
+    public static void setStringPref(Context ctx, String key, String value) {
+        SharedPreferences sp = ctx.getSharedPreferences(SP_CONFIG, ctx.MODE_PRIVATE);
+        sp.edit().putString(key, value).commit();
+    }
+
+    public static String getStringPref(Context ctx, String key) {
+        SharedPreferences sp = ctx.getSharedPreferences(SP_CONFIG, ctx.MODE_PRIVATE);
+        return sp.getString(key, null);
+    }
+
+    public static void setStringPref(String key, String value) {
+        SharedPreferences sp = AppGlobals.getAppContext().getSharedPreferences(SP_CONFIG, AppGlobals.getAppContext().MODE_PRIVATE);
+        sp.edit().putString(key, value).commit();
+    }
+
+    public static String getStringPref(String key) {
+        SharedPreferences sp = AppGlobals.getAppContext().getSharedPreferences(SP_CONFIG, AppGlobals.getAppContext().MODE_PRIVATE);
+        return sp.getString(key, null);
+    }
+
+    public static void setIntPref(Context ctx, String key, int value) {
+        SharedPreferences sp = ctx.getSharedPreferences(SP_CONFIG, ctx.MODE_PRIVATE);
+        sp.edit().putInt(key, value).commit();
+    }
+
+    public static int getIntPref(Context ctx, String key) {
+        SharedPreferences sp = ctx.getSharedPreferences(SP_CONFIG, ctx.MODE_PRIVATE);
+        return sp.getInt(key, 0);
+    }
+
+    public static void setIntPref(String key, int value) {
+        SharedPreferences sp = AppGlobals.getAppContext().getSharedPreferences(SP_CONFIG, AppGlobals.getAppContext().MODE_PRIVATE);
+        sp.edit().putInt(key, value).commit();
+    }
+
+    public static int getIntPref(String key) {
+        SharedPreferences sp = AppGlobals.getAppContext().getSharedPreferences(SP_CONFIG, AppGlobals.getAppContext().MODE_PRIVATE);
+        return sp.getInt(key, 0);
+    }
+
+    public static void removePref(Context ctx, String key) {
+        SharedPreferences sp = ctx.getSharedPreferences(SP_CONFIG, ctx.MODE_PRIVATE);
+        sp.edit().remove(key).commit();
+    }
+
+    public static void removePref(String key) {
+        SharedPreferences sp = AppGlobals.getAppContext().getSharedPreferences(SP_CONFIG, AppGlobals.getAppContext().MODE_PRIVATE);
+        sp.edit().remove(key).commit();
     }
 }

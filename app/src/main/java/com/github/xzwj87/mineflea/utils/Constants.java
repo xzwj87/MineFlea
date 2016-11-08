@@ -30,4 +30,10 @@ public class Constants {
 	public static final LatLng CHENGDU = new LatLng(30.679879, 104.064855);// 成都市经纬度
 	public static final LatLng XIAN = new LatLng(34.341568, 108.940174);// 西安市经纬度
 	public static final LatLng ZHENGZHOU = new LatLng(34.7466, 113.625367);// 郑州市经纬度
+
+	public static final String PREF_START_X = "pref_start_x";
+	public static final String PREF_START_Y = "pref_start_y";
+
+	public static final int UPDATE_MARKER = 100;
+	public static final String COM_SEARCH_GOODS_ACTION = "com.search.goods";
 }

@@ -11,4 +11,21 @@
     <color name="colorVLGrey">#E0E0E0</color>
     <color name="colorTransparent">#00000000</color>
     <color name="colorBlue">#ff35abde</color>
+
+    <color name="blue">#ff35abde</color>
+    <color name="gray">#808080</color><!--灰色 -->
+    <color name="whitesmoke">#F5F5F5</color><!--烟白色 -->
+    <color name="grey"> #ebebeb</color>
+    <color name="black"> #000000</color>
+    <color name="darkgrey"> #999999</color>
+    <color name="white"> #FFFFFF</color>
+    <color name="red"> #FF0000</color>
+
+    <color name="gary">#898989</color>
+    <color name="gray_lite">#c5c5c5</color>
+    <color name="phone_bg">#f6f6f6</color>
+    <color name="transparent">#00000000</color>
+    <color name="itemlist">#f4f4f4</color>
+    <color name="watermark_hint">#ccffffff</color>
+    <color name="act_background">#efefef</color>
 </resources>
