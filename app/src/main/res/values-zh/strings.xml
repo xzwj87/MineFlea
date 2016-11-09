@@ -79,7 +79,7 @@
     <string name="settings_about">关于</string>
     <string name="settings_about_sum">了解MineFlea</string>
     <string name="settings_about_mineflea">关于MineFlea</string>
-    <string name="about_mineflea">MineFlea由Jason/Icesea共同开发维护
+    <string name="about_mineflea">MineFlea由Jason/Seaice共同开发维护
                                   电邮:wlh2119@gmail.com</string>
     <string name="pref_data_sync">数据同步</string>
     <string name="pref_theme_color">主题颜色</string>
@@ -93,6 +93,7 @@
     <string name="write_down_your_advice">谢谢你的反馈</string>
     <string name="hint_logining">登录中,请稍候&#8230;</string>
     <string name="hint_logout_success">退出成功</string>
-    <string name="no_result">搜不到路线哦！！</string>
+    <string name="no_result">搜不到路线！</string>
+    <string name="need_to_login">请先登录</string>
 
 </resources>

@@ -40,7 +40,8 @@ public class UserCenterPresenterImpl extends UserCenterPresenter {
     @Override
     public String getUserId() {
         if(mUserInfo == null){
-            return mRepository.getCurrentUserId();
+            mView.showNeedLoginHint();
+            return null;
         }
 
         return mUserInfo.getUserId();

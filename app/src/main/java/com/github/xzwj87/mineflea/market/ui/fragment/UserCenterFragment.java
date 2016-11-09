@@ -58,8 +58,6 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
     @BindView(R.id.tv_published_goods) TextView mTvPublishedGoods;
     @BindView(R.id.tv_favorite_goods) TextView mTvFavorGoods;
 
-    private String mUserId;
-
     @Inject UserCenterPresenterImpl mPresenter;
 
     public UserCenterFragment(){
@@ -96,7 +94,7 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
         boolean isLogin = SharePrefsHelper.getInstance(getActivity()).getLoginState();
         if(isLogin){
             Intent intent = new Intent(getActivity(), UserDetailActivity.class);
-            intent.putExtra(UserInfo.USER_ID,mUserId);
+            intent.putExtra(UserInfo.USER_ID,mPresenter.getUserId());
             intent.putExtra(UserInfo.CURRENT_USER,true);
             startActivity(intent);
         }else {
@@ -173,6 +171,13 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
 
     @OnClick({R.id.tv_favorite_goods,R.id.tv_published_goods,R.id.tv_settings})
     public void doAction(TextView tv){
+
+        boolean login = SharePrefsHelper.getInstance(getContext()).getLoginState();
+        if(!login){
+            showNeedLoginHint();
+            return;
+        }
+
         int id = tv.getId();
 
         Intent intent = null;
@@ -180,13 +185,13 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
             case R.id.tv_favorite_goods:
                 intent = new Intent(getActivity(),UserGoodsActivity.class);
                 intent.putExtra("FragmentTag",UserFavoritesFragment.TAG);
-                intent.putExtra("UserId",mUserId);
+                intent.putExtra("UserId",mPresenter.getUserId());
                 startActivity(intent);
                 break;
             case R.id.tv_published_goods:
                 intent = new Intent(getActivity(),UserGoodsActivity.class);
                 intent.putExtra("FragmentTag",UserPublishedGoodsFragment.TAG);
-                intent.putExtra("UserId",mUserId);
+                intent.putExtra("UserId",mPresenter.getUserId());
                 startActivity(intent);
                 break;
             case R.id.tv_settings:
@@ -201,8 +206,6 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
             mPresenter.init();
             mPresenter.setView(this);
             mPresenter.loadUserInfo();
-
-            mUserId = mPresenter.getUserId();
         }
     }
 
@@ -231,6 +234,11 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
                     .centerCrop()
                     .into(mCivHeader);
         }
+    }
+
+    @Override
+    public void showNeedLoginHint() {
+        showToast(getString(R.string.need_to_login));
     }
 
     @Override
