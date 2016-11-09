@@ -24,6 +24,10 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
+
     <application
         android:name=".app.AppGlobals"
         android:allowBackup="true"
@@ -107,8 +111,11 @@
         <activity android:name=".market.ui.activity.UserGoodsActivity"
             android:label=""
             android:theme="@style/AppTheme.NoActionBar">
-
         </activity>
+
+        <activity android:name=".market.ui.alimap.WalkRouteDetailActivity"></activity>
+        <activity android:name=".market.ui.alimap.DriveRouteDetailActivity"></activity>
+        <activity android:name=".market.ui.alimap.BusRouteDetailActivity"></activity>
 
         <!-- 定位需要的服务 使用2.0的定位需要加上这个 -->
         <service android:name="com.amap.api.location.APSService"></service>
