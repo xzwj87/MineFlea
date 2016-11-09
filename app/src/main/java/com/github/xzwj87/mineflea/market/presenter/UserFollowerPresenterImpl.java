@@ -12,7 +12,6 @@ import com.github.xzwj87.mineflea.market.ui.UserFollowView;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * Created by jason on 10/31/16.
@@ -35,7 +34,7 @@ public class UserFollowerPresenterImpl extends UserFollowerPresenter {
     @Override
     public void init() {
         mRepo.init();
-        mRepo.setPresenterCallback(this);
+        mRepo.registerCallBack(PRESENTER_FOLLOWER,new FollowerPresenterCallback());
     }
 
     @Override
@@ -46,6 +45,7 @@ public class UserFollowerPresenterImpl extends UserFollowerPresenter {
     @Override
     public void onDestroy() {
         mUserFollowList = null;
+        mRepo.unregisterCallback(PRESENTER_FOLLOWER);
     }
 
     @Override
@@ -68,23 +68,30 @@ public class UserFollowerPresenterImpl extends UserFollowerPresenter {
         mRepo.queryUserFolloweeListByUserId(userId);
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public void onGetUserFollowListDone(Message message) {
-        Log.v(TAG,"onGetUserFollowListDone()");
+    private class FollowerPresenterCallback implements PresenterCallback {
 
-        if(message.obj == null){
-            mView.showBlankPage();
-        }else{
-            mUserFollowList = (List<UserFollowInfo>)message.obj;
-            mView.renderView();
+        @SuppressWarnings("unchecked")
+        @Override
+        public void onComplete(Message message) {
+            Log.v(TAG,"onComplete()");
+            if(message.obj == null){
+                mView.showBlankPage();
+            }else{
+                mUserFollowList = (List<UserFollowInfo>)message.obj;
+                mView.renderView();
+            }
+
+            mView.showProgress(false);
         }
 
-        mView.showProgress(false);
-    }
+        @Override
+        public void onNext(Message message) {
 
-    @Override
-    public void onGetUserFollowerDone(Message message) {
+        }
 
+        @Override
+        public void onError(Throwable e) {
+
+        }
     }
 }

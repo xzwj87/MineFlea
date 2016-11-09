@@ -3,6 +3,7 @@ package com.github.xzwj87.mineflea.market.ui.fragment;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,9 @@ public class UserFavoritesFragment  extends BaseFragment
 
         mFragContainer = container;
         mRvGoodsList = (RecyclerView)rootView.findViewById(R.id.rv_container);
+        mAdapter = new UserGoodsAdapter();
+        mAdapter.setCallback(this);
+
         mSrLayout = (SwipeRefreshLayout)rootView.findViewById(R.id.srl_container);
 
         return rootView;
@@ -95,16 +99,21 @@ public class UserFavoritesFragment  extends BaseFragment
 
     @Override
     public void showBlankPage() {
+        Log.v(TAG,"showBlankPage()");
         mSrLayout.removeAllViewsInLayout();
-        View root = LayoutInflater.from(AppGlobals.getAppContext())
-                    .inflate(R.layout.fragment_blank_hint,mFragContainer,false);
-        mSrLayout.addView(root);
+        if(getActivity() != null) {
+            View root = LayoutInflater.from(getActivity())
+                    .inflate(R.layout.fragment_blank_hint, mFragContainer, false);
+            mSrLayout.addView(root);
+        }else{
+            View root = LayoutInflater.from(AppGlobals.getAppContext())
+                    .inflate(R.layout.fragment_blank_hint, mFragContainer, false);
+            mSrLayout.addView(root);
+        }
     }
 
     @Override
     public void renderView() {
-        mAdapter = new UserGoodsAdapter();
-        mAdapter.setCallback(this);
         mRvGoodsList.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
     }

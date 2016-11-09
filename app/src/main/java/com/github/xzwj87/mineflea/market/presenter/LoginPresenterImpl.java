@@ -1,9 +1,7 @@
 package com.github.xzwj87.mineflea.market.presenter;
 
 import android.os.Message;
-import android.util.Log;
 
-import com.avos.avoscloud.AVUser;
 import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
@@ -11,10 +9,8 @@ import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.LoginView;
 import com.github.xzwj87.mineflea.utils.UserInfoUtils;
 import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
-import com.tencent.qc.stat.common.User;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * Created by jason on 10/16/16.
@@ -66,7 +62,7 @@ public class LoginPresenterImpl extends LoginPresenter{
     public void init() {
         mUserInfo = new UserInfo();
         mDataRepo.init();
-        mDataRepo.setPresenterCallback(this);
+        mDataRepo.registerCallBack(PRESENTER_LOGIN,new LoginPresenterCallback());
     }
 
     @Override
@@ -76,7 +72,8 @@ public class LoginPresenterImpl extends LoginPresenter{
 
     @Override
     public void onDestroy() {
-
+        mUserInfo = null;
+        mDataRepo.unregisterCallback(PRESENTER_LOGIN);
     }
 
     @Override
@@ -84,23 +81,35 @@ public class LoginPresenterImpl extends LoginPresenter{
         mView = (LoginView) view;
     }
 
-    @Override
-    public void loginComplete(Message message) {
-        Log.v(TAG,"loginComplete(): user detail = " + message.obj);
+    private class LoginPresenterCallback implements PresenterCallback {
 
-        if(message.obj != null){
-            UserInfo user = (UserInfo) message.obj;
-            user.setLoginState(true);
-            UserPrefsUtil.saveUserLoginInfo(user);
+        @Override
+        public void onComplete(Message message) {
+            if(message.obj != null){
+                UserInfo user = (UserInfo) message.obj;
+                user.setLoginState(true);
+                UserPrefsUtil.saveUserLoginInfo(user);
 
-            mView.updateUserEmail(user.getUserEmail());
-            mView.updateUserNickName(user.getNickName());
-            mView.updateUserHeadIcon(user.getHeadIconUrl());
+                mView.updateUserEmail(user.getUserEmail());
+                mView.updateUserNickName(user.getNickName());
+                mView.updateUserHeadIcon(user.getHeadIconUrl());
 
-            mView.onLoginSuccess();
-        }else{
-            mView.onLoginFail();
-            UserPrefsUtil.updateUserInfoBoolean(UserInfo.IS_LOGIN,false);
+                mView.onLoginSuccess();
+                mView.showProgress(false);
+            }else{
+                mView.onLoginFail();
+                UserPrefsUtil.updateUserInfoBoolean(UserInfo.IS_LOGIN,false);
+            }
+        }
+
+        @Override
+        public void onNext(Message message) {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
         }
     }
 }

@@ -24,7 +24,9 @@ public class ResponseCode {
 
     public static final int RESP_LOGIN_FAIL = 0x71;
 
-    public static final int RESP_AV_SAVED_SUCCESS = 0x80;
+    public static final int RESP_IMAGE_UPLOAD_SUCCESS = 0x80;
+
+    public static final int RESP_IMAGE_UPLOAD_ERROR = 0x81;
 
     public static final int RESP_FILE_NOT_FOUND = 0x90;
 
@@ -40,33 +42,29 @@ public class ResponseCode {
 
     public static final int RESP_GET_GOODS_ERROR = 0x203;
 
-    public static final int RESP_QUERY_FAVORITE_GOODS_LIST_SUCCESS = 0x202;
+    public static final int RESP_PUBLISH_GOODS_SUCCESS = 0x204;
 
-    public static final int RESP_QUERY_FAVORITE_GOODS_LIST_ERROR = 0x203;
+    public static final int RESP_PUBLISH_GOODS_ERROR = 0x205;
 
-    public static final int RESP_QUERY_FOLLOWEES_SUCCESS = 0x204;
+    public static final int RESP_QUERY_FAVORITE_GOODS_LIST_SUCCESS = 0x302;
 
-    public static final int RESP_QUERY_FOLLOWEES_ERROR = 0x205;
+    public static final int RESP_QUERY_FAVORITE_GOODS_LIST_ERROR = 0x303;
 
-    private int mCode = RESP_SUCCESS;
+    public static final int RESP_QUERY_FOLLOWEES_SUCCESS = 0x304;
 
-    public ResponseCode(){}
+    public static final int RESP_QUERY_FOLLOWEES_ERROR = 0x305;
 
-    public ResponseCode(int code){
-        mCode = code;
-    }
-
-    public void setCode(int code){
-        mCode = code;
-    }
-
-    public int getCode(){
-        return mCode;
-    }
 
     @Override
     public String toString(){
-        return String.valueOf(mCode);
+        return ResponseCode.class.getSimpleName();
     }
 
+    public String codeToString(int code){
+        switch (code){
+
+        }
+
+        return null;
+    }
 }

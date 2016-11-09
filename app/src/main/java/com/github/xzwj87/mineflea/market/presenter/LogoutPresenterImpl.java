@@ -34,7 +34,6 @@ public class LogoutPresenterImpl extends LogoutPresenter{
     @Override
     public void init() {
         mRepo.init();
-        mRepo.setPresenterCallback(this);
     }
 
     @Override

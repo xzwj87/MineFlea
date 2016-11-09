@@ -13,7 +13,6 @@ import com.github.xzwj87.mineflea.utils.UserInfoUtils;
 import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * Created by jason on 10/14/16.
@@ -47,18 +46,6 @@ public class RegisterPresenterImpl extends RegisterPresenter{
         }
 
         mRepository.register(mUserInfo);
-    }
-
-    @Override
-    public void onImgUploadComplete(Message message) {
-        Log.v(TAG,"onImgUploadComplete(): icon id = " + message.obj);
-        if(message.obj != null) {
-            mUserInfo.setHeadIconUrl((String)message.obj);
-        }else{
-            mUserInfo.setHeadIconUrl("");
-        }
-
-        mRepository.updateCurrentUserInfo(UserInfo.USER_HEAD_ICON,mUserInfo.getHeadIconUrl());
     }
 
     @Override
@@ -127,7 +114,8 @@ public class RegisterPresenterImpl extends RegisterPresenter{
     public void init() {
         mUserInfo = new UserInfo();
         mRepository.init();
-        mRepository.setPresenterCallback(this);
+        //mRepository.setPresenterCallback(this);
+        mRepository.registerCallBack(PRESENTER_REGISTER,new RegisterPresenterCallback());
     }
 
     @Override
@@ -137,27 +125,48 @@ public class RegisterPresenterImpl extends RegisterPresenter{
 
     @Override
     public void onDestroy() {
-
-    }
-
-    @Override
-    public void onRegisterComplete(Message message) {
-        Log.v(TAG,"onRegisterComplete(): user id " + (String)message.obj);
-
-        if(message.obj != null){
-            mView.onRegisterComplete(true);
-            mUserInfo.setUserId((String)message.obj);
-            mUserInfo.setLoginState(true);
-        }else {
-            mView.onRegisterComplete(false);
-            mUserInfo.setLoginState(false);
-        }
-
-        saveUserInfo();
-        mView.finishView();
+        mUserInfo = null;
+        mRepository.unregisterCallback(PRESENTER_REGISTER);
     }
 
     private void saveUserInfo(){
         UserPrefsUtil.saveUserLoginInfo(mUserInfo);
+    }
+
+    private class RegisterPresenterCallback implements PresenterCallback {
+
+        @Override
+        public void onComplete(Message message) {
+            Log.v(TAG,"onComplete(): id = " + (String)message.obj);
+
+            if(message.obj != null){
+                mView.onRegisterComplete(true);
+                mUserInfo.setUserId((String)message.obj);
+                mUserInfo.setLoginState(true);
+            }else {
+                mView.onRegisterComplete(false);
+                mUserInfo.setLoginState(false);
+            }
+
+            saveUserInfo();
+            mView.finishView();
+        }
+
+        @Override
+        public void onNext(Message message) {
+            Log.v(TAG,"onNext(): event = " + message.obj);
+            if(message.obj != null) {
+                mUserInfo.setHeadIconUrl((String)message.obj);
+            }else{
+                mUserInfo.setHeadIconUrl("");
+            }
+
+            mRepository.updateCurrentUserInfo(UserInfo.USER_HEAD_ICON,mUserInfo.getHeadIconUrl());
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
     }
 }

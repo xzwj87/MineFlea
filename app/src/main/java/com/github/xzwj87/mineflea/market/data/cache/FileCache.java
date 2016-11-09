@@ -21,7 +21,7 @@ public interface FileCache {
 
     @Retention(SOURCE)
     @StringDef({CACHE_TYPE_USER,CACHE_TYPE_GOODS})
-    public @interface CacheType{};
+    @interface CacheType{}
 
     String CACHE_TYPE_USER = "user";
     String CACHE_TYPE_GOODS = "goods";

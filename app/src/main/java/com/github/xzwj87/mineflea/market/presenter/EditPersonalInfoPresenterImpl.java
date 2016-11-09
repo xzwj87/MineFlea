@@ -9,7 +9,6 @@ import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.EditPersonalInfoView;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * Created by jason on 11/2/16.
@@ -30,7 +29,7 @@ public class EditPersonalInfoPresenterImpl extends EditPersonalInfoPresenter{
     @Override
     public void init() {
         mRepo.init();
-        mRepo.setPresenterCallback(this);
+        mRepo.registerCallBack(PRESENTER_EDIT,new EditPresenterListener());
 
         mCurrent = mRepo.getCurrentUser();
     }
@@ -42,7 +41,8 @@ public class EditPersonalInfoPresenterImpl extends EditPersonalInfoPresenter{
 
     @Override
     public void onDestroy() {
-
+        mCurrent = null;
+        mRepo.unregisterCallback(PRESENTER_EDIT);
     }
 
     @Override
@@ -89,20 +89,33 @@ public class EditPersonalInfoPresenterImpl extends EditPersonalInfoPresenter{
         mView.updateIntro(intro);
     }
 
-    @Override
-    public void onImgUploadComplete(Message message) {
-        if(message.obj != null){
-            String url = (String)message.obj;
-            mRepo.updateCurrentUserInfo(UserInfo.USER_HEAD_ICON,url);
-        }
-    }
-
-
     private void initView(){
         mView.updateHeadIcon(mCurrent.getHeadIconUrl());
         mView.updateNickName(mCurrent.getNickName());
         mView.updateEmail(mCurrent.getUserEmail());
         mView.updateTelNumber(mCurrent.getUserTelNumber());
         mView.updateIntro(mCurrent.getIntro());
+    }
+
+
+    private class EditPresenterListener implements PresenterCallback {
+
+        @Override
+        public void onComplete(Message message) {
+            if (message.obj != null) {
+                String url = (String) message.obj;
+                mRepo.updateCurrentUserInfo(UserInfo.USER_HEAD_ICON, url);
+            }
+        }
+
+        @Override
+        public void onNext(Message object) {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
     }
 }

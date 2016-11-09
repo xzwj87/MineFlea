@@ -1,20 +1,16 @@
 package com.github.xzwj87.mineflea.market.presenter;
 
 import android.os.Message;
-import android.util.Log;
-import android.widget.TextView;
 
 import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.UserFollowInfo;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.UserFollowView;
-import com.tencent.qc.stat.common.User;
 
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * Created by jason on 10/31/16.
@@ -37,7 +33,7 @@ public class UserFolloweePresenterImpl extends UserFolloweePresenter{
     @Override
     public void init() {
         mRepo.init();
-        mRepo.setPresenterCallback(this);
+        mRepo.registerCallBack(PRESENTER_FOLLOWEE,new FolloweePresenterCallback());
     }
 
     @Override
@@ -48,26 +44,12 @@ public class UserFolloweePresenterImpl extends UserFolloweePresenter{
     @Override
     public void onDestroy() {
         mUserFollowList = null;
+        mRepo.unregisterCallback(PRESENTER_FOLLOWEE);
     }
 
     @Override
     public void setView(BaseView view) {
         mView = (UserFollowView)view;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void onGetUserFollowListDone(Message message) {
-        Log.v(TAG,"onGetUserFollowListDone()");
-
-        if(message.obj == null){
-            mView.showBlankPage();
-        }else{
-            mUserFollowList = (List<UserFollowInfo>)message.obj;
-            mView.renderView();
-        }
-
-        mView.showProgress(false);
     }
 
     @Override
@@ -77,11 +59,41 @@ public class UserFolloweePresenterImpl extends UserFolloweePresenter{
 
     @Override
     public UserFollowInfo getUserFollowAtPos(int pos) {
-        return mUserFollowList.get(pos);
+        if(mUserFollowList != null) {
+            return mUserFollowList.get(pos);
+        }
+
+        throw new IllegalAccessError("no following list still!!!");
     }
 
     @Override
     public void getUserFollowList(String userId) {
         mRepo.queryUserFolloweeListByUserId(userId);
+    }
+
+    private class FolloweePresenterCallback implements PresenterCallback {
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public void onComplete(Message message) {
+            if(message.obj == null){
+                mView.showBlankPage();
+            }else{
+                mUserFollowList = (List<UserFollowInfo>)message.obj;
+                mView.renderView();
+            }
+
+            mView.showProgress(false);
+        }
+
+        @Override
+        public void onNext(Message message) {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
     }
 }

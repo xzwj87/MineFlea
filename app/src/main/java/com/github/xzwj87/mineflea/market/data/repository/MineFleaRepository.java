@@ -1,7 +1,6 @@
 package com.github.xzwj87.mineflea.market.data.repository;
 
 import android.os.Message;
-import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.URLUtil;
 
@@ -11,15 +10,18 @@ import com.github.xzwj87.mineflea.market.data.cache.FileCacheImpl;
 import com.github.xzwj87.mineflea.market.data.remote.MineFleaRemoteSource;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
+import com.github.xzwj87.mineflea.market.presenter.BasePresenter;
 import com.github.xzwj87.mineflea.market.presenter.PresenterCallback;
-import com.squareup.picasso.Picasso;
-import com.tencent.tauth.bean.Pic;
+
+import com.github.xzwj87.mineflea.market.presenter.BasePresenter.PRESENTER_TYPE;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 /**
@@ -32,7 +34,8 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
 
     @Inject FileCacheImpl mCache;
     @Inject MineFleaRemoteSource mCloudSrc;
-    private PresenterCallback mPresenterCb;
+
+    private HashMap<String,PresenterCallback> mPresenterCbs;
 
     private PublishGoodsInfo mGoodsInfo;
 
@@ -40,6 +43,7 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
     public MineFleaRepository(FileCacheImpl cache, MineFleaRemoteSource cloudSource){
         mCloudSrc = cloudSource;
         mCache = cache;
+        mPresenterCbs = new HashMap<>();
     }
 
     public void init(){
@@ -78,11 +82,6 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
         if(mCache.isCached(currentUserId,FileCache.CACHE_TYPE_USER)){
             mCache.delete(currentUserId,FileCache.CACHE_TYPE_USER);
         }
-    }
-
-    @Override
-    public void setPresenterCallback(PresenterCallback callback) {
-        mPresenterCb = callback;
     }
 
     @Override
@@ -129,12 +128,13 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
         if (mCache.isCached(id, FileCache.CACHE_TYPE_USER) &&
                 !mCache.isExpired(id, FileCache.CACHE_TYPE_USER)) {
             UserInfo userInfo = mCache.getUserCache(id);
-            if(mPresenterCb != null){
+            PresenterCallback callback = mPresenterCbs.get(BasePresenter.PRESENTER_USER_DETAIL);
+            if(callback != null){
                 final Message message = new Message();
                 message.obj = userInfo;
                 message.what = ResponseCode.RESP_GET_USER_INFO_SUCCESS;
 
-                mPresenterCb.onGetUserInfoComplete(message);
+                callback.onComplete(message);
             }
         }else {
             mCloudSrc.getUserInfoById(id);
@@ -164,11 +164,12 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
                 }
             }
 
-            if(mPresenterCb != null){
+            PresenterCallback callback = mPresenterCbs.get(BasePresenter.PRESENTER_GOODS);
+            if(callback != null){
                 final Message message = new Message();
                 message.obj = goodsIdList;
                 message.what = ResponseCode.RESP_GET_GOODS_LIST_SUCCESS;
-                mPresenterCb.onGetUserInfoComplete(message);
+                callback.onComplete(message);
             }
         }else{
             mCloudSrc.getGoodsListByUserId(id);
@@ -190,16 +191,37 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
 
     }
 
+    @Override
+    public void registerCallBack(@PRESENTER_TYPE String type, PresenterCallback callback) {
+        if(!mPresenterCbs.containsKey(type)) {
+            mPresenterCbs.put(type, callback);
+        }
+    }
+
+    @Override
+    public void unregisterCallback(@PRESENTER_TYPE String type) {
+        if(mPresenterCbs.containsKey(type)){
+            mPresenterCbs.remove(type);
+        }
+    }
+
     public void onImgUploadComplete(Message msg) {
-        if(mPresenterCb != null) {
-            mPresenterCb.onImgUploadComplete(msg);
+
+        Iterator iterator = mPresenterCbs.entrySet().iterator();
+        while(iterator.hasNext()){
+            Map.Entry entry = (Map.Entry)iterator.next();
+            PresenterCallback callback = (PresenterCallback)entry.getValue();
+            if(callback != null){
+                callback.onComplete(msg);
+            }
         }
     }
 
     @Override
     public void onGetUserInfoDone(Message msg) {
-        if(mPresenterCb != null) {
-            mPresenterCb.onGetUserInfoComplete(msg);
+        PresenterCallback listener = mPresenterCbs.get(BasePresenter.PRESENTER_USER_DETAIL);
+        if(listener != null){
+            listener.onComplete(msg);
         }
     }
 
@@ -210,19 +232,26 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
 
     @Override
     public void onGetGoodsListDone(Message msg) {
-        if(mPresenterCb != null) {
-            mPresenterCb.onGetGoodsListDone(msg);
+        PresenterCallback callback = mPresenterCbs.get(BasePresenter.PRESENTER_GOODS);
+        if(callback != null) {
+            callback.onComplete(msg);
         }
     }
 
     @Override
     public void onGetUserFolloweeDone(Message message) {
-        mPresenterCb.onGetUserFolloweeDone(message);
+        PresenterCallback callback = mPresenterCbs.get(BasePresenter.PRESENTER_FOLLOWEE);
+        if(callback != null) {
+            callback.onComplete(message);
+        }
     }
 
     @Override
     public void onGetUserFollowerDone(Message message) {
-        mPresenterCb.onGetUserFollowerDone(message);
+        PresenterCallback callback = mPresenterCbs.get(BasePresenter.PRESENTER_FOLLOWER);
+        if(callback != null) {
+            callback.onComplete(message);
+        }
     }
 
 
@@ -234,8 +263,9 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
             mGoodsInfo.setId((String) message.obj);
         }
 
-        if(mPresenterCb != null) {
-            mPresenterCb.onPublishComplete(message);
+        PresenterCallback listener = mPresenterCbs.get(BasePresenter.PRESENTER_PUBLISH);
+        if(listener != null){
+            listener.onComplete(message);
         }
     }
 
@@ -243,8 +273,9 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
     public void registerComplete(Message message) {
         Log.v(TAG,"registerComplete(): message " + message.obj);
 
-        if(mPresenterCb != null) {
-            mPresenterCb.onRegisterComplete(message);
+        PresenterCallback listener = mPresenterCbs.get(BasePresenter.PRESENTER_REGISTER);
+        if(listener != null){
+            listener.onComplete(message);
         }
     }
 
@@ -252,9 +283,15 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
     public void updateProcess(int count) {
         Log.v(TAG,"updateProcess(): count = " + count);
 
-        if(mPresenterCb != null) {
-            mPresenterCb.updateUploadProcess(count);
+        PresenterCallback listener = mPresenterCbs.get(BasePresenter.PRESENTER_PUBLISH);
+        if(listener != null){
+            final Message message = new Message();
+            message.obj = count;
+            listener.onNext(message);
         }
+/*        if(mPresenterCb != null) {
+            mPresenterCb.updateUploadProcess(count);
+        }*/
     }
 
     @Override
@@ -282,8 +319,9 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
             user.setHeadIconUrl(cacheImg);
         }
 
-        if(mPresenterCb != null){
-            mPresenterCb.loginComplete(message);
+        PresenterCallback listener = mPresenterCbs.get(BasePresenter.PRESENTER_LOGIN);
+        if(listener != null){
+            listener.onComplete(message);
         }
     }
 }

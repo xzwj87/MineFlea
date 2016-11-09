@@ -303,13 +303,13 @@ public class MineFleaRemoteSource implements RemoteSource{
                     final Message msg = new Message();
                     if(e != null){
                         msg.obj = null;
-                        msg.arg1 = ResponseCode.RESP_AV_SAVED_FAILURE;
+                        msg.arg1 = ResponseCode.RESP_PUBLISH_GOODS_ERROR;
                         mCloudCallback.publishComplete(msg);
                         return;
                     }
 
                     String id = avObject.getObjectId();
-                    msg.arg1 = ResponseCode.RESP_AV_SAVED_SUCCESS;
+                    msg.arg1 = ResponseCode.RESP_PUBLISH_GOODS_SUCCESS;
                     msg.obj = id;
                     Log.v(TAG,"publishGoods(): goods = " + id);
                     mCloudCallback.publishComplete(msg);
@@ -470,11 +470,11 @@ public class MineFleaRemoteSource implements RemoteSource{
                         Log.v(TAG, "saveInBackground(): done");
                         final Message msg = new Message();
                         if (e != null) {
-                            msg.arg1 = ResponseCode.RESP_AV_SAVED_FAILURE;
-                            msg.obj = null;
+                            msg.arg1 = ResponseCode.RESP_IMAGE_UPLOAD_ERROR;
+                            msg.obj = e.getCode();
                             Log.e(TAG, "fail to upload image: " + file.getPath());
                         }else{
-                            msg.arg1 = ResponseCode.RESP_AV_SAVED_SUCCESS;
+                            msg.arg1 = ResponseCode.RESP_IMAGE_UPLOAD_SUCCESS;
                             msg.obj = avFile.getUrl();
                         }
                         mCloudCallback.onImgUploadComplete(msg);

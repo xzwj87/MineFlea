@@ -126,7 +126,7 @@ public class UserDetailFragment extends BaseFragment implements UserDetailView{
     }
 
     @Override
-    public void updateActionButton(boolean isFollowee) {
+    public void updateActionButton(@ACTION_STATE int state) {
 
     }
 

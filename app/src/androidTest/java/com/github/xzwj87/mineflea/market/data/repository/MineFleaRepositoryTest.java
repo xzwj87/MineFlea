@@ -5,7 +5,6 @@ package com.github.xzwj87.mineflea.market.data.repository;
  */
 
 import android.os.Environment;
-import android.os.Message;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.SmallTest;
 
@@ -14,7 +13,6 @@ import com.github.xzwj87.mineflea.market.data.cache.FileCacheImpl;
 import com.github.xzwj87.mineflea.market.data.remote.MineFleaRemoteSource;
 import com.github.xzwj87.mineflea.market.executor.JobExecutor;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
-import com.github.xzwj87.mineflea.market.presenter.PresenterCallback;
 
 import junit.framework.TestCase;
 
@@ -43,8 +41,6 @@ public class MineFleaRepositoryTest extends TestCase{
         mRepo = new MineFleaRepository(new FileCacheImpl(new CacheManager(),new JobExecutor()),
                 new MineFleaRemoteSource());
         mRepo.init();
-
-        mRepo.setPresenterCallback(new RemoteSrcCallback());
         mIconUrl = Environment.getExternalStorageDirectory().getAbsolutePath() +
                 Environment.DIRECTORY_DCIM + "/Camera/20160311_130939.jpg";
     }
@@ -63,60 +59,6 @@ public class MineFleaRepositoryTest extends TestCase{
 
     public void publishGoods_test(){
 
-    }
-
-
-    private class RemoteSrcCallback implements PresenterCallback {
-
-        @Override
-        public void loginComplete(Message message) {
-
-        }
-
-        @Override
-        public void onPublishComplete(Message message) {
-
-        }
-
-        @Override
-        public void onRegisterComplete(Message message) {
-            assertEquals(message.obj,null);
-        }
-
-        @Override
-        public void updateUploadProcess(int count) {
-
-        }
-
-        @Override
-        public void onImgUploadComplete(Message message) {
-            assertEquals(message.obj,null);
-        }
-
-        @Override
-        public void onGetUserInfoComplete(Message message) {
-
-        }
-
-        @Override
-        public void onGetGoodsListDone(Message message) {
-
-        }
-
-        @Override
-        public void onGetUserFollowListDone(Message message) {
-
-        }
-
-        @Override
-        public void onGetUserFolloweeDone(Message message) {
-
-        }
-
-        @Override
-        public void onGetUserFollowerDone(Message message) {
-
-        }
     }
 }
 

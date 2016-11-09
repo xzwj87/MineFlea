@@ -114,5 +114,6 @@
     <string name="hint_logining">Logining,please wait for a while</string>
     <string name="string_false">false</string>
     <string name="hint_logout_success">Logout Success</string>
+    <string name="follow">Follow</string>
     <string name="no_result">Fail to find the path！！</string>
 </resources>
