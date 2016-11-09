@@ -17,7 +17,6 @@
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_register">Register your account</string>
 
-
     <!-- Strings related to login -->
     <string name="prompt_name">User Name</string>
     <string name="prompt_tel_number">Mobile Phone Number</string>
@@ -115,6 +114,5 @@
     <string name="hint_logining">Logining,please wait for a while</string>
     <string name="string_false">false</string>
     <string name="hint_logout_success">Logout Success</string>
-
-    <string name="no_result">搜不到路线哦！！</string>
+    <string name="no_result">Fail to find the path！！</string>
 </resources>

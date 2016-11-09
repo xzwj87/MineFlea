@@ -93,5 +93,6 @@
     <string name="write_down_your_advice">谢谢你的反馈</string>
     <string name="hint_logining">登录中,请稍候&#8230;</string>
     <string name="hint_logout_success">退出成功</string>
+    <string name="no_result">搜不到路线哦！！</string>
 
 </resources>
