@@ -4,12 +4,17 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/activity_vertical_margin"
+    android:paddingStart="@dimen/activity_vertical_margin"
+    android:paddingEnd="@dimen/activity_vertical_margin"
     tools:context=".market.ui.activity.MineFleaHomeActivity$PlaceholderFragment">
 
     <LinearLayout android:id="@+id/header_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:background="@drawable/edit_item_selected_background"
+        android:paddingTop="@dimen/user_center_padding"
+        android:paddingBottom="@dimen/user_center_padding">
 
         <include layout="@layout/layout_header_logout"/>
     </LinearLayout>
@@ -18,21 +23,21 @@
 
     <TextView android:id="@+id/tv_published_goods"
         style="@style/HeaderTextView"
-        android:drawableLeft="@drawable/ic_publish_goods_grey_24dp"
+        android:drawableStart="@drawable/ic_publish_goods_grey_24dp"
         android:text="@string/published_goods"/>
 
     <View style="@style/VerticalDivider" />
 
     <TextView android:id="@+id/tv_favorite_goods"
         style="@style/HeaderTextView"
-        android:drawableLeft="@drawable/ic_favorite_grey_24dp"
+        android:drawableStart="@drawable/ic_favorite_grey_24dp"
         android:text="@string/my_favorites"/>
 
     <View style="@style/VerticalDivider" />
 
     <TextView android:id="@+id/tv_settings"
         style="@style/HeaderTextView"
-        android:drawableLeft="@drawable/ic_settings_grey_24dp"
+        android:drawableStart="@drawable/ic_settings_grey_24dp"
         android:text="@string/settings"/>
 
 </LinearLayout>

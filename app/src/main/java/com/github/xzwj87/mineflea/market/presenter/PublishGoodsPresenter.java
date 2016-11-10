@@ -10,8 +10,7 @@ import java.util.List;
  * Created by jason on 9/27/16.
  */
 
-public abstract class PublishGoodsPresenter implements BasePresenter,
-                    PresenterCallback{
+public abstract class PublishGoodsPresenter implements BasePresenter{
     public abstract void publishGoods();
 
     public abstract void setGoodsName(String name);
@@ -21,42 +20,4 @@ public abstract class PublishGoodsPresenter implements BasePresenter,
     public abstract void setGoodsImgUrl(List<String> url);
     public abstract void setPublisherName(String name);
     public abstract boolean validGoodsInfo();
-
-    public abstract void onPublishComplete(Message message);
-
-
-    public void loginComplete(Message message){
-        throw new UnsupportedOperationException("not supported operation");
-    }
-
-    public void onRegisterComplete(Message message){
-        throw new UnsupportedOperationException("not supported operation");
-    }
-
-    public void onImgUploadComplete(Message message){
-        throw new UnsupportedOperationException("not supported operation");
-    }
-
-    public void onGetUserInfoComplete(Message message){
-        throw new UnsupportedOperationException("not supported operation");
-    }
-
-    public void onGetGoodsListDone(Message message){
-        throw new UnsupportedOperationException("not supported operation");
-    }
-
-    @Override
-    public void onGetUserFollowListDone(Message message) {
-
-    }
-
-    @Override
-    public void onGetUserFolloweeDone(Message message) {
-
-    }
-
-    @Override
-    public void onGetUserFollowerDone(Message message) {
-
-    }
 }

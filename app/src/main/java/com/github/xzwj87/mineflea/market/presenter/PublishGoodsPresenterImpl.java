@@ -13,7 +13,6 @@ import com.github.xzwj87.mineflea.market.ui.PublishGoodsView;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * Created by jason on 9/27/16.
@@ -23,7 +22,7 @@ import javax.inject.Named;
 public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     public static final String TAG = PublishGoodsPresenterImpl.class.getSimpleName();
 
-    private MineFleaRepository mRepository;
+    @Inject MineFleaRepository mRepository;
     private PublishGoodsView mView;
     private PublishGoodsInfo mGoodsInfo;
 
@@ -33,7 +32,7 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     private List<String> mImgUris;
 
     @Inject
-    public PublishGoodsPresenterImpl(@Named("dataRepository") MineFleaRepository repository){
+    public PublishGoodsPresenterImpl(MineFleaRepository repository){
         mRepository = repository;
     }
 
@@ -46,7 +45,8 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     public void init() {
         mGoodsInfo = new PublishGoodsInfo();
         mRepository.init();
-        mRepository.setPresenterCallback(this);
+        //mRepository.setPresenterCallback(this);
+        mRepository.registerCallBack(PRESENTER_PUBLISH,new PublishPresenterCallback());
 
         mCurrentProcess = 0;
         mUploadImgCount = 0;
@@ -60,7 +60,9 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
         mImgUris = mGoodsInfo.getImageUri();
         mUploadImgCount = 0;
         mCurrentProcess = 0;
-        mRepository.uploadImage(mImgUris.get(mUploadImgCount),true);
+        mRepository.uploadImageById(mGoodsInfo.getId(),
+                mImgUris.get(0),false,true);
+        //mRepository.uploadImage(mImgUris.get(mUploadImgCount),true);
     }
 
     @Override
@@ -86,11 +88,12 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     @Override
     public void setGoodsImgUrl(List<String> urls) {
         mGoodsInfo.setImageUri(urls);
+        mImgUris = urls;
     }
 
     @Override
     public void setPublisherName(String name) {
-        mGoodsInfo.setPublisherId(name);
+        mGoodsInfo.setUserId(name);
     }
 
     @Override
@@ -122,35 +125,52 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
 
     @Override
     public void onPause() {
+
     }
 
     @Override
     public void onDestroy() {
         mGoodsInfo = null;
+        mImgUris = null;
+
+        mRepository.unregisterCallback(PRESENTER_PUBLISH);
     }
 
-    @Override
-    public void onPublishComplete(Message message) {
-        if(message.obj == null){
-            mView.onPublishComplete(false);
-        }else{
-            mView.onPublishComplete(true);
-        }
-    }
+    private class PublishPresenterCallback implements PresenterCallback {
 
-    @Override
-    public void updateUploadProcess(int count) {
-        if((count == 100) && (++mUploadImgCount < sImgNumber)){
-            mRepository.uploadImage(mImgUris.get(mUploadImgCount),true);
-        }else if(mUploadImgCount == sImgNumber){
-            mView.onPublishComplete(true);
-            mUploadImgCount = 0;
-            mCurrentProcess = 0;
-            return;
+        @Override
+        public void onComplete(Message message) {
+            if(message.obj == null){
+                mView.onPublishComplete(false);
+            }else{
+                mView.onPublishComplete(true);
+            }
         }
 
-        mCurrentProcess = (count/sImgNumber) + mUploadImgCount*100/sImgNumber;
-        Log.v(TAG,"updateUploadProcess(): count = " + mCurrentProcess);
-        mView.updateUploadProcess(mCurrentProcess);
+        @Override
+        public void onNext(Message message) {
+            int count = (Integer)message.obj;
+            Log.v(TAG,"onNext(): count = " + count);
+
+            if((count == 100) && (++mUploadImgCount < sImgNumber)){
+                mRepository.uploadImageById(mGoodsInfo.getId(),
+                        mImgUris.get(mUploadImgCount),false,true);
+                //mRepository.uploadImage(mImgUris.get(mUploadImgCount),true);
+            }else if(mUploadImgCount == sImgNumber){
+                mView.onPublishComplete(true);
+                mUploadImgCount = 0;
+                mCurrentProcess = 0;
+                return;
+            }
+
+            mCurrentProcess = (count/sImgNumber) + mUploadImgCount*100/sImgNumber;
+            Log.v(TAG,"updateUploadProcess(): count = " + mCurrentProcess);
+            mView.updateUploadProcess(mCurrentProcess);
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
     }
 }

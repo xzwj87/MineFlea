@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:key="@string/key_pref_wifi_only_sync"
+        android:title="@string/pref_data_sync"
+        android:summaryOn="@string/wifi_only_sync"
+        android:summaryOff="@string/network_connected_sync"
+        android:defaultValue="false" />
+
+    <ListPreference
+        android:title="@string/pref_theme_color"
+        android:summary="@string/change_theme_color"
+        android:dialogTitle="@string/choose_color_you_like"
+        android:entries="@array/dummy"
+        android:entryValues="@array/dummy_values"
+        android:dialogLayout="@layout/settings_theme_color_list"/>
+
+    <ListPreference
+        android:title="@string/settings_about"
+        android:summary="@string/settings_about_sum"
+        android:dialogTitle="@string/settings_about_mineflea"
+        android:dialogMessage="@string/about_mineflea"
+        android:entries="@array/dummy"
+        android:entryValues="@array/dummy_values" />
+
+    <EditTextPreference
+        android:key="@string/key_feedback"
+        android:title="@string/issue_feedback"
+        android:dialogTitle="@string/write_down_your_advice"
+        android:theme="@style/DialogTheme"
+        android:negativeButtonText="@string/button_cancel"
+        android:positiveButtonText="@string/button_ok" />
+
+    <com.github.xzwj87.mineflea.market.ui.dialog.LogoutPreference
+        android:key="@string/key_login_state"
+        android:title="@string/settings_logout"
+        android:entries="@array/dummy"
+        android:defaultValue="@string/string_false"
+        android:entryValues="@array/dummy_values"
+        android:dialogTitle="@string/sure_to_logout"
+        android:negativeButtonText="@string/button_cancel"
+        android:positiveButtonText="@string/button_ok"/>
+
+
+</PreferenceScreen>

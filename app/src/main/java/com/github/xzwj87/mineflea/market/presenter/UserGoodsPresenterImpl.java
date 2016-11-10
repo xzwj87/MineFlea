@@ -12,7 +12,6 @@ import com.github.xzwj87.mineflea.market.ui.UserGoodsView;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * Created by jason on 10/27/16.
@@ -21,20 +20,19 @@ import javax.inject.Named;
 @PerActivity
 public class UserGoodsPresenterImpl extends UserGoodsPresenter {
 
-    private MineFleaRepository mRepo;
+    @Inject MineFleaRepository mRepo;
     private UserGoodsView mView;
     private List<PublishGoodsInfo> mGoodsList;
 
     @Inject
-    public UserGoodsPresenterImpl(@Named("dataRepository")MineFleaRepository repository){
+    public UserGoodsPresenterImpl(MineFleaRepository repository){
         mRepo = repository;
     }
 
     @Override
     public void init() {
         mRepo.init();
-        mRepo.setPresenterCallback(this);
-
+        mRepo.registerCallBack(PRESENTER_GOODS,new UserGoodsPresenterCallback());
     }
 
     @Override
@@ -78,28 +76,36 @@ public class UserGoodsPresenterImpl extends UserGoodsPresenter {
         return goods;
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public void onGetGoodsListDone(Message message) {
-        if(message.obj != null){
-            mGoodsList = (List<PublishGoodsInfo>)message.obj;
-
-            renderView();
-        // empty list or fail
-        }else if(message.arg1 == 0){
-            mView.showBlankPage();
-        }
-
-        mView.showProgress(false);
-    }
 
     private void renderView(){
         mView.renderView();
     }
 
-    @Override
-    public void onGetUserInfoComplete(Message message) {
+    private class UserGoodsPresenterCallback implements PresenterCallback {
+        @SuppressWarnings("unchecked")
+        @Override
+        public void onComplete(Message message) {
+            if(message.obj != null){
+                mGoodsList = (List<PublishGoodsInfo>)message.obj;
 
+                renderView();
+                // empty list or fail
+            }else if(message.arg1 == 0){
+                mView.showBlankPage();
+            }
+
+            mView.showProgress(false);
+        }
+
+        @Override
+        public void onNext(Message message) {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
     }
 
 }

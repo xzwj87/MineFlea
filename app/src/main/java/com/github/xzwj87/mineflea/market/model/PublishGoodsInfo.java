@@ -28,7 +28,7 @@ public class PublishGoodsInfo {
 
     private String mName;
 
-    private String mPublisherId;
+    private String mUserId;
 
     private double mHighPrice;
 
@@ -43,6 +43,8 @@ public class PublishGoodsInfo {
     private List<String> mImageUri;
 
     private int mStars;
+    //users who likes me
+    private List<String> mFavorUserList;
 
     public PublishGoodsInfo(){
         mReleasedDate = System.currentTimeMillis();
@@ -51,7 +53,7 @@ public class PublishGoodsInfo {
     public static AVObject toAvObject(PublishGoodsInfo info){
         AVObject avObject = new AVObject(info.getId());
         avObject.put(GOODS_NAME,info.getName());
-        avObject.put(GOODS_PUBLISHER,info.getPublisherId());
+        avObject.put(GOODS_PUBLISHER,info.getUserId());
         avObject.put(GOODS_PRICE,info.getPrice());
         avObject.put(GOODS_LIKES,info.getStars());
         avObject.put(GOODS_IMAGES,info.getImageUri());
@@ -61,10 +63,12 @@ public class PublishGoodsInfo {
 
     @SuppressWarnings("unchecked")
     public static PublishGoodsInfo fromAvObject(AVObject object){
+        if(object == null) return null;
+
         PublishGoodsInfo info = new PublishGoodsInfo();
         info.setId(object.getClassName());
         info.setName((String)object.get(GOODS_NAME));
-        info.setPublisherId((String)object.get(GOODS_PUBLISHER));
+        info.setUserId((String)object.get(GOODS_PUBLISHER));
         info.setPrice(object.getDouble(GOODS_PRICE));
         info.setStars(object.getInt(GOODS_LIKES));
         info.setImageUri(object.getList(GOODS_IMAGES));
@@ -89,12 +93,12 @@ public class PublishGoodsInfo {
     }
 
 
-    public String getPublisherId(){
-        return mPublisherId;
+    public String getUserId(){
+        return mUserId;
     }
 
-    public void setPublisherId(String publisher){
-        mPublisherId = publisher;
+    public void setUserId(String publisher){
+        mUserId = publisher;
     }
 
     public double getHighPrice(){
@@ -150,7 +154,21 @@ public class PublishGoodsInfo {
     }
 
     public int getStars(){
-        return mStars;
+        if(mFavorUserList == null) return 0;
+
+        return mFavorUserList.size();
+    }
+
+    public void addFavorUser(String id){
+        if(mFavorUserList == null) return;
+
+        mFavorUserList.add(id);
+    }
+
+    public void removeFavorUser(String id){
+        if(mFavorUserList == null) return;
+
+        mFavorUserList.remove(id);
     }
 
 

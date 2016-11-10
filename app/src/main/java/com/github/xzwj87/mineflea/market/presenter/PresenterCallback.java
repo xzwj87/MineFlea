@@ -2,22 +2,14 @@ package com.github.xzwj87.mineflea.market.presenter;
 
 import android.os.Message;
 
-import com.github.xzwj87.mineflea.market.model.UserInfo;
-
 /**
- * Created by jason on 10/17/16.
+ * Created by jason on 11/7/16.
  */
 
 public interface PresenterCallback {
-    void loginComplete(Message message);
-    void onPublishComplete(Message message);
-    void onRegisterComplete(Message message);
-    void updateUploadProcess(int count);
-    void onImgUploadComplete(Message message);
-    void onGetUserInfoComplete(Message message);
-    void onGetGoodsListDone(Message message);
-    void onGetUserFollowListDone(Message message);
-    void onGetUserFolloweeDone(Message message);
-    void onGetUserFollowerDone(Message message);
+    void onComplete(Message message);
 
+    void onNext(Message message);
+
+    void onError(Throwable e);
 }

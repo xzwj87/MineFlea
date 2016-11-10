@@ -37,6 +37,7 @@
             android:layout_gravity="start"
             android:textColor="@color/colorLightGrey"
             android:text="@string/logout"
+            android:visibility="invisible"
             android:textSize="@dimen/user_center_sub_title_size" />
     </LinearLayout>
 </RelativeLayout>

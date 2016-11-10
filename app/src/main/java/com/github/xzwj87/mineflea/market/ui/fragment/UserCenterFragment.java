@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amap.api.maps.model.Text;
@@ -26,6 +27,8 @@ import com.github.xzwj87.mineflea.market.ui.UserCenterView;
 import com.github.xzwj87.mineflea.market.ui.activity.LoginActivity;
 import com.github.xzwj87.mineflea.market.ui.activity.UserDetailActivity;
 import com.github.xzwj87.mineflea.market.ui.activity.UserGoodsActivity;
+import com.github.xzwj87.mineflea.market.ui.settings.SettingsActivity;
+import com.github.xzwj87.mineflea.utils.SharePrefsHelper;
 import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 import com.squareup.picasso.Picasso;
 
@@ -55,9 +58,6 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
     @BindView(R.id.tv_published_goods) TextView mTvPublishedGoods;
     @BindView(R.id.tv_favorite_goods) TextView mTvFavorGoods;
 
-    private boolean mIsIconSet = false;
-    private String mUserId;
-
     @Inject UserCenterPresenterImpl mPresenter;
 
     public UserCenterFragment(){
@@ -76,20 +76,25 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
 
         ButterKnife.bind(this,root);
 
+        return root;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
         initView();
         init();
-
-        return root;
     }
 
     @OnClick(R.id.header_container)
     public void login(){
         Log.v(TAG,"login()");
 
-        boolean isLogin = UserPrefsUtil.getBoolean(UserInfo.IS_LOGIN,false);
+        boolean isLogin = SharePrefsHelper.getInstance(getActivity()).getLoginState();
         if(isLogin){
             Intent intent = new Intent(getActivity(), UserDetailActivity.class);
-            intent.putExtra(UserInfo.USER_ID,mUserId);
+            intent.putExtra(UserInfo.USER_ID,mPresenter.getUserId());
             intent.putExtra(UserInfo.CURRENT_USER,true);
             startActivity(intent);
         }else {
@@ -146,33 +151,33 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
     private void initView(){
         Log.v(TAG,"initView()");
 
-        if(UserPrefsUtil.isLogin()) {
+        boolean login = SharePrefsHelper.getInstance(getContext()).getLoginState();
+        if(login) {
             Log.v(TAG,"initView(): login!!!");
-            mTvNickName.setText(UserPrefsUtil.getString(UserInfo.USER_NICK_NAME, ""));
-            mTvUserEmail.setText(UserPrefsUtil.getString(UserInfo.UER_EMAIL,""));
+            mTvUserEmail.setVisibility(View.VISIBLE);
+        }else{
+            mTvUserEmail.setVisibility(View.GONE);
+            mTvNickName.setText(getString(R.string.logout));
+        }
 
-            String headIcon = UserPrefsUtil.getString(UserInfo.USER_HEAD_ICON,"");
-            if(!TextUtils.isEmpty(headIcon)) {
-                Picasso.with(getActivity())
-                        .load(headIcon)
-                        .resize(512,512)
-                        .centerCrop()
-                        .into(mCivHeader);
-                mIsIconSet = true;
-            }else{
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mCivHeader.setImageDrawable(
-                            getResources().getDrawable(R.drawable.ic_account_circle_grey_72dp, null));
-                }else{
-                    mCivHeader.setImageDrawable(
-                            getResources().getDrawable(R.drawable.ic_account_circle_grey_72dp));
-                }
-            }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mCivHeader.setImageDrawable(
+                    getResources().getDrawable(R.drawable.ic_account_circle_grey_72dp, null));
+        }else{
+            mCivHeader.setImageDrawable(
+                    getResources().getDrawable(R.drawable.ic_account_circle_grey_72dp));
         }
     }
 
     @OnClick({R.id.tv_favorite_goods,R.id.tv_published_goods,R.id.tv_settings})
     public void doAction(TextView tv){
+
+        boolean login = SharePrefsHelper.getInstance(getContext()).getLoginState();
+        if(!login){
+            showNeedLoginHint();
+            return;
+        }
+
         int id = tv.getId();
 
         Intent intent = null;
@@ -180,16 +185,18 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
             case R.id.tv_favorite_goods:
                 intent = new Intent(getActivity(),UserGoodsActivity.class);
                 intent.putExtra("FragmentTag",UserFavoritesFragment.TAG);
-                intent.putExtra("UserId",mUserId);
+                intent.putExtra("UserId",mPresenter.getUserId());
                 startActivity(intent);
                 break;
             case R.id.tv_published_goods:
                 intent = new Intent(getActivity(),UserGoodsActivity.class);
                 intent.putExtra("FragmentTag",UserPublishedGoodsFragment.TAG);
-                intent.putExtra("UserId",mUserId);
+                intent.putExtra("UserId",mPresenter.getUserId());
                 startActivity(intent);
                 break;
             case R.id.tv_settings:
+                intent = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(intent);
                 break;
         }
     }
@@ -199,34 +206,39 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
             mPresenter.init();
             mPresenter.setView(this);
             mPresenter.loadUserInfo();
-
-            mUserId = mPresenter.getUserId();
         }
     }
 
     @Override
     public void updateUserNickName(String nickName) {
-        if(TextUtils.isEmpty(mTvNickName.getText())) {
-            mTvNickName.setText(nickName);
-        }
+        mTvNickName.setText(nickName);
     }
 
     @Override
     public void updateUserEmail(String email) {
-        if(TextUtils.isEmpty(mTvUserEmail.getText())) {
-            mTvUserEmail.setText(email);
-        }
+        mTvUserEmail.setText(email);
     }
 
     @Override
     public void updateHeadIcon(String iconUrl) {
-        if(!mIsIconSet) {
+        if(URLUtil.isNetworkUrl(iconUrl)){
             Picasso.with(getActivity())
                     .load(iconUrl)
                     .resize(512, 512)
                     .centerCrop()
                     .into(mCivHeader);
+        }else{
+            Picasso.with(getActivity())
+                    .load(Uri.fromFile(new File(iconUrl)))
+                    .resize(512, 512)
+                    .centerCrop()
+                    .into(mCivHeader);
         }
+    }
+
+    @Override
+    public void showNeedLoginHint() {
+        showToast(getString(R.string.need_to_login));
     }
 
     @Override

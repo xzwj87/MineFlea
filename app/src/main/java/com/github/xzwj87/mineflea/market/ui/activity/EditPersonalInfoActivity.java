@@ -258,6 +258,8 @@ public class EditPersonalInfoActivity extends BaseActivity
 
 
     private void showGetHeadIconDialog(){
+        Log.v(TAG,"showGetHeadIconDialog()");
+        
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setItems(R.array.user_head_icon_capture, new DialogInterface.OnClickListener() {

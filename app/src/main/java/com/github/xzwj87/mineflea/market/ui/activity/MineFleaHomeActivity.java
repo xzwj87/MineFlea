@@ -81,8 +81,6 @@ public class MineFleaHomeActivity extends BaseActivity
 
         //noinspection SimplifiableIfStatement
         switch (id){
-            case R.id.action_settings:
-                return true;
             case R.id.action_publish:
                 startPublishActivity();
                 return true;

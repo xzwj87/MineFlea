@@ -45,8 +45,6 @@ public class UserInfoUtils {
 
         userInfo.setNickName((String)avUser.get(UserInfo.USER_NICK_NAME));
         userInfo.setHeadIconUrl((String)avUser.get(UserInfo.USER_HEAD_ICON));
-        userInfo.setFollowers((int)avUser.get(UserInfo.USER_FOLLOWERS));
-        userInfo.setFollowees((int)avUser.get(UserInfo.USER_FOLLOWEES));
         userInfo.setLocation((String)avUser.get(UserInfo.USER_LOCATION));
         return userInfo;
     }

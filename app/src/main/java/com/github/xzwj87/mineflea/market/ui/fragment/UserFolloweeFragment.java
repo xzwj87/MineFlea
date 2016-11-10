@@ -6,11 +6,13 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.xzwj87.mineflea.R;
+import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.model.UserFollowInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.UserFolloweePresenterImpl;
@@ -25,6 +27,8 @@ import javax.inject.Inject;
 
 public class UserFolloweeFragment extends BaseFragment
         implements UserFollowView,UserFollowAdapter.UserFollowCallback{
+
+    private static final String TAG = UserFolloweeFragment.class.getSimpleName();
 
     @Inject UserFolloweePresenterImpl mPresenter;
     private RecyclerView mRvUserList;
@@ -70,17 +74,26 @@ public class UserFolloweeFragment extends BaseFragment
 
     @Override
     public void showBlankPage() {
-        mRvUserList.removeAllViewsInLayout();
+        mSrLayout.removeAllViewsInLayout();
 
-        View blank = View.inflate(getContext(),R.layout.fragment_blank_hint,null);
-        mRvUserList.addView(blank);
+        if(getActivity() != null) {
+            View blank = LayoutInflater.from(getActivity())
+                    .inflate(R.layout.fragment_blank_hint, mSrLayout, false);
+            //View blank = View.inflate(getContext(),R.layout.fragment_blank_hint,null);
+            mSrLayout.addView(blank);
+        }else{
+            View blank = LayoutInflater.from(AppGlobals.getAppContext())
+                    .inflate(R.layout.fragment_blank_hint, mSrLayout, false);
+            //View blank = View.inflate(getContext(),R.layout.fragment_blank_hint,null);
+            mSrLayout.addView(blank);
+        }
     }
 
     @Override
     public void renderView() {
+        Log.v(TAG,"renderView()");
         mRvUserList.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
-        mAdapter.setCallback(this);
     }
 
     @Override
@@ -92,8 +105,8 @@ public class UserFolloweeFragment extends BaseFragment
         LinearLayoutManager layoutMgr = new LinearLayoutManager(getContext(), OrientationHelper.VERTICAL,false);
         mRvUserList.setLayoutManager(layoutMgr);
         mRvUserList.setItemAnimator(new DefaultItemAnimator());
-
         mAdapter = new UserFollowAdapter();
+        mAdapter.setCallback(this);
     }
 
     @Override

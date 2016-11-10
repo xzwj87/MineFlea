@@ -11,4 +11,7 @@
         <item>Camera</item>
         <item>From File</item>
     </string-array>
+
+    <string-array name="dummy">dummy</string-array>
+    <string-array name="dummy_values">dummy_values</string-array>
 </resources>
