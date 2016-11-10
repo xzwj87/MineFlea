@@ -11,6 +11,7 @@ import com.github.xzwj87.mineflea.market.internal.di.component.DaggerAppComponen
 import com.github.xzwj87.mineflea.market.internal.di.component.DaggerMarketComponent;
 import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
 import com.github.xzwj87.mineflea.market.internal.di.module.ActivityModule;
+import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
 
 /**
  * Created by jason on 9/29/16.
@@ -28,6 +29,13 @@ public class BaseActivity extends AppCompatActivity
         getAppComponent().inject(this);
 
         initInjector();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        checkThemeColor();
     }
 
     public void showToast(String msg){
@@ -53,5 +61,9 @@ public class BaseActivity extends AppCompatActivity
     @Override
     public MarketComponent getComponent() {
         return mMarketComponent;
+    }
+
+    private void checkThemeColor(){
+        ThemeColorUtils.changeThemeColor(this);
     }
 }

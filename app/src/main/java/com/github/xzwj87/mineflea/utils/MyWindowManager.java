@@ -8,7 +8,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
-import com.github.xzwj87.mineflea.market.ui.FloatWindowSmallView;
+import com.github.xzwj87.mineflea.market.ui.view.FloatWindowSmallView;
 /**
  * Created by seaice on 2016/7/5.
  */

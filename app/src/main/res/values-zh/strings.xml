@@ -95,5 +95,7 @@
     <string name="hint_logout_success">退出成功</string>
     <string name="no_result">搜不到路线！</string>
     <string name="need_to_login">请先登录</string>
+    <string name="image_color">color image</string>
+    <string name="selected_color">selected_color</string>
 
 </resources>

@@ -117,4 +117,8 @@
     <string name="follow">Follow</string>
     <string name="no_result">Fail to find the path！！</string>
     <string name="need_to_login">Please login firstly</string>
+    <string name="image_color">color image</string>
+    <string name="selected_color">selected_color</string>
+    <string name="key_pref_theme_color">key_pref_theme_color</string>
+    <string name="color_indigo">#303F9F</string>
 </resources>

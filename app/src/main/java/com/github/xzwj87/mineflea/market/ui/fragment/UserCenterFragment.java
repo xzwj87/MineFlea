@@ -171,14 +171,12 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
 
     @OnClick({R.id.tv_favorite_goods,R.id.tv_published_goods,R.id.tv_settings})
     public void doAction(TextView tv){
-
+        int id = tv.getId();
         boolean login = SharePrefsHelper.getInstance(getContext()).getLoginState();
-        if(!login){
+        if(!login && id != R.id.tv_settings){
             showNeedLoginHint();
             return;
         }
-
-        int id = tv.getId();
 
         Intent intent = null;
         switch (id){

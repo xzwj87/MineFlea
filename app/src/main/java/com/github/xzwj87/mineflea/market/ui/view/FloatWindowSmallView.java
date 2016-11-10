@@ -1,4 +1,4 @@
-package com.github.xzwj87.mineflea.market.ui;
+package com.github.xzwj87.mineflea.market.ui.view;
 
 import android.content.Context;
 import android.content.Intent;

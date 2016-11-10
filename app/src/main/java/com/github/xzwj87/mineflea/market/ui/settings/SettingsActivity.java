@@ -12,6 +12,7 @@ import android.view.MenuItem;
 
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.ui.activity.BaseActivity;
+import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
 
 public class SettingsActivity extends BaseActivity {
     public static final String LOG_TAG = "SettingsActivity";
@@ -37,6 +38,8 @@ public class SettingsActivity extends BaseActivity {
 
             getComponent().inject(fragment);
         }
+
+        //checkThemeColor();
     }
 
     @Override
@@ -50,5 +53,4 @@ public class SettingsActivity extends BaseActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 }
