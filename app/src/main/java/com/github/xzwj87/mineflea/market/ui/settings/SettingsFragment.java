@@ -13,6 +13,9 @@ import com.github.xzwj87.mineflea.market.ui.dialog.ThemeColorPickerPreference;
 import com.github.xzwj87.mineflea.utils.SharePrefsHelper;
 import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.inject.Inject;
 
 /**
@@ -77,7 +80,10 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     private void initPref(){
         ThemeColorPickerPreference pref = (ThemeColorPickerPreference)findPreference(getString(R.string.key_pref_theme_color));
         String color = SharePrefsHelper.getInstance(getActivity()).getThemeColor();
-        int idx = pref.findIndexOfValue(color);
-        pref.setSummary(pref.getEntries()[idx]);
+        List<String> name = Arrays.asList(getResources().getStringArray(R.array.pref_colorList));
+        int idx = ThemeColorUtils.findThemeColorIndex(color);
+        if(idx != -1) {
+            pref.setSummary(name.get(idx));
+        }
     }
 }

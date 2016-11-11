@@ -20,6 +20,7 @@ import com.github.xzwj87.mineflea.market.internal.di.component.DaggerMarketCompo
 import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
 import com.github.xzwj87.mineflea.market.ui.adapter.SectionsPageAdapter;
 import com.github.xzwj87.mineflea.market.ui.fragment.UserCenterFragment;
+import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
 
 import static com.github.xzwj87.mineflea.market.ui.adapter.SectionsPageAdapter.FRAGMENT_USER_CENTER_TAB;
 
@@ -63,6 +64,8 @@ public class MineFleaHomeActivity extends BaseActivity
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
+        checkThemeColor(this);
     }
 
     @Override
@@ -87,6 +90,11 @@ public class MineFleaHomeActivity extends BaseActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void checkThemeColor(AppCompatActivity activity){
+        ThemeColorUtils.changeThemeColor(this);
     }
 
     private void startPublishActivity(){

@@ -18,6 +18,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -40,6 +41,7 @@ import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.LoginPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.LoginView;
 import com.github.xzwj87.mineflea.utils.SharePrefsHelper;
+import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
 
 import javax.inject.Inject;
 
@@ -81,6 +83,8 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         ButterKnife.bind(this);
 
         init();
+
+        checkThemeColor(this);
     }
 
     @OnEditorAction(R.id.et_password)
@@ -331,6 +335,10 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         finish();
     }
 
+    @Override
+    protected void checkThemeColor(AppCompatActivity activity){
+        ThemeColorUtils.changeThemeColor(this);
+    }
 
     private interface ProfileQuery {
         String[] PROJECTION = {

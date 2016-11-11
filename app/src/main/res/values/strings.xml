@@ -120,5 +120,5 @@
     <string name="image_color">color image</string>
     <string name="selected_color">selected_color</string>
     <string name="key_pref_theme_color">key_pref_theme_color</string>
-    <string name="color_indigo">#303F9F</string>
+    <string name="color_indigo">#3F51B5</string>
 </resources>

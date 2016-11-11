@@ -12,6 +12,7 @@ import android.text.TextUtils;
 
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
+import com.github.xzwj87.mineflea.market.ui.activity.UserDetailActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,5 +69,9 @@ public class ThemeColorUtils {
             activity.getWindow().setStatusBarColor(
                     Color.parseColor(sThemeDarkColorList.get(ind)));
         }
+    }
+
+    public static int findThemeColorIndex(String color){
+        return sThemeColorList.indexOf(color);
     }
 }

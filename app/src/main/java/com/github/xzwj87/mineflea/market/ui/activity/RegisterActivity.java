@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.AutoCompleteTextView;
@@ -21,6 +22,7 @@ import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.RegisterPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.RegisterView;
 import com.github.xzwj87.mineflea.utils.SharePrefsHelper;
+import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
@@ -60,6 +62,8 @@ public class RegisterActivity extends BaseActivity implements RegisterView{
 
         initInjector();
         init();
+
+        checkThemeColor(this);
     }
 
     @Override
@@ -231,5 +235,10 @@ public class RegisterActivity extends BaseActivity implements RegisterView{
 
             }
         }
+    }
+
+    @Override
+    protected void checkThemeColor(AppCompatActivity activity){
+        ThemeColorUtils.changeThemeColor(this);
     }
 }

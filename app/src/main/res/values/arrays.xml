@@ -16,7 +16,7 @@
     <string-array name="dummy_values">dummy_values</string-array>
 
     <string-array name="pref_colorList">
-        <item>Red</item>
+        <item>Grey</item>
         <item>Pink</item>
         <item>Purple</item>
         <item>Brown</item>
@@ -28,7 +28,7 @@
     </string-array>
 
     <string-array name="pref_colorList_values">
-        <item>#F44336</item>
+        <item>#424242</item>
         <item>#E91E63</item>
         <item>#9C27B0</item>
         <item>#795548</item>
@@ -40,7 +40,7 @@
     </string-array>
 
     <string-array name="color_list_dark_values">
-        <item>#D32F2F</item>
+        <item>#212121</item>
         <item>#C2185B</item>
         <item>#7B1FA2</item>
         <item>#5D4037</item>

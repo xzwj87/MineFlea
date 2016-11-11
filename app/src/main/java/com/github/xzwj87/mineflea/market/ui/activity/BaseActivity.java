@@ -34,8 +34,6 @@ public class BaseActivity extends AppCompatActivity
     @Override
     public void onResume(){
         super.onResume();
-
-        checkThemeColor();
     }
 
     public void showToast(String msg){
@@ -63,7 +61,7 @@ public class BaseActivity extends AppCompatActivity
         return mMarketComponent;
     }
 
-    private void checkThemeColor(){
-        ThemeColorUtils.changeThemeColor(this);
+    protected void checkThemeColor(AppCompatActivity activity){
+        // empty, if necessary, subclass should override it
     }
 }

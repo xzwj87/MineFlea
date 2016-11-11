@@ -22,6 +22,7 @@ import com.github.xzwj87.mineflea.market.ui.adapter.ColorListAdapter;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.Random;
 
 
 /**
@@ -85,7 +86,11 @@ public class ThemeColorPickerPreference extends ListPreference implements ColorI
 
         mCurrent = getValue();
         mPrev = mCurrent;
-        setSummary(mEntries[findIndexOfValue(mCurrent)]);
+        int ind = findIndexOfValue(mCurrent);
+        if(ind == -1){
+            ind = (int)(Math.random()*mEntries.length);
+        }
+        setSummary(mEntries[ind]);
 
         if(VIEW_TYPE_LIST.equals(mViewType)) {
             ColorListAdapter adapter = new ColorListAdapter(getContext(), mEntryValues, findIndexOfValue(mCurrent));

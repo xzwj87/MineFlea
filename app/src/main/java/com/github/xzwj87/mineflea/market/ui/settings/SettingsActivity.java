@@ -39,7 +39,7 @@ public class SettingsActivity extends BaseActivity {
             getComponent().inject(fragment);
         }
 
-        //checkThemeColor();
+        checkThemeColor(this);
     }
 
     @Override
@@ -52,5 +52,10 @@ public class SettingsActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void checkThemeColor(AppCompatActivity activity){
+        ThemeColorUtils.changeThemeColor(this);
     }
 }
