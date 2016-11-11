@@ -7,11 +7,13 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by jason on 9/27/16.
  */
 
+@Singleton
 public class JobExecutor implements Executor {
 
     private static final int INI_POOL_SIZE = 3;

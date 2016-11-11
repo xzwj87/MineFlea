@@ -6,7 +6,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
         // for edit text
         <item name="colorControlNormal">@color/colorLightGrey</item>
         <item name="colorControlActivated">@color/colorAccent</item>
@@ -49,6 +48,9 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/colorDarkGrey</item>
         <item name="android:drawablePadding">16dp</item>
+        <item name="android:paddingTop">@dimen/user_center_padding</item>
+        <item name="android:paddingBottom">@dimen/user_center_padding</item>
+        <item name="android:background">@drawable/edit_item_selected_background</item>
     </style>
 
     <style name="UserDetailTextView">
@@ -65,8 +67,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:background">@color/colorVLGrey</item>
-        <item name="android:layout_marginBottom">16dp</item>
-        <item name="android:layout_marginTop">16dp</item>
     </style>
 
     <style name="EditVerticalDivider">

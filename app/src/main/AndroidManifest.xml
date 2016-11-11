@@ -6,6 +6,7 @@
     <!--允许程序打开网络套接字-->
     <uses-permission android:name="android.permission.INTERNET" />
     <!--允许程序设置内置sd卡的写权限-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--允许程序获取网络状态-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -94,6 +95,11 @@
         <activity android:name=".market.ui.activity.EditPersonalInfoActivity"
             android:label="@string/edit_personal_info"
             android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".market.ui.settings.SettingsActivity"
+            android:label="@string/action_settings"
+            android:theme="@style/AppTheme">
+        </activity>
 
         <activity android:name="me.iwf.photopicker.PhotoPickerActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"

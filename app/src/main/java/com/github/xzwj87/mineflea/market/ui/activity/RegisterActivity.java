@@ -20,6 +20,7 @@ import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.RegisterPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.RegisterView;
+import com.github.xzwj87.mineflea.utils.SharePrefsHelper;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
@@ -136,6 +137,9 @@ public class RegisterActivity extends BaseActivity implements RegisterView{
 
             data.putExtras(bundle);
             setResult(RESULT_OK, data);
+
+            SharePrefsHelper.getInstance(this)
+                            .updateLogState(true);
         }else{
             setResult(RESULT_CANCELED);
         }

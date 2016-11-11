@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="user_detail_tab_name">
+        <item>已发布</item>
+        <item>收藏</item>
+        <item>关注</item>
+        <item>关注者</item>
+    </string-array>
+
+    <string-array name="user_head_icon_capture">
+        <item>相机</item>
+        <item>从文件中选取</item>
+    </string-array>
+
+    <string-array name="dummy">dummy</string-array>
+    <string-array name="dummy_values">dummy_values</string-array>
+    <string-array name="data_sync_frequency">3h a time</string-array>
+
     <string-array name="planets_array">
         <item>米</item>
         <item>千米</item>

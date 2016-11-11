@@ -1,12 +1,9 @@
 package com.github.xzwj87.mineflea.market.data.repository;
 
-import android.os.Message;
-
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
+import com.github.xzwj87.mineflea.market.presenter.BasePresenter;
 import com.github.xzwj87.mineflea.market.presenter.PresenterCallback;
-
-import java.util.List;
 
 /**
  * Created by jason on 10/11/16.
@@ -30,14 +27,14 @@ public interface BaseRepository {
     void login(UserInfo info);
 
     /*
-     * Callback of Presenter:this must be called in Presenter
+     * logout
      */
-    void setPresenterCallback(PresenterCallback callback);
+    void logout();
 
     /*
-     * upload image
+     * upload image by user id or goods id
      */
-    void uploadImage(String imgUri,boolean showProcess);
+    void uploadImageById(String id,String imgUri,boolean isUser,boolean showProcess);
 
     /*
      * get current user id
@@ -79,4 +76,8 @@ public interface BaseRepository {
      * query user followee by id
      */
     void queryUserFolloweeListByUserId(String id);
+
+    void registerCallBack(@BasePresenter.PRESENTER_TYPE String type,PresenterCallback callback);
+
+    void unregisterCallback(@BasePresenter.PRESENTER_TYPE String type);
 }

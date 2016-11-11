@@ -13,7 +13,6 @@ import com.github.xzwj87.mineflea.market.ui.UserGoodsView;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * Created by jason on 10/30/16.
@@ -21,22 +20,21 @@ import javax.inject.Named;
 
 @PerActivity
 public class UserFavorGoodsPresenterImpl extends UserFavorGoodsPresenter{
-
     private static final String TAG = UserFavorGoodsPresenterImpl.class.getSimpleName();
 
-    private MineFleaRepository mRepo;
+    @Inject MineFleaRepository mRepo;
     private UserGoodsView mView;
     private List<PublishGoodsInfo> mGoodsList;
 
     @Inject
-    public UserFavorGoodsPresenterImpl(@Named("dataRepository")MineFleaRepository repository){
+    public UserFavorGoodsPresenterImpl(MineFleaRepository repository){
         mRepo = repository;
     }
 
     @Override
     public void init() {
         mRepo.init();
-        mRepo.setPresenterCallback(this);
+        mRepo.registerCallBack(PRESENTER_FAVOR,new FavorPresenterCallback());
     }
 
     @Override
@@ -47,26 +45,12 @@ public class UserFavorGoodsPresenterImpl extends UserFavorGoodsPresenter{
     @Override
     public void onDestroy() {
         mGoodsList = null;
+        mRepo.unregisterCallback(PRESENTER_FAVOR);
     }
 
     @Override
     public void setView(BaseView view) {
         mView = (UserGoodsView) view;
-    }
-
-    @Override
-    public void onGetGoodsListDone(Message message) {
-        Log.v(TAG,"onGetGoodsListDone()");
-
-        if(message.obj != null){
-            mGoodsList = (List<PublishGoodsInfo>)message.obj;
-
-            renderView();
-        }else{
-            mView.showBlankPage();
-        }
-
-        mView.showProgress(false);
     }
 
     @Override
@@ -95,5 +79,32 @@ public class UserFavorGoodsPresenterImpl extends UserFavorGoodsPresenter{
 
     private void renderView(){
         mView.renderView();
+    }
+
+    private class FavorPresenterCallback implements PresenterCallback {
+        @SuppressWarnings("unchecked")
+        @Override
+        public void onComplete(Message message) {
+            Log.v(TAG,"onComplete(): resp = " + message.what);
+            if(message.obj != null){
+                mGoodsList = (List<PublishGoodsInfo>)message.obj;
+
+                renderView();
+            }else{
+                mView.showBlankPage();
+            }
+
+            mView.showProgress(false);
+        }
+
+        @Override
+        public void onNext(Message message) {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
     }
 }

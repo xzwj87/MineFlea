@@ -2,7 +2,6 @@ package com.github.xzwj87.mineflea.market.data.remote;
 
 import android.os.Message;
 import android.util.Log;
-import android.view.MotionEvent;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
@@ -18,11 +17,9 @@ import com.avos.avoscloud.LogInCallback;
 import com.avos.avoscloud.ProgressCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.github.xzwj87.mineflea.market.data.ResponseCode;
-import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.AvCloudConstants;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
-import com.github.xzwj87.mineflea.market.net.NetDataApiImpl;
 import com.github.xzwj87.mineflea.utils.NetConnectionUtils;
 import com.github.xzwj87.mineflea.utils.PublishGoodsUtils;
 import com.github.xzwj87.mineflea.utils.UserInfoUtils;
@@ -33,35 +30,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
+import javax.inject.Singleton;
 
 /**
  * Created by JasonWang on 2016/9/20.
  */
 
-@PerActivity
+@Singleton
 public class MineFleaRemoteSource implements RemoteSource{
     public static final String TAG = MineFleaRemoteSource.class.getSimpleName();
 
-    private NetDataApiImpl mNetApi;
     private static MineFleaRemoteSource sInstance;
     private CloudSourceCallback mCloudCallback;
 
     @Inject
-    public MineFleaRemoteSource(@Named("netApi") NetDataApiImpl netApi){
-        mNetApi = netApi;
+    public MineFleaRemoteSource(){
     }
 
     public void setCloudCallback(CloudSourceCallback callback){
         mCloudCallback = callback;
-    }
-
-    public static MineFleaRemoteSource getInstance(){
-        if(sInstance == null){
-            sInstance = new MineFleaRemoteSource(new NetDataApiImpl());
-        }
-
-        return sInstance;
     }
 
     public interface CloudSourceCallback{
@@ -71,12 +58,12 @@ public class MineFleaRemoteSource implements RemoteSource{
         void loginComplete(Message message);
         void onImgUploadComplete(Message msg);
         void onGetUserInfoDone(Message msg);
+        void onGetGoodsInfoDone(Message msg);
         void onGetGoodsListDone(Message msg);
         void onGetUserFolloweeDone(Message message);
         void onGetUserFollowerDone(Message message);
     }
 
-    //Todo: we may want to cache info
     @Override
     public void getUserInfoById(String id) {
         UserInfo user = getCurrentUser();
@@ -85,7 +72,7 @@ public class MineFleaRemoteSource implements RemoteSource{
             msg.obj = user;
             msg.what = ResponseCode.RESP_GET_USER_INFO_SUCCESS;
             mCloudCallback.onGetUserInfoDone(msg);
-        }else {
+        }else{
             AVQuery<AVUser> query = new AVQuery<>(AvCloudConstants.AV_OBJ_USER);
 
             query.getInBackground(id, new GetCallback<AVUser>() {
@@ -132,6 +119,30 @@ public class MineFleaRemoteSource implements RemoteSource{
                 }
 
                 mCloudCallback.onGetGoodsListDone(msg);
+            }
+        });
+    }
+
+    @Override
+    public void getGoodsById(String id) {
+        Log.v(TAG,"getGoodsById()");
+        AVQuery query = new AVQuery(AvCloudConstants.AV_OBJ_GOODS);
+        query.whereEqualTo(AvCloudConstants.AV_OBJ_ID,id);
+
+        query.getInBackground(id, new GetCallback() {
+            @Override
+            public void done(AVObject object, AVException e) {
+                PublishGoodsInfo goodsInfo = PublishGoodsInfo.fromAvObject(object);
+
+                final Message message = new Message();
+                message.obj = goodsInfo;
+                if(goodsInfo != null){
+                    message.what = ResponseCode.RESP_GET_GOODS_SUCCESS;
+                }else{
+                    message.what = ResponseCode.RESP_GET_GOODS_ERROR;
+                }
+
+                mCloudCallback.onGetUserInfoDone(message);
             }
         });
     }
@@ -202,7 +213,7 @@ public class MineFleaRemoteSource implements RemoteSource{
 
         AVUser user = AVUser.getCurrentUser();
         AVQuery<AVUser> query = AVUser.followeeQuery(user.getObjectId(),AVUser.class);
-        query.whereEqualTo(AvCloudConstants.AV_USER_ID,userId);
+        query.whereEqualTo(AvCloudConstants.AV_OBJ_ID,userId);
 
         query.findInBackground(new FindCallback<AVUser>() {
             @Override
@@ -279,7 +290,7 @@ public class MineFleaRemoteSource implements RemoteSource{
 
             final AVObject avObject = new AVObject(AvCloudConstants.AV_OBJ_GOODS);
             avObject.put(PublishGoodsInfo.GOODS_NAME,goods.getName());
-            avObject.put(PublishGoodsInfo.GOODS_PUBLISHER,goods.getPublisherId());
+            avObject.put(PublishGoodsInfo.GOODS_PUBLISHER,goods.getUserId());
             avObject.put(PublishGoodsInfo.GOODS_PRICE,goods.getPrice());
             avObject.put(PublishGoodsInfo.GOODS_RELEASE_DATE,goods.getReleasedDate());
             avObject.put(PublishGoodsInfo.GOODS_LOC,goods.getLocation());
@@ -292,13 +303,13 @@ public class MineFleaRemoteSource implements RemoteSource{
                     final Message msg = new Message();
                     if(e != null){
                         msg.obj = null;
-                        msg.arg1 = ResponseCode.RESP_AV_SAVED_FAILURE;
+                        msg.arg1 = ResponseCode.RESP_PUBLISH_GOODS_ERROR;
                         mCloudCallback.publishComplete(msg);
                         return;
                     }
 
                     String id = avObject.getObjectId();
-                    msg.arg1 = ResponseCode.RESP_AV_SAVED_SUCCESS;
+                    msg.arg1 = ResponseCode.RESP_PUBLISH_GOODS_SUCCESS;
                     msg.obj = id;
                     Log.v(TAG,"publishGoods(): goods = " + id);
                     mCloudCallback.publishComplete(msg);
@@ -319,9 +330,10 @@ public class MineFleaRemoteSource implements RemoteSource{
         avUser.put(UserInfo.USER_NICK_NAME,userInfo.getNickName());
         avUser.put(UserInfo.USER_HEAD_ICON,userInfo.getHeadIconUrl());
         avUser.put(UserInfo.USER_LOCATION,userInfo.getLocation());
-        avUser.put(UserInfo.USER_FOLLOWERS,userInfo.getFollowers());
-        avUser.put(UserInfo.USER_FOLLOWEES,userInfo.getFollowees());
+        avUser.put(UserInfo.USER_FOLLOWERS,userInfo.getFollowerList());
+        avUser.put(UserInfo.USER_FOLLOWEES,userInfo.getFolloweeList());
         avUser.put(UserInfo.USER_INTRO,userInfo.getIntro());
+        avUser.put(UserInfo.PUBLISHED_GOODS,userInfo.getGoodsList());
         avUser.setUsername(userInfo.getUserEmail());
         avUser.setEmail(userInfo.getUserEmail());
         avUser.setMobilePhoneNumber(userInfo.getUserTelNumber());
@@ -458,11 +470,11 @@ public class MineFleaRemoteSource implements RemoteSource{
                         Log.v(TAG, "saveInBackground(): done");
                         final Message msg = new Message();
                         if (e != null) {
-                            msg.arg1 = ResponseCode.RESP_AV_SAVED_FAILURE;
-                            msg.obj = null;
+                            msg.arg1 = ResponseCode.RESP_IMAGE_UPLOAD_ERROR;
+                            msg.obj = e.getCode();
                             Log.e(TAG, "fail to upload image: " + file.getPath());
                         }else{
-                            msg.arg1 = ResponseCode.RESP_AV_SAVED_SUCCESS;
+                            msg.arg1 = ResponseCode.RESP_IMAGE_UPLOAD_SUCCESS;
                             msg.obj = avFile.getUrl();
                         }
                         mCloudCallback.onImgUploadComplete(msg);

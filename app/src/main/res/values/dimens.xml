@@ -49,6 +49,9 @@
     <dimen name="user_center_sub_title_size">12sp</dimen>
     <dimen name="user_center_head_size">72dp</dimen>
     <dimen name="dialog_view_margin">24dp</dimen>
+    <dimen name="user_center_padding">16dp</dimen>
+    <dimen name="settings_title_size">16sp</dimen>
+    <dimen name="settings_summary_size">12sp</dimen>
 
 
     <dimen name="margin_top">20dp</dimen>

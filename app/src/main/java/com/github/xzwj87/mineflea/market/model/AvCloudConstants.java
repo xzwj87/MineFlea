@@ -12,7 +12,7 @@ public interface AvCloudConstants {
 
     String AV_FAVOR_GOODS = "favor_goods";
 
-    String AV_USER_ID = "objectId";
+    String AV_OBJ_ID = "objectId";
     String AV_OBJ_USER = "_User";
     String AV_GOODS_NAME = "goodsName";
 

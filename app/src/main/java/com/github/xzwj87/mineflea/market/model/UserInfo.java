@@ -45,6 +45,8 @@ public class UserInfo {
 
     public static final String USER_INTRO = "introduction";
 
+    public static final String PUBLISHED_GOODS = "published_goods";
+
     private String mId;
     private boolean mIsLogin;
     private String mNickName;
@@ -53,16 +55,20 @@ public class UserInfo {
     private String mTelNumber;
     private String mUserPwd;
     private String mHeadIconUrl;
-    private int mFollowers;
-    private int mFollowees;
+    private List<String> mGoodsList;
+    private List<String> mFollowerList;
+    private List<String> mFolloweeList;
     private String mLoc;
     private Date mLoginDate;
     private String mIntro;
 
     public UserInfo(){
         mLoginDate = new Date();
-        mFollowees = 0;
-        mFollowers = 0;
+
+        mFolloweeList = new ArrayList<>();
+        mFollowerList = new ArrayList<>();
+        // published goods list
+        mGoodsList = new ArrayList<>();
     }
 
     public UserInfo(String nickName,String userName,String email,String iconUrl){
@@ -136,20 +142,82 @@ public class UserInfo {
         return mHeadIconUrl;
     }
 
-    public void setFollowers(int followers){
-        mFollowers = followers;
+    public int getFollowersCount(){
+        if(mFollowerList == null) return 0;
+
+        return mFollowerList.size();
     }
 
-    public int getFollowers(){
-        return mFollowers;
+    public void setFollowerList(List<String> follower){
+        mFollowerList = follower;
     }
 
-    public void setFollowees(int followees){
-        mFollowees = followees;
+    public List<String> getFollowerList(){
+        return mFollowerList;
     }
 
-    public int getFollowees(){
-        return mFollowees;
+    public void addFollower(String userId){
+        if(mFollowerList == null) return;
+
+        mFollowerList.add(userId);
+    }
+
+    public void removeFollower(String userId){
+        if(mFollowerList == null) return;
+
+        mFollowerList.remove(userId);
+    }
+
+    public void setFolloweeList(List<String> followee){
+        mFolloweeList = followee;
+    }
+
+    public List<String> getFolloweeList(){
+        return mFolloweeList;
+    }
+
+    public int getFolloweesCount(){
+        if(mFolloweeList == null) return 0;
+
+        return mFolloweeList.size();
+    }
+
+    public void addFollowee(String userId){
+        if(mFolloweeList == null) return;
+
+        mFolloweeList.add(userId);
+    }
+
+    public void removeFollowee(String userId){
+        if(mFolloweeList == null) return;
+
+        mFolloweeList.remove(userId);
+    }
+
+    public void setGoodsList(List<String> goodsList){
+        mGoodsList = goodsList;
+    }
+
+    public List<String> getGoodsList(){
+        return mGoodsList;
+    }
+
+    public int getGoodsCount(){
+        if(mGoodsList == null) return 0;
+
+        return mGoodsList.size();
+    }
+
+    public void addGoods(String goodsId){
+        if(mGoodsList == null) return;
+
+        mGoodsList.add(goodsId);
+    }
+
+    public void removeGoods(String goodsId){
+        if(mGoodsList == null) return;
+
+        mGoodsList.remove(goodsId);
     }
 
     public void setLocation(String location){

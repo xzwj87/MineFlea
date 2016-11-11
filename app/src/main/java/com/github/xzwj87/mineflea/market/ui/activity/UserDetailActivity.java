@@ -1,6 +1,7 @@
 package com.github.xzwj87.mineflea.market.ui.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
@@ -23,6 +24,8 @@ import com.github.xzwj87.mineflea.market.presenter.UserDetailPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.UserDetailView;
 import com.github.xzwj87.mineflea.market.ui.adapter.UserDetailPageAdapter;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 import javax.inject.Inject;
 
@@ -115,12 +118,9 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
 
     }
 
-
     @Override
-    public void onGetUserInfoDone(boolean success) {
-        if(!success){
-            showToast(getString(R.string.error_get_user_info));
-        }
+    public void showGetInfoFailMsg() {
+        showToast(getString(R.string.error_get_user_info));
     }
 
     @Override
@@ -128,6 +128,12 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
         if(!TextUtils.isEmpty(iconUrl)) {
             Picasso.with(this)
                     .load(iconUrl)
+                    .resize(1024, 1024)
+                    .centerCrop()
+                    .into(mIvHeadIcon);
+        }else{
+            Picasso.with(this)
+                    .load(Uri.fromFile(new File(iconUrl)))
                     .resize(1024, 1024)
                     .centerCrop()
                     .into(mIvHeadIcon);
@@ -145,19 +151,33 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
     }
 
     @Override
-    public void updateActionButton(boolean isFollowee) {
-        if(isFollowee){
-            mTvAction.setText(R.string.action_already_followee);
+    public void updateActionButton(@ACTION_STATE int state) {
+        int resId = 0;
+        switch (state){
+            case IS_ME:
+                resId = R.drawable.ic_edit_white_16dp;
+                mTvAction.setText(R.string.edit);
+                break;
+            case ALREADY_FOLLOW:
+                resId = R.drawable.ic_done_white_16dp;
+                mTvAction.setText(R.string.action_already_followee);
+                break;
+            case NOT_FOLLOW:
+                resId = R.drawable.ic_add_white_16dp;
+                mTvAction.setText(R.string.follow);
+                break;
+            default:
+                break;
+        }
 
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mTvAction.setCompoundDrawablesWithIntrinsicBounds(
-                        getDrawable(R.drawable.ic_done_white_24dp),
-                        null, null, null);
-            }else{
-                mTvAction.setCompoundDrawablesWithIntrinsicBounds(
-                        getResources().getDrawable(R.drawable.ic_done_white_24dp),
-                        null, null, null);
-            }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mTvAction.setCompoundDrawablesWithIntrinsicBounds(
+                    getDrawable(resId),
+                    null, null, null);
+        }else{
+            mTvAction.setCompoundDrawablesWithIntrinsicBounds(
+                    getResources().getDrawable(resId),
+                    null, null, null);
         }
     }
 

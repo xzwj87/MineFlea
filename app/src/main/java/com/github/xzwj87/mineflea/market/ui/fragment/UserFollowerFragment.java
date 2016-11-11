@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.xzwj87.mineflea.R;
+import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.model.UserFollowInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.UserFollowerPresenterImpl;
@@ -71,25 +72,29 @@ public class UserFollowerFragment extends BaseFragment
 
     @Override
     public void showBlankPage() {
-        mRvUserList.removeAllViewsInLayout();
-
-        View blank = View.inflate(getContext(),R.layout.fragment_blank_hint,null);
-        mRvUserList.addView(blank);
+        mSrLayout.removeAllViewsInLayout();
+        if(getActivity() != null) {
+            View blank = View.inflate(getActivity(), R.layout.fragment_blank_hint, null);
+            mSrLayout.addView(blank);
+        }else{
+            View blank = View.inflate(AppGlobals.getAppContext(), R.layout.fragment_blank_hint, null);
+            mSrLayout.addView(blank);
+        }
     }
 
     @Override
     public void renderView() {
         mRvUserList.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
-        mAdapter.setCallback(this);
     }
 
     private void setupRecycleView(){
-        LinearLayoutManager layoutMgr = new LinearLayoutManager(getContext(), OrientationHelper.VERTICAL,false);
+        LinearLayoutManager layoutMgr = new LinearLayoutManager(getActivity(), OrientationHelper.VERTICAL,false);
         mRvUserList.setLayoutManager(layoutMgr);
         mRvUserList.setItemAnimator(new DefaultItemAnimator());
 
         mAdapter = new UserFollowAdapter();
+        mAdapter.setCallback(this);
     }
 
     private void init(){

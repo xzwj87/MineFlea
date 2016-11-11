@@ -1,5 +1,7 @@
 package com.github.xzwj87.mineflea.market.presenter;
 
+import android.text.TextUtils;
+
 import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
@@ -17,12 +19,12 @@ import javax.inject.Named;
 public class UserCenterPresenterImpl extends UserCenterPresenter {
     public static final String TAG = UserCenterPresenterImpl.class.getSimpleName();
 
-    private MineFleaRepository mRepository;
+    @Inject MineFleaRepository mRepository;
     private UserInfo mUserInfo;
     private UserCenterView mView;
 
     @Inject
-    public UserCenterPresenterImpl(@Named("dataRepository") MineFleaRepository repository){
+    public UserCenterPresenterImpl(MineFleaRepository repository){
         mRepository = repository;
     }
 
@@ -31,16 +33,15 @@ public class UserCenterPresenterImpl extends UserCenterPresenter {
         mUserInfo = mRepository.getCurrentUser();
 
         if(mUserInfo != null){
-            mView.updateUserNickName(mUserInfo.getNickName());
-            mView.updateUserEmail(mUserInfo.getUserEmail());
-            mView.updateHeadIcon(mUserInfo.getHeadIconUrl());
+            renderView();
         }
     }
 
     @Override
     public String getUserId() {
         if(mUserInfo == null){
-            return mRepository.getCurrentUserId();
+            mView.showNeedLoginHint();
+            return null;
         }
 
         return mUserInfo.getUserId();
@@ -64,5 +65,19 @@ public class UserCenterPresenterImpl extends UserCenterPresenter {
     @Override
     public void setView(BaseView view) {
         mView = (UserCenterView)view;
+    }
+
+    private void renderView(){
+        if(!TextUtils.isEmpty(mUserInfo.getNickName())){
+            mView.updateUserNickName(mUserInfo.getNickName());
+        }
+
+        if (!TextUtils.isEmpty(mUserInfo.getUserEmail())) {
+            mView.updateUserEmail(mUserInfo.getUserEmail());
+        }
+
+        if(!TextUtils.isEmpty(mUserInfo.getHeadIconUrl())) {
+            mView.updateHeadIcon(mUserInfo.getHeadIconUrl());
+        }
     }
 }

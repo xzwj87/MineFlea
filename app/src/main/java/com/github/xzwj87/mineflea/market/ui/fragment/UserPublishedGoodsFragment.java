@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.github.xzwj87.mineflea.R;
+import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.model.UserGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.UserGoodsPresenterImpl;
@@ -86,14 +87,18 @@ public class UserPublishedGoodsFragment extends BaseFragment
 
     @Override
     public void showBlankPage() {
-        if(mSrLayout.isRefreshing()){
-            mSrLayout.setRefreshing(false);
+        mSrLayout.removeAllViewsInLayout();
+        if(getActivity() != null) {
+            View blank = LayoutInflater.from(getActivity())
+                    .inflate(R.layout.fragment_blank_hint, mSrLayout, false);
+            //View blank = View.inflate(getContext(),R.layout.fragment_blank_hint,null);
+            mSrLayout.addView(blank);
+        }else{
+            View blank = LayoutInflater.from(AppGlobals.getAppContext())
+                    .inflate(R.layout.fragment_blank_hint, mSrLayout, false);
+            //View blank = View.inflate(getContext(),R.layout.fragment_blank_hint,null);
+            mSrLayout.addView(blank);
         }
-
-        mRvGoodsList.removeAllViewsInLayout();
-
-        View blank = View.inflate(getContext(),R.layout.fragment_blank_hint,null);
-        mRvGoodsList.addView(blank);
     }
 
     @Override

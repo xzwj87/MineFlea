@@ -5,18 +5,17 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.avos.avoscloud.AVUser;
+import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.UserDetailView;
-import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * Created by jason on 10/22/16.
@@ -26,14 +25,14 @@ import javax.inject.Named;
 public class UserDetailPresenterImpl extends UserDetailPresenter{
     private static final String TAG = UserDetailPresenterImpl.class.getSimpleName();
 
-    private MineFleaRepository mDataRepo;
+    @Inject MineFleaRepository mDataRepo;
     private UserDetailView mView;
     private List<PublishGoodsInfo> mGoodsList;
     private List<AVUser> mFolloweeList;
     private UserInfo mUserInfo;
 
     @Inject
-    public UserDetailPresenterImpl(@Named("dataRepository")MineFleaRepository repository){
+    public UserDetailPresenterImpl(MineFleaRepository repository){
         mDataRepo = repository;
     }
 
@@ -88,6 +87,8 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
 
     @Override
     public boolean isMe() {
+        if(mUserInfo == null) return false;
+
         String id = mUserInfo.getUserId();
         String currentId = getCurrentUserId();
 
@@ -97,7 +98,7 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
     @Override
     public void init() {
         mDataRepo.init();
-        mDataRepo.setPresenterCallback(this);
+        mDataRepo.registerCallBack(PRESENTER_USER_DETAIL,new DetailPresenterCallback());
     }
 
     @Override
@@ -107,39 +108,12 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
 
     @Override
     public void onDestroy() {
-
+        mDataRepo.unregisterCallback(PRESENTER_USER_DETAIL);
     }
 
     @Override
     public void setView(BaseView view) {
         mView = (UserDetailView)view;
-    }
-
-    @Override
-    public void onGetUserInfoComplete(Message message) {
-        Log.v(TAG,"onGetUserInfoDone(): user info = " + message.obj);
-        if(message.obj != null){
-            mView.onGetUserInfoDone(true);
-            mUserInfo = (UserInfo)message.obj;
-
-            mDataRepo.queryUserFolloweeListByUserId(mUserInfo.getUserId());
-
-            renderView();
-        }else{
-            mView.onGetUserInfoDone(false);
-            mView.finishView();
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void onGetUserFolloweeDone(Message message) {
-        if(message.obj != null){
-            mFolloweeList = (List<AVUser>)message.obj;
-            mView.updateActionButton(true);
-        }else{
-            mView.updateActionButton(false);
-        }
     }
 
     private void renderView(){
@@ -153,6 +127,44 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
 
         if(!TextUtils.isEmpty(mUserInfo.getUserEmail())){
             mView.renderEmail(mUserInfo.getUserEmail());
+        }
+    }
+
+    private class DetailPresenterCallback implements PresenterCallback {
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public void onComplete(Message message) {
+            int what = message.what;
+            switch (what) {
+                case ResponseCode.RESP_GET_USER_INFO_SUCCESS:
+                    if(message.obj != null){
+                        mUserInfo = (UserInfo)message.obj;
+
+                        mDataRepo.queryUserFolloweeListByUserId(mUserInfo.getUserId());
+
+                        renderView();
+                    }else{
+                        mView.showGetInfoFailMsg();
+                        mView.finishView();
+                    }
+                    break;
+                case ResponseCode.RESP_QUERY_FOLLOWEES_SUCCESS:
+                    if (message.obj != null) {
+                        mFolloweeList = (List<AVUser>) message.obj;
+                    }
+                    break;
+            }
+        }
+
+        @Override
+        public void onNext(Message message) {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
         }
     }
 }

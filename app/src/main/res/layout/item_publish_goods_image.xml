@@ -20,6 +20,7 @@
     <ImageButton android:id="@+id/btn_remove"
         android:layout_width="32dp"
         android:layout_height="32dp"
+        android:contentDescription="@string/button_remove"
         android:src="@drawable/ic_clear_white_24dp"
         android:scaleType="center"
         android:layout_gravity="end|top"

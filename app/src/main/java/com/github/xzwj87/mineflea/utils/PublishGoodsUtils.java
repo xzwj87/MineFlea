@@ -20,7 +20,7 @@ public class PublishGoodsUtils {
         goodsInfo.setPrice(object.getDouble(PublishGoodsInfo.GOODS_PRICE));
         goodsInfo.setNote((String)object.get(PublishGoodsInfo.GOODS_NOTE));
         goodsInfo.setLocation((String)object.get(PublishGoodsInfo.GOODS_LOC));
-        goodsInfo.setPublisherId((String)object.get(PublishGoodsInfo.GOODS_PUBLISHER));
+        goodsInfo.setUserId((String)object.get(PublishGoodsInfo.GOODS_PUBLISHER));
         goodsInfo.setReleasedDate((long)object.get(PublishGoodsInfo.GOODS_RELEASE_DATE));
         goodsInfo.setStars((int)object.get(PublishGoodsInfo.GOODS_LIKES));
 

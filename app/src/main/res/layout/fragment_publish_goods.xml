@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/input_text_size"
             android:layout_marginStart="@dimen/publish_goods_text_margin"
-            android:maxLines="2"
+            android:maxLines="1"
             android:layout_marginEnd="@dimen/publish_goods_text_margin"
             android:layout_gravity="center"/>
 
@@ -80,16 +80,18 @@
     <com.daimajia.numberprogressbar.NumberProgressBar
         android:id="@+id/process_upload_image"
         android:visibility="invisible"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="5dp"
 
-        custom:progress_unreached_color="#CCCCCC"
-        custom:progress_reached_color="#3498DB"
+        custom:progress_unreached_color="@color/colorPrimary"
+        custom:progress_reached_color="@color/colorPrimaryDark"
 
-        custom:progress_unreached_bar_height="0.75dp"
-        custom:progress_reached_bar_height="1.5dp"
+        custom:progress_unreached_bar_height="1.5dp"
+        custom:progress_reached_bar_height="5dp"
 
-        custom:progress_text_size="10sp"
+        custom:progress_text_size="12sp"
         custom:progress_text_color="#3498DB"
         custom:progress_text_offset="1dp"
         custom:progress_text_visibility="visible"
