@@ -93,7 +93,7 @@ public class EditPersonalInfoActivity extends BaseActivity
 
         getComponent().inject(this);
 
-        checkThemeColor(this);
+        checkThemeColor();
     }
 
     @Override
@@ -319,7 +319,7 @@ public class EditPersonalInfoActivity extends BaseActivity
     }
 
     @Override
-    protected void checkThemeColor(AppCompatActivity activity){
+    protected void checkThemeColor(){
         ThemeColorUtils.changeThemeColor(this);
     }
 }

@@ -63,7 +63,7 @@ public class RegisterActivity extends BaseActivity implements RegisterView{
         initInjector();
         init();
 
-        checkThemeColor(this);
+        checkThemeColor();
     }
 
     @Override
@@ -238,7 +238,7 @@ public class RegisterActivity extends BaseActivity implements RegisterView{
     }
 
     @Override
-    protected void checkThemeColor(AppCompatActivity activity){
+    protected void checkThemeColor(){
         ThemeColorUtils.changeThemeColor(this);
     }
 }

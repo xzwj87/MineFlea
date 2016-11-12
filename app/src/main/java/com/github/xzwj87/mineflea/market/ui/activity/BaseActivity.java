@@ -61,7 +61,7 @@ public class BaseActivity extends AppCompatActivity
         return mMarketComponent;
     }
 
-    protected void checkThemeColor(AppCompatActivity activity){
+    protected void checkThemeColor(){
         // empty, if necessary, subclass should override it
     }
 }

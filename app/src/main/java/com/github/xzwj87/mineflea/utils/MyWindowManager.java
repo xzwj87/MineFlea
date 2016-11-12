@@ -65,7 +65,7 @@ public class MyWindowManager {
                     smallWinParams.x = screenWidth / 2;
                     smallWinParams.y = screenHeight / 2;
                 }
-                smallWin.setmParams(smallWinParams);
+                smallWin.setParams(smallWinParams);
                 windowManager.addView(smallWin, smallWinParams);
                 //handler.sendEmptyMessageDelayed(SMALL_WIN, 300);
             }

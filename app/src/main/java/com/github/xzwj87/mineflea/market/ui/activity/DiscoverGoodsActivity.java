@@ -27,7 +27,7 @@ public class DiscoverGoodsActivity extends BaseActivity {
     public void onResume(){
         super.onResume();
 
-        checkThemeColor(this);
+        checkThemeColor();
     }
 
     @Override
@@ -42,7 +42,7 @@ public class DiscoverGoodsActivity extends BaseActivity {
     }
 
     @Override
-    protected void checkThemeColor(AppCompatActivity activity){
+    protected void checkThemeColor(){
         ThemeColorUtils.changeThemeColor(this);
     }
 

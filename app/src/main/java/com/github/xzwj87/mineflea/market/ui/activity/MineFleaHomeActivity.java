@@ -65,7 +65,7 @@ public class MineFleaHomeActivity extends BaseActivity
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        checkThemeColor(this);
+        checkThemeColor();
     }
 
     @Override
@@ -93,7 +93,7 @@ public class MineFleaHomeActivity extends BaseActivity
     }
 
     @Override
-    protected void checkThemeColor(AppCompatActivity activity){
+    protected void checkThemeColor(){
         ThemeColorUtils.changeThemeColor(this);
     }
 

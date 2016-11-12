@@ -152,7 +152,7 @@ public class FloatWindowSmallView extends LinearLayout {
         wm.updateViewLayout(this, mParams);
     }
 
-    public void setmParams(WindowManager.LayoutParams p) {
+    public void setParams(WindowManager.LayoutParams p) {
         mParams = p;
     }
 
