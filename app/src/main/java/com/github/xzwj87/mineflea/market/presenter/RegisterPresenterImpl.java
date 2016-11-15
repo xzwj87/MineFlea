@@ -142,10 +142,8 @@ public class RegisterPresenterImpl extends RegisterPresenter{
             if(message.obj != null){
                 mView.onRegisterComplete(true);
                 mUserInfo.setUserId((String)message.obj);
-                mUserInfo.setLoginState(true);
             }else {
                 mView.onRegisterComplete(false);
-                mUserInfo.setLoginState(false);
             }
 
             saveUserInfo();

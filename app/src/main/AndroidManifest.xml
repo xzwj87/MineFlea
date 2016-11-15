@@ -85,7 +85,7 @@
         <activity android:name=".market.ui.activity.NearbyGoodsActivity">
         </activity>
 
-        <activity android:name=".market.ui.activity.DiscoverGoodsActivity">
+        <activity android:name=".market.ui.activity.GoodsDetailActivity">
         </activity>
 
         <activity android:name=".market.ui.activity.UserDetailActivity"

@@ -25,7 +25,8 @@ public class BaseActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedState){
         super.onCreate(savedState);
-
+        // reduce overdrawing
+        getWindow().setBackgroundDrawable(null);
         getAppComponent().inject(this);
 
         initInjector();

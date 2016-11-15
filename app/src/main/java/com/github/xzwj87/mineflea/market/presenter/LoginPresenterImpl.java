@@ -87,7 +87,6 @@ public class LoginPresenterImpl extends LoginPresenter{
         public void onComplete(Message message) {
             if(message.obj != null){
                 UserInfo user = (UserInfo) message.obj;
-                user.setLoginState(true);
                 UserPrefsUtil.saveUserLoginInfo(user);
 
                 mView.updateUserEmail(user.getUserEmail());

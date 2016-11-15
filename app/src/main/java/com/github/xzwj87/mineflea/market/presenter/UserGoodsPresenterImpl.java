@@ -32,7 +32,7 @@ public class UserGoodsPresenterImpl extends UserGoodsPresenter {
     @Override
     public void init() {
         mRepo.init();
-        mRepo.registerCallBack(PRESENTER_GOODS,new UserGoodsPresenterCallback());
+        mRepo.registerCallBack(PRESENTER_GOODS_LIST,new UserGoodsPresenterCallback());
     }
 
     @Override
@@ -42,7 +42,9 @@ public class UserGoodsPresenterImpl extends UserGoodsPresenter {
 
     @Override
     public void onDestroy() {
-
+        mRepo.unregisterCallback(PRESENTER_GOODS_LIST);
+        mGoodsList = null;
+        mRepo = null;
     }
 
     @Override

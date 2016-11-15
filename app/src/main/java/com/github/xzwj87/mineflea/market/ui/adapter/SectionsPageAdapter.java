@@ -42,15 +42,23 @@ public class SectionsPageAdapter extends FragmentPagerAdapter{
         // Return a PlaceholderFragment (defined as a static inner class below).
         switch (position){
             case FRAGMENT_DISCOVER_TAB:
-                return DiscoverTabFragment.newInstance();
-            case FRAGMENT_NEARBY_TAB:
-                return NearbyTabFragment.newInstance();
-            case FRAGMENT_USER_CENTER_TAB:
-                UserCenterFragment fragment = UserCenterFragment.newInstance();
+                DiscoverTabFragment fragment1 = DiscoverTabFragment.newInstance();
                 if(mComponent != null){
-                    mComponent.inject(fragment);
+                    mComponent.inject(fragment1);
                 }
-                return fragment;
+                return fragment1;
+            case FRAGMENT_NEARBY_TAB:
+                NearbyTabFragment fragment2 = NearbyTabFragment.newInstance();
+                if(mComponent != null){
+                    mComponent.inject(fragment2);
+                }
+                return fragment2;
+            case FRAGMENT_USER_CENTER_TAB:
+                UserCenterFragment fragment3 = UserCenterFragment.newInstance();
+                if(mComponent != null){
+                    mComponent.inject(fragment3);
+                }
+                return fragment3;
         }
 
         return TabHolderFragment.newInstance(position + 1);

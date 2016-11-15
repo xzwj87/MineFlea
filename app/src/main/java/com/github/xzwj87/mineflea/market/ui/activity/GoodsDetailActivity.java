@@ -1,7 +1,6 @@
 package com.github.xzwj87.mineflea.market.ui.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
@@ -12,8 +11,8 @@ import butterknife.ButterKnife;
  * Created by jason on 9/27/16.
  */
 
-public class DiscoverGoodsActivity extends BaseActivity {
-    public static final String TAG = DiscoverGoodsActivity.class.getSimpleName();
+public class GoodsDetailActivity extends BaseActivity {
+    public static final String TAG = GoodsDetailActivity.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle bundle){

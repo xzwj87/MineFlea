@@ -38,13 +38,17 @@ public class ResponseCode {
 
     public static final int RESP_GET_GOODS_LIST_ERROR = 0x201;
 
-    public static final int RESP_GET_GOODS_SUCCESS = 0x202;
+    public static final int RESP_GET_ALL_GOODS_CACHE_SUCCESS = 0x202;
 
-    public static final int RESP_GET_GOODS_ERROR = 0x203;
+    public static final int RESP_GET_ALL_GOODS_CACHE_FAIL = 0x203;
 
-    public static final int RESP_PUBLISH_GOODS_SUCCESS = 0x204;
+    public static final int RESP_GET_GOODS_SUCCESS = 0x210;
 
-    public static final int RESP_PUBLISH_GOODS_ERROR = 0x205;
+    public static final int RESP_GET_GOODS_ERROR = 0x211;
+
+    public static final int RESP_PUBLISH_GOODS_SUCCESS = 0x220;
+
+    public static final int RESP_PUBLISH_GOODS_ERROR = 0x221;
 
     public static final int RESP_QUERY_FAVORITE_GOODS_LIST_SUCCESS = 0x302;
 

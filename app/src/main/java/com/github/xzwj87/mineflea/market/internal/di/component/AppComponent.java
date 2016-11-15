@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 
+import com.github.xzwj87.mineflea.market.data.cache.FileCacheImpl;
 import com.github.xzwj87.mineflea.market.data.remote.MineFleaRemoteSource;
 import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
 import com.github.xzwj87.mineflea.market.executor.JobExecutor;
@@ -30,4 +31,5 @@ public interface AppComponent {
     MineFleaRepository mineFleaRepository();
     JobExecutor jobExecutor();
     MineFleaRemoteSource mineFleaRemoteSource();
+    FileCacheImpl fileCacheImpl();
 }

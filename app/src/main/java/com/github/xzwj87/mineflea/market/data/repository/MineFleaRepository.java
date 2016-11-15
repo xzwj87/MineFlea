@@ -143,6 +143,25 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
     }
 
     @Override
+    public void getAllGoods() {
+        Log.v(TAG,"getAllGoods()");
+
+        List<PublishGoodsInfo> goodsList = mCache.getAllGoodsCache();
+        if(goodsList.size() > 0){
+            final Message msg = new Message();
+            msg.obj = goodsList;
+            msg.what = ResponseCode.RESP_GET_GOODS_LIST_SUCCESS;
+
+            PresenterCallback callback = mPresenterCbs.get(BasePresenter.PRESENTER_GOODS_LIST);
+            if(callback != null){
+                callback.onComplete(msg);
+            }
+        }
+
+        mCloudSrc.getAllGoods();
+    }
+
+    @Override
     public void getGoodsListByUserId(String id) {
         if(!mCache.isExpired(id,FileCache.CACHE_TYPE_USER) &&
                 mCache.isCached(id,FileCache.CACHE_TYPE_USER)){
@@ -232,7 +251,7 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
 
     @Override
     public void onGetGoodsListDone(Message msg) {
-        PresenterCallback callback = mPresenterCbs.get(BasePresenter.PRESENTER_GOODS);
+        PresenterCallback callback = mPresenterCbs.get(BasePresenter.PRESENTER_GOODS_LIST);
         if(callback != null) {
             callback.onComplete(msg);
         }
@@ -306,7 +325,7 @@ public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.C
             if(!mCache.isImageCached(imgName,FileCache.CACHE_TYPE_USER)){
                 cacheImg  = mCache.saveImgToFile(imgUrl,FileCache.CACHE_TYPE_USER);
             }else{
-                cacheImg = mCache.getImageCachePath(imgName,FileCache.CACHE_TYPE_USER);
+                cacheImg = mCache.getImageFilePath(imgName,FileCache.CACHE_TYPE_USER);
             }
 
             if(!mCache.isCached(user.getUserId(),FileCache.CACHE_TYPE_USER) ||

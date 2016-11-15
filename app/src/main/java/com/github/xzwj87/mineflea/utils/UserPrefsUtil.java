@@ -56,7 +56,6 @@ public class UserPrefsUtil {
     public static void saveUserLoginInfo(UserInfo info){
         SharedPreferences.Editor editor = prefs.edit();
 
-        editor.putBoolean(UserInfo.IS_LOGIN,info.getLoginState());
         editor.putString(UserInfo.USER_NICK_NAME,info.getNickName());
         editor.putString(UserInfo.USER_NAME,info.getUserName());
         editor.putString(UserInfo.UER_EMAIL,info.getUserEmail());
@@ -86,7 +85,6 @@ public class UserPrefsUtil {
         String email = prefs.getString(UserInfo.UER_EMAIL,"null");
         String pwd = prefs.getString(UserInfo.USER_PWD,"null");
 
-        loginInfo.setLoginState(loginState);
         loginInfo.setUserName(name);
         loginInfo.setUerEmail(email);
         loginInfo.setUserPwd(pwd);

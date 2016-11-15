@@ -84,7 +84,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
         init();
 
-        checkThemeColor(this);
+        checkThemeColor();
     }
 
     @OnEditorAction(R.id.et_password)
@@ -336,7 +336,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     }
 
     @Override
-    protected void checkThemeColor(AppCompatActivity activity){
+    protected void checkThemeColor(){
         ThemeColorUtils.changeThemeColor(this);
     }
 

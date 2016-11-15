@@ -20,6 +20,7 @@ import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.model.AvCloudConstants;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
+import com.github.xzwj87.mineflea.market.presenter.PresenterCallback;
 import com.github.xzwj87.mineflea.utils.NetConnectionUtils;
 import com.github.xzwj87.mineflea.utils.PublishGoodsUtils;
 import com.github.xzwj87.mineflea.utils.UserInfoUtils;
@@ -132,7 +133,7 @@ public class MineFleaRemoteSource implements RemoteSource{
         query.getInBackground(id, new GetCallback() {
             @Override
             public void done(AVObject object, AVException e) {
-                PublishGoodsInfo goodsInfo = PublishGoodsInfo.fromAvObject(object);
+                PublishGoodsInfo goodsInfo = PublishGoodsUtils.fromAvObject(object);
 
                 final Message message = new Message();
                 message.obj = goodsInfo;
@@ -277,6 +278,36 @@ public class MineFleaRemoteSource implements RemoteSource{
 
     }
 
+    @Override
+    public void getAllGoods() {
+        AVQuery<AVObject> query = new AVQuery(AvCloudConstants.AV_OBJ_GOODS);
+
+        query.setLimit(MAX_GOODS_TO_GET_ONE_TIME);
+        query.orderByAscending(AvCloudConstants.AV_UPDATE_TIME);
+
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                final Message message = new Message();
+                if(e == null){
+                    List<PublishGoodsInfo> goodsList = new ArrayList<PublishGoodsInfo>();
+                    for(int i = 0; i < list.size(); ++i){
+                        goodsList.add(PublishGoodsUtils.fromAvObject(list.get(i)));
+                    }
+
+                    message.what = ResponseCode.RESP_GET_GOODS_LIST_SUCCESS;
+                    message.obj = goodsList;
+                }else{
+                    message.what = ResponseCode.RESP_GET_GOODS_LIST_ERROR;
+                    message.arg1 = e.getCode();
+                    message.obj = null;
+                }
+
+                mCloudCallback.onGetGoodsListDone(message);
+            }
+        });
+    }
+
     /**
      * release goods
      *
@@ -288,12 +319,7 @@ public class MineFleaRemoteSource implements RemoteSource{
 
         if(NetConnectionUtils.isNetworkConnected()) {
 
-            final AVObject avObject = new AVObject(AvCloudConstants.AV_OBJ_GOODS);
-            avObject.put(PublishGoodsInfo.GOODS_NAME,goods.getName());
-            avObject.put(PublishGoodsInfo.GOODS_PUBLISHER,goods.getUserId());
-            avObject.put(PublishGoodsInfo.GOODS_PRICE,goods.getPrice());
-            avObject.put(PublishGoodsInfo.GOODS_RELEASE_DATE,goods.getReleasedDate());
-            avObject.put(PublishGoodsInfo.GOODS_LOC,goods.getLocation());
+            final AVObject avObject = PublishGoodsUtils.toAvObject(goods);
 
             avObject.saveInBackground(new SaveCallback() {
                 @Override
@@ -325,19 +351,7 @@ public class MineFleaRemoteSource implements RemoteSource{
     public void register(UserInfo userInfo) {
         Log.v(TAG,"register(): user info " + userInfo);
 
-        final AVUser avUser = new AVUser();
-
-        avUser.put(UserInfo.USER_NICK_NAME,userInfo.getNickName());
-        avUser.put(UserInfo.USER_HEAD_ICON,userInfo.getHeadIconUrl());
-        avUser.put(UserInfo.USER_LOCATION,userInfo.getLocation());
-        avUser.put(UserInfo.USER_FOLLOWERS,userInfo.getFollowerList());
-        avUser.put(UserInfo.USER_FOLLOWEES,userInfo.getFolloweeList());
-        avUser.put(UserInfo.USER_INTRO,userInfo.getIntro());
-        avUser.put(UserInfo.PUBLISHED_GOODS,userInfo.getGoodsList());
-        avUser.setUsername(userInfo.getUserEmail());
-        avUser.setEmail(userInfo.getUserEmail());
-        avUser.setMobilePhoneNumber(userInfo.getUserTelNumber());
-        avUser.setPassword(userInfo.getUserPwd());
+        final AVUser avUser = UserInfoUtils.toAvUser(userInfo);
 
         avUser.saveInBackground(new SaveCallback() {
             @Override
@@ -387,7 +401,7 @@ public class MineFleaRemoteSource implements RemoteSource{
 
         final AVUser user = AVUser.getCurrentUser();
 
-        final AVObject object = PublishGoodsInfo.toAvObject(goodsInfo);
+        final AVObject object = PublishGoodsUtils.toAvObject(goodsInfo);
         object.put(AvCloudConstants.AV_GOODS_NAME,goodsInfo.getName());
 
         object.saveInBackground(new SaveCallback() {
@@ -416,7 +430,7 @@ public class MineFleaRemoteSource implements RemoteSource{
                 if(e == null){
                     List<PublishGoodsInfo> goodsList = new ArrayList<PublishGoodsInfo>();
                     for(int i = 0; i < list.size(); ++i){
-                        goodsList.add(PublishGoodsInfo.fromAvObject(list.get(i)));
+                        goodsList.add(PublishGoodsUtils.fromAvObject(list.get(i)));
                     }
 
                     msg.obj = goodsList;

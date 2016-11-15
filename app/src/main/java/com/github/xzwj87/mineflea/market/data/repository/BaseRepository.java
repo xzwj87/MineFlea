@@ -58,6 +58,11 @@ public interface BaseRepository {
     void getUserInfoById(String id);
 
     /*
+     * get all goods
+     */
+    void getAllGoods();
+
+    /*
      * get goods list by user id
      */
     void getGoodsListByUserId(String id);
