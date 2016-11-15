@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.SmallTest;
 
+import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.data.cache.CacheManager;
 import com.github.xzwj87.mineflea.market.data.cache.FileCacheImpl;
 import com.github.xzwj87.mineflea.market.data.remote.MineFleaRemoteSource;
@@ -16,6 +17,7 @@ import com.github.xzwj87.mineflea.market.model.UserInfo;
 
 import junit.framework.TestCase;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,7 +40,7 @@ public class MineFleaRepositoryTest extends TestCase{
 
     @Before
     public void setUp(){
-        mRepo = new MineFleaRepository(new FileCacheImpl(new CacheManager(),new JobExecutor()),
+        mRepo = new MineFleaRepository(new FileCacheImpl(AppGlobals.getAppContext(),new CacheManager(),new JobExecutor()),
                 new MineFleaRemoteSource());
         mRepo.init();
         mIconUrl = Environment.getExternalStorageDirectory().getAbsolutePath() +
@@ -49,7 +51,6 @@ public class MineFleaRepositoryTest extends TestCase{
     public void register_test(){
         UserInfo user = new UserInfo("妮子","qaz123@163.com","qaz123@163.com",mIconUrl);
         user.setUserTelNumber("18923233233");
-        user.setLoginDate(new Date());
         mRepo.register(user);
     }
 
@@ -59,6 +60,13 @@ public class MineFleaRepositoryTest extends TestCase{
 
     public void publishGoods_test(){
 
+    }
+
+    @After
+    @Override
+    public void tearDown(){
+        mRepo = null;
+        mIconUrl = null;
     }
 }
 
