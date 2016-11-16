@@ -3,9 +3,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
-
     <TextView
-        android:id="@+id/percent"
+        android:id="@+id/float_button"
         android:layout_width="60dp"
         android:layout_height="40dp"
         android:gravity="center"

@@ -1,32 +1,26 @@
 package com.github.xzwj87.mineflea.market.ui.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
-
 
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.internal.di.HasComponent;
-import com.github.xzwj87.mineflea.market.internal.di.component.DaggerMarketComponent;
 import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
 import com.github.xzwj87.mineflea.market.ui.adapter.SectionsPageAdapter;
-import com.github.xzwj87.mineflea.market.ui.fragment.UserCenterFragment;
 
-import static com.github.xzwj87.mineflea.market.ui.adapter.SectionsPageAdapter.FRAGMENT_USER_CENTER_TAB;
-
-public class MineFleaHomeActivity extends BaseActivity
-            implements HasComponent<MarketComponent>{
+public class MineFleaHomeActivity extends BaseActivity implements HasComponent<MarketComponent>{
 
     private static final String TAG = MineFleaHomeActivity.class.getSimpleName();
+
+    public static int DRIVE_ACTIVITY_CODE = 0;
+    public static int WALK_ACTIVITY_CODE = 1;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide

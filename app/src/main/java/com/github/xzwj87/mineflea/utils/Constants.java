@@ -36,4 +36,5 @@ public class Constants {
 
 	public static final int UPDATE_MARKER = 100;
 	public static final String COM_SEARCH_GOODS_ACTION = "com.search.goods";
+	public static final String PREF_SMALL_WIN = "pref_small_win";
 }
