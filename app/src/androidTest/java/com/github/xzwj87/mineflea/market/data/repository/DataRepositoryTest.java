@@ -9,11 +9,10 @@ import android.os.Message;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.SmallTest;
 
-import com.avos.avoscloud.AVUser;
 import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.data.cache.CacheManager;
 import com.github.xzwj87.mineflea.market.data.cache.FileCacheImpl;
-import com.github.xzwj87.mineflea.market.data.remote.MineFleaRemoteSource;
+import com.github.xzwj87.mineflea.market.data.remote.RemoteDataSource;
 import com.github.xzwj87.mineflea.market.executor.JobExecutor;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.BasePresenter;
@@ -26,8 +25,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.Date;
-
 import static junit.framework.Assert.assertEquals;
 
 /**
@@ -36,16 +33,16 @@ import static junit.framework.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
-public class MineFleaRepositoryTest extends TestCase{
+public class DataRepositoryTest extends TestCase{
 
     private String mIconUrl;
 
-    private MineFleaRepository mRepo;
+    private DataRepository mRepo;
 
     @Before
     public void setUp(){
-        mRepo = new MineFleaRepository(new FileCacheImpl(AppGlobals.getAppContext(),new CacheManager(),new JobExecutor()),
-                new MineFleaRemoteSource());
+        mRepo = new DataRepository(new FileCacheImpl(AppGlobals.getAppContext(),new CacheManager(),new JobExecutor()),
+                new RemoteDataSource());
         mRepo.init();
         mIconUrl = Environment.getExternalStorageDirectory().getAbsolutePath() +
                 Environment.DIRECTORY_DCIM + "/Camera/20160311_130939.jpg";

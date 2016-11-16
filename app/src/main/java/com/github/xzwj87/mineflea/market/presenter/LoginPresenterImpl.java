@@ -2,7 +2,7 @@ package com.github.xzwj87.mineflea.market.presenter;
 
 import android.os.Message;
 
-import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
+import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
@@ -20,13 +20,14 @@ public class LoginPresenterImpl extends LoginPresenter{
 
     public static final String TAG = LoginPresenterImpl.class.getSimpleName();
 
-    @Inject MineFleaRepository mDataRepo;
+    @Inject
+    DataRepository mDataRepo;
     private UserInfo mUserInfo;
     private LoginView mView;
     private boolean mIsEmail;
 
     @Inject
-    public LoginPresenterImpl(MineFleaRepository repository){
+    public LoginPresenterImpl(DataRepository repository){
         mDataRepo = repository;
     }
 

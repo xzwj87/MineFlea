@@ -103,7 +103,7 @@ public class DiscoverTabFragment extends BaseFragment
         mSrlDiscover.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //empty
+                mPresenter.getGoodsList();
             }
         });
     }

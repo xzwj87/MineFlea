@@ -4,7 +4,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.github.xzwj87.mineflea.market.data.ResponseCode;
-import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
+import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
@@ -26,7 +26,7 @@ public class DiscoverGoodsPresenterImpl implements DiscoverGoodsPresenter{
     private static final String TAG = DiscoverGoodsPresenter.class.getSimpleName();
 
     @Inject
-    MineFleaRepository mRepo;
+    DataRepository mRepo;
     private DiscoverGoodsView mView;
     // a id set to check whether a goods has been retrieved already
     private HashSet<String> mGoodsSet;
@@ -35,7 +35,7 @@ public class DiscoverGoodsPresenterImpl implements DiscoverGoodsPresenter{
     private final Object mCompleteLock;
 
     @Inject
-    public DiscoverGoodsPresenterImpl(MineFleaRepository repository){
+    public DiscoverGoodsPresenterImpl(DataRepository repository){
         mRepo = repository;
         mGoodsList = new ArrayList<>();
         mPublisherList = new ArrayList<>();

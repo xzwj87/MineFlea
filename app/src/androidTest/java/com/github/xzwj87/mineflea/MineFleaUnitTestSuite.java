@@ -1,7 +1,7 @@
 package com.github.xzwj87.mineflea;
 
 import com.github.xzwj87.mineflea.market.data.cache.FileCacheTest;
-import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepositoryTest;
+import com.github.xzwj87.mineflea.market.data.repository.DataRepositoryTest;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -11,5 +11,5 @@ import org.junit.runners.Suite;
  */
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({MineFleaRepositoryTest.class, FileCacheTest.class})
+@Suite.SuiteClasses({DataRepositoryTest.class, FileCacheTest.class})
 public class MineFleaUnitTestSuite {}

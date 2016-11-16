@@ -7,7 +7,7 @@ import android.webkit.URLUtil;
 import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.data.cache.FileCache;
 import com.github.xzwj87.mineflea.market.data.cache.FileCacheImpl;
-import com.github.xzwj87.mineflea.market.data.remote.MineFleaRemoteSource;
+import com.github.xzwj87.mineflea.market.data.remote.RemoteDataSource;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.BasePresenter;
@@ -29,18 +29,19 @@ import javax.inject.Singleton;
  */
 
 @Singleton
-public class MineFleaRepository implements BaseRepository,MineFleaRemoteSource.CloudSourceCallback{
-    public static final String TAG = MineFleaRepository.class.getSimpleName();
+public class DataRepository implements BaseRepository,RemoteDataSource.CloudSourceCallback{
+    public static final String TAG = DataRepository.class.getSimpleName();
 
     @Inject FileCacheImpl mCache;
-    @Inject MineFleaRemoteSource mCloudSrc;
+    @Inject
+    RemoteDataSource mCloudSrc;
 
     private HashMap<String,PresenterCallback> mPresenterCbs;
 
     private PublishGoodsInfo mGoodsInfo;
 
     @Inject
-    public MineFleaRepository(FileCacheImpl cache, MineFleaRemoteSource cloudSource){
+    public DataRepository(FileCacheImpl cache, RemoteDataSource cloudSource){
         mCloudSrc = cloudSource;
         mCache = cache;
         mPresenterCbs = new HashMap<>();

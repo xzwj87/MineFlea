@@ -4,7 +4,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
+import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
@@ -22,12 +22,13 @@ import javax.inject.Inject;
 public class RegisterPresenterImpl extends RegisterPresenter{
     public static final String TAG = RegisterPresenterImpl.class.getSimpleName();
 
-    @Inject MineFleaRepository mRepository;
+    @Inject
+    DataRepository mRepository;
     private RegisterView mView;
     private UserInfo mUserInfo;
 
     @Inject
-    public RegisterPresenterImpl(MineFleaRepository repository){
+    public RegisterPresenterImpl(DataRepository repository){
         mRepository = repository;
     }
 

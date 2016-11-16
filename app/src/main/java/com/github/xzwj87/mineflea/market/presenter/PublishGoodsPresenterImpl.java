@@ -4,7 +4,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
+import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
@@ -22,7 +22,8 @@ import javax.inject.Inject;
 public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     public static final String TAG = PublishGoodsPresenterImpl.class.getSimpleName();
 
-    @Inject MineFleaRepository mRepository;
+    @Inject
+    DataRepository mRepository;
     private PublishGoodsView mView;
     private PublishGoodsInfo mGoodsInfo;
 
@@ -32,7 +33,7 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     private List<String> mImgUris;
 
     @Inject
-    public PublishGoodsPresenterImpl(MineFleaRepository repository){
+    public PublishGoodsPresenterImpl(DataRepository repository){
         mRepository = repository;
     }
 

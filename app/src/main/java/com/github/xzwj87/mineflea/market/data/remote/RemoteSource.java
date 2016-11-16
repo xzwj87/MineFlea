@@ -10,6 +10,7 @@ import com.github.xzwj87.mineflea.market.model.UserInfo;
 
 public interface RemoteSource extends DataSource {
 
+    // only get 30 items a time
     int MAX_GOODS_TO_GET_ONE_TIME = 30;
 
     void getUserInfoById(String id);

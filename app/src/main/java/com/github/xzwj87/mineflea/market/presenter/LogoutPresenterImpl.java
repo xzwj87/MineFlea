@@ -1,14 +1,12 @@
 package com.github.xzwj87.mineflea.market.presenter;
 
-import android.os.Message;
 import android.util.Log;
 
-import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
+import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * Created by jason on 11/4/16.
@@ -18,10 +16,11 @@ public class LogoutPresenterImpl extends LogoutPresenter{
 
     private static final String TAG = LogoutPresenterImpl.class.getSimpleName();
 
-    @Inject MineFleaRepository mRepo;
+    @Inject
+    DataRepository mRepo;
 
     @Inject
-    public LogoutPresenterImpl(MineFleaRepository repository){
+    public LogoutPresenterImpl(DataRepository repository){
         mRepo = repository;
     }
 

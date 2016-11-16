@@ -20,7 +20,6 @@ import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.model.AvCloudConstants;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
-import com.github.xzwj87.mineflea.market.presenter.PresenterCallback;
 import com.github.xzwj87.mineflea.utils.NetConnectionUtils;
 import com.github.xzwj87.mineflea.utils.PublishGoodsUtils;
 import com.github.xzwj87.mineflea.utils.UserInfoUtils;
@@ -38,14 +37,14 @@ import javax.inject.Singleton;
  */
 
 @Singleton
-public class MineFleaRemoteSource implements RemoteSource{
-    public static final String TAG = MineFleaRemoteSource.class.getSimpleName();
+public class RemoteDataSource implements RemoteSource{
+    public static final String TAG = RemoteDataSource.class.getSimpleName();
 
-    private static MineFleaRemoteSource sInstance;
+    private static RemoteDataSource sInstance;
     private CloudSourceCallback mCloudCallback;
 
     @Inject
-    public MineFleaRemoteSource(){
+    public RemoteDataSource(){
     }
 
     public void setCloudCallback(CloudSourceCallback callback){
