@@ -73,7 +73,11 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
 
     @Override
     public void setGoodsPrice(String price) {
-        mGoodsInfo.setPrice(Double.parseDouble(price));
+        if(TextUtils.isEmpty(price)){
+            mGoodsInfo.setPrice(0.0);
+        }else {
+            mGoodsInfo.setPrice(Double.parseDouble(price));
+        }
     }
 
     @Override

@@ -23,6 +23,7 @@ import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.PublishGoodsPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.PublishGoodsView;
+import com.github.xzwj87.mineflea.market.ui.activity.MineFleaHomeActivity;
 import com.github.xzwj87.mineflea.market.ui.adapter.PublishGoodsImageAdapter;
 import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 
@@ -81,6 +82,10 @@ public class PublishGoodsFragment extends BaseFragment
         switch (id){
             case R.id.action_publish:
                 publishGoods();
+                return true;
+            case android.R.id.home:
+                Intent intent = new Intent(getActivity(),MineFleaHomeActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(menuItem);

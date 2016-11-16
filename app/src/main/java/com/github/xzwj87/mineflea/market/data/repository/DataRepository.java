@@ -66,7 +66,6 @@ public class DataRepository implements BaseRepository,RemoteDataSource.CloudSour
 
     @Override
     public void register(UserInfo userInfo) {
-        mCache.saveToFile(userInfo);
         mCloudSrc.register(userInfo);
     }
 
@@ -292,6 +291,10 @@ public class DataRepository implements BaseRepository,RemoteDataSource.CloudSour
     @Override
     public void registerComplete(Message message) {
         Log.v(TAG,"registerComplete(): message " + message.obj);
+
+        if(message.obj != null){
+            mCache.saveToFile((UserInfo)message.obj);
+        }
 
         PresenterCallback listener = mPresenterCbs.get(BasePresenter.PRESENTER_REGISTER);
         if(listener != null){

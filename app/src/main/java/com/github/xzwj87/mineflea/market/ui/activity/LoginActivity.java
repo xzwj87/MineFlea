@@ -120,10 +120,11 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                 case REQUEST_USER_REGISTER:
                     if(result == RESULT_OK && data != null) {
                         setResult(RESULT_OK, data);
+                    }else{
+                        finishView();
                     }
                     break;
             }
-            finish();
     }
 
     private void populateAutoComplete() {

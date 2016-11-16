@@ -13,8 +13,6 @@ import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
 public class BaseFragment extends Fragment{
 
     public BaseFragment(){
-        super();
-
         setRetainInstance(true);
     }
 

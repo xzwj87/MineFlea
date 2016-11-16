@@ -1,5 +1,6 @@
 package com.github.xzwj87.mineflea.market.ui.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -66,8 +67,17 @@ public class DiscoverTabFragment extends BaseFragment
     }
 
     @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+
+        Log.v(TAG,"onAttach()");
+    }
+
+    @Override
     public void onResume(){
         super.onResume();
+
+        Log.v(TAG,"onResume()");
 
         mPresenter.setView(this);
         mPresenter.init();
@@ -145,14 +155,13 @@ public class DiscoverTabFragment extends BaseFragment
         Log.v(TAG,"onGetGoodsListDone(): " + (success ? "success" : "fail"));
         if(mSrlDiscover.isRefreshing()){
             mSrlDiscover.setRefreshing(false);
-        }
 
-        if(success){
-            showToast(getString(R.string.get_goods_list_sucess));
-        }else{
-            showToast(getString(R.string.error_get_goods_list));
+            if(success){
+                showToast(getString(R.string.get_goods_list_sucess));
+            }else{
+                showToast(getString(R.string.error_get_goods_list));
+            }
         }
-
     }
 
     @Override

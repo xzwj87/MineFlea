@@ -347,7 +347,7 @@ public class RemoteDataSource implements RemoteSource{
     }
 
     @Override
-    public void register(UserInfo userInfo) {
+    public void register(final UserInfo userInfo) {
         Log.v(TAG,"register(): user info " + userInfo);
 
         final AVUser avUser = UserInfoUtils.toAvUser(userInfo);
@@ -357,7 +357,8 @@ public class RemoteDataSource implements RemoteSource{
             public void done(AVException e) {
                 final Message msg = new Message();
                 if(e == null){
-                    msg.obj = avUser.getObjectId();
+                    userInfo.setUserId(avUser.getObjectId());
+                    msg.obj = userInfo;
                     msg.arg1 = ResponseCode.RESP_REGISTER_SUCCESS;
                 }else{
                     Log.v(TAG,"avException = " + e.toString());
@@ -380,10 +381,10 @@ public class RemoteDataSource implements RemoteSource{
             public void done(AVUser avUser, AVException e) {
                 Message message = new Message();
                 if(e == null){
-                    message.arg1 = ResponseCode.RESP_LOGIN_SUCCESS;
+                    message.what = ResponseCode.RESP_LOGIN_SUCCESS;
                     message.obj = UserInfoUtils.fromAvUser(avUser);
                 }else{
-                    message.arg1 = ResponseCode.RESP_LOGIN_FAIL;
+                    message.what = ResponseCode.RESP_LOGIN_FAIL;
                     message.obj = null;
                 }
 

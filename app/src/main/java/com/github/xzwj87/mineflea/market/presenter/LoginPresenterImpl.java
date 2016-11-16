@@ -2,6 +2,7 @@ package com.github.xzwj87.mineflea.market.presenter;
 
 import android.os.Message;
 
+import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
@@ -86,20 +87,24 @@ public class LoginPresenterImpl extends LoginPresenter{
 
         @Override
         public void onComplete(Message message) {
-            if(message.obj != null){
-                UserInfo user = (UserInfo) message.obj;
-                UserPrefsUtil.saveUserLoginInfo(user);
+                switch (message.what) {
+                    case ResponseCode.RESP_LOGIN_SUCCESS:
+                        UserInfo user = (UserInfo) message.obj;
+                        UserPrefsUtil.saveUserLoginInfo(user);
 
-                mView.updateUserEmail(user.getUserEmail());
-                mView.updateUserNickName(user.getNickName());
-                mView.updateUserHeadIcon(user.getHeadIconUrl());
+                        mView.updateUserEmail(user.getUserEmail());
+                        mView.updateUserNickName(user.getNickName());
+                        mView.updateUserHeadIcon(user.getHeadIconUrl());
 
-                mView.onLoginSuccess();
-                mView.showProgress(false);
-            }else{
-                mView.onLoginFail();
-                UserPrefsUtil.updateUserInfoBoolean(UserInfo.IS_LOGIN,false);
-            }
+                        mView.onLoginSuccess();
+                        mView.showProgress(false);
+                        break;
+
+                    case ResponseCode.RESP_LOGIN_FAIL:
+                        mView.onLoginFail();
+                        UserPrefsUtil.updateUserInfoBoolean(UserInfo.IS_LOGIN,false);
+                        break;
+                }
         }
 
         @Override
