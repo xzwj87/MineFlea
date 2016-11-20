@@ -8,12 +8,14 @@ import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.data.cache.FileCache;
 import com.github.xzwj87.mineflea.market.data.cache.FileCacheImpl;
 import com.github.xzwj87.mineflea.market.data.remote.RemoteDataSource;
+import com.github.xzwj87.mineflea.market.data.remote.RemoteSourceCallBack;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.BasePresenter;
 import com.github.xzwj87.mineflea.market.presenter.PresenterCallback;
+import com.github.xzwj87.mineflea.utils.UserInfoUtils;
 
-import com.github.xzwj87.mineflea.market.presenter.BasePresenter.PRESENTER_TYPE;
+import static com.github.xzwj87.mineflea.market.presenter.BasePresenter.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +31,7 @@ import javax.inject.Singleton;
  */
 
 @Singleton
-public class DataRepository implements BaseRepository,RemoteDataSource.CloudSourceCallback{
+public class DataRepository implements BaseRepository,RemoteSourceCallBack{
     public static final String TAG = DataRepository.class.getSimpleName();
 
     @Inject FileCacheImpl mCache;
@@ -72,6 +74,20 @@ public class DataRepository implements BaseRepository,RemoteDataSource.CloudSour
     @Override
     public void login(UserInfo info) {
         mCloudSrc.login(info);
+    }
+
+    @Override
+    public void sendSmsAuthCode(String number) {
+        mCloudSrc.sendAuthCode(number);
+    }
+
+    @Override
+    public void resetPwdByAccount(String account) {
+        if(UserInfoUtils.isTelNumberValid(account)){
+            mCloudSrc.sendResetPwdBySms(account);
+        }else{
+            mCloudSrc.sendResetPwdEmail(account);
+        }
     }
 
     @Override
@@ -128,7 +144,7 @@ public class DataRepository implements BaseRepository,RemoteDataSource.CloudSour
         if (mCache.isCached(id, FileCache.CACHE_TYPE_USER) &&
                 !mCache.isExpired(id, FileCache.CACHE_TYPE_USER)) {
             UserInfo userInfo = mCache.getUserCache(id);
-            PresenterCallback callback = mPresenterCbs.get(BasePresenter.PRESENTER_USER_DETAIL);
+            PresenterCallback callback = mPresenterCbs.get(PRESENTER_USER_DETAIL);
             if(callback != null){
                 final Message message = new Message();
                 message.obj = userInfo;
@@ -152,7 +168,7 @@ public class DataRepository implements BaseRepository,RemoteDataSource.CloudSour
             msg.obj = goodsList;
             msg.what = ResponseCode.RESP_GET_GOODS_LIST_SUCCESS;
 
-            PresenterCallback callback = mPresenterCbs.get(BasePresenter.PRESENTER_GOODS_LIST);
+            PresenterCallback callback = mPresenterCbs.get(PRESENTER_GOODS_LIST);
             if(callback != null){
                 callback.onComplete(msg);
             }
@@ -183,7 +199,7 @@ public class DataRepository implements BaseRepository,RemoteDataSource.CloudSour
                 }
             }
 
-            PresenterCallback callback = mPresenterCbs.get(BasePresenter.PRESENTER_GOODS);
+            PresenterCallback callback = mPresenterCbs.get(PRESENTER_GOODS);
             if(callback != null){
                 final Message message = new Message();
                 message.obj = goodsIdList;
@@ -238,7 +254,7 @@ public class DataRepository implements BaseRepository,RemoteDataSource.CloudSour
 
     @Override
     public void onGetUserInfoDone(Message msg) {
-        PresenterCallback listener = mPresenterCbs.get(BasePresenter.PRESENTER_USER_DETAIL);
+        PresenterCallback listener = mPresenterCbs.get(PRESENTER_USER_DETAIL);
         if(listener != null){
             listener.onComplete(msg);
         }
@@ -251,7 +267,7 @@ public class DataRepository implements BaseRepository,RemoteDataSource.CloudSour
 
     @Override
     public void onGetGoodsListDone(Message msg) {
-        PresenterCallback callback = mPresenterCbs.get(BasePresenter.PRESENTER_GOODS_LIST);
+        PresenterCallback callback = mPresenterCbs.get(PRESENTER_GOODS_LIST);
         if(callback != null) {
             callback.onComplete(msg);
         }
@@ -259,7 +275,7 @@ public class DataRepository implements BaseRepository,RemoteDataSource.CloudSour
 
     @Override
     public void onGetUserFolloweeDone(Message message) {
-        PresenterCallback callback = mPresenterCbs.get(BasePresenter.PRESENTER_FOLLOWEE);
+        PresenterCallback callback = mPresenterCbs.get(PRESENTER_FOLLOWEE);
         if(callback != null) {
             callback.onComplete(message);
         }
@@ -267,8 +283,24 @@ public class DataRepository implements BaseRepository,RemoteDataSource.CloudSour
 
     @Override
     public void onGetUserFollowerDone(Message message) {
-        PresenterCallback callback = mPresenterCbs.get(BasePresenter.PRESENTER_FOLLOWER);
+        PresenterCallback callback = mPresenterCbs.get(PRESENTER_FOLLOWER);
         if(callback != null) {
+            callback.onComplete(message);
+        }
+    }
+
+    @Override
+    public void onResetPwdByEmailDone(Message message) {
+        PresenterCallback callback = mPresenterCbs.get(PRESENTER_LOGIN);
+        if(callback != null){
+            callback.onComplete(message);
+        }
+    }
+
+    @Override
+    public void onResetPwdByTelDone(Message message) {
+        PresenterCallback callback = mPresenterCbs.get(PRESENTER_LOGIN);
+        if(callback != null){
             callback.onComplete(message);
         }
     }
@@ -282,7 +314,7 @@ public class DataRepository implements BaseRepository,RemoteDataSource.CloudSour
             mGoodsInfo.setId((String) message.obj);
         }
 
-        PresenterCallback listener = mPresenterCbs.get(BasePresenter.PRESENTER_PUBLISH);
+        PresenterCallback listener = mPresenterCbs.get(PRESENTER_PUBLISH);
         if(listener != null){
             listener.onComplete(message);
         }
@@ -296,7 +328,7 @@ public class DataRepository implements BaseRepository,RemoteDataSource.CloudSour
             mCache.saveToFile((UserInfo)message.obj);
         }
 
-        PresenterCallback listener = mPresenterCbs.get(BasePresenter.PRESENTER_REGISTER);
+        PresenterCallback listener = mPresenterCbs.get(PRESENTER_REGISTER);
         if(listener != null){
             listener.onComplete(message);
         }
@@ -306,7 +338,7 @@ public class DataRepository implements BaseRepository,RemoteDataSource.CloudSour
     public void updateProcess(int count) {
         Log.v(TAG,"updateProcess(): count = " + count);
 
-        PresenterCallback listener = mPresenterCbs.get(BasePresenter.PRESENTER_PUBLISH);
+        PresenterCallback listener = mPresenterCbs.get(PRESENTER_PUBLISH);
         if(listener != null){
             final Message message = new Message();
             message.obj = count;
@@ -342,7 +374,7 @@ public class DataRepository implements BaseRepository,RemoteDataSource.CloudSour
             user.setHeadIconUrl(cacheImg);
         }
 
-        PresenterCallback listener = mPresenterCbs.get(BasePresenter.PRESENTER_LOGIN);
+        PresenterCallback listener = mPresenterCbs.get(PRESENTER_LOGIN);
         if(listener != null){
             listener.onComplete(message);
         }

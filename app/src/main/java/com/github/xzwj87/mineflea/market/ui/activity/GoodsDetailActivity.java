@@ -26,7 +26,7 @@ public class GoodsDetailActivity extends BaseActivity {
     public void onResume(){
         super.onResume();
 
-        checkThemeColor();
+        ThemeColorUtils.changeThemeColor(this);
     }
 
     @Override
@@ -39,10 +39,4 @@ public class GoodsDetailActivity extends BaseActivity {
     public void onDestroy(){
         super.onDestroy();
     }
-
-    @Override
-    protected void checkThemeColor(){
-        ThemeColorUtils.changeThemeColor(this);
-    }
-
 }

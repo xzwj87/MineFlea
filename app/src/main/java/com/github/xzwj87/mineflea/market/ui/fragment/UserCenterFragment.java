@@ -12,28 +12,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.amap.api.maps.model.Text;
 import com.github.xzwj87.mineflea.R;
-import com.github.xzwj87.mineflea.market.internal.di.HasComponent;
-import com.github.xzwj87.mineflea.market.internal.di.component.DaggerMarketComponent;
-import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.UserCenterPresenterImpl;
-import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.UserCenterView;
 import com.github.xzwj87.mineflea.market.ui.activity.LoginActivity;
 import com.github.xzwj87.mineflea.market.ui.activity.UserDetailActivity;
 import com.github.xzwj87.mineflea.market.ui.activity.UserGoodsActivity;
 import com.github.xzwj87.mineflea.market.ui.settings.SettingsActivity;
 import com.github.xzwj87.mineflea.utils.SharePrefsHelper;
-import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.net.URL;
 
 import javax.inject.Inject;
 

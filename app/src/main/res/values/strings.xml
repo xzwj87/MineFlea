@@ -21,7 +21,7 @@
     <string name="prompt_name">User Name</string>
     <string name="prompt_tel_number">Mobile Phone Number</string>
     <string name="prompt_email_register">Email</string>
-    <string name="prompt_email_login">Email or User Name</string>
+    <string name="prompt_email_login">Email or Telephone Number</string>
     <string name="prompt_password">Password (optional)</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_register">Register</string>
@@ -54,7 +54,7 @@
     <string name="button_cancel">Cancel</string>
     <string name="register_progress_info">Registering, please wait for a while</string>
     <string name="error_publish_fail">Fail to publish goods</string>
-    <string name="prompt_login_incorrect_email_password">Incorrect Name or password</string>
+    <string name="prompt_login_failure">Fail to login; Incorrect account or password!</string>
     <string name="pictures_over_max_count_hints">only 5 pictures should be picked</string>
     <string name="iv_share_description">Share</string>
     <string name="iv_goods_img">Goods Image</string>
@@ -122,4 +122,19 @@
     <string name="key_pref_theme_color">key_pref_theme_color</string>
     <string name="color_indigo">#3F51B5</string>
     <string name="get_goods_list_sucess">Refresh Success</string>
+    <string name="forget_password">Forget Password?</string>
+    <string name="tel_number_china">+86</string>
+    <string name="use_tel_number_register">Use  Telephone Number To Register</string>
+    <string name="had_account_login">Already have an account? Login</string>
+    <string name="prompt_input_auth_code">Please Input Authentification Code</string>
+    <string name="please_input_name_password">Please Input Account and Password</string>
+    <string name="show_password">Show Password</string>
+    <string name="error_invalid_account">Invalid Email or Telephone Number</string>
+    <string name="please_input_email_or_telephone_number">Please Input Email or Telephone Number</string>
+    <string name="send_auth_code">Send Authentification Information</string>
+    <string name="reset_your_password">Find Your Password</string>
+    <string name="reset_password_email_sent">Reset password email has been sent!</string>
+    <string name="error_reset_pwd_by_email">Fail to reset password by Email ,please try it again!</string>
+    <string name="error_reset_pwd_by_sms">Fail to reset password by SMS ,please try it again!</string>
+    <string name="reset_pwd_success">Success to reset password</string>
 </resources>

@@ -1,6 +1,8 @@
 package com.github.xzwj87.mineflea.market.presenter;
 
 import android.os.Message;
+import android.util.Log;
+import android.webkit.URLUtil;
 
 import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
@@ -17,7 +19,7 @@ import javax.inject.Inject;
  * Created by jason on 10/16/16.
  */
 @PerActivity
-public class LoginPresenterImpl extends LoginPresenter{
+public class LoginPresenterImpl implements LoginPresenter{
 
     public static final String TAG = LoginPresenterImpl.class.getSimpleName();
 
@@ -35,29 +37,62 @@ public class LoginPresenterImpl extends LoginPresenter{
     @Override
     public void login() {
         mDataRepo.login(mUserInfo);
+        mView.showProgress(true);
     }
 
     @Override
     public boolean validLoginInfo() {
+        boolean ret = UserInfoUtils.isEmailValid(mUserInfo.getUserEmail());
+        if(!ret){
+            mView.showAccountInvalidMsg();
+        }
 
-        return UserInfoUtils.isEmailValid(mUserInfo.getUserEmail());
+        return ret;
     }
 
     @Override
     public void setUserAccount(String account) {
-        mUserInfo.setUerEmail(account);
-        mUserInfo.setUserName(account);
-
-        if(UserInfoUtils.isEmailValid(account)){
+        if(UserInfoUtils.isPossibleEmail(account)){
+            mUserInfo.setUerEmail(account);
+            mUserInfo.setUserName(account);
             mIsEmail = true;
-        }else{
-            mView.showAccountInvalidMsg();
+        }else if(UserInfoUtils.isTelNumber(account)){
+            mUserInfo.setUserTelNumber(account);
+            mIsEmail = false;
         }
+
     }
 
     @Override
     public void setUserPwd(String pwd) {
         mUserInfo.setUserPwd(pwd);
+    }
+
+    @Override
+    public String getUserNickName() {
+        if(mUserInfo == null) return null;
+
+        return mUserInfo.getNickName();
+    }
+
+    @Override
+    public String getUserEmail() {
+        if(mUserInfo == null) return null;
+
+        return mUserInfo.getUserEmail();
+    }
+
+    @Override
+    public String getHeadIconUrl() {
+        if(mUserInfo == null) return null;
+
+        return mUserInfo.getHeadIconUrl();
+    }
+
+    @Override
+    public void resetPwdByAccount(String account) {
+        Log.v(TAG,"resetPwdByAccount()");
+        mDataRepo.resetPwdByAccount(account);
     }
 
     @Override
@@ -87,22 +122,35 @@ public class LoginPresenterImpl extends LoginPresenter{
 
         @Override
         public void onComplete(Message message) {
-                switch (message.what) {
+            mView.showProgress(false);
+
+            switch (message.what) {
                     case ResponseCode.RESP_LOGIN_SUCCESS:
                         UserInfo user = (UserInfo) message.obj;
                         UserPrefsUtil.saveUserLoginInfo(user);
 
-                        mView.updateUserEmail(user.getUserEmail());
-                        mView.updateUserNickName(user.getNickName());
-                        mView.updateUserHeadIcon(user.getHeadIconUrl());
-
                         mView.onLoginSuccess();
-                        mView.showProgress(false);
                         break;
 
                     case ResponseCode.RESP_LOGIN_FAIL:
                         mView.onLoginFail();
+                        if(message.arg1 == ResponseCode.RESP_LOGIN_INVALID_PASSWORD){
+                            mView.showPwdInvalidMsg();
+                        }
                         UserPrefsUtil.updateUserInfoBoolean(UserInfo.IS_LOGIN,false);
+                        break;
+
+                    case ResponseCode.RESP_RESET_PWD_BY_EMAIL_SUCCESS:
+                    case ResponseCode.RESP_RESET_PWD_BY_SMS_SUCCESS:
+                        mView.resetPwdSuccess();
+                        break;
+                    case ResponseCode.RESP_RESET_PWD_BY_EMAIL_FAIL:
+                        mView.showEmailResetPwdFailMsg();
+                        break;
+                    case ResponseCode.RESP_RESET_PWD_BY_SMS_FAIL:
+                        mView.showSmsResetPwdFailMsg();
+                        break;
+                    default:
                         break;
                 }
         }

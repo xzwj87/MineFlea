@@ -23,7 +23,7 @@ import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.PublishGoodsPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.PublishGoodsView;
-import com.github.xzwj87.mineflea.market.ui.activity.MineFleaHomeActivity;
+import com.github.xzwj87.mineflea.market.ui.activity.HomeActivity;
 import com.github.xzwj87.mineflea.market.ui.adapter.PublishGoodsImageAdapter;
 import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 
@@ -84,7 +84,7 @@ public class PublishGoodsFragment extends BaseFragment
                 publishGoods();
                 return true;
             case android.R.id.home:
-                Intent intent = new Intent(getActivity(),MineFleaHomeActivity.class);
+                Intent intent = new Intent(getActivity(),HomeActivity.class);
                 startActivity(intent);
                 return true;
             default:

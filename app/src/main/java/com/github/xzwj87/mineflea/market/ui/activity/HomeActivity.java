@@ -2,7 +2,6 @@ package com.github.xzwj87.mineflea.market.ui.activity;
 
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.FragmentPagerAdapter;
@@ -11,23 +10,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.internal.di.HasComponent;
-import com.github.xzwj87.mineflea.market.internal.di.component.DaggerMarketComponent;
 import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
 import com.github.xzwj87.mineflea.market.ui.adapter.SectionsPageAdapter;
-import com.github.xzwj87.mineflea.market.ui.fragment.UserCenterFragment;
 import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
 
-import static com.github.xzwj87.mineflea.market.ui.adapter.SectionsPageAdapter.FRAGMENT_USER_CENTER_TAB;
-
-public class MineFleaHomeActivity extends BaseActivity
+public class HomeActivity extends BaseActivity
             implements HasComponent<MarketComponent>{
 
-    private static final String TAG = MineFleaHomeActivity.class.getSimpleName();
+    private static final String TAG = HomeActivity.class.getSimpleName();
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -65,7 +59,7 @@ public class MineFleaHomeActivity extends BaseActivity
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        checkThemeColor();
+        ThemeColorUtils.changeThemeColor(this);
     }
 
     @Override
@@ -90,11 +84,6 @@ public class MineFleaHomeActivity extends BaseActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void checkThemeColor(){
-        ThemeColorUtils.changeThemeColor(this);
     }
 
     private void startPublishActivity(){

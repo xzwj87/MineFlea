@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVPowerfulUtils;
 import com.avos.avoscloud.AVQuery;
@@ -15,6 +16,8 @@ import com.avos.avoscloud.FollowCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.LogInCallback;
 import com.avos.avoscloud.ProgressCallback;
+import com.avos.avoscloud.RequestMobileCodeCallback;
+import com.avos.avoscloud.RequestPasswordResetCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.model.AvCloudConstants;
@@ -41,27 +44,14 @@ public class RemoteDataSource implements RemoteSource{
     public static final String TAG = RemoteDataSource.class.getSimpleName();
 
     private static RemoteDataSource sInstance;
-    private CloudSourceCallback mCloudCallback;
+    private RemoteSourceCallBack mCloudCallback;
 
     @Inject
     public RemoteDataSource(){
     }
 
-    public void setCloudCallback(CloudSourceCallback callback){
+    public void setCloudCallback(RemoteSourceCallBack callback){
         mCloudCallback = callback;
-    }
-
-    public interface CloudSourceCallback{
-        void publishComplete(Message message);
-        void registerComplete(Message message);
-        void updateProcess(int count);
-        void loginComplete(Message message);
-        void onImgUploadComplete(Message msg);
-        void onGetUserInfoDone(Message msg);
-        void onGetGoodsInfoDone(Message msg);
-        void onGetGoodsListDone(Message msg);
-        void onGetUserFolloweeDone(Message message);
-        void onGetUserFollowerDone(Message message);
     }
 
     @Override
@@ -307,6 +297,64 @@ public class RemoteDataSource implements RemoteSource{
         });
     }
 
+    @Override
+    public void sendAuthCode(String number) {
+        Log.v(TAG,"sendAuthCode()");
+
+        AVOSCloud.requestSMSCodeInBackground(number, new RequestMobileCodeCallback() {
+            @Override
+            public void done(AVException e) {
+                Log.v(TAG,"sendAuthCode(): done");
+            }
+        });
+    }
+
+    @Override
+    public void sendResetPwdEmail(String emailAddress) {
+        Log.v(TAG,"sendResetPwdEmail()");
+
+        AVUser.requestPasswordResetInBackground(emailAddress, new RequestPasswordResetCallback() {
+            @Override
+            public void done(AVException e) {
+                final Message msg = new Message();
+
+                if(e != null){
+                    e.printStackTrace();
+                    // tell user to try again
+                    msg.what = ResponseCode.RESP_RESET_PWD_BY_EMAIL_FAIL;
+                    msg.obj = e.toString();
+                }else{
+                    msg.what = ResponseCode.RESP_RESET_PWD_BY_EMAIL_SUCCESS;
+                    msg.obj = null;
+                }
+
+                mCloudCallback.onResetPwdByEmailDone(msg);
+            }
+        });
+    }
+
+    @Override
+    public void sendResetPwdBySms(String telNumber) {
+        Log.v(TAG,"sendResetPwdBySms()");
+
+        AVUser.requestPasswordResetBySmsCodeInBackground(telNumber, new RequestMobileCodeCallback() {
+            @Override
+            public void done(AVException e) {
+                final Message msg = new Message();
+                if(e != null){
+                    msg.what = ResponseCode.RESP_RESET_PWD_BY_SMS_FAIL;
+                    msg.obj = e.toString();
+                    e.printStackTrace();
+                }else{
+                    msg.what = ResponseCode.RESP_RESET_PWD_BY_SMS_SUCCESS;
+                    msg.obj = null;
+                }
+
+                mCloudCallback.onResetPwdByTelDone(msg);
+            }
+        });
+    }
+
     /**
      * release goods
      *
@@ -385,6 +433,13 @@ public class RemoteDataSource implements RemoteSource{
                     message.obj = UserInfoUtils.fromAvUser(avUser);
                 }else{
                     message.what = ResponseCode.RESP_LOGIN_FAIL;
+                    if(e.getCode() == AVException.INVALID_EMAIL_ADDRESS) {
+                        message.arg1 = ResponseCode.RESP_LOGIN_INVALID_EMAIL;
+                    }else if(e.getCode() == AVException.INVALID_PHONE_NUMBER){
+                        message.arg1 = ResponseCode.RESP_LOGIN_INVALID_PHONE_NUMBER;
+                    }else if(e.getCode() == AVException.USERNAME_PASSWORD_MISMATCH){
+                        message.arg1 = ResponseCode.RESP_LOGIN_INVALID_PASSWORD;
+                    }
                     message.obj = null;
                 }
 

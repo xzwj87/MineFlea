@@ -36,4 +36,10 @@ public interface RemoteSource extends DataSource {
     void getFollowerList(String userId);
 
     void getAllGoods();
+
+    void sendAuthCode(String number);
+
+    void sendResetPwdEmail(String emailAddress);
+
+    void sendResetPwdBySms(String telNumber);
 }

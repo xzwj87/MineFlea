@@ -1,83 +1,65 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout android:id="@+id/dialog_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.github.xzwj87.mineflea.market.ui.activity.LoginActivity">
+    android:layout_margin="@dimen/activity_vertical_margin"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ScrollView
-        android:id="@+id/form_login"
+    <EditText
+        android:id="@+id/et_account"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:hint="@string/prompt_email_login"
+        android:inputType="textEmailAddress"
+        android:textSize="@dimen/edit_text_size"
+        android:maxLines="1"
+        android:drawableStart="@drawable/ic_email_grey_24dp"
+        android:drawablePadding="@dimen/drawable_padding"
+        android:layout_marginBottom="@dimen/dialog_view_margin"/>
 
-        <LinearLayout
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dialog_view_margin">
+
+        <EditText
+            android:id="@+id/et_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:hint="@string/prompt_password"
+            android:imeActionId="@+id/login"
+            android:imeActionLabel="@string/action_sign_in_short"
+            android:imeOptions="actionUnspecified"
+            android:inputType="textPassword"
+            android:textSize="@dimen/edit_text_size"
+            android:maxLines="1"
+            android:drawableStart="@drawable/ic_lock_grey_24dp"
+            android:drawablePadding="@dimen/drawable_padding" />
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+        <ImageView android:id="@+id/iv_show_pwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/show_password"
+            android:src="@drawable/ic_visibility_grey_24dp"
+            android:layout_gravity="end|center"/>
 
-                <AutoCompleteTextView
-                    android:id="@+id/atv_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_email_login"
-                    android:inputType="textEmailAddress"
-                    android:textSize="@dimen/edit_text_size"
-                    android:maxLines="1"
-                    android:drawableLeft="@drawable/ic_email_grey_24dp"
-                    android:drawablePadding="@dimen/drawable_padding"/>
+    </FrameLayout>
 
-            </android.support.design.widget.TextInputLayout>
+    <TextView android:id="@+id/tv_forget_password"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/login_item_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/login_text_size"
+        android:text="@string/forget_password"/>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+    <Button android:id="@+id/btn_login"
+        android:layout_marginTop="@dimen/register_view_margin"
+        android:layout_gravity="center"
+        android:text="@string/had_account_login"
+        style="?android:borderlessButtonStyle"
+        android:textSize="@dimen/edit_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
-                <EditText
-                    android:id="@+id/et_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_password"
-                    android:imeActionId="@+id/login"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textPassword"
-                    android:textSize="@dimen/edit_text_size"
-                    android:maxLines="1"
-                    android:drawableLeft="@drawable/ic_lock_grey_24dp"
-                    android:drawablePadding="@dimen/drawable_padding"/>
-
-            </android.support.design.widget.TextInputLayout>
-
-            <Button
-                android:id="@+id/btn_sign_in"
-                style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/action_sign_in"
-                android:textStyle="bold"
-                android:elevation="3dp"/>
-
-
-            <Button
-                android:id="@+id/btn_register"
-                style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/action_register"
-                android:textStyle="bold"
-                android:elevation="3dp"/>
-
-        </LinearLayout>
-    </ScrollView>
 </LinearLayout>

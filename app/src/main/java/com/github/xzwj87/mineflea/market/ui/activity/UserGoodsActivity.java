@@ -68,7 +68,7 @@ public class UserGoodsActivity extends BaseActivity{
                    .add(fragment,mFragmentTag)
                    .commit();
 
-        checkThemeColor();
+        ThemeColorUtils.changeThemeColor(this);
     }
 
 
@@ -79,10 +79,5 @@ public class UserGoodsActivity extends BaseActivity{
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void checkThemeColor(){
-        ThemeColorUtils.changeThemeColor(this);
     }
 }

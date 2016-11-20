@@ -22,7 +22,7 @@ public class NearbyGoodsActivity extends BaseActivity {
         setContentView(R.layout.activity_nearby_goods);
         ButterKnife.bind(this);
 
-        checkThemeColor();
+        ThemeColorUtils.changeThemeColor(this);
     }
 
     @Override
@@ -40,10 +40,5 @@ public class NearbyGoodsActivity extends BaseActivity {
     @Override
     public void onDestroy(){
         super.onDestroy();
-    }
-
-    @Override
-    protected void checkThemeColor(){
-        ThemeColorUtils.changeThemeColor(this);
     }
 }

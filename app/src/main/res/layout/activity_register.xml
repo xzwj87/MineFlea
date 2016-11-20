@@ -1,121 +1,70 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/activity_vertical_margin"
-    android:fitsSystemWindows="true"
-    tools:context=".market.ui.activity.RegisterActivity">
+    android:layout_margin="@dimen/activity_vertical_margin"
+    tools:context="com.github.xzwj87.mineflea.market.ui.activity.LoginActivity">
 
-    <ScrollView
+    <TextView android:id="@+id/tv_register_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="start|center"
+        android:layout_alignParentStart="true"
+        android:text="@string/use_tel_number_register"
+        android:textColor="@color/colorLightGrey"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginBottom="@dimen/register_view_margin"
+        android:textSize="@dimen/edit_text_size"/>
+
+    <TextView android:id="@+id/tv_tel_country_code"
+        android:layout_below="@id/tv_register_hint"
+        android:layout_alignParentStart="true"
+        android:gravity="start|center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tel_number_china"
+        android:textColor="@color/colorDarkGrey"
+        android:textSize="@dimen/edit_text_size"/>
+
+    <EditText
+        android:id="@+id/et_tel_number"
+        android:layout_toEndOf="@id/tv_tel_country_code"
+        android:layout_below="@id/tv_register_hint"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:hint="@string/prompt_tel_number"
+        android:inputType="number"
+        android:maxEms="11"
+        android:textSize="@dimen/edit_text_size" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+    <Button android:id="@+id/btn_get_auth_code"
+        android:layout_below="@id/tv_register_hint"
+        android:gravity="center"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="@dimen/register_view_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+    <EditText
+        android:id="@+id/et_input_auth_code"
+        android:layout_below="@id/tv_tel_country_code"
+        android:layout_alignParentStart="true"
+        android:gravity="start|center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/prompt_input_auth_code"
+        android:visibility="invisible"
+        android:inputType="number"
+        android:textSize="@dimen/edit_text_size" />
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="48dp"
-                    android:orientation="horizontal">
+    <Button android:id="@+id/btn_login"
+        android:layout_marginTop="@dimen/register_view_margin"
+        android:layout_below="@id/et_input_auth_code"
+        android:layout_centerInParent="true"
+        android:text="@string/had_account_login"
+        style="?android:borderlessButtonStyle"
+        android:textSize="@dimen/edit_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
-                    <EditText
-                        android:id="@+id/et_user_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:hint="@string/prompt_name"
-                        android:inputType="textPersonName"
-                        android:maxLines="1"
-                        android:textSize="@dimen/edit_text_size"
-                        android:drawableLeft="@drawable/ic_user_name_grey_24dp"
-                        android:drawablePadding="@dimen/drawable_padding" />
-
-                </android.support.design.widget.TextInputLayout>
-
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:id="@+id/user_header_picker"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_alignParentEnd="true"
-                    android:src="@drawable/ic_camera_grey_48dp"
-                    android:adjustViewBounds="true" />
-
-            </RelativeLayout>
-
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <AutoCompleteTextView
-                    android:id="@+id/atv_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_email_register"
-                    android:inputType="textEmailAddress"
-                    android:textSize="@dimen/edit_text_size"
-                    android:maxLines="1"
-                    android:drawableLeft="@drawable/ic_email_grey_24dp"
-                    android:drawablePadding="@dimen/drawable_padding"/>
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/et_tel_number"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_tel_number"
-                    android:inputType="textPhonetic"
-                    android:textSize="@dimen/edit_text_size"
-                    android:maxLines="1"
-                    android:drawableLeft="@drawable/ic_phone_grey_24dp"
-                    android:drawablePadding="@dimen/drawable_padding"/>
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/et_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_password"
-                    android:inputType="textPassword"
-                    android:textSize="@dimen/edit_text_size"
-                    android:maxLines="1"
-                    android:drawableLeft="@drawable/ic_lock_grey_24dp"
-                    android:drawablePadding="@dimen/drawable_padding"/>
-
-            </android.support.design.widget.TextInputLayout>
-
-            <Button
-                android:id="@+id/btn_register"
-                style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/action_register"
-                android:textStyle="bold"
-                android:elevation="3dp"/>
-
-        </LinearLayout>
-    </ScrollView>
-
-
-</LinearLayout>
+</RelativeLayout>

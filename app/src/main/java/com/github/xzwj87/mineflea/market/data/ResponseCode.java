@@ -24,6 +24,12 @@ public class ResponseCode {
 
     public static final int RESP_LOGIN_FAIL = 0x71;
 
+    public static final int RESP_LOGIN_INVALID_EMAIL = 0x72;
+
+    public static final int RESP_LOGIN_INVALID_PHONE_NUMBER = 0x73;
+
+    public static final int RESP_LOGIN_INVALID_PASSWORD = 0x74;
+
     public static final int RESP_IMAGE_UPLOAD_SUCCESS = 0x80;
 
     public static final int RESP_IMAGE_UPLOAD_ERROR = 0x81;
@@ -57,6 +63,14 @@ public class ResponseCode {
     public static final int RESP_QUERY_FOLLOWEES_SUCCESS = 0x304;
 
     public static final int RESP_QUERY_FOLLOWEES_ERROR = 0x305;
+
+    public static final int RESP_RESET_PWD_BY_EMAIL_SUCCESS = 0x400;
+
+    public static final int RESP_RESET_PWD_BY_EMAIL_FAIL = 0x401;
+
+    public static final int RESP_RESET_PWD_BY_SMS_SUCCESS = 0x402;
+
+    public static final int RESP_RESET_PWD_BY_SMS_FAIL = 0x403;
 
 
     @Override

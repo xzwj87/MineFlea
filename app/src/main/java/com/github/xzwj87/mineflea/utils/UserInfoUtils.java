@@ -21,13 +21,22 @@ public class UserInfoUtils {
 
     private static final String VALIDATE_EMAIL_REGEX = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@" +
             "(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
-
+    private static final String VALIDATE_TEL_REGEX = "^\\d[1-9]{1}\\d[0-9]{10}";
 
     public static boolean isEmailValid(String email) {
-        Pattern pattern = Pattern.compile(VALIDATE_EMAIL_REGEX);
-        Matcher matcher = pattern.matcher(email);
 
-        return email.contains("@") || matcher.matches();
+        return TextUtils.isEmpty(email) && email.contains("@") && isEmail(email);
+    }
+
+    public static boolean isPossibleEmail(String account){
+        return TextUtils.isEmpty(account) && account.contains("@");
+    }
+
+    private static boolean isEmail(String account){
+        Pattern pattern = Pattern.compile(VALIDATE_EMAIL_REGEX);
+        Matcher matcher = pattern.matcher(account);
+
+        return matcher.matches();
     }
 
     public static boolean isPasswordValid(String password) {
@@ -41,7 +50,15 @@ public class UserInfoUtils {
     }
 
     public static boolean isTelNumberValid(String tel){
-        return !TextUtils.isEmpty(tel) && tel.length() == TEL_NUMBER_LEN;
+        return !TextUtils.isEmpty(tel) && tel.length() == TEL_NUMBER_LEN
+                && isTelNumber(tel);
+    }
+
+    public static boolean isTelNumber(String account){
+        Pattern pattern = Pattern.compile(VALIDATE_TEL_REGEX);
+        Matcher matcher = pattern.matcher(account);
+
+        return matcher.matches();
     }
 
     @SuppressWarnings("unchecked")

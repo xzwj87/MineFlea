@@ -17,9 +17,9 @@ public interface LoginView extends BaseView{
 
     void showProgress(boolean show);
 
-    void updateUserHeadIcon(String url);
+    void resetPwdSuccess();
 
-    void updateUserNickName(String nickName);
+    void showEmailResetPwdFailMsg();
 
-    void updateUserEmail(String email);
+    void showSmsResetPwdFailMsg();
 }

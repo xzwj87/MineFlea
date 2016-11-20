@@ -15,7 +15,6 @@ public interface BaseRepository {
      */
     void publishGoods(PublishGoodsInfo goods);
 
-
     /*
      * register user
      */
@@ -25,6 +24,17 @@ public interface BaseRepository {
      * login
      */
     void login(UserInfo info);
+
+    /*
+     * send SMS auth code
+     */
+    void sendSmsAuthCode(String number);
+
+
+    /*
+     * reset password by email or SMS
+     */
+    void resetPwdByAccount(String account);
 
     /*
      * logout
@@ -82,7 +92,13 @@ public interface BaseRepository {
      */
     void queryUserFolloweeListByUserId(String id);
 
+    /*
+     * register presenter callback
+     */
     void registerCallBack(@BasePresenter.PRESENTER_TYPE String type,PresenterCallback callback);
 
+    /*
+     *  unregister presenter callback
+     */
     void unregisterCallback(@BasePresenter.PRESENTER_TYPE String type);
 }

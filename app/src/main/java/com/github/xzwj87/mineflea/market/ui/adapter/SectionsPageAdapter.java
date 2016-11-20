@@ -4,10 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.github.xzwj87.mineflea.market.internal.di.HasComponent;
 import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
-import com.github.xzwj87.mineflea.market.ui.activity.BaseActivity;
-import com.github.xzwj87.mineflea.market.ui.activity.MineFleaHomeActivity;
 import com.github.xzwj87.mineflea.market.ui.fragment.DiscoverTabFragment;
 import com.github.xzwj87.mineflea.market.ui.fragment.NearbyTabFragment;
 import com.github.xzwj87.mineflea.market.ui.fragment.TabHolderFragment;
