@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <RelativeLayout
         android:id="@+id/routemap_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/title_background" >
+        android:background="@drawable/title_background"
+        android:visibility="gone">
         <LinearLayout
             android:id="@+id/routemap_choose"
             android:layout_width="match_parent"
@@ -161,5 +163,34 @@
             android:listSelector="#00000000" >
         </ListView>
     </LinearLayout>
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/multiple_actions_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        fab:fab_addButtonSize="mini"
+        fab:fab_addButtonStrokeVisible="false"
+        fab:fab_expandDirection="up"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="56dp">
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fam_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@color/white"
+            fab:fab_colorPressed="@color/blue"
+            fab:fab_size="mini"/>
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fam_reset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_size="mini"
+            fab:fab_icon="@mipmap/cancel"
+            fab:fab_title="Label on the right"/>
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 </RelativeLayout>

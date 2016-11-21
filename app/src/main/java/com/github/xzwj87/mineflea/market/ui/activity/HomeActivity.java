@@ -1,12 +1,13 @@
 package com.github.xzwj87.mineflea.market.ui.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +23,9 @@ public class HomeActivity extends BaseActivity
             implements HasComponent<MarketComponent>{
 
     private static final String TAG = HomeActivity.class.getSimpleName();
+
+    public static int DRIVE_ACTIVITY_CODE = 0;
+    public static int WALK_ACTIVITY_CODE = 1;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
