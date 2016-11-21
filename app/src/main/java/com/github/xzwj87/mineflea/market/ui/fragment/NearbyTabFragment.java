@@ -47,9 +47,12 @@ import com.amap.api.services.route.RideRouteResult;
 import com.amap.api.services.route.RouteSearch;
 import com.amap.api.services.route.WalkPath;
 import com.amap.api.services.route.WalkRouteResult;
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.model.NearbyGoodsInfo;
+import com.github.xzwj87.mineflea.market.ui.activity.MineFleaHomeActivity;
 import com.github.xzwj87.mineflea.market.ui.activity.NearbyGoodsActivity;
 import com.github.xzwj87.mineflea.market.ui.alimap.BusResultListAdapter;
 import com.github.xzwj87.mineflea.market.ui.alimap.DriveRouteDetailActivity;
@@ -57,13 +60,16 @@ import com.github.xzwj87.mineflea.market.ui.alimap.DrivingRouteOverLay;
 import com.github.xzwj87.mineflea.market.ui.alimap.WalkRouteDetailActivity;
 import com.github.xzwj87.mineflea.utils.AMapUtil;
 import com.github.xzwj87.mineflea.utils.Constants;
-import com.github.xzwj87.mineflea.utils.MyWindowManager;
 import com.github.xzwj87.mineflea.utils.NearbyProtocol;
 import com.github.xzwj87.mineflea.utils.ToastUtil;
 import com.github.xzwj87.mineflea.utils.UiUtils;
 
 import java.text.DecimalFormat;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 //Created by jason on 10/9/16.
 public class NearbyTabFragment extends BaseFragment implements View.OnClickListener, AMap.OnMarkerClickListener,
@@ -81,13 +87,20 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
     private final int ROUTE_TYPE_WALK = 3;
     private final int ROUTE_TYPE_CROSSTOWN = 4;
 
-    private LinearLayout mBusResultLayout;
-    private RelativeLayout mBottomLayout;
-    private TextView mRotueTimeDes, mRouteDetailDes;
-    private ImageView mBus;
-    private ImageView mDrive;
-    private ImageView mWalk;
-    private ListView mBusResultList;
+    @BindView(R.id.map) MapView mapView;
+    @BindView(R.id.bottom_layout) RelativeLayout mBottomLayout;
+    @BindView(R.id.bus_result) LinearLayout mBusResultLayout;
+    @BindView(R.id.firstline) TextView mRotueTimeDes;
+    @BindView(R.id.secondline) TextView mRouteDetailDes;
+    @BindView(R.id.route_drive) ImageView mDrive;
+    @BindView(R.id.route_bus) ImageView mBus;
+    @BindView(R.id.route_walk) ImageView mWalk;
+    @BindView(R.id.route_CrosstownBus) TextView mCrossBus;
+    @BindView(R.id.bus_result_list) ListView mBusResultList;
+    @BindView(R.id.fam_search) FloatingActionButton fam_search;
+    @BindView(R.id.fam_reset) FloatingActionButton fam_reset;
+    @BindView(R.id.multiple_actions_left) FloatingActionsMenu fam_menu;
+
     private ProgressDialog progDialog = null;// 搜索时进度条
 
     private static final int STROKE_COLOR = Color.argb(180, 3, 145, 255);
@@ -102,7 +115,7 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
     private long distance = 0;
     private int selected = 0;
 
-    private MapView mapView;
+    //private MapView mapView;
 
     private EditText etSearchDis;
     private Spinner spinner;
@@ -117,10 +130,10 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
     private LatLonPoint mEndPoint_bus = new LatLonPoint(44.433942, 125.184449);//终点，
     private String mCurrentCityName = "北京";
 
-    @Override
-    public void onMapClick(LatLng latLng) {
+    private AMapLocation mCurrentAmapLocation;
 
-    }
+    @Override
+    public void onMapClick(LatLng latLng) {}
 
     //广播接收器
     private class Receiver extends BroadcastReceiver {
@@ -139,10 +152,9 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedSate) {
         View root = inflater.inflate(R.layout.fragment_nearby_tab, container, false);
-
+        ButterKnife.bind(this,root);
         mapView = (MapView) root.findViewById(R.id.map);
         mapView.onCreate(savedSate);
-
         initView(root);
         loadData();
         return root;
@@ -165,17 +177,12 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
     private void setSearchView(View root) {
         mRouteSearch = new RouteSearch(getActivity());
         mRouteSearch.setRouteSearchListener(this);
-        mBottomLayout = (RelativeLayout) root.findViewById(R.id.bottom_layout);
-        mBusResultLayout = (LinearLayout) root.findViewById(R.id.bus_result);
-        mRotueTimeDes = (TextView) root.findViewById(R.id.firstline);
-        mRouteDetailDes = (TextView) root.findViewById(R.id.secondline);
-        mDrive = (ImageView) root.findViewById(R.id.route_drive);
         mDrive.setOnClickListener(this);
-        mBus = (ImageView) root.findViewById(R.id.route_bus);
         mBus.setOnClickListener(this);
-        mWalk = (ImageView) root.findViewById(R.id.route_walk);
         mWalk.setOnClickListener(this);
-        mBusResultList = (ListView) root.findViewById(R.id.bus_result_list);
+        mCrossBus.setOnClickListener(this);
+        fam_search.setOnClickListener(this);
+        fam_reset.setOnClickListener(this);
     }
 
     //设置一些amap的属性
@@ -203,12 +210,14 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
         // 自定义定位蓝点图标
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.mipmap.gps_point));
         // 自定义精度范围的圆形边框颜色
-        myLocationStyle.strokeColor(STROKE_COLOR);
+        //myLocationStyle.strokeColor(STROKE_COLOR);
         //自定义精度范围的圆形边框宽度
-        myLocationStyle.strokeWidth(5);
+        //myLocationStyle.strokeWidth(5);
         // 设置圆形的填充颜色
-        myLocationStyle.radiusFillColor(FILL_COLOR);
+        //myLocationStyle.radiusFillColor(FILL_COLOR);
         // 将自定义的 myLocationStyle 对象添加到地图上
+        myLocationStyle.radiusFillColor(Color.TRANSPARENT);
+        myLocationStyle.strokeColor(Color.TRANSPARENT);
         aMap.setMyLocationStyle(myLocationStyle);
     }
 
@@ -229,7 +238,6 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final AlertDialog dialog = builder.create();
-
         View searchView = inflater.inflate(R.layout.nearby_fragment_search_dialog, null, false);
         etSearchDis = (EditText) searchView.findViewById(R.id.etSearchDis);
         Button btn_ok = (Button) searchView.findViewById(R.id.btn_ok);
@@ -264,9 +272,7 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
         });
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
-            public void onDismiss(DialogInterface dialog) {
-                MyWindowManager.getInstance().createSmallWindow(getActivity());
-            }
+            public void onDismiss(DialogInterface dialog) {}
         });
         dialog.show();
     }
@@ -283,12 +289,29 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
             case R.id.route_walk:
                 onWalkClick();
                 break;
-            case R.id.route_cross:
+            case R.id.route_CrosstownBus:
                 onCrosstownBusClick();
+                break;
+            case R.id.fam_reset:
+                fam_menu.toggle();
+                ToastUtil.show(AppGlobals.getAppContext(),"clear_map");
+                resetMap();
+                break;
+            case R.id.fam_search:
+                fam_menu.toggle();
+                ToastUtil.show(AppGlobals.getAppContext(),"fam_search");
+                showSearchDialog();
                 break;
             default:
                 break;
         }
+    }
+
+    //地图重新设置
+    private void resetMap() {
+        clearMap();
+        addMarkersToMap();
+        getLocation();
     }
 
     public void onBusClick() {
@@ -329,16 +352,17 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
 
     //开始搜索路径规划方案
     public void searchRouteResult(int routeType, int mode) {
+        mStartPoint = new LatLonPoint(myLocation.latitude,myLocation.longitude);
         if (mStartPoint == null) {
             ToastUtil.show(AppGlobals.getAppContext(), "起点未设置");
             return;
         }
         if (mEndPoint == null) {
             ToastUtil.show(AppGlobals.getAppContext(), "终点未设置");
+            return;
         }
         showProgressDialog();
-        final RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(
-                mStartPoint, mEndPoint);
+        final RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(mStartPoint, mEndPoint);
         if (routeType == ROUTE_TYPE_BUS) {// 公交路径规划
             RouteSearch.BusRouteQuery query = new RouteSearch.BusRouteQuery(fromAndTo, mode,
                     mCurrentCityName, 0);// 第一个参数表示路径规划的起点和终点，第二个参数表示公交查询模式，第三个参数表示公交查询城市区号，第四个参数表示是否计算夜班车，0表示不计算
@@ -351,17 +375,14 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
             RouteSearch.WalkRouteQuery query = new RouteSearch.WalkRouteQuery(fromAndTo, mode);
             mRouteSearch.calculateWalkRouteAsyn(query);// 异步路径规划步行模式查询
         } else if (routeType == ROUTE_TYPE_CROSSTOWN) {
-            RouteSearch.FromAndTo fromAndTo_bus = new RouteSearch.FromAndTo(
-                    mStartPoint_bus, mEndPoint_bus);
-            RouteSearch.BusRouteQuery query = new RouteSearch.BusRouteQuery(fromAndTo_bus, mode,
-                    "呼和浩特市", 0);// 第一个参数表示路径规划的起点和终点，第二个参数表示公交查询模式，第三个参数表示公交查询城市区号，第四个参数表示是否计算夜班车，0表示不计算
+            RouteSearch.FromAndTo fromAndTo_bus = new RouteSearch.FromAndTo(mStartPoint_bus, mEndPoint_bus);
+            RouteSearch.BusRouteQuery query = new RouteSearch.BusRouteQuery(fromAndTo_bus, mode, "呼和浩特市", 0);// 第一个参数表示路径规划的起点和终点，第二个参数表示公交查询模式，第三个参数表示公交查询城市区号，第四个参数表示是否计算夜班车，0表示不计算
             query.setCityd("农安县");
             mRouteSearch.calculateBusRouteAsyn(query);// 异步路径规划公交模式查询
         }
     }
 
-    public NearbyTabFragment() {
-    }
+    public NearbyTabFragment() {}
 
     public static NearbyTabFragment newInstance() {
         NearbyTabFragment fragment = new NearbyTabFragment();
@@ -371,7 +392,7 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
     //添加地图覆盖物
     private void addMarkersToMap() {
         for (NearbyGoodsInfo info : list) {
-            MarkerOptions options = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+            MarkerOptions options = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
                     .title(info.getName()).position(info.getLatlng()).draggable(true);
             Marker marker = aMap.addMarker(options);
             marker.setObject(info);
@@ -396,6 +417,7 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
                     marker.setObject(info);
                 }
             }
+            getLocation();
         }
     }
 
@@ -423,6 +445,7 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
         NearbyGoodsInfo info = (NearbyGoodsInfo) marker.getObject();
         showGoodsInfoDialog(info);
         showRoutGuide(marker);
+        mEndPoint = new LatLonPoint(marker.getPosition().latitude, marker.getPosition().longitude);
         return false;
     }
 
@@ -435,7 +458,6 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
 
     //显示点击物品的信息
     private void showGoodsInfoDialog(NearbyGoodsInfo info) {
-        MyWindowManager.getInstance().removeWindow(getActivity());
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final AlertDialog dialog = builder.create();
@@ -473,7 +495,6 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                MyWindowManager.getInstance().createSmallWindow(getActivity());
             }
         });
 
@@ -502,6 +523,7 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
             if (amapLocation != null && amapLocation.getErrorCode() == 0) {
                 setupLocationStyle();
                 mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
+                mCurrentAmapLocation = amapLocation;
                 myLocation = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
                 Log.e(TAG, myLocation.toString());
             } else {
@@ -515,6 +537,10 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
     @Override
     public void activate(OnLocationChangedListener listener) {
         mListener = listener;
+        getLocation();
+    }
+
+    private void getLocation(){
         if (mlocationClient == null) {
             mlocationClient = new AMapLocationClient(AppGlobals.getAppContext());
             //设置定位监听
@@ -539,8 +565,8 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
             // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
             // 在定位结束后，在合适的生命周期调用onDestroy()方法
             // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
-            mlocationClient.startLocation();
         }
+        mlocationClient.startLocation();
     }
 
     //关闭定位
@@ -587,10 +613,10 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
     public void onBusRouteSearched(BusRouteResult result, int errorCode) {
         dissmissProgressDialog();
         mBottomLayout.setVisibility(View.GONE);
-        aMap.clear();// 清理地图上的所有覆盖物
         if (errorCode == 1000) {
             if (result != null && result.getPaths() != null) {
                 if (result.getPaths().size() > 0) {
+                    clearMap();
                     mBusRouteResult = result;
                     BusResultListAdapter mBusResultListAdapter = new BusResultListAdapter(getActivity(), mBusRouteResult);
                     mBusResultList.setAdapter(mBusResultListAdapter);
@@ -608,10 +634,10 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
     @Override
     public void onDriveRouteSearched(DriveRouteResult result, int errorCode) {
         dissmissProgressDialog();
-        aMap.clear();// 清理地图上的所有覆盖物
         if (errorCode == 1000) {
             if (result != null && result.getPaths() != null) {
                 if (result.getPaths().size() > 0) {
+                    clearMap();
                     mDriveRouteResult = result;
                     final DrivePath drivePath = mDriveRouteResult.getPaths()
                             .get(0);
@@ -627,11 +653,11 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
                     mBottomLayout.setVisibility(View.VISIBLE);
                     int dis = (int) drivePath.getDistance();
                     int dur = (int) drivePath.getDuration();
-                    String des = AMapUtil.getFriendlyTime(dur)+"("+AMapUtil.getFriendlyLength(dis)+")";
+                    String des = AMapUtil.getFriendlyTime(dur) + "(" + AMapUtil.getFriendlyLength(dis) + ")";
                     mRotueTimeDes.setText(des);
                     mRouteDetailDes.setVisibility(View.VISIBLE);
                     int taxiCost = (int) mDriveRouteResult.getTaxiCost();
-                    mRouteDetailDes.setText("打车约"+taxiCost+"元");
+                    mRouteDetailDes.setText("打车约" + taxiCost + "元");
                     mBottomLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -640,7 +666,7 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
                             intent.putExtra("drive_path", drivePath);
                             intent.putExtra("drive_result",
                                     mDriveRouteResult);
-                            startActivity(intent);
+                            startActivityForResult(intent, MineFleaHomeActivity.DRIVE_ACTIVITY_CODE);
                         }
                     });
                 } else if (result != null && result.getPaths() == null) {
@@ -658,10 +684,10 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
     @Override
     public void onWalkRouteSearched(WalkRouteResult result, int errorCode) {
         dissmissProgressDialog();
-        aMap.clear();// 清理地图上的所有覆盖物
         if (errorCode == 1000) {
             if (result != null && result.getPaths() != null) {
                 if (result.getPaths().size() > 0) {
+                    clearMap();
                     mWalkRouteResult = result;
                     final WalkPath walkPath = mWalkRouteResult.getPaths()
                             .get(0);
@@ -675,7 +701,7 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
                     mBottomLayout.setVisibility(View.VISIBLE);
                     int dis = (int) walkPath.getDistance();
                     int dur = (int) walkPath.getDuration();
-                    String des = AMapUtil.getFriendlyTime(dur)+"("+AMapUtil.getFriendlyLength(dis)+")";
+                    String des = AMapUtil.getFriendlyTime(dur) + "(" + AMapUtil.getFriendlyLength(dis) + ")";
                     mRotueTimeDes.setText(des);
                     mRouteDetailDes.setVisibility(View.GONE);
                     mBottomLayout.setOnClickListener(new View.OnClickListener() {
@@ -686,7 +712,7 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
                             intent.putExtra("walk_path", walkPath);
                             intent.putExtra("walk_result",
                                     mWalkRouteResult);
-                            startActivity(intent);
+                            getActivity().startActivityForResult(intent, MineFleaHomeActivity.WALK_ACTIVITY_CODE);
                         }
                     });
                 } else if (result != null && result.getPaths() == null) {
@@ -701,32 +727,29 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
         }
     }
 
+    private void clearMap() {
+        if (aMap != null) {
+            aMap.clear();// 清理地图上的所有覆盖物
+        }
+    }
+
     @Override
-    public void onRideRouteSearched(RideRouteResult result, int i) {
+    public void onRideRouteSearched(RideRouteResult rideRouteResult, int i) {}
 
-    }
-
-    //@Override
-    //public void onRideRouteSearched(RideRouteResult rideRouteResult, int i) {
-
-    //}
-
-    /**
-     * 显示进度框
-     */
+    //显示进度框
     private void showProgressDialog() {
-        if (progDialog == null)
-            progDialog = new ProgressDialog(getActivity());
-        progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progDialog.setIndeterminate(false);
-        progDialog.setCancelable(true);
-        progDialog.setMessage("正在搜索");
-        progDialog.show();
+        if (!getActivity().isFinishing()) {
+            if (progDialog == null)
+                progDialog = new ProgressDialog(getActivity());
+            progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progDialog.setIndeterminate(false);
+            progDialog.setCancelable(true);
+            progDialog.setMessage("正在搜索");
+            progDialog.show();
+        }
     }
 
-    /**
-     * 隐藏进度框
-     */
+    //隐藏进度框
     private void dissmissProgressDialog() {
         if (progDialog != null) {
             progDialog.dismiss();
