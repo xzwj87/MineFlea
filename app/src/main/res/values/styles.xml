@@ -63,6 +63,13 @@
         <item name="android:layout_marginBottom">16dp</item>
     </style>
 
+    <style name="RegisterTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/colorDarkGrey</item>
+    </style>
+
     <style name="VerticalDivider">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>

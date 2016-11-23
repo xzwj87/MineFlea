@@ -2,6 +2,7 @@ package com.github.xzwj87.mineflea.market.data.remote;
 
 import android.os.Message;
 import android.util.Log;
+import android.view.MotionEvent;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
@@ -293,6 +294,50 @@ public class RemoteDataSource implements RemoteSource{
                 }
 
                 mCloudCallback.onGetGoodsListDone(message);
+            }
+        });
+    }
+
+    @Override
+    public void loginBySms(String telNumber, String smsCode) {
+        Log.v(TAG,"loginBySms()");
+
+        AVUser.signUpOrLoginByMobilePhoneInBackground(telNumber, smsCode, new LogInCallback<AVUser>() {
+            @Override
+            public void done(AVUser avUser, AVException e) {
+                final Message msg = new Message();
+                if(e != null){
+                    msg.what = ResponseCode.RESP_LOGIN_FAIL;
+                    msg.obj = e.getCode();
+                    e.printStackTrace();
+                }else{
+                    msg.what = ResponseCode.RESP_LOGIN_SUCCESS;
+                    msg.obj = UserInfoUtils.fromAvUser(avUser);
+                }
+
+                mCloudCallback.loginComplete(msg);
+            }
+        });
+    }
+
+    @Override
+    public void registerBySms(String telNumber, String smsCode) {
+        Log.v(TAG,"registerBySms()");
+
+        AVUser.signUpOrLoginByMobilePhoneInBackground(telNumber, smsCode, new LogInCallback<AVUser>() {
+            @Override
+            public void done(AVUser avUser, AVException e) {
+                final Message msg = new Message();
+                if(e != null){
+                    msg.what = ResponseCode.RESP_REGISTER_FAIL;
+                    msg.obj = e.getCode();
+                    e.printStackTrace();
+                }else{
+                    msg.what = ResponseCode.RESP_REGISTER_SUCCESS;
+                    msg.obj = UserInfoUtils.fromAvUser(avUser);
+                }
+
+                mCloudCallback.registerComplete(msg);
             }
         });
     }

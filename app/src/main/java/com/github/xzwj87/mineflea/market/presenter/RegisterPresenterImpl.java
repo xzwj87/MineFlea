@@ -4,11 +4,13 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.RegisterView;
+import com.github.xzwj87.mineflea.utils.SharePrefsHelper;
 import com.github.xzwj87.mineflea.utils.UserInfoUtils;
 import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 
@@ -19,13 +21,18 @@ import javax.inject.Inject;
  */
 
 @PerActivity
-public class RegisterPresenterImpl extends RegisterPresenter{
+public class RegisterPresenterImpl implements RegisterPresenter{
     public static final String TAG = RegisterPresenterImpl.class.getSimpleName();
 
     @Inject
     DataRepository mRepository;
     private RegisterView mView;
     private UserInfo mUserInfo;
+    // save a temp phone number value
+    private String mPhoneNumber;
+    private String mAuthCode;
+
+    private static boolean sIsUserDataSaved = false;
 
     @Inject
     public RegisterPresenterImpl(DataRepository repository){
@@ -62,11 +69,6 @@ public class RegisterPresenterImpl extends RegisterPresenter{
     }
 
     @Override
-    public void setUserTel(String tel) {
-        mUserInfo.setUserTelNumber(tel);
-    }
-
-    @Override
     public void setUserPwd(String pwd) {
         mUserInfo.setUserPwd(pwd);
     }
@@ -74,6 +76,13 @@ public class RegisterPresenterImpl extends RegisterPresenter{
     @Override
     public void setUserIconUrl(String url) {
         mUserInfo.setHeadIconUrl(url);
+    }
+
+    @Override
+    public void setSmsAuthCode(String authCode) {
+        if(!TextUtils.isEmpty(authCode)) {
+            mAuthCode = authCode;
+        }
     }
 
     @Override
@@ -89,18 +98,13 @@ public class RegisterPresenterImpl extends RegisterPresenter{
             return false;
         }
 
-        if(!UserInfoUtils.isTelNumberValid(mUserInfo.getUserTelNumber())){
-            mView.showTelInvalidMsg();
-            return false;
-        }
-
         if(!UserInfoUtils.isPasswordValid(mUserInfo.getUserPwd())){
             mView.showPwdInvalidMsg();
             return false;
         }
 
         if(TextUtils.isEmpty(mUserInfo.getHeadIconUrl())){
-            mView.showHeadIconNullDialog();
+            mView.showHeadIconNullMsg();
         }
 
         return true;
@@ -109,6 +113,41 @@ public class RegisterPresenterImpl extends RegisterPresenter{
     @Override
     public String getUserIconUrl() {
         return mUserInfo.getHeadIconUrl();
+    }
+
+    @Override
+    public void getSmsAuthCode(String telNumber) {
+        Log.v(TAG,"getSmsAuthCode()");
+        if(UserInfoUtils.isTelNumberValid(telNumber)) {
+            mPhoneNumber = telNumber;
+            mRepository.sendSmsAuthCode(telNumber);
+        }
+    }
+
+    @Override
+    public void signUpBySms() {
+        Log.v(TAG,"signUpBySms()");
+        if(!TextUtils.isEmpty(mAuthCode)) {
+            mRepository.loginBySms(mPhoneNumber, mAuthCode);
+            return;
+        }
+        throw new IllegalArgumentException("auth code should not be empty");
+    }
+
+    @Override
+    public void updateUserInfo() {
+        Log.v(TAG,"updateUserInfo()");
+        if(!sIsUserDataSaved) {
+            mRepository.updateCurrentUserInfo(UserInfo.USER_NICK_NAME, mUserInfo.getNickName());
+            mRepository.updateCurrentUserInfo(UserInfo.USER_NAME, mUserInfo.getUserName());
+            mRepository.updateCurrentUserInfo(UserInfo.UER_EMAIL, mUserInfo.getUserEmail());
+            mRepository.updateCurrentUserInfo(UserInfo.USER_PWD, mUserInfo.getUserPwd());
+            // upload head icon
+            mRepository.uploadImageById(mUserInfo.getUserId(), mUserInfo.getHeadIconUrl(),
+                    true, false);
+
+            sIsUserDataSaved = true;
+        }
     }
 
     @Override
@@ -142,7 +181,10 @@ public class RegisterPresenterImpl extends RegisterPresenter{
 
             if(message.obj != null){
                 mView.onRegisterComplete(true);
-                mUserInfo.setUserId((String)message.obj);
+                mUserInfo.setUserId(((UserInfo)message.obj).getUserId());
+                // now we are sign up
+                SharePrefsHelper.getInstance(AppGlobals.getAppContext())
+                        .updateLogState(true);
             }else {
                 mView.onRegisterComplete(false);
             }

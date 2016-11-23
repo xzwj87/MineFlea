@@ -137,4 +137,8 @@
     <string name="error_reset_pwd_by_email">Fail to reset password by Email ,please try it again!</string>
     <string name="error_reset_pwd_by_sms">Fail to reset password by SMS ,please try it again!</string>
     <string name="reset_pwd_success">Success to reset password</string>
+    <string name="next_step">Next Step</string>
+    <string name="user_password">Password</string>
+    <string name="error_invalid_auth_code">Invalid Auth Code</string>
+    <string name="error_register">Register Failure,please try it again!</string>
 </resources>

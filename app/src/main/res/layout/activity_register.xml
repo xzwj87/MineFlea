@@ -1,70 +1,31 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/activity_vertical_margin"
-    tools:context="com.github.xzwj87.mineflea.market.ui.activity.LoginActivity">
+    android:fitsSystemWindows="true"
+    tools:context="com.github.xzwj87.mineflea.market.ui.activity.RegisterActivity">
 
-    <TextView android:id="@+id/tv_register_hint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="start|center"
-        android:layout_alignParentStart="true"
-        android:text="@string/use_tel_number_register"
-        android:textColor="@color/colorLightGrey"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_marginBottom="@dimen/register_view_margin"
-        android:textSize="@dimen/edit_text_size"/>
-
-    <TextView android:id="@+id/tv_tel_country_code"
-        android:layout_below="@id/tv_register_hint"
-        android:layout_alignParentStart="true"
-        android:gravity="start|center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/tel_number_china"
-        android:textColor="@color/colorDarkGrey"
-        android:textSize="@dimen/edit_text_size"/>
-
-    <EditText
-        android:id="@+id/et_tel_number"
-        android:layout_toEndOf="@id/tv_tel_country_code"
-        android:layout_below="@id/tv_register_hint"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/prompt_tel_number"
-        android:inputType="number"
-        android:maxEms="11"
-        android:textSize="@dimen/edit_text_size" />
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-    <Button android:id="@+id/btn_get_auth_code"
-        android:layout_below="@id/tv_register_hint"
-        android:gravity="center"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="@dimen/register_view_margin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
 
-    <EditText
-        android:id="@+id/et_input_auth_code"
-        android:layout_below="@id/tv_tel_country_code"
-        android:layout_alignParentStart="true"
-        android:gravity="start|center"
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <FrameLayout android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/prompt_input_auth_code"
-        android:visibility="invisible"
-        android:inputType="number"
-        android:textSize="@dimen/edit_text_size" />
+        android:layout_height="wrap_content">
 
-    <Button android:id="@+id/btn_login"
-        android:layout_marginTop="@dimen/register_view_margin"
-        android:layout_below="@id/et_input_auth_code"
-        android:layout_centerInParent="true"
-        android:text="@string/had_account_login"
-        style="?android:borderlessButtonStyle"
-        android:textSize="@dimen/edit_text_size"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    </FrameLayout>
 
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

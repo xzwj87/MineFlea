@@ -77,6 +77,16 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
     }
 
     @Override
+    public void loginBySms(String telNumber, String authCode) {
+        mCloudSrc.loginBySms(telNumber,authCode);
+    }
+
+    @Override
+    public void registerBySms(String telNumber, String authCode) {
+        mCloudSrc.registerBySms(telNumber,authCode);
+    }
+
+    @Override
     public void sendSmsAuthCode(String number) {
         mCloudSrc.sendAuthCode(number);
     }

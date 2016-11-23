@@ -26,6 +26,16 @@ public interface BaseRepository {
     void login(UserInfo info);
 
     /*
+     * login by SMS auth code
+     */
+    void loginBySms(String telNumber, String authCode);
+
+    /*
+     * register by SMS auth code
+     */
+    void registerBySms(String telNumber,String authCode);
+
+    /*
      * send SMS auth code
      */
     void sendSmsAuthCode(String number);

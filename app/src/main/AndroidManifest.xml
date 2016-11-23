@@ -72,14 +72,14 @@
         <activity
             android:name=".market.ui.activity.LoginActivity"
             android:label="@string/title_activity_login"
-            android:parentActivityName=".market.ui.activity.HomeActivity"
+            android:parentActivityName=".market.ui.activity.RegisterActivity"
             android:theme="@style/AppTheme">
         </activity>
 
         <activity android:name=".market.ui.activity.RegisterActivity"
             android:label="@string/title_activity_register"
             android:parentActivityName=".market.ui.activity.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
         </activity>
 
         <activity android:name=".market.ui.activity.NearbyGoodsActivity">
