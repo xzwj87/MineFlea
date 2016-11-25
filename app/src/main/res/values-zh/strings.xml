@@ -24,7 +24,7 @@
     <string name="prompt_name">用户名(昵称)</string>
     <string name="prompt_tel_number">手机号码(可选)</string>
     <string name="prompt_email_register">电子邮箱</string>
-    <string name="prompt_email_login">邮箱或手机号码</string>
+    <string name="prompt_account_login">邮箱或手机号码</string>
     <string name="prompt_password">密码</string>
     <string name="action_sign_in">登陆</string>
     <string name="action_register">注册</string>
@@ -95,14 +95,11 @@
     <string name="hint_logout_success">退出成功</string>
     <string name="no_result">搜不到路线！</string>
     <string name="need_to_login">请先登录</string>
-    <string name="image_color">color image</string>
-    <string name="selected_color">selected_color</string>
     <string name="forget_password">忘记密码?</string>
     <string name="use_tel_number_register">使用手机号注册</string>
-    <string name="had_account_login">已注册?请登录</string>
+    <string name="no_account_register">没有账号?注册</string>
     <string name="prompt_input_auth_code">请输入验证码</string>
     <string name="please_input_name_password">请输入账户和密码</string>
-    <string name="show_password">Show Password</string>
     <string name="error_invalid_account">无效邮箱/手机号</string>
     <string name="please_input_email_or_telephone_number">邮箱或手机号</string>
     <string name="send_auth_code">获取验证码</string>

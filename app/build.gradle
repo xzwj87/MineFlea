@@ -52,14 +52,14 @@ android {
     signingConfigs {
         //调试版的keystore
         debug {
-            storeFile file("/Users/linhai/Desktop/AndroidAppDir/newMineFlea/MineFlea/mineflea_debug.jks")
+            storeFile file("/home/jason/GitHub/MineFlea/mineflea_debug.jks")
             storePassword "mineflea"
             keyAlias "seaicelin"
             keyPassword "mineflea"
         }
         //发布版的keystore
         release {
-            storeFile file("/Users/linhai/Desktop/AndroidAppDir/newMineFlea/MineFlea/mineflea_release.jks")
+            storeFile file("/home/jason/GitHub/MineFlea/mineflea_release.jks")
             storePassword "mineflea"
             keyAlias "seaicelin"
             keyPassword "mineflea"

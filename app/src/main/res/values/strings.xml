@@ -21,7 +21,7 @@
     <string name="prompt_name">User Name</string>
     <string name="prompt_tel_number">Mobile Phone Number</string>
     <string name="prompt_email_register">Email</string>
-    <string name="prompt_email_login">Email or Telephone Number</string>
+    <string name="prompt_account_login">Email or Telephone Number</string>
     <string name="prompt_password">Password (optional)</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_register">Register</string>
@@ -125,7 +125,7 @@
     <string name="forget_password">Forget Password?</string>
     <string name="tel_number_china">+86</string>
     <string name="use_tel_number_register">Use  Telephone Number To Register</string>
-    <string name="had_account_login">Already have an account? Login</string>
+    <string name="no_account_register">No account? Register</string>
     <string name="prompt_input_auth_code">Please Input Authentification Code</string>
     <string name="please_input_name_password">Please Input Account and Password</string>
     <string name="show_password">Show Password</string>

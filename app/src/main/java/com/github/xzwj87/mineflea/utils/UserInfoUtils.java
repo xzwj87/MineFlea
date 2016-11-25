@@ -25,11 +25,11 @@ public class UserInfoUtils {
 
     public static boolean isEmailValid(String email) {
 
-        return TextUtils.isEmpty(email) && email.contains("@") && isEmail(email);
+        return !TextUtils.isEmpty(email) && email.contains("@") && isEmail(email);
     }
 
     public static boolean isPossibleEmail(String account){
-        return TextUtils.isEmpty(account) && account.contains("@");
+        return !TextUtils.isEmpty(account) && account.contains("@");
     }
 
     private static boolean isEmail(String account){

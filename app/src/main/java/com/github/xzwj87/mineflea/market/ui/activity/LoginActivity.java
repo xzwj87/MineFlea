@@ -1,14 +1,18 @@
 package com.github.xzwj87.mineflea.market.ui.activity;
 
-import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.xzwj87.mineflea.R;
@@ -24,6 +28,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnFocusChange;
 
 import static com.github.xzwj87.mineflea.utils.UserInfoUtils.isEmailValid;
 
@@ -34,12 +39,17 @@ public class LoginActivity extends BaseActivity implements LoginView,
 
     private static final int REQUEST_USER_REGISTER = 1;
 
+    @BindView(R.id.iv_account) ImageView mIvAccountIcon;
+    @BindView(R.id.iv_password) ImageView mIvPwdIcon;
     @BindView(R.id.et_account) EditText mEtAccount;
     @BindView(R.id.et_password) EditText mEtPassword;
     @BindView(R.id.tv_forget_password) TextView mTvForgetPwd;
+    @BindView(R.id.tv_register) TextView mTvRegister;
+    @BindView(R.id.iv_show_pwd) ImageView mIvShowPwd;
     @BindView(R.id.btn_login) Button mBtnLogin;
 
     private ProgressDialog mProgress;
+    private boolean mIsPwdShow = false;
 
     @Inject LoginPresenterImpl mPresenter;
 
@@ -49,19 +59,34 @@ public class LoginActivity extends BaseActivity implements LoginView,
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-
         init();
 
         ThemeColorUtils.changeThemeColor(this);
     }
 
+
     @OnClick({R.id.btn_login})
-    public void onButtonClick(){
+    void onLogin(){
         tryLogin();
     }
 
-    @OnClick({R.id.tv_forget_password})
-    public void resetPassword(){
+    @OnClick({R.id.tv_register,R.id.tv_forget_password})
+    void onTextClick(View view){
+        int id = view.getId();
+        switch (id){
+            case R.id.tv_forget_password:
+                resetPassword();
+                break;
+            case R.id.tv_register:
+                startRegister();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void resetPassword(){
+        Log.v(TAG,"resetPassword()");
         showResetPasswordDialog();
     }
 
@@ -187,6 +212,12 @@ public class LoginActivity extends BaseActivity implements LoginView,
     }
 
     @Override
+    public void onResetPwd(String account) {
+        Log.v(TAG,"onResetPwd()");
+        mPresenter.resetPwdByAccount(account);
+    }
+
+    @Override
     public void finishView() {
         finish();
     }
@@ -195,6 +226,51 @@ public class LoginActivity extends BaseActivity implements LoginView,
         initInjector();
 
         mPresenter.init();
+    }
+
+    @OnFocusChange({R.id.et_account,R.id.et_password})
+    void changeViewStyle(EditText view, boolean hasFocus){
+        int id = view.getId();
+
+        if(hasFocus || !TextUtils.isEmpty(view.getText())) {
+            view.setHint("");
+
+            if(id == R.id.et_account) {
+                mIvAccountIcon.getDrawable().setColorFilter(view.getHighlightColor(), PorterDuff.Mode.SRC_IN);
+            }else if(id == R.id.et_password){
+                mIvPwdIcon.getDrawable().setColorFilter(view.getHighlightColor(), PorterDuff.Mode.SRC_IN);
+            }
+        }else{
+            if(TextUtils.isEmpty(view.getText())) {
+                if (id == R.id.et_account) {
+                    mEtAccount.setHint(R.string.prompt_account_login);
+                } else if (id == R.id.et_password) {
+                    mEtPassword.setHint(R.string.prompt_password);
+                }
+            }
+
+            if (id == R.id.et_account) {
+                // remove background
+                mIvAccountIcon.getDrawable().setColorFilter(Color.parseColor("#BDBDBD"), PorterDuff.Mode.SRC_IN);
+            } else if (id == R.id.et_password) {
+                mIvPwdIcon.getDrawable().setColorFilter(Color.parseColor("#BDBDBD"), PorterDuff.Mode.SRC_IN);
+            }
+        }
+    }
+
+    @OnClick(R.id.iv_show_pwd)
+    void showPassword(ImageView iv){
+        if(!mIsPwdShow) {
+            mEtPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            mIvShowPwd.setBackgroundResource(R.drawable.ic_visibility_off_grey_24dp);
+        }else{
+            mIvShowPwd.setBackgroundResource(R.drawable.ic_visibility_grey_24dp);
+            // tricky
+            mEtPassword.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD + 0x01);
+        }
+
+        mEtPassword.setSelection(mEtPassword.getText().length());
+        mIsPwdShow = !mIsPwdShow;
     }
 
     private void initInjector(){
@@ -207,10 +283,10 @@ public class LoginActivity extends BaseActivity implements LoginView,
         dialog.show(getFragmentManager(),ResetPasswordDialog.class.getSimpleName());
     }
 
-    @Override
-    public void onResetPwd(String account) {
-        Log.v(TAG,"onResetPwd()");
-        mPresenter.resetPwdByAccount(account);
+    private void startRegister(){
+        Log.v(TAG,"startRegister()");
+        Intent intent = new Intent(this,RegisterActivity.class);
+        startActivity(intent);
     }
 }
 

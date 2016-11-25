@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.github.xzwj87.mineflea.R;
@@ -65,13 +68,12 @@ public class ResetPasswordDialog extends DialogFragment{
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),R.style.DialogTheme);
 
-        AlertDialog dialog = builder.setView(R.layout.dialog_reset_password)
-               .setTitle(title)
-               .create();
+        View view = LayoutInflater.from(getActivity())
+                                  .inflate(R.layout.dialog_reset_password,null);
 
-        mEtUserAccount = (EditText)dialog.findViewById(R.id.et_account);
-        mEtAuthCode = (EditText)dialog.findViewById(R.id.et_input_auth_code);
-        mBtnGetAuthCode = (Button)dialog.findViewById(R.id.btn_send_auth_code);
+        mEtUserAccount = (EditText)view.findViewById(R.id.et_input_email_or_tel);
+        mEtAuthCode = (EditText)view.findViewById(R.id.et_input_auth_code);
+        mBtnGetAuthCode = (Button)view.findViewById(R.id.btn_send_auth_code);
 
         mBtnGetAuthCode.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +94,9 @@ public class ResetPasswordDialog extends DialogFragment{
             }
         });
 
-        return dialog;
+        return  builder.setView(view)
+                .setTitle(title)
+                .create();
     }
 
 

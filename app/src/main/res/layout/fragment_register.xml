@@ -59,11 +59,11 @@
         android:inputType="number"
         android:textSize="@dimen/edit_text_size" />
 
-    <Button android:id="@+id/btn_login"
+    <Button android:id="@+id/tv_register"
         android:layout_marginTop="@dimen/register_view_margin"
         android:layout_below="@id/et_input_auth_code"
         android:layout_centerInParent="true"
-        android:text="@string/had_account_login"
+        android:text="@string/no_account_register"
         style="?android:borderlessButtonStyle"
         android:textSize="@dimen/edit_text_size"
         android:layout_width="wrap_content"
