@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.xzwj87.mineflea.R;
@@ -34,9 +34,9 @@ public class ResetPasswordDialog extends DialogFragment{
 
     private EditText mEtUserAccount;
     private EditText mEtAuthCode;
-    private Button mBtnGetAuthCode;
+    private TextView mTvGetAuthCode;
 
-
+    private CountDownTimer mDownTimer;
     private DialogButtonClickCallback mListener;
 
     public ResetPasswordDialog(){}
@@ -49,11 +49,14 @@ public class ResetPasswordDialog extends DialogFragment{
         void onResetPwd(String account);
     }
 
+    public void setButtonClickCallback(DialogButtonClickCallback callback){
+        mListener = callback;
+    }
 
     @Override
     public void onAttach(Context context){
         super.onAttach(context);
-
+        Log.v(LOG_TAG,"onAttach()");
         try{
             mListener = (DialogButtonClickCallback)context;
         }catch (ClassCastException e){
@@ -64,6 +67,7 @@ public class ResetPasswordDialog extends DialogFragment{
 
     @Override
     public Dialog onCreateDialog(Bundle savedSate){
+        Log.v(LOG_TAG,"onCreateDialog()");
         String title = getString(R.string.reset_your_password);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),R.style.DialogTheme);
@@ -73,18 +77,22 @@ public class ResetPasswordDialog extends DialogFragment{
 
         mEtUserAccount = (EditText)view.findViewById(R.id.et_input_email_or_tel);
         mEtAuthCode = (EditText)view.findViewById(R.id.et_input_auth_code);
-        mBtnGetAuthCode = (Button)view.findViewById(R.id.btn_send_auth_code);
+        mTvGetAuthCode = (TextView) view.findViewById(R.id.tv_send_auth_code);
 
-        mBtnGetAuthCode.setOnClickListener(new View.OnClickListener() {
+        mTvGetAuthCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String account = mEtUserAccount.getText().toString();
                 if(UserInfoUtils.isEmailValid(account)){
-                    mListener.onResetPwd(account);
+                    if(mListener != null) {
+                        mListener.onResetPwd(account);
+                    }
                     showToast();
                     //dismiss();
                 }else if(UserInfoUtils.isTelNumberValid(account)){
-                    mListener.onResetPwd(account);
+                    if(mListener != null) {
+                        mListener.onResetPwd(account);
+                    }
                     // ok, we want to count 60s to get the auth code
                     startCountDown();
                     mEtAuthCode.setVisibility(View.VISIBLE);
@@ -99,10 +107,11 @@ public class ResetPasswordDialog extends DialogFragment{
                 .create();
     }
 
-
     public void resetPwdFail(){
         Log.v(LOG_TAG,"resetPwdFail()");
         mEtAuthCode.setVisibility(View.GONE);
+        mDownTimer.onFinish();
+        mDownTimer.cancel();
     }
 
     public void resetPwdSuccess(){
@@ -117,16 +126,17 @@ public class ResetPasswordDialog extends DialogFragment{
     }
 
     private void startCountDown(){
-        mBtnGetAuthCode.setText(String.valueOf(COUNT_DOWNS));
-        new CountDownTimer(COUNT_DOWN_TIME, COUNT_DOWN_INTERVAL) {
+        mTvGetAuthCode.setText("     " + String.valueOf(COUNT_DOWNS) + "     ");
+        mDownTimer =  new CountDownTimer(COUNT_DOWN_TIME, COUNT_DOWN_INTERVAL) {
             @Override
             public void onTick(long millisUntilFinished) {
-                mBtnGetAuthCode.setText(String.valueOf(millisUntilFinished/COUNT_DOWNS));
+                mTvGetAuthCode.setText("     " + String.valueOf(millisUntilFinished/COUNT_DOWN_INTERVAL)
+                        + "     ");
             }
 
             @Override
             public void onFinish() {
-                mBtnGetAuthCode.setText(R.string.send_auth_code);
+                mTvGetAuthCode.setText(R.string.send_auth_code);
             }
         }.start();
     }

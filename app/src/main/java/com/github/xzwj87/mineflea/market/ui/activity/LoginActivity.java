@@ -127,6 +127,7 @@ public class LoginActivity extends BaseActivity implements LoginView,
 
     @Override
     public void showProgress(boolean show) {
+        if(mProgress == null) return;
 
         if(show) {
             mProgress = ProgressDialog.show(this, "", getString(R.string.hint_logining));
@@ -281,6 +282,7 @@ public class LoginActivity extends BaseActivity implements LoginView,
     private void showResetPasswordDialog(){
         ResetPasswordDialog dialog = ResetPasswordDialog.newInstance();
         dialog.show(getFragmentManager(),ResetPasswordDialog.class.getSimpleName());
+        dialog.setButtonClickCallback(this);
     }
 
     private void startRegister(){
