@@ -125,13 +125,13 @@
     <string name="forget_password">Forget Password?</string>
     <string name="tel_number_china">+86</string>
     <string name="use_tel_number_register">Use  Telephone Number To Register</string>
-    <string name="no_account_register">No account? Register</string>
+    <string name="had_account_login">No account? Register</string>
     <string name="prompt_input_auth_code">Please Input Authentification Code</string>
     <string name="please_input_name_password">Please Input Account and Password</string>
     <string name="show_password">Show Password</string>
     <string name="error_invalid_account">Invalid Email or Telephone Number</string>
     <string name="please_input_email_or_telephone_number">Please Input Email or Telephone Number</string>
-    <string name="send_auth_code">Send Authentification Information</string>
+    <string name="send_auth_code">Send SMS</string>
     <string name="reset_your_password">Find Your Password</string>
     <string name="reset_password_email_sent">Reset password email has been sent!</string>
     <string name="error_reset_pwd_by_email">Fail to reset password by Email ,please try it again!</string>
@@ -141,4 +141,5 @@
     <string name="user_password">Password</string>
     <string name="error_invalid_auth_code">Invalid Auth Code</string>
     <string name="error_register">Register Failure,please try it again!</string>
+    <string name="previous_step">Previous Step</string>
 </resources>

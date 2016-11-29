@@ -1,6 +1,7 @@
 package com.github.xzwj87.mineflea.market.data.repository;
 
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.URLUtil;
 
@@ -88,6 +89,7 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
 
     @Override
     public void sendSmsAuthCode(String number) {
+        Log.v(TAG,"sendSmsAuthCode()");
         mCloudSrc.sendAuthCode(number);
     }
 
@@ -112,6 +114,8 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
 
     @Override
     public void uploadImageById(String id, String imgUri, boolean isUser, boolean showProcess) {
+        if(TextUtils.isEmpty(imgUri) || TextUtils.isEmpty(id))  return;
+
         String type = FileCache.CACHE_TYPE_USER;
         if(!isUser){
           type = FileCache.CACHE_TYPE_GOODS;

@@ -1,6 +1,7 @@
 package com.github.xzwj87.mineflea.market.ui.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.TextUtils;
@@ -11,13 +12,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.presenter.RegisterPresenter;
 import com.github.xzwj87.mineflea.market.presenter.RegisterPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.RegisterView;
+import com.github.xzwj87.mineflea.market.ui.activity.LoginActivity;
 
 import java.lang.ref.WeakReference;
 
@@ -32,17 +35,22 @@ import butterknife.OnClick;
 public class RegisterFragment extends BaseFragment{
     public static final String TAG = RegisterFragment.class.getSimpleName();
 
+    public static final int REQUEST_LOGIN = 1;
     private static final int MAX_COUNTS = 60; // 60s
     private static final int COUNT_DOWN_INTERVAL = 1000;
     private static final int MAX_COUNT_DOWN_MS = MAX_COUNTS*COUNT_DOWN_INTERVAL;
 
     private WeakReference<RegisterPresenter> mPresenter;
+
+    private static boolean sIsTimerStarted = false;
     private CountDownTimer mDownTimer;
     private NextStepCallback mCallback;
 
     @BindView(R.id.et_tel_number) EditText mEtTelNumber;
-    @BindView(R.id.btn_get_auth_code) Button mBtnGetAuthCode;
+    @BindView(R.id.tv_get_auth_code) TextView mTvGetAuthCode;
     @BindView(R.id.et_input_auth_code) EditText mEtInputAuthCode;
+    @BindView(R.id.input_auth) LinearLayout mInputAuthLayout;
+    @BindView(R.id.tv_login) TextView mTvLogin;
 
     public RegisterFragment(){}
 
@@ -102,7 +110,8 @@ public class RegisterFragment extends BaseFragment{
                 mPresenter.get().setSmsAuthCode(authCode);
                 if(!TextUtils.isEmpty(authCode)){
                     mPresenter.get().signUpBySms();
-                }else{
+                    nextStep();
+                }else {
                     mEtInputAuthCode.setError(getString(R.string.error_invalid_auth_code));
                 }
 
@@ -112,20 +121,22 @@ public class RegisterFragment extends BaseFragment{
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick({R.id.btn_get_auth_code})
+    @OnClick({R.id.tv_get_auth_code})
     public void getAuthCode(){
         String telNumber = mEtTelNumber.getText().toString();
-        if(!TextUtils.isEmpty(telNumber)){
+        if(!TextUtils.isEmpty(telNumber) && !sIsTimerStarted){
             startCountDown();
             // get SMS auth code
             mPresenter.get().getSmsAuthCode(telNumber);
-
+            mInputAuthLayout.setVisibility(View.VISIBLE);
             mEtInputAuthCode.setVisibility(View.VISIBLE);
             mEtInputAuthCode.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    sIsTimerStarted = false;
+                    mDownTimer.onFinish();
                     mDownTimer.cancel();
-                    mBtnGetAuthCode.setText(R.string.send_auth_code);
+                    mTvGetAuthCode.setText(R.string.send_auth_code);
                 }
             });
         }else{
@@ -133,19 +144,28 @@ public class RegisterFragment extends BaseFragment{
         }
     }
 
+    @OnClick({R.id.tv_login})
+    public void login(){
+        Log.v(TAG,"login()");
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        startActivityForResult(intent,REQUEST_LOGIN);
+    }
+
     private void startCountDown(){
-        mBtnGetAuthCode.setText(String.valueOf(MAX_COUNTS));
+        sIsTimerStarted = true;
+        mTvGetAuthCode.setText("     " + String.valueOf(MAX_COUNTS) + "     ");
         mDownTimer = new CountDownTimer(MAX_COUNT_DOWN_MS, COUNT_DOWN_INTERVAL) {
             @Override
             public void onTick(long millisUntilFinished) {
-                mBtnGetAuthCode.setText(String.valueOf(millisUntilFinished/MAX_COUNTS));
+                mTvGetAuthCode.setText("     " +
+                        String.valueOf(millisUntilFinished/COUNT_DOWN_INTERVAL) + "     ");
             }
 
             @Override
             public void onFinish() {
-                mBtnGetAuthCode.setText(R.string.send_auth_code);
+                mTvGetAuthCode.setText(R.string.send_auth_code);
             }
-        };
+        }.start();
     }
 
     private void nextStep(){

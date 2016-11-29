@@ -40,7 +40,7 @@ public class RegisterSecondStepFragment extends BaseFragment{
 
     private ProgressDialog mProgress;
 
-    @BindView(R.id.civ_head_icon) CircleImageView mCivHeader;
+    @BindView(R.id.civ_header_icon) CircleImageView mCivHeader;
     @BindView(R.id.et_nick_name) EditText mEtName;
     @BindView(R.id.et_email) EditText mEtEmail;
     @BindView(R.id.et_password) EditText mEtPwd;
@@ -61,6 +61,10 @@ public class RegisterSecondStepFragment extends BaseFragment{
         View root = inflater.inflate(R.layout.fragment_register_second_step,parent,false);
 
         ButterKnife.bind(this,root);
+
+        if(getActivity() != null) {
+            getActivity().setTitle(R.string.previous_step);
+        }
 
         setHasOptionsMenu(true);
 

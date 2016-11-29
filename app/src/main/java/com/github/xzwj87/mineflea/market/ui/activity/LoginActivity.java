@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,7 +46,7 @@ public class LoginActivity extends BaseActivity implements LoginView,
     @BindView(R.id.et_account) EditText mEtAccount;
     @BindView(R.id.et_password) EditText mEtPassword;
     @BindView(R.id.tv_forget_password) TextView mTvForgetPwd;
-    @BindView(R.id.tv_register) TextView mTvRegister;
+    @BindView(R.id.tv_login) TextView mTvRegister;
     @BindView(R.id.iv_show_pwd) ImageView mIvShowPwd;
     @BindView(R.id.btn_login) Button mBtnLogin;
 
@@ -61,7 +63,24 @@ public class LoginActivity extends BaseActivity implements LoginView,
 
         init();
 
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_back_white_24dp);
+        }
+
         ThemeColorUtils.changeThemeColor(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+        switch (id){
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
@@ -70,14 +89,14 @@ public class LoginActivity extends BaseActivity implements LoginView,
         tryLogin();
     }
 
-    @OnClick({R.id.tv_register,R.id.tv_forget_password})
+    @OnClick({R.id.tv_login,R.id.tv_forget_password})
     void onTextClick(View view){
         int id = view.getId();
         switch (id){
             case R.id.tv_forget_password:
                 resetPassword();
                 break;
-            case R.id.tv_register:
+            case R.id.tv_login:
                 startRegister();
                 break;
             default:

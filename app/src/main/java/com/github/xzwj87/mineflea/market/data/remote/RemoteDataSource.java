@@ -161,8 +161,10 @@ public class RemoteDataSource implements RemoteSource{
     @Override
     public void updateCurrentUserInfo(String key, String val) {
         AVUser user = AVUser.getCurrentUser();
-        user.put(key,val);
-        user.saveInBackground();
+        if(user != null) {
+            user.put(key, val);
+            user.saveInBackground();
+        }
     }
 
     @Override
@@ -349,6 +351,9 @@ public class RemoteDataSource implements RemoteSource{
         AVOSCloud.requestSMSCodeInBackground(number, new RequestMobileCodeCallback() {
             @Override
             public void done(AVException e) {
+                if(e != null) {
+                    Log.v(TAG,"sendAuthCode(): error" + e.getMessage());
+                }
                 Log.v(TAG,"sendAuthCode(): done");
             }
         });

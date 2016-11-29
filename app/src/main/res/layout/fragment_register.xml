@@ -1,72 +1,104 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="@dimen/activity_vertical_margin"
-    tools:context="com.github.xzwj87.mineflea.market.ui.activity.LoginActivity">
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/activity_vertical_margin">
 
     <TextView android:id="@+id/tv_register_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="start|center"
         android:layout_alignParentStart="true"
+        android:layout_marginTop="@dimen/register_view_margin"
+        android:layout_marginBottom="@dimen/dialog_item_margin"
         android:text="@string/use_tel_number_register"
         android:textColor="@color/colorLightGrey"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_marginBottom="@dimen/register_view_margin"
         android:textSize="@dimen/edit_text_size"/>
 
-    <TextView android:id="@+id/tv_tel_country_code"
+    <LinearLayout android:id="@+id/input_tel"
         android:layout_below="@id/tv_register_hint"
-        android:layout_alignParentStart="true"
-        android:gravity="start|center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/tel_number_china"
-        android:textColor="@color/colorDarkGrey"
-        android:textSize="@dimen/edit_text_size"/>
-
-    <Button android:id="@+id/btn_get_auth_code"
-        android:layout_below="@id/tv_register_hint"
-        android:layout_alignParentEnd="true"
-        android:background="@color/colorAccent"
-        android:textColor="@color/white"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <EditText
-        android:id="@+id/et_tel_number"
-        android:layout_toStartOf="@id/btn_get_auth_code"
-        android:layout_toEndOf="@id/tv_tel_country_code"
-        android:layout_below="@id/tv_register_hint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="@string/prompt_tel_number"
-        android:inputType="number"
-        android:maxEms="11"
-        android:textSize="@dimen/edit_text_size" />
-
-    <EditText
-        android:id="@+id/et_input_auth_code"
-        android:layout_below="@id/tv_tel_country_code"
-        android:layout_alignStart="@id/et_tel_number"
-        android:layout_alignEnd="@id/et_tel_number"
-        android:gravity="start|center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/prompt_input_auth_code"
-        android:visibility="gone"
-        android:inputType="number"
-        android:textSize="@dimen/edit_text_size" />
+        android:gravity="center"
+        android:orientation="horizontal">
 
-    <Button android:id="@+id/tv_register"
+        <TextView android:id="@+id/tv_tel_country_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tel_number_china"
+            android:textColor="@color/colorDarkGrey"
+            android:layout_marginEnd="@dimen/dialog_item_margin"
+            android:textSize="@dimen/edit_text_size"/>
+
+        <EditText
+            android:id="@+id/et_tel_number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/user_tel_number"
+            android:inputType="number"
+            android:maxEms="11"
+            android:layout_weight="1"
+            android:textSize="@dimen/edit_text_size" />
+
+        <TextView android:id="@+id/tv_get_auth_code"
+            android:text="@string/send_auth_code"
+            android:layout_marginStart="@dimen/register_view_margin"
+            android:background="@drawable/item_rect_background_grey"
+            android:textColor="@color/colorDarkGrey"
+            android:textSize="@dimen/button_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+    <LinearLayout android:id="@+id/input_auth"
+        android:layout_below="@id/input_tel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="gone"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tel_number_china"
+            android:textColor="@color/colorDarkGrey"
+            android:layout_marginEnd="@dimen/dialog_item_margin"
+            android:textSize="@dimen/edit_text_size"
+            android:visibility="invisible"/>
+
+        <EditText
+            android:id="@+id/et_input_auth_code"
+            android:gravity="start|center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/prompt_input_auth_code"
+            android:visibility="invisible"
+            android:layout_weight="1"
+            android:inputType="number"
+            android:textSize="@dimen/edit_text_size" />
+
+        <TextView
+            android:text="@string/send_auth_code"
+            android:layout_marginStart="@dimen/register_view_margin"
+            android:background="@drawable/item_rect_background_grey"
+            android:textColor="@color/colorDarkGrey"
+            android:textSize="@dimen/button_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"/>
+    </LinearLayout>
+
+
+    <Button android:id="@+id/tv_login"
         android:layout_marginTop="@dimen/register_view_margin"
-        android:layout_below="@id/et_input_auth_code"
+        android:layout_below="@id/input_auth"
         android:layout_centerInParent="true"
-        android:text="@string/no_account_register"
+        android:paddingBottom="@dimen/register_view_margin"
+        android:paddingTop="@dimen/dialog_item_margin"
+        android:text="@string/had_account_login"
         style="?android:borderlessButtonStyle"
         android:textSize="@dimen/edit_text_size"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
 </RelativeLayout>

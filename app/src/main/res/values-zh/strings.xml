@@ -74,7 +74,7 @@
     <string name="error_invalid_input">此选项不能为空</string>
     <string name="user_intro">简介</string>
     <string name="user_email">邮箱</string>
-    <string name="user_tel_number">手机号</string>
+    <string name="user_tel_number">手机号码</string>
     <string name="say_something_about_yourself">简要的介绍自己</string>
     <string name="settings_about">关于</string>
     <string name="settings_about_sum">了解MineFlea</string>
@@ -97,7 +97,7 @@
     <string name="need_to_login">请先登录</string>
     <string name="forget_password">忘记密码?</string>
     <string name="use_tel_number_register">使用手机号注册</string>
-    <string name="no_account_register">没有账号?注册</string>
+    <string name="had_account_login">已有账号?登录</string>
     <string name="prompt_input_auth_code">请输入验证码</string>
     <string name="please_input_name_password">请输入账户和密码</string>
     <string name="error_invalid_account">无效邮箱/手机号</string>
@@ -112,5 +112,6 @@
     <string name="user_password">密码</string>
     <string name="error_invalid_auth_code">无效验证码</string>
     <string name="error_register">注册失败</string>
+    <string name="previous_step">上一步</string>
 
 </resources>

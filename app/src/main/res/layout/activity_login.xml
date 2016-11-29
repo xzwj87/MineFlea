@@ -100,17 +100,5 @@
             android:textColor="@color/colorLightGrey"
             android:background="@drawable/edit_item_selected_background"
             android:drawableStart="@drawable/ic_arrow_right_grey_24dp"/>
-
-        <TextView android:id="@+id/tv_register"
-            android:layout_below="@id/tv_forget_password"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="@dimen/register_view_margin"
-            android:text="@string/no_account_register"
-            android:textColor="@color/colorLightGrey"
-            android:textSize="@dimen/edit_text_size"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edit_item_selected_background"
-            android:drawableStart="@drawable/ic_arrow_right_grey_24dp"/>
     </RelativeLayout>
 </LinearLayout>

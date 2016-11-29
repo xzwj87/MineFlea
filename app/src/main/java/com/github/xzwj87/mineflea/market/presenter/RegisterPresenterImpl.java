@@ -137,7 +137,7 @@ public class RegisterPresenterImpl implements RegisterPresenter{
     @Override
     public void updateUserInfo() {
         Log.v(TAG,"updateUserInfo()");
-        if(!sIsUserDataSaved) {
+        if(!sIsUserDataSaved && mUserInfo != null) {
             mRepository.updateCurrentUserInfo(UserInfo.USER_NICK_NAME, mUserInfo.getNickName());
             mRepository.updateCurrentUserInfo(UserInfo.USER_NAME, mUserInfo.getUserName());
             mRepository.updateCurrentUserInfo(UserInfo.UER_EMAIL, mUserInfo.getUserEmail());
@@ -153,6 +153,7 @@ public class RegisterPresenterImpl implements RegisterPresenter{
     @Override
     public void init() {
         mUserInfo = new UserInfo();
+
         mRepository.init();
         //mRepository.setPresenterCallback(this);
         mRepository.registerCallBack(PRESENTER_REGISTER,new RegisterPresenterCallback());

@@ -3,6 +3,8 @@ package com.github.xzwj87.mineflea.market.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.github.xzwj87.mineflea.R;
@@ -31,6 +33,15 @@ public class RegisterActivity extends BaseActivity implements RegisterFragment.N
 
         ButterKnife.bind(this);
 
+/*        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);*/
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_back_white_24dp);
+            actionBar.setTitle(R.string.action_register);
+        }
+
         initInjector();
 
         init();
@@ -42,7 +53,7 @@ public class RegisterActivity extends BaseActivity implements RegisterFragment.N
         if(fragment == null){
             fragment = RegisterFragment.newInstance();
             fragmentMgr.beginTransaction()
-                       .add(fragment,RegisterFragment.TAG)
+                       .add(R.id.fragment_container,fragment,RegisterFragment.TAG)
                        .commit();
 
             fragment.setPresenter(mPresenter);
@@ -75,8 +86,11 @@ public class RegisterActivity extends BaseActivity implements RegisterFragment.N
 
     @Override
     public void onActivityResult(int request, int result, Intent data){
-        super.onActivityResult(request,result,data);
         Log.v(TAG,"onActivityResult(): result = " + result);
+
+        if(request == RESULT_OK && data != null){
+            setResult(result,data);
+        }
     }
 
     @Override

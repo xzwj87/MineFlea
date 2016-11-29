@@ -19,6 +19,7 @@ import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.UserCenterPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.UserCenterView;
 import com.github.xzwj87.mineflea.market.ui.activity.LoginActivity;
+import com.github.xzwj87.mineflea.market.ui.activity.RegisterActivity;
 import com.github.xzwj87.mineflea.market.ui.activity.UserDetailActivity;
 import com.github.xzwj87.mineflea.market.ui.activity.UserGoodsActivity;
 import com.github.xzwj87.mineflea.market.ui.settings.SettingsActivity;
@@ -42,6 +43,7 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
     public static final String TAG = UserCenterFragment.class.getSimpleName();
 
     public static final int REQUEST_LOGIN = 1;
+    public static final int REQUEST_REGISTER = 2;
 
     @BindView(R.id.civ_user_header) CircleImageView mCivHeader;
     @BindView(R.id.header_container) LinearLayout mHeaderLayout;
@@ -90,8 +92,8 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
             intent.putExtra(UserInfo.CURRENT_USER,true);
             startActivity(intent);
         }else {
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            startActivityForResult(intent, REQUEST_LOGIN);
+            Intent intent = new Intent(getActivity(), RegisterActivity.class);
+            startActivityForResult(intent, REQUEST_REGISTER);
         }
     }
 
