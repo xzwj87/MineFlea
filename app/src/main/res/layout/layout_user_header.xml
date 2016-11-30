@@ -17,7 +17,7 @@
         android:id="@+id/tv_user_nick_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/civ_user_header"
+        android:layout_toEndOf="@id/iv_user_header"
         android:layout_centerInParent="true"
         android:layout_marginLeft="@dimen/card_view_item_margin"
         android:textColor="@color/colorDarkGrey"

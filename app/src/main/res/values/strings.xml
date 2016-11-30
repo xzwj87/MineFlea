@@ -142,4 +142,5 @@
     <string name="error_invalid_auth_code">Invalid Auth Code</string>
     <string name="error_register">Register Failure,please try it again!</string>
     <string name="previous_step">Previous Step</string>
+    <string name="add_to_your_likes">Add To Your Likes</string>
 </resources>

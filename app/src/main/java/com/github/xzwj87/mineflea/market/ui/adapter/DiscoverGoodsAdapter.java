@@ -69,9 +69,9 @@ public class DiscoverGoodsAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
             holder.likes.setText(String.valueOf(info.getStars()));
             holder.title.setText(info.getName());
-            if (!TextUtils.isEmpty(userHeadIcon)) {
+/*            if (!TextUtils.isEmpty(userHeadIcon)) {
                 PicassoUtils.loadImage(holder.headIcon, userHeadIcon);
-            }
+            }*/
 
 
             holder.userNickName.setText(userNickName);
@@ -98,7 +98,7 @@ public class DiscoverGoodsAdapter extends RecyclerView.Adapter<RecyclerView.View
         @BindView(R.id.tv_likes) TextView likes;
         @BindView(R.id.tv_location) TextView loc;
         @BindView(R.id.tv_note) TextView note;
-        public CircleImageView headIcon;
+        //public CircleImageView headIcon;
         public TextView userNickName;
         public TextView updatedTime;
 
@@ -108,7 +108,7 @@ public class DiscoverGoodsAdapter extends RecyclerView.Adapter<RecyclerView.View
             ButterKnife.bind(this,view);
 
             RelativeLayout rl = (RelativeLayout)view.findViewById(R.id.layout_publisher);
-            headIcon = (CircleImageView) rl.findViewById(R.id.civ_user_header);
+            //headIcon = (CircleImageView) rl.findViewById(R.id.civ_user_header);
             userNickName = (TextView) rl.findViewById(R.id.tv_user_nick_name);
             updatedTime = (TextView) rl.findViewById(R.id.tv_updated_time);
 
