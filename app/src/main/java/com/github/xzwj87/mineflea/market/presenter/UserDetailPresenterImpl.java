@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.avos.avoscloud.AVUser;
 import com.github.xzwj87.mineflea.market.data.ResponseCode;
-import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
+import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
@@ -25,14 +25,15 @@ import javax.inject.Inject;
 public class UserDetailPresenterImpl extends UserDetailPresenter{
     private static final String TAG = UserDetailPresenterImpl.class.getSimpleName();
 
-    @Inject MineFleaRepository mDataRepo;
+    @Inject
+    DataRepository mDataRepo;
     private UserDetailView mView;
     private List<PublishGoodsInfo> mGoodsList;
     private List<AVUser> mFolloweeList;
     private UserInfo mUserInfo;
 
     @Inject
-    public UserDetailPresenterImpl(MineFleaRepository repository){
+    public UserDetailPresenterImpl(DataRepository repository){
         mDataRepo = repository;
     }
 

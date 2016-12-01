@@ -2,6 +2,7 @@ package com.github.xzwj87.mineflea.utils;
 
 import com.avos.avoscloud.AVObject;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
+import static com.github.xzwj87.mineflea.market.model.PublishGoodsInfo.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -11,20 +12,43 @@ import java.util.List;
  */
 
 public class PublishGoodsUtils {
+    public static final String AV_OBJ_GOODS = "publishGoods";
 
+
+    public static AVObject toAvObject(PublishGoodsInfo info){
+        if(info == null) return null;
+
+        AVObject avObject = new AVObject(AV_OBJ_GOODS);
+        avObject.put(GOODS_NAME,info.getName());
+        avObject.put(GOODS_PUBLISHER,info.getUserId());
+        avObject.put(GOODS_PRICE,info.getPrice());
+        avObject.put(GOODS_NOTE,info.getNote());
+        avObject.put(GOODS_RELEASE_DATE,info.getReleasedDate());
+        avObject.put(GOODS_UPDATED_TIME,info.getUpdateTime());
+        avObject.put(GOODS_LOC,info.getLocation());
+        avObject.put(GOODS_IMAGES,info.getImageUri());
+        avObject.put(GOODS_FAVOR_USER,info.getFavorUserList());
+
+        return avObject;
+    }
+
+    @SuppressWarnings("unchecked")
     public static PublishGoodsInfo fromAvObject(AVObject object){
-        PublishGoodsInfo goodsInfo = new PublishGoodsInfo();
+        if(object == null) return null;
 
-        goodsInfo.setId(object.getObjectId());
-        goodsInfo.setName((String)object.get(PublishGoodsInfo.GOODS_NAME));
-        goodsInfo.setPrice(object.getDouble(PublishGoodsInfo.GOODS_PRICE));
-        goodsInfo.setNote((String)object.get(PublishGoodsInfo.GOODS_NOTE));
-        goodsInfo.setLocation((String)object.get(PublishGoodsInfo.GOODS_LOC));
-        goodsInfo.setUserId((String)object.get(PublishGoodsInfo.GOODS_PUBLISHER));
-        goodsInfo.setReleasedDate((long)object.get(PublishGoodsInfo.GOODS_RELEASE_DATE));
-        goodsInfo.setStars((int)object.get(PublishGoodsInfo.GOODS_LIKES));
+        PublishGoodsInfo info = new PublishGoodsInfo();
+        info.setId(object.getObjectId());
+        info.setName((String)object.get(GOODS_NAME));
+        info.setUserId((String)object.get(GOODS_PUBLISHER));
+        info.setPrice(object.getDouble(GOODS_PRICE));
+        info.setNote((String)object.get(GOODS_NOTE));
+        info.setReleasedDate(object.getCreatedAt());
+        info.setUpdateTime(object.getUpdatedAt());
+        info.setLocation((String)object.get(GOODS_LOC));
+        info.setImageUri(object.getList(GOODS_IMAGES));
+        info.setGoodsFavorUser(object.getList(GOODS_FAVOR_USER));
 
-        return goodsInfo;
+        return info;
     }
 
     public static List<String> getImgUrls(AVObject avObject){

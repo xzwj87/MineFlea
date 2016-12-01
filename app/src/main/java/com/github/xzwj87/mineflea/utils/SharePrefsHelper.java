@@ -3,6 +3,7 @@ package com.github.xzwj87.mineflea.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -59,6 +60,13 @@ public class SharePrefsHelper {
         String key = mResources.getString(R.string.key_pref_wifi_only_sync);
 
         return mSharePref.getBoolean(key,false);
+    }
+
+    public String getThemeColor(){
+        String key = mResources.getString(R.string.key_pref_theme_color);
+        String blue = mResources.getString(R.string.color_indigo);
+
+        return mSharePref.getString(key,blue);
     }
 
 

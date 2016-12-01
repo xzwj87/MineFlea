@@ -11,6 +11,7 @@ import com.github.xzwj87.mineflea.market.internal.di.component.DaggerAppComponen
 import com.github.xzwj87.mineflea.market.internal.di.component.DaggerMarketComponent;
 import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
 import com.github.xzwj87.mineflea.market.internal.di.module.ActivityModule;
+import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
 
 /**
  * Created by jason on 9/29/16.
@@ -24,10 +25,16 @@ public class BaseActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedState){
         super.onCreate(savedState);
-
+        // reduce overdrawing
+        getWindow().setBackgroundDrawable(null);
         getAppComponent().inject(this);
 
         initInjector();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
     }
 
     public void showToast(String msg){

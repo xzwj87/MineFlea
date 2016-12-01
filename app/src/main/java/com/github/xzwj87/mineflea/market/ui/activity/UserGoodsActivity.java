@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
@@ -11,6 +12,7 @@ import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.ui.fragment.BaseFragment;
 import com.github.xzwj87.mineflea.market.ui.fragment.UserFavoritesFragment;
 import com.github.xzwj87.mineflea.market.ui.fragment.UserPublishedGoodsFragment;
+import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
 
 /**
  * Created by jason on 11/1/16.
@@ -65,6 +67,8 @@ public class UserGoodsActivity extends BaseActivity{
         fragmentMgr.beginTransaction()
                    .add(fragment,mFragmentTag)
                    .commit();
+
+        ThemeColorUtils.changeThemeColor(this);
     }
 
 

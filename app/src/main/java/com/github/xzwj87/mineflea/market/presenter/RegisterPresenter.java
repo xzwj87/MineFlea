@@ -6,20 +6,26 @@ import android.os.Message;
  * Created by jason on 10/14/16.
  */
 
-public abstract class RegisterPresenter implements BasePresenter{
-    public abstract void register();
+public interface  RegisterPresenter extends BasePresenter{
+    void register();
 
-    public abstract void setUserNickName(String name);
+    void setUserNickName(String name);
 
-    public abstract void setUserEmail(String email);
+    void setUserEmail(String email);
 
-    public abstract void setUserTel(String tel);
+    void setUserPwd(String pwd);
 
-    public abstract void setUserPwd(String pwd);
+    void setUserIconUrl(String url);
 
-    public abstract void setUserIconUrl(String url);
+    void setSmsAuthCode(String authCode);
 
-    public abstract boolean validUserInfo();
+    boolean validUserInfo();
 
-    public abstract String getUserIconUrl();
+    String getUserIconUrl();
+
+    void getSmsAuthCode(String telNumber);
+
+    void signUpBySms();
+
+    void updateUserInfo();
 }

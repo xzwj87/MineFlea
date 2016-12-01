@@ -5,7 +5,6 @@ import android.support.annotation.StringDef;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
 
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
@@ -19,7 +18,7 @@ public interface BasePresenter {
     @StringDef({PRESENTER_EDIT,PRESENTER_LOGIN,PRESENTER_LOGOUT,
             PRESENTER_PUBLISH,PRESENTER_REGISTER,PRESENTER_CENTER,
             PRESENTER_USER_DETAIL,PRESENTER_FAVOR,PRESENTER_FOLLOWEE,
-            PRESENTER_FOLLOWER,PRESENTER_GOODS})
+            PRESENTER_FOLLOWER,PRESENTER_GOODS, PRESENTER_GOODS_LIST})
     @interface PRESENTER_TYPE{}
 
     String PRESENTER_EDIT = "edit";
@@ -33,6 +32,7 @@ public interface BasePresenter {
     String PRESENTER_FOLLOWEE = "followee";
     String PRESENTER_FOLLOWER = "follower";
     String PRESENTER_GOODS = "goods";
+    String PRESENTER_GOODS_LIST = "goodsList";
 
 
     void init();

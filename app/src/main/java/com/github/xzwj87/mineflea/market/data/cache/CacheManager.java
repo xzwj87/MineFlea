@@ -139,6 +139,6 @@ public class CacheManager {
     }
 
     public void setCachedTime(File file){
-        sCacheTime.put(file,Long.valueOf(System.currentTimeMillis()));
+        sCacheTime.put(file,System.currentTimeMillis());
     }
 }

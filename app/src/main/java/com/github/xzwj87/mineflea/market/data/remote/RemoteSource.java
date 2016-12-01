@@ -9,6 +9,10 @@ import com.github.xzwj87.mineflea.market.model.UserInfo;
  */
 
 public interface RemoteSource extends DataSource {
+
+    // only get 30 items a time
+    int MAX_GOODS_TO_GET_ONE_TIME = 30;
+
     void getUserInfoById(String id);
 
     void getGoodsListByUserId(String id);
@@ -30,4 +34,16 @@ public interface RemoteSource extends DataSource {
     void getFolloweeList(String userId);
 
     void getFollowerList(String userId);
+
+    void getAllGoods();
+
+    void loginBySms(String telNumber,String smsCode);
+
+    void registerBySms(String telNumber, String smsCode);
+
+    void sendAuthCode(String number);
+
+    void sendResetPwdEmail(String emailAddress);
+
+    void sendResetPwdBySms(String telNumber);
 }

@@ -1,23 +1,31 @@
 package com.github.xzwj87.mineflea.market.ui.fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
-import com.github.xzwj87.mineflea.market.ui.adapter.DiscoverRecyclerViewAdapter;
-import com.github.xzwj87.mineflea.market.model.DiscoverInfo;
-import com.github.xzwj87.mineflea.market.ui.activity.DiscoverGoodsActivity;
-import com.github.xzwj87.mineflea.utils.DiscoverProtocol;
+import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
+import com.github.xzwj87.mineflea.market.presenter.DiscoverGoodsPresenter;
+import com.github.xzwj87.mineflea.market.presenter.DiscoverGoodsPresenterImpl;
+import com.github.xzwj87.mineflea.market.ui.DiscoverGoodsView;
+import com.github.xzwj87.mineflea.market.ui.adapter.DiscoverGoodsAdapter;
+import com.github.xzwj87.mineflea.market.ui.activity.GoodsDetailActivity;
+import com.github.xzwj87.mineflea.utils.SharePrefsHelper;
 
-import java.util.List;
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,17 +35,17 @@ import butterknife.ButterKnife;
  */
 
 public class DiscoverTabFragment extends BaseFragment
-            implements DiscoverRecyclerViewAdapter.DiscoverClickListener{
+            implements DiscoverGoodsAdapter.DiscoverGoodsCallback,DiscoverGoodsView {
     public static final String TAG = DiscoverTabFragment.class.getSimpleName();
 
-    private DiscoverRecyclerViewAdapter recylerViewAdapter;
-    private List<DiscoverInfo> disInfolist;
-
+    private DiscoverGoodsAdapter mRvAdapter;
+    @Inject
+    DiscoverGoodsPresenterImpl mPresenter;
 
     @BindView(R.id.discover_recycler_view)
-    RecyclerView discoverRecyclerView;
+    RecyclerView mRvDiscover;
     @BindView(R.id.swipe_container)
-    SwipeRefreshLayout swipeRefreshLayout;
+    SwipeRefreshLayout mSrlDiscover;
 
     public DiscoverTabFragment() {
     }
@@ -52,42 +60,112 @@ public class DiscoverTabFragment extends BaseFragment
                              Bundle savedSate) {
         View root = inflater.inflate(R.layout.fragment_discover_tab, container, false);
         ButterKnife.bind(this, root);
+
         init();
+
         return root;
     }
 
+    @Override
+    public void onAttach(Context context){
+        super.onAttach(context);
+
+        Log.v(TAG,"onAttach()");
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        Log.v(TAG,"onResume()");
+
+        mPresenter.setView(this);
+        mPresenter.init();
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo info){
+        super.onCreateContextMenu(menu,v,info);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item){
+
+        return super.onContextItemSelected(item);
+    }
+
     private void init() {
-        DiscoverProtocol protocol = new DiscoverProtocol();
-        disInfolist = protocol.loadDiscoverData();
-        recylerViewAdapter = new DiscoverRecyclerViewAdapter(disInfolist);
+        mRvAdapter = new DiscoverGoodsAdapter();
         LinearLayoutManager layoutManager = new LinearLayoutManager(AppGlobals.getAppContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        discoverRecyclerView.setLayoutManager(layoutManager);
-        discoverRecyclerView.setAdapter(recylerViewAdapter);
+        mRvDiscover.setLayoutManager(layoutManager);
         setSwipeLayout();
+
+        mRvAdapter.setCallback(this);
+        mRvDiscover.setAdapter(mRvAdapter);
     }
 
     //设置下拉刷新
     private void setSwipeLayout() {
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        String themeColor = SharePrefsHelper.getInstance(getContext())
+                .getThemeColor();
+        mSrlDiscover.setColorSchemeColors(Color.parseColor(themeColor));
+        mSrlDiscover.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                AppGlobals.getHandler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        swipeRefreshLayout.setRefreshing(false);
-                        Toast.makeText(AppGlobals.getAppContext(), "刷新成功", Toast.LENGTH_SHORT).show();
-                    }
-                }, 3000);
+                mPresenter.getGoodsList();
             }
         });
     }
 
     @Override
-    public void onDiscoverItemClick(int position) {
+    public void onItemClick(int position) {
         Toast.makeText(AppGlobals.getAppContext(), "显示", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getActivity(), DiscoverGoodsActivity.class);
+        Intent intent = new Intent(getActivity(), GoodsDetailActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onItemLongClick(View item,int pos) {
+
+    }
+
+    @Override
+    public PublishGoodsInfo getItemAtPos(int pos) {
+        return mPresenter.getItemAtPos(pos);
+    }
+
+    @Override
+    public int getItemCount() {
+        return mPresenter.getItemCount();
+    }
+
+    @Override
+    public String getPublisherHeadIcon(int pos) {
+        return mPresenter.getPublisherHeadIcon(pos);
+    }
+
+    @Override
+    public String getPublisherNickName(int pos) {
+        return mPresenter.getPublisherNickName(pos);
+    }
+
+    @Override
+    public void onGetGoodsListDone(boolean success) {
+        Log.v(TAG,"onGetGoodsListDone(): " + (success ? "success" : "fail"));
+        if(mSrlDiscover.isRefreshing()){
+            mSrlDiscover.setRefreshing(false);
+
+            if(success){
+                showToast(getString(R.string.get_goods_list_sucess));
+            }else{
+                showToast(getString(R.string.error_get_goods_list));
+            }
+        }
+    }
+
+    @Override
+    public void finishView() {
+        // empty
     }
 }

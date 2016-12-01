@@ -1,5 +1,6 @@
 package com.github.xzwj87.mineflea.market.data.cache;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.IntDef;
@@ -24,6 +25,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -51,20 +54,19 @@ public class FileCacheImpl implements FileCache{
     @Inject CacheManager mCacheMgr;
     @Inject JobExecutor mExecutor;
 
+    // currently how many goods are retrieved from the cache
+    private int mCurrentRetrieved = 0;
+
     @Inject
-    public FileCacheImpl(CacheManager cacheMgr, JobExecutor executor){
+    public FileCacheImpl(Context context, CacheManager cacheMgr, JobExecutor executor){
         mCacheMgr = cacheMgr;
         mExecutor = executor;
 
         if(isExternalStorageWritable()) {
             mCacheDir = new File(FILE_DIR_PARENT);
         }else{
-            FILE_DIR_PARENT = AppGlobals.getAppContext().getFilesDir().getPath();
+            FILE_DIR_PARENT = context.getFilesDir().getPath();
             mCacheDir = new File(FILE_DIR_PARENT);
-        }
-
-        if(!mCacheDir.exists()){
-            mCacheDir.mkdirs();
         }
 
         // make dirs for cache
@@ -74,7 +76,7 @@ public class FileCacheImpl implements FileCache{
         File goodsImg = new File((getImgCacheDir() + File.separator + CACHE_TYPE_GOODS));
 
         if(!user.exists()){
-            user.mkdir();
+            user.mkdirs();
         }
 
         if(!goods.exists()){
@@ -86,7 +88,7 @@ public class FileCacheImpl implements FileCache{
         }
 
         if(!goodsImg.exists()){
-            goodsImg.mkdirs();
+            goodsImg.mkdir();
         }
     }
 
@@ -181,10 +183,46 @@ public class FileCacheImpl implements FileCache{
     }
 
     @Override
-    public String getImageCachePath(String name, @CacheType String type) {
-        File file = buildImageFile(name,type);
+    public List<PublishGoodsInfo> getAllGoodsCache() {
+        File goodsFile = new File(getGoodsCacheDir());
+        File[] files = goodsFile.listFiles();
 
-        return file.getPath();
+        List<PublishGoodsInfo> goodsList = new ArrayList<>();
+
+        if(goodsFile.exists() && files.length > 0){
+            mCurrentRetrieved = (mCurrentRetrieved >= files.length) ? 0 : mCurrentRetrieved;
+            // only retrieve 30 items a time
+            int i;
+            for(i = mCurrentRetrieved; i < (mCurrentRetrieved + MAX_ITEMS_TO_GET_A_TIME) &&
+                    i < files.length; ++i){
+                if(files[i] != null && files[i].isFile()){
+                    goodsList.add(getGoodsCache(files[i].getName()));
+                }
+            }
+
+            mCurrentRetrieved = i + MAX_ITEMS_TO_GET_A_TIME;
+        }
+
+        return goodsList;
+    }
+
+    @Override
+    public String getUserCachePath() {
+        return getUserCacheDir();
+    }
+
+    @Override
+    public String getGoodsCachePath() {
+        return getGoodsCacheDir();
+    }
+
+    public String getImageCachePath() {
+        return getImgCacheDir();
+    }
+
+    @Override
+    public String getImageFilePath(String name, @CacheType String type) {
+        return buildImageFile(name,type).getPath();
     }
 
     @Override
@@ -258,7 +296,7 @@ public class FileCacheImpl implements FileCache{
     private File buildUserFile(String id){
         String str = getUserCacheDir();
 
-        return new File(str,id);
+        return new File(new File(str),id);
     }
 
     private File buildGoodsFile(String id){

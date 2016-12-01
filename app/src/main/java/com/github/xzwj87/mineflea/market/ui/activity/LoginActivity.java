@@ -1,78 +1,59 @@
 package com.github.xzwj87.mineflea.market.ui.activity;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.app.LoaderManager.LoaderCallbacks;
 
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
-
-import android.os.Build;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.support.v7.app.ActionBar;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.github.xzwj87.mineflea.R;
-import com.github.xzwj87.mineflea.market.internal.di.component.DaggerMarketComponent;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.LoginPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.LoginView;
+import com.github.xzwj87.mineflea.market.ui.dialog.ResetPasswordDialog;
 import com.github.xzwj87.mineflea.utils.SharePrefsHelper;
+import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnEditorAction;
+import butterknife.OnFocusChange;
 
-import static android.Manifest.permission.READ_CONTACTS;
 import static com.github.xzwj87.mineflea.utils.UserInfoUtils.isEmailValid;
 
 
-public class LoginActivity extends BaseActivity implements LoaderCallbacks<Cursor>,
-        LoginView{
+public class LoginActivity extends BaseActivity implements LoginView,
+        ResetPasswordDialog.DialogButtonClickCallback{
     public static final String TAG = LoginActivity.class.getSimpleName();
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
-    private static final int REQUEST_READ_CONTACTS = 0;
+
     private static final int REQUEST_USER_REGISTER = 1;
 
-    @BindView(R.id.atv_email) AutoCompleteTextView mEmailView;
-    @BindView(R.id.et_password) EditText mPasswordView;
-    @BindView(R.id.form_login) View mLoginFormView;
-    @BindView(R.id.btn_register) Button mBtnRegister;
-    @BindView(R.id.btn_sign_in) Button mBtnEmailSignIn;
+    @BindView(R.id.iv_account) ImageView mIvAccountIcon;
+    @BindView(R.id.iv_password) ImageView mIvPwdIcon;
+    @BindView(R.id.et_account) EditText mEtAccount;
+    @BindView(R.id.et_password) EditText mEtPassword;
+    @BindView(R.id.tv_forget_password) TextView mTvForgetPwd;
+    @BindView(R.id.tv_login) TextView mTvRegister;
+    @BindView(R.id.iv_show_pwd) ImageView mIvShowPwd;
+    @BindView(R.id.btn_login) Button mBtnLogin;
 
     private ProgressDialog mProgress;
+    private boolean mIsPwdShow = false;
 
     @Inject LoginPresenterImpl mPresenter;
-    private String mHeadIconUrl;
-    private String mNickName;
-    private String mEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,30 +62,51 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         ButterKnife.bind(this);
 
         init();
-    }
 
-    @OnEditorAction(R.id.et_password)
-    public boolean onPwdInputComplete(TextView textView,int id,KeyEvent keyEvent){
-        if (id == R.id.login || id == EditorInfo.IME_NULL) {
-            tryLogin();
-            return true;
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_back_white_24dp);
         }
 
-        return false;
+        ThemeColorUtils.changeThemeColor(this);
     }
 
-    @OnClick({R.id.btn_register,R.id.btn_sign_in})
-    public void onButtonClick(Button button){
-        switch (button.getId()){
-            case R.id.btn_sign_in:
-                tryLogin();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+        switch (id){
+            case android.R.id.home:
+                finish();
                 break;
-            case R.id.btn_register:
-                tryRegister();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    @OnClick({R.id.btn_login})
+    void onLogin(){
+        tryLogin();
+    }
+
+    @OnClick({R.id.tv_login,R.id.tv_forget_password})
+    void onTextClick(View view){
+        int id = view.getId();
+        switch (id){
+            case R.id.tv_forget_password:
+                resetPassword();
+                break;
+            case R.id.tv_login:
+                startRegister();
                 break;
             default:
                 break;
         }
+    }
+
+    private void resetPassword(){
+        Log.v(TAG,"resetPassword()");
+        showResetPasswordDialog();
     }
 
 
@@ -116,64 +118,22 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                 case REQUEST_USER_REGISTER:
                     if(result == RESULT_OK && data != null) {
                         setResult(RESULT_OK, data);
+                    }else{
+                        finishView();
                     }
                     break;
             }
-            finish();
-    }
-
-    private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
-        }
-
-        getLoaderManager().initLoader(0, null, this);
-    }
-
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
-    }
-
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
-            }
-        }
     }
 
     private void tryLogin() {
         Log.v(TAG,"tryLogin()");
         // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
+        mEtAccount.setError(null);
+        mEtPassword.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        String email = mEtAccount.getText().toString();
+        String password = mEtPassword.getText().toString();
 
         mPresenter.setUserAccount(email);
         mPresenter.setUserPwd(password);
@@ -181,102 +141,62 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         // check user login info
         if(mPresenter.validLoginInfo()){
             mPresenter.login();
-            showProgress(true);
-        }else{
-            showProgress(false);
         }
     }
 
-    private void tryRegister(){
-        Log.v(TAG,"tryRegister()");
-
-        // start another activity
-        Intent intent = new Intent(this,RegisterActivity.class);
-        startActivityForResult(intent,REQUEST_USER_REGISTER);
-    }
-
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    public void showProgress(final boolean show) {
+    @Override
+    public void showProgress(boolean show) {
+        if(mProgress == null) return;
 
         if(show) {
             mProgress = ProgressDialog.show(this, "", getString(R.string.hint_logining));
         }else if(mProgress.isShowing()){
             mProgress.dismiss();
         }
+    }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-        } else {
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+    @Override
+    public void resetPwdSuccess() {
+        ResetPasswordDialog dialog = (ResetPasswordDialog)getFragmentManager()
+                .findFragmentByTag(ResetPasswordDialog.class.getSimpleName());
+        if(dialog != null) {
+            dialog.resetPwdSuccess();
+        }else{
+            showToast(getString(R.string.reset_pwd_success));
         }
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this,
-                // Retrieve data rows for the device user's 'profile' contact.
-                Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
-                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
-
-                // Select only email addresses.
-                ContactsContract.Contacts.Data.MIMETYPE +
-                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                .CONTENT_ITEM_TYPE},
-
-                // Show primary email addresses first. Note that there won't be
-                // a primary email address if the user hasn't specified one.
-                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        List<String> emails = new ArrayList<>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            emails.add(cursor.getString(ProfileQuery.ADDRESS));
-            cursor.moveToNext();
+    public void showEmailResetPwdFailMsg() {
+        showToast(getString(R.string.error_reset_pwd_by_email));
+        ResetPasswordDialog dialog = (ResetPasswordDialog)getFragmentManager()
+                .findFragmentByTag(ResetPasswordDialog.class.getSimpleName());
+        if(dialog != null){
+            dialog.resetPwdFail();
         }
-
-        addEmailsToAutoComplete(emails);
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
-    }
-
-    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(LoginActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
-
-        mEmailView.setAdapter(adapter);
+    public void showSmsResetPwdFailMsg() {
+        showToast(getString(R.string.error_reset_pwd_by_sms));
+        ResetPasswordDialog dialog = (ResetPasswordDialog)getFragmentManager()
+                .findFragmentByTag(ResetPasswordDialog.class.getSimpleName());
+        if(dialog != null){
+            dialog.resetPwdFail();
+        }
     }
 
     @Override
     public void onLoginSuccess() {
         Log.v(TAG,"onLoginSuccess()");
 
-        showProgress(false);
         showToast(getString(R.string.hint_login_success));
 
         Intent intent = new Intent();
         intent.putExtra(UserInfo.IS_LOGIN,true);
-        intent.putExtra(UserInfo.USER_NICK_NAME,mNickName);
-        intent.putExtra(UserInfo.UER_EMAIL,mEmail);
-        intent.putExtra(UserInfo.USER_HEAD_ICON,mHeadIconUrl);
+        intent.putExtra(UserInfo.USER_NICK_NAME,mPresenter.getUserNickName());
+        intent.putExtra(UserInfo.UER_EMAIL,mPresenter.getUserEmail());
+        intent.putExtra(UserInfo.USER_HEAD_ICON,mPresenter.getHeadIconUrl());
 
         // save pref value of login state
         SharePrefsHelper.getInstance(this).updateLogState(true);
@@ -290,56 +210,36 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     public void onLoginFail() {
         Log.v(TAG,"onLoginFail()");
 
-        showToast(getString(R.string.prompt_login_incorrect_email_password));
+        showToast(getString(R.string.prompt_login_failure));
     }
 
     @Override
     public void showAccountInvalidMsg() {
         // Check for a valid email address.
-        String email = mEmailView.getText().toString();
+        String email = mEtAccount.getText().toString();
         if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
+            mEtAccount.setError(getString(R.string.error_field_required));
         } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
+            mEtAccount.setError(getString(R.string.error_invalid_account));
         }
-        mEmailView.requestFocus();
+        mEtAccount.requestFocus();
     }
 
     @Override
     public void showPwdInvalidMsg() {
-        mPasswordView.setError(getString(R.string.error_invalid_email));
-        mPasswordView.requestFocus();
+        mEtPassword.setError(getString(R.string.error_invalid_email));
+        mEtPassword.requestFocus();
     }
 
     @Override
-    public void updateUserHeadIcon(String url) {
-        mHeadIconUrl = url;
-    }
-
-    @Override
-    public void updateUserNickName(String nickName) {
-        mNickName = nickName;
-    }
-
-    @Override
-    public void updateUserEmail(String email) {
-        mEmail = email;
+    public void onResetPwd(String account) {
+        Log.v(TAG,"onResetPwd()");
+        mPresenter.resetPwdByAccount(account);
     }
 
     @Override
     public void finishView() {
         finish();
-    }
-
-
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-        int IS_PRIMARY = 1;
     }
 
     private void init() {
@@ -348,9 +248,66 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         mPresenter.init();
     }
 
+    @OnFocusChange({R.id.et_account,R.id.et_password})
+    void changeViewStyle(EditText view, boolean hasFocus){
+        int id = view.getId();
+
+        if(hasFocus || !TextUtils.isEmpty(view.getText())) {
+            view.setHint("");
+
+            if(id == R.id.et_account) {
+                mIvAccountIcon.getDrawable().setColorFilter(view.getHighlightColor(), PorterDuff.Mode.SRC_IN);
+            }else if(id == R.id.et_password){
+                mIvPwdIcon.getDrawable().setColorFilter(view.getHighlightColor(), PorterDuff.Mode.SRC_IN);
+            }
+        }else{
+            if(TextUtils.isEmpty(view.getText())) {
+                if (id == R.id.et_account) {
+                    mEtAccount.setHint(R.string.prompt_account_login);
+                } else if (id == R.id.et_password) {
+                    mEtPassword.setHint(R.string.prompt_password);
+                }
+            }
+
+            if (id == R.id.et_account) {
+                // remove background
+                mIvAccountIcon.getDrawable().setColorFilter(Color.parseColor("#BDBDBD"), PorterDuff.Mode.SRC_IN);
+            } else if (id == R.id.et_password) {
+                mIvPwdIcon.getDrawable().setColorFilter(Color.parseColor("#BDBDBD"), PorterDuff.Mode.SRC_IN);
+            }
+        }
+    }
+
+    @OnClick(R.id.iv_show_pwd)
+    void showPassword(ImageView iv){
+        if(!mIsPwdShow) {
+            mEtPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            mIvShowPwd.setBackgroundResource(R.drawable.ic_visibility_off_grey_24dp);
+        }else{
+            mIvShowPwd.setBackgroundResource(R.drawable.ic_visibility_grey_24dp);
+            // tricky
+            mEtPassword.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD + 0x01);
+        }
+
+        mEtPassword.setSelection(mEtPassword.getText().length());
+        mIsPwdShow = !mIsPwdShow;
+    }
+
     private void initInjector(){
         mMarketComponent.inject(this);
         mPresenter.setView(this);
+    }
+
+    private void showResetPasswordDialog(){
+        ResetPasswordDialog dialog = ResetPasswordDialog.newInstance();
+        dialog.show(getFragmentManager(),ResetPasswordDialog.class.getSimpleName());
+        dialog.setButtonClickCallback(this);
+    }
+
+    private void startRegister(){
+        Log.v(TAG,"startRegister()");
+        Intent intent = new Intent(this,RegisterActivity.class);
+        startActivity(intent);
     }
 }
 

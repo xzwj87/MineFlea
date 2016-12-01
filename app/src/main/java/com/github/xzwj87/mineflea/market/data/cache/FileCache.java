@@ -26,6 +26,8 @@ public interface FileCache {
     String CACHE_TYPE_USER = "user";
     String CACHE_TYPE_GOODS = "goods";
 
+    // 30 items a time to get
+    int MAX_ITEMS_TO_GET_A_TIME = 30;
     /*
      * whether the data is cached based on its id
      * @param type - userInfo or goodsInfo
@@ -69,9 +71,30 @@ public interface FileCache {
     PublishGoodsInfo getGoodsCache(String id);
 
     /*
-     * get image cache dir
+     * get all goods in cache dir
      */
-    String getImageCachePath(String name,@CacheType String type);
+    List<PublishGoodsInfo> getAllGoodsCache();
+
+    /*
+     * get user cache dir
+     */
+    String getUserCachePath();
+
+
+    /*
+     * get goods cache dir
+     */
+    String getGoodsCachePath();
+
+    /*
+     * get image cache dri
+     */
+    String getImageCachePath();
+
+    /*
+     * get image file cache dir
+     */
+    String getImageFilePath(String name, @CacheType String type);
 
     /*
      * is expired for time duration too long
@@ -93,7 +116,4 @@ public interface FileCache {
      * clean all
      */
     void clearAll();
-
-
-
 }

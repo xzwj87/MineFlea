@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <SwitchPreference
         android:key="@string/key_pref_wifi_only_sync"
@@ -8,13 +9,15 @@
         android:summaryOff="@string/network_connected_sync"
         android:defaultValue="false" />
 
-    <ListPreference
+    <com.github.xzwj87.mineflea.market.ui.dialog.ThemeColorPickerPreference
+        android:key="@string/key_pref_theme_color"
         android:title="@string/pref_theme_color"
         android:summary="@string/change_theme_color"
         android:dialogTitle="@string/choose_color_you_like"
-        android:entries="@array/dummy"
-        android:entryValues="@array/dummy_values"
-        android:dialogLayout="@layout/settings_theme_color_list"/>
+        android:entries="@array/pref_colorList"
+        android:entryValues="@array/pref_colorList_values"
+        android:defaultValue="@string/color_indigo"
+        app:viewType="GridView"/>
 
     <ListPreference
         android:title="@string/settings_about"

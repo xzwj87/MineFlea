@@ -2,7 +2,7 @@ package com.github.xzwj87.mineflea.market.presenter;
 
 import android.os.Message;
 
-import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
+import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserGoodsInfo;
@@ -20,19 +20,20 @@ import javax.inject.Inject;
 @PerActivity
 public class UserGoodsPresenterImpl extends UserGoodsPresenter {
 
-    @Inject MineFleaRepository mRepo;
+    @Inject
+    DataRepository mRepo;
     private UserGoodsView mView;
     private List<PublishGoodsInfo> mGoodsList;
 
     @Inject
-    public UserGoodsPresenterImpl(MineFleaRepository repository){
+    public UserGoodsPresenterImpl(DataRepository repository){
         mRepo = repository;
     }
 
     @Override
     public void init() {
         mRepo.init();
-        mRepo.registerCallBack(PRESENTER_GOODS,new UserGoodsPresenterCallback());
+        mRepo.registerCallBack(PRESENTER_GOODS_LIST,new UserGoodsPresenterCallback());
     }
 
     @Override
@@ -42,7 +43,9 @@ public class UserGoodsPresenterImpl extends UserGoodsPresenter {
 
     @Override
     public void onDestroy() {
-
+        mRepo.unregisterCallback(PRESENTER_GOODS_LIST);
+        mGoodsList = null;
+        mRepo = null;
     }
 
     @Override

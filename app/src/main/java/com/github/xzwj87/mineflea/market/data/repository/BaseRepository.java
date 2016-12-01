@@ -15,7 +15,6 @@ public interface BaseRepository {
      */
     void publishGoods(PublishGoodsInfo goods);
 
-
     /*
      * register user
      */
@@ -25,6 +24,27 @@ public interface BaseRepository {
      * login
      */
     void login(UserInfo info);
+
+    /*
+     * login by SMS auth code
+     */
+    void loginBySms(String telNumber, String authCode);
+
+    /*
+     * register by SMS auth code
+     */
+    void registerBySms(String telNumber,String authCode);
+
+    /*
+     * send SMS auth code
+     */
+    void sendSmsAuthCode(String number);
+
+
+    /*
+     * reset password by email or SMS
+     */
+    void resetPwdByAccount(String account);
 
     /*
      * logout
@@ -58,6 +78,11 @@ public interface BaseRepository {
     void getUserInfoById(String id);
 
     /*
+     * get all goods
+     */
+    void getAllGoods();
+
+    /*
      * get goods list by user id
      */
     void getGoodsListByUserId(String id);
@@ -77,7 +102,13 @@ public interface BaseRepository {
      */
     void queryUserFolloweeListByUserId(String id);
 
+    /*
+     * register presenter callback
+     */
     void registerCallBack(@BasePresenter.PRESENTER_TYPE String type,PresenterCallback callback);
 
+    /*
+     *  unregister presenter callback
+     */
     void unregisterCallback(@BasePresenter.PRESENTER_TYPE String type);
 }
