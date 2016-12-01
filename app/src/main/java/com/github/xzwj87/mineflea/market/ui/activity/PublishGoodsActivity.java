@@ -10,6 +10,7 @@ import com.github.xzwj87.mineflea.market.internal.di.HasComponent;
 import com.github.xzwj87.mineflea.market.internal.di.component.DaggerMarketComponent;
 import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
 import com.github.xzwj87.mineflea.market.ui.fragment.PublishGoodsFragment;
+import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -65,5 +66,4 @@ public class PublishGoodsActivity extends BaseActivity {
     public void onDestroy(){
         super.onDestroy();
     }
-
 }

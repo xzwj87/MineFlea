@@ -3,6 +3,8 @@ package com.github.xzwj87.mineflea.market.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v7.widget.Toolbar;
+
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -10,14 +12,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.internal.di.HasComponent;
 import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
 import com.github.xzwj87.mineflea.market.ui.adapter.SectionsPageAdapter;
+import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
 
-public class MineFleaHomeActivity extends BaseActivity implements HasComponent<MarketComponent>{
+public class HomeActivity extends BaseActivity
+            implements HasComponent<MarketComponent>{
 
-    private static final String TAG = MineFleaHomeActivity.class.getSimpleName();
+    private static final String TAG = HomeActivity.class.getSimpleName();
 
     public static int DRIVE_ACTIVITY_CODE = 0;
     public static int WALK_ACTIVITY_CODE = 1;
@@ -57,6 +62,8 @@ public class MineFleaHomeActivity extends BaseActivity implements HasComponent<M
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
+        ThemeColorUtils.changeThemeColor(this);
     }
 
     @Override

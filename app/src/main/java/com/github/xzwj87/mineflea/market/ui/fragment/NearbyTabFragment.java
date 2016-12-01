@@ -52,7 +52,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.model.NearbyGoodsInfo;
-import com.github.xzwj87.mineflea.market.ui.activity.MineFleaHomeActivity;
+import com.github.xzwj87.mineflea.market.ui.activity.HomeActivity;
 import com.github.xzwj87.mineflea.market.ui.activity.NearbyGoodsActivity;
 import com.github.xzwj87.mineflea.market.ui.alimap.BusResultListAdapter;
 import com.github.xzwj87.mineflea.market.ui.alimap.DriveRouteDetailActivity;
@@ -666,7 +666,7 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
                             intent.putExtra("drive_path", drivePath);
                             intent.putExtra("drive_result",
                                     mDriveRouteResult);
-                            startActivityForResult(intent, MineFleaHomeActivity.DRIVE_ACTIVITY_CODE);
+                            startActivityForResult(intent, HomeActivity.DRIVE_ACTIVITY_CODE);
                         }
                     });
                 } else if (result != null && result.getPaths() == null) {
@@ -712,7 +712,7 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
                             intent.putExtra("walk_path", walkPath);
                             intent.putExtra("walk_result",
                                     mWalkRouteResult);
-                            getActivity().startActivityForResult(intent, MineFleaHomeActivity.WALK_ACTIVITY_CODE);
+                            getActivity().startActivityForResult(intent, HomeActivity.WALK_ACTIVITY_CODE);
                         }
                     });
                 } else if (result != null && result.getPaths() == null) {

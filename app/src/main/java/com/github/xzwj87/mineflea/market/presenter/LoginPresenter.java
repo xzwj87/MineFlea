@@ -5,18 +5,26 @@ import android.os.Message;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
 
 /**
- * Created by jason on 10/13/16.
+ * presenter to login and reset password if user would like
  */
 
-public abstract  class LoginPresenter implements BasePresenter{
+public interface  LoginPresenter extends BasePresenter{
 
-    public abstract void setView(BaseView view);
+    void setView(BaseView view);
 
-    public abstract void login();
+    void login();
 
-    public abstract boolean validLoginInfo();
+    boolean validLoginInfo();
 
-    public abstract void setUserAccount(String account);
+    void setUserAccount(String account);
 
-    public abstract void setUserPwd(String pwd);
+    void setUserPwd(String pwd);
+
+    String getUserNickName();
+
+    String getUserEmail();
+
+    String getHeadIconUrl();
+
+    void resetPwdByAccount(String account);
 }

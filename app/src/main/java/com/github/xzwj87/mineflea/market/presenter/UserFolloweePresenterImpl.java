@@ -2,7 +2,7 @@ package com.github.xzwj87.mineflea.market.presenter;
 
 import android.os.Message;
 
-import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
+import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.UserFollowInfo;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
@@ -22,11 +22,12 @@ public class UserFolloweePresenterImpl extends UserFolloweePresenter{
     private static final String TAG = UserFolloweePresenterImpl.class.getSimpleName();
 
     private UserFollowView mView;
-    @Inject MineFleaRepository mRepo;
+    @Inject
+    DataRepository mRepo;
     private List<UserFollowInfo> mUserFollowList;
 
     @Inject
-    public UserFolloweePresenterImpl(MineFleaRepository repository){
+    public UserFolloweePresenterImpl(DataRepository repository){
         mRepo = repository;
     }
 

@@ -19,7 +19,7 @@
         android:layout_marginStart="@dimen/user_center_title_margin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/civ_user_header"
+        android:layout_toEndOf="@id/iv_user_header"
         android:layout_centerInParent="true"
         android:orientation="vertical">
         <TextView

@@ -1,8 +1,10 @@
 package com.github.xzwj87.mineflea.market.ui.activity;
 
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.github.xzwj87.mineflea.R;
+import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
 
 import butterknife.ButterKnife;
 
@@ -20,7 +22,7 @@ public class NearbyGoodsActivity extends BaseActivity {
         setContentView(R.layout.activity_nearby_goods);
         ButterKnife.bind(this);
 
-
+        ThemeColorUtils.changeThemeColor(this);
     }
 
     @Override
@@ -39,6 +41,4 @@ public class NearbyGoodsActivity extends BaseActivity {
     public void onDestroy(){
         super.onDestroy();
     }
-
-
 }

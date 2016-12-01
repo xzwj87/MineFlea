@@ -8,12 +8,18 @@ import butterknife.BindView;
  * Created by jason on 10/14/16.
  */
 
-public interface RegisterView extends BaseView{
-    void onRegisterComplete(boolean success);
-    void showNameInvalidMsg();
-    void showEmailInvalidMsg();
-    void showTelInvalidMsg();
-    void showPwdInvalidMsg();
-    void showHeadIconNullDialog();
-    void showProgress();
+public abstract class RegisterView implements BaseView{
+    public void onRegisterComplete(boolean success){};
+
+    public void showNameInvalidMsg(){};
+
+    public void showEmailInvalidMsg(){};
+
+    //void showTelInvalidMsg();
+
+    public void showPwdInvalidMsg(){};
+
+    public void showHeadIconNullMsg(){};
+
+    public void showProgress(){};
 }

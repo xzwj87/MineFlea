@@ -19,7 +19,6 @@ import com.github.xzwj87.mineflea.R;
 public class LogoutPreference extends ListPreference{
 
     private static final boolean LOGOUT_CONFIRM = true;
-    private static final boolean LOGOUT_CANCEL = false;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public LogoutPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {

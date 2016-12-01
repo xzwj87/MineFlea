@@ -1,18 +1,20 @@
 package com.github.xzwj87.mineflea.market.ui.settings;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.github.xzwj87.mineflea.R;
-import com.github.xzwj87.mineflea.market.presenter.LoginPresenterImpl;
 import com.github.xzwj87.mineflea.market.presenter.LogoutPresenterImpl;
+import com.github.xzwj87.mineflea.market.ui.dialog.ThemeColorPickerPreference;
+import com.github.xzwj87.mineflea.utils.SharePrefsHelper;
+import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
 
-import java.util.prefs.PreferenceChangeEvent;
-import java.util.prefs.PreferenceChangeListener;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -30,6 +32,8 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         Log.d(LOG_TAG, "onCreate()");
 
         addPreferencesFromResource(R.xml.settings);
+
+        initPref();
     }
 
     @Override
@@ -55,6 +59,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.v(LOG_TAG,"onSharedPreferenceChanged(): key = " + key);
         String keyLogState = getString(R.string.key_login_state);
+        String keyThemeColor = getString(R.string.key_pref_theme_color);
 
         if(!key.equals(getString(R.string.key_pref_wifi_only_sync))){
 
@@ -65,7 +70,20 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
                 Toast.makeText(getActivity(), R.string.hint_logout_success, Toast.LENGTH_LONG)
                         .show();
+            }else if(keyThemeColor.equals(key)){
+                ThemeColorUtils.changeThemeColor((AppCompatActivity)getActivity(),val);
             }
+
+        }
+    }
+
+    private void initPref(){
+        ThemeColorPickerPreference pref = (ThemeColorPickerPreference)findPreference(getString(R.string.key_pref_theme_color));
+        String color = SharePrefsHelper.getInstance(getActivity()).getThemeColor();
+        List<String> name = Arrays.asList(getResources().getStringArray(R.array.pref_colorList));
+        int idx = ThemeColorUtils.findThemeColorIndex(color);
+        if(idx != -1) {
+            pref.setSummary(name.get(idx));
         }
     }
 }

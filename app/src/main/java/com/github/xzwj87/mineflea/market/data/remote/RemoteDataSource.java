@@ -2,9 +2,11 @@ package com.github.xzwj87.mineflea.market.data.remote;
 
 import android.os.Message;
 import android.util.Log;
+import android.view.MotionEvent;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVPowerfulUtils;
 import com.avos.avoscloud.AVQuery;
@@ -15,6 +17,8 @@ import com.avos.avoscloud.FollowCallback;
 import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.LogInCallback;
 import com.avos.avoscloud.ProgressCallback;
+import com.avos.avoscloud.RequestMobileCodeCallback;
+import com.avos.avoscloud.RequestPasswordResetCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.model.AvCloudConstants;
@@ -37,31 +41,18 @@ import javax.inject.Singleton;
  */
 
 @Singleton
-public class MineFleaRemoteSource implements RemoteSource{
-    public static final String TAG = MineFleaRemoteSource.class.getSimpleName();
+public class RemoteDataSource implements RemoteSource{
+    public static final String TAG = RemoteDataSource.class.getSimpleName();
 
-    private static MineFleaRemoteSource sInstance;
-    private CloudSourceCallback mCloudCallback;
+    private static RemoteDataSource sInstance;
+    private RemoteSourceCallBack mCloudCallback;
 
     @Inject
-    public MineFleaRemoteSource(){
+    public RemoteDataSource(){
     }
 
-    public void setCloudCallback(CloudSourceCallback callback){
+    public void setCloudCallback(RemoteSourceCallBack callback){
         mCloudCallback = callback;
-    }
-
-    public interface CloudSourceCallback{
-        void publishComplete(Message message);
-        void registerComplete(Message message);
-        void updateProcess(int count);
-        void loginComplete(Message message);
-        void onImgUploadComplete(Message msg);
-        void onGetUserInfoDone(Message msg);
-        void onGetGoodsInfoDone(Message msg);
-        void onGetGoodsListDone(Message msg);
-        void onGetUserFolloweeDone(Message message);
-        void onGetUserFollowerDone(Message message);
     }
 
     @Override
@@ -132,7 +123,7 @@ public class MineFleaRemoteSource implements RemoteSource{
         query.getInBackground(id, new GetCallback() {
             @Override
             public void done(AVObject object, AVException e) {
-                PublishGoodsInfo goodsInfo = PublishGoodsInfo.fromAvObject(object);
+                PublishGoodsInfo goodsInfo = PublishGoodsUtils.fromAvObject(object);
 
                 final Message message = new Message();
                 message.obj = goodsInfo;
@@ -170,8 +161,10 @@ public class MineFleaRemoteSource implements RemoteSource{
     @Override
     public void updateCurrentUserInfo(String key, String val) {
         AVUser user = AVUser.getCurrentUser();
-        user.put(key,val);
-        user.saveInBackground();
+        if(user != null) {
+            user.put(key, val);
+            user.saveInBackground();
+        }
     }
 
     @Override
@@ -277,6 +270,141 @@ public class MineFleaRemoteSource implements RemoteSource{
 
     }
 
+    @Override
+    public void getAllGoods() {
+        AVQuery<AVObject> query = new AVQuery(AvCloudConstants.AV_OBJ_GOODS);
+
+        query.setLimit(MAX_GOODS_TO_GET_ONE_TIME);
+        query.orderByAscending(AvCloudConstants.AV_UPDATE_TIME);
+
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                final Message message = new Message();
+                if(e == null){
+                    List<PublishGoodsInfo> goodsList = new ArrayList<PublishGoodsInfo>();
+                    for(int i = 0; i < list.size(); ++i){
+                        goodsList.add(PublishGoodsUtils.fromAvObject(list.get(i)));
+                    }
+
+                    message.what = ResponseCode.RESP_GET_GOODS_LIST_SUCCESS;
+                    message.obj = goodsList;
+                }else{
+                    message.what = ResponseCode.RESP_GET_GOODS_LIST_ERROR;
+                    message.arg1 = e.getCode();
+                    message.obj = null;
+                }
+
+                mCloudCallback.onGetGoodsListDone(message);
+            }
+        });
+    }
+
+    @Override
+    public void loginBySms(String telNumber, String smsCode) {
+        Log.v(TAG,"loginBySms()");
+
+        AVUser.signUpOrLoginByMobilePhoneInBackground(telNumber, smsCode, new LogInCallback<AVUser>() {
+            @Override
+            public void done(AVUser avUser, AVException e) {
+                final Message msg = new Message();
+                if(e != null){
+                    msg.what = ResponseCode.RESP_LOGIN_FAIL;
+                    msg.obj = e.getCode();
+                    e.printStackTrace();
+                }else{
+                    msg.what = ResponseCode.RESP_LOGIN_SUCCESS;
+                    msg.obj = UserInfoUtils.fromAvUser(avUser);
+                }
+
+                mCloudCallback.loginComplete(msg);
+            }
+        });
+    }
+
+    @Override
+    public void registerBySms(String telNumber, String smsCode) {
+        Log.v(TAG,"registerBySms()");
+
+        AVUser.signUpOrLoginByMobilePhoneInBackground(telNumber, smsCode, new LogInCallback<AVUser>() {
+            @Override
+            public void done(AVUser avUser, AVException e) {
+                final Message msg = new Message();
+                if(e != null){
+                    msg.what = ResponseCode.RESP_REGISTER_FAIL;
+                    msg.obj = e.getCode();
+                    e.printStackTrace();
+                }else{
+                    msg.what = ResponseCode.RESP_REGISTER_SUCCESS;
+                    msg.obj = UserInfoUtils.fromAvUser(avUser);
+                }
+
+                mCloudCallback.registerComplete(msg);
+            }
+        });
+    }
+
+    @Override
+    public void sendAuthCode(String number) {
+        Log.v(TAG,"sendAuthCode()");
+
+        AVOSCloud.requestSMSCodeInBackground(number, new RequestMobileCodeCallback() {
+            @Override
+            public void done(AVException e) {
+                if(e != null) {
+                    Log.v(TAG,"sendAuthCode(): error" + e.getMessage());
+                }
+                Log.v(TAG,"sendAuthCode(): done");
+            }
+        });
+    }
+
+    @Override
+    public void sendResetPwdEmail(String emailAddress) {
+        Log.v(TAG,"sendResetPwdEmail()");
+
+        AVUser.requestPasswordResetInBackground(emailAddress, new RequestPasswordResetCallback() {
+            @Override
+            public void done(AVException e) {
+                final Message msg = new Message();
+
+                if(e != null){
+                    e.printStackTrace();
+                    // tell user to try again
+                    msg.what = ResponseCode.RESP_RESET_PWD_BY_EMAIL_FAIL;
+                    msg.obj = e.toString();
+                }else{
+                    msg.what = ResponseCode.RESP_RESET_PWD_BY_EMAIL_SUCCESS;
+                    msg.obj = null;
+                }
+
+                mCloudCallback.onResetPwdByEmailDone(msg);
+            }
+        });
+    }
+
+    @Override
+    public void sendResetPwdBySms(String telNumber) {
+        Log.v(TAG,"sendResetPwdBySms()");
+
+        AVUser.requestPasswordResetBySmsCodeInBackground(telNumber, new RequestMobileCodeCallback() {
+            @Override
+            public void done(AVException e) {
+                final Message msg = new Message();
+                if(e != null){
+                    msg.what = ResponseCode.RESP_RESET_PWD_BY_SMS_FAIL;
+                    msg.obj = e.toString();
+                    e.printStackTrace();
+                }else{
+                    msg.what = ResponseCode.RESP_RESET_PWD_BY_SMS_SUCCESS;
+                    msg.obj = null;
+                }
+
+                mCloudCallback.onResetPwdByTelDone(msg);
+            }
+        });
+    }
+
     /**
      * release goods
      *
@@ -288,12 +416,7 @@ public class MineFleaRemoteSource implements RemoteSource{
 
         if(NetConnectionUtils.isNetworkConnected()) {
 
-            final AVObject avObject = new AVObject(AvCloudConstants.AV_OBJ_GOODS);
-            avObject.put(PublishGoodsInfo.GOODS_NAME,goods.getName());
-            avObject.put(PublishGoodsInfo.GOODS_PUBLISHER,goods.getUserId());
-            avObject.put(PublishGoodsInfo.GOODS_PRICE,goods.getPrice());
-            avObject.put(PublishGoodsInfo.GOODS_RELEASE_DATE,goods.getReleasedDate());
-            avObject.put(PublishGoodsInfo.GOODS_LOC,goods.getLocation());
+            final AVObject avObject = PublishGoodsUtils.toAvObject(goods);
 
             avObject.saveInBackground(new SaveCallback() {
                 @Override
@@ -322,29 +445,18 @@ public class MineFleaRemoteSource implements RemoteSource{
     }
 
     @Override
-    public void register(UserInfo userInfo) {
+    public void register(final UserInfo userInfo) {
         Log.v(TAG,"register(): user info " + userInfo);
 
-        final AVUser avUser = new AVUser();
-
-        avUser.put(UserInfo.USER_NICK_NAME,userInfo.getNickName());
-        avUser.put(UserInfo.USER_HEAD_ICON,userInfo.getHeadIconUrl());
-        avUser.put(UserInfo.USER_LOCATION,userInfo.getLocation());
-        avUser.put(UserInfo.USER_FOLLOWERS,userInfo.getFollowerList());
-        avUser.put(UserInfo.USER_FOLLOWEES,userInfo.getFolloweeList());
-        avUser.put(UserInfo.USER_INTRO,userInfo.getIntro());
-        avUser.put(UserInfo.PUBLISHED_GOODS,userInfo.getGoodsList());
-        avUser.setUsername(userInfo.getUserEmail());
-        avUser.setEmail(userInfo.getUserEmail());
-        avUser.setMobilePhoneNumber(userInfo.getUserTelNumber());
-        avUser.setPassword(userInfo.getUserPwd());
+        final AVUser avUser = UserInfoUtils.toAvUser(userInfo);
 
         avUser.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
                 final Message msg = new Message();
                 if(e == null){
-                    msg.obj = avUser.getObjectId();
+                    userInfo.setUserId(avUser.getObjectId());
+                    msg.obj = userInfo;
                     msg.arg1 = ResponseCode.RESP_REGISTER_SUCCESS;
                 }else{
                     Log.v(TAG,"avException = " + e.toString());
@@ -367,10 +479,17 @@ public class MineFleaRemoteSource implements RemoteSource{
             public void done(AVUser avUser, AVException e) {
                 Message message = new Message();
                 if(e == null){
-                    message.arg1 = ResponseCode.RESP_LOGIN_SUCCESS;
+                    message.what = ResponseCode.RESP_LOGIN_SUCCESS;
                     message.obj = UserInfoUtils.fromAvUser(avUser);
                 }else{
-                    message.arg1 = ResponseCode.RESP_LOGIN_FAIL;
+                    message.what = ResponseCode.RESP_LOGIN_FAIL;
+                    if(e.getCode() == AVException.INVALID_EMAIL_ADDRESS) {
+                        message.arg1 = ResponseCode.RESP_LOGIN_INVALID_EMAIL;
+                    }else if(e.getCode() == AVException.INVALID_PHONE_NUMBER){
+                        message.arg1 = ResponseCode.RESP_LOGIN_INVALID_PHONE_NUMBER;
+                    }else if(e.getCode() == AVException.USERNAME_PASSWORD_MISMATCH){
+                        message.arg1 = ResponseCode.RESP_LOGIN_INVALID_PASSWORD;
+                    }
                     message.obj = null;
                 }
 
@@ -387,7 +506,7 @@ public class MineFleaRemoteSource implements RemoteSource{
 
         final AVUser user = AVUser.getCurrentUser();
 
-        final AVObject object = PublishGoodsInfo.toAvObject(goodsInfo);
+        final AVObject object = PublishGoodsUtils.toAvObject(goodsInfo);
         object.put(AvCloudConstants.AV_GOODS_NAME,goodsInfo.getName());
 
         object.saveInBackground(new SaveCallback() {
@@ -416,7 +535,7 @@ public class MineFleaRemoteSource implements RemoteSource{
                 if(e == null){
                     List<PublishGoodsInfo> goodsList = new ArrayList<PublishGoodsInfo>();
                     for(int i = 0; i < list.size(); ++i){
-                        goodsList.add(PublishGoodsInfo.fromAvObject(list.get(i)));
+                        goodsList.add(PublishGoodsUtils.fromAvObject(list.get(i)));
                     }
 
                     msg.obj = goodsList;

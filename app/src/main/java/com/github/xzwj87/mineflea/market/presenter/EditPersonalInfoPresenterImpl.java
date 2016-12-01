@@ -2,7 +2,7 @@ package com.github.xzwj87.mineflea.market.presenter;
 
 import android.os.Message;
 
-import com.github.xzwj87.mineflea.market.data.repository.MineFleaRepository;
+import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
@@ -18,11 +18,12 @@ import javax.inject.Inject;
 public class EditPersonalInfoPresenterImpl extends EditPersonalInfoPresenter{
 
     private EditPersonalInfoView mView;
-    @Inject MineFleaRepository mRepo;
+    @Inject
+    DataRepository mRepo;
     private UserInfo mCurrent;
 
     @Inject
-    public EditPersonalInfoPresenterImpl(MineFleaRepository repository){
+    public EditPersonalInfoPresenterImpl(DataRepository repository){
         mRepo = repository;
     }
 

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_vertical_margin">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/civ_header_icon"
+        android:layout_marginTop="@dimen/register_head_view_margin"
+        android:layout_marginBottom="@dimen/register_head_view_margin"
+        android:layout_width="@dimen/edit_head_icon_size"
+        android:layout_height="@dimen/edit_head_icon_size"
+        app:civ_border_color="@color/colorWhite"
+        android:layout_gravity="center"
+        android:clickable="true"
+        android:src="@drawable/ic_camera_grey_48dp" />
+
+    <RelativeLayout
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView android:id="@+id/name"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:text="@string/user_nick_name"
+            style="@style/RegisterTextView" />
+
+        <EditText
+            android:id="@+id/et_nick_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/name"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:hint="@string/prompt_name"
+            android:inputType="textPersonName"
+            android:maxLines="1"
+            android:textSize="@dimen/edit_text_size" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+        <TextView android:id="@+id/email"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:text="@string/user_email"
+            style="@style/RegisterTextView" />
+
+        <EditText
+            android:id="@+id/et_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/email"
+            android:layout_alignParentEnd="true"
+            android:hint="@string/prompt_email_register"
+            android:inputType="textEmailAddress"
+            android:textSize="@dimen/edit_text_size"
+            android:maxLines="1"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+        <TextView android:id="@+id/password"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:text="@string/user_password"
+            style="@style/RegisterTextView" />
+
+        <EditText
+            android:id="@+id/et_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/password"
+            android:layout_centerInParent="true"
+            android:layout_alignParentEnd="true"
+            android:hint="@string/prompt_password"
+            android:inputType="textPassword"
+            android:textSize="@dimen/edit_text_size"
+            android:maxLines="1" />
+    </RelativeLayout>
+
+</LinearLayout>

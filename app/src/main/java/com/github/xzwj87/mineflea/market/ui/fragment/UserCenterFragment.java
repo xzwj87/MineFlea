@@ -12,28 +12,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.amap.api.maps.model.Text;
 import com.github.xzwj87.mineflea.R;
-import com.github.xzwj87.mineflea.market.internal.di.HasComponent;
-import com.github.xzwj87.mineflea.market.internal.di.component.DaggerMarketComponent;
-import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.UserCenterPresenterImpl;
-import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.UserCenterView;
 import com.github.xzwj87.mineflea.market.ui.activity.LoginActivity;
+import com.github.xzwj87.mineflea.market.ui.activity.RegisterActivity;
 import com.github.xzwj87.mineflea.market.ui.activity.UserDetailActivity;
 import com.github.xzwj87.mineflea.market.ui.activity.UserGoodsActivity;
 import com.github.xzwj87.mineflea.market.ui.settings.SettingsActivity;
 import com.github.xzwj87.mineflea.utils.SharePrefsHelper;
-import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.net.URL;
 
 import javax.inject.Inject;
 
@@ -50,6 +43,7 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
     public static final String TAG = UserCenterFragment.class.getSimpleName();
 
     public static final int REQUEST_LOGIN = 1;
+    public static final int REQUEST_REGISTER = 2;
 
     @BindView(R.id.civ_user_header) CircleImageView mCivHeader;
     @BindView(R.id.header_container) LinearLayout mHeaderLayout;
@@ -98,8 +92,8 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
             intent.putExtra(UserInfo.CURRENT_USER,true);
             startActivity(intent);
         }else {
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            startActivityForResult(intent, REQUEST_LOGIN);
+            Intent intent = new Intent(getActivity(), RegisterActivity.class);
+            startActivityForResult(intent, REQUEST_REGISTER);
         }
     }
 
@@ -171,14 +165,12 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
 
     @OnClick({R.id.tv_favorite_goods,R.id.tv_published_goods,R.id.tv_settings})
     public void doAction(TextView tv){
-
+        int id = tv.getId();
         boolean login = SharePrefsHelper.getInstance(getContext()).getLoginState();
-        if(!login){
+        if(!login && id != R.id.tv_settings){
             showNeedLoginHint();
             return;
         }
-
-        int id = tv.getId();
 
         Intent intent = null;
         switch (id){

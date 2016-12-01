@@ -14,4 +14,40 @@
 
     <string-array name="dummy">dummy</string-array>
     <string-array name="dummy_values">dummy_values</string-array>
+
+    <string-array name="pref_colorList">
+        <item>Grey</item>
+        <item>Pink</item>
+        <item>Purple</item>
+        <item>Brown</item>
+        <item>Indigo</item>
+        <item>Blue</item>
+        <item>DeepOrange</item>
+        <item>Blue Grey</item>
+        <item>Teal</item>
+    </string-array>
+
+    <string-array name="pref_colorList_values">
+        <item>#424242</item>
+        <item>#E91E63</item>
+        <item>#9C27B0</item>
+        <item>#795548</item>
+        <item>#3F51B5</item>
+        <item>#2196F3</item>
+        <item>#FF5722</item>
+        <item>#607D8B</item>
+        <item>#009688</item>
+    </string-array>
+
+    <string-array name="color_list_dark_values">
+        <item>#212121</item>
+        <item>#C2185B</item>
+        <item>#7B1FA2</item>
+        <item>#5D4037</item>
+        <item>#303F9F</item>
+        <item>#1976D2</item>
+        <item>#E64A19</item>
+        <item>#455A64</item>
+        <item>#00796B</item>
+    </string-array>
 </resources>

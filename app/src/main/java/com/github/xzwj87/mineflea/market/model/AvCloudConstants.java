@@ -18,4 +18,6 @@ public interface AvCloudConstants {
 
     String AV_USER_FOLLOWERS = "follower";
     String AV_USER_FOLLOWEES = "followee";
+
+    String AV_UPDATE_TIME = "updatedAt";
 }

@@ -8,11 +8,12 @@
 
     <dimen name="input_text_size">16sp</dimen>
     <dimen name="edit_text_size">14sp</dimen>
+    <dimen name="dialog_input_text_size">14sp</dimen>
 
     <dimen name="drawable_padding">16dp</dimen>
     <dimen name="card_view_item_margin">16dp</dimen>
     <dimen name="card_view_title_size">24sp</dimen>
-    <dimen name="card_view_image_size">180dp</dimen>
+    <dimen name="card_view_image_size">210dp</dimen>
     <dimen name="card_view_text_size">14sp</dimen>
     <dimen name="card_view_layout_margin">16dp</dimen>
     <dimen name="rv_item_margin">8dp</dimen>
@@ -53,7 +54,6 @@
     <dimen name="settings_title_size">16sp</dimen>
     <dimen name="settings_summary_size">12sp</dimen>
 
-
     <dimen name="margin_top">20dp</dimen>
     <dimen name="poi_title_size">14sp</dimen>
     <dimen name="poi_field_size">14sp</dimen>
@@ -65,4 +65,24 @@
     <dimen name="width_title_leftImg">30dp</dimen>
     <dimen name="title_text_size">15sp</dimen>
     <dimen name="offset_title">5dp</dimen>
+    <dimen name="color_board_size_grid">48dp</dimen>
+    <dimen name="color_board_size">48dp</dimen>
+    <dimen name="image_view_pager_height">210dp</dimen>
+    <dimen name="goods_detail_title_size">24sp</dimen>
+    <dimen name="view_pager_margin">16dp</dimen>
+    <dimen name="goods_detail_item_margin">12dp</dimen>
+    <dimen name="goods_detail_icon_margin">72dp</dimen>
+    <dimen name="goods_detail_head_size">48dp</dimen>
+    <dimen name="login_text_size">14sp</dimen>
+    <dimen name="login_item_margin">12dp</dimen>
+    <dimen name="register_head_view_margin">30dp</dimen>
+    <dimen name="register_view_margin">12dp</dimen>
+    <dimen name="dialog_item_margin">12dp</dimen>
+    <dimen name="login_drawable_padding">8dp</dimen>
+    <dimen name="dialog_item_padding">24dp</dimen>
+    <dimen name="button_text_size">12sp</dimen>
+    <dimen name="goods_detail_name_size">14sp</dimen>
+    <dimen name="goods_detail_margin">12dp</dimen>
+    <dimen name="goods_detail_price_size">18sp</dimen>
+    <dimen name="goods_detail_text_size">14sp</dimen>
 </resources>

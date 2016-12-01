@@ -20,4 +20,16 @@
         <item>米</item>
         <item>千米</item>
     </string-array>
+
+    <string-array name="pref_colorList">
+        <item>银灰</item>
+        <item>粉红</item>
+        <item>紫色</item>
+        <item>棕色</item>
+        <item>靛蓝</item>
+        <item>蓝色</item>
+        <item>深橘</item>
+        <item>蓝灰</item>
+        <item>蓝绿</item>
+    </string-array>
 </resources>

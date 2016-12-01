@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -28,6 +29,7 @@ import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.presenter.EditPersonalInfoPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.EditPersonalInfoView;
 import com.github.xzwj87.mineflea.market.ui.dialog.UserInfoEditDialog;
+import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -90,6 +92,8 @@ public class EditPersonalInfoActivity extends BaseActivity
         }
 
         getComponent().inject(this);
+
+        ThemeColorUtils.changeThemeColor(this);
     }
 
     @Override
