@@ -4,6 +4,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.amap.api.maps.model.LatLng;
 import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
@@ -86,7 +87,7 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     }
 
     @Override
-    public void setLocation(String loc) {
+    public void setLocation(LatLng loc) {
         mGoodsInfo.setLocation(loc);
     }
 
