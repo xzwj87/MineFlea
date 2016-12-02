@@ -143,4 +143,6 @@
     <string name="error_register">Register Failure,please try it again!</string>
     <string name="previous_step">Previous Step</string>
     <string name="add_to_your_likes">Add To Your Likes</string>
+    <string name="progress_get_goods_detail">Loading...</string>
+    <string name="dist_units">km</string>
 </resources>

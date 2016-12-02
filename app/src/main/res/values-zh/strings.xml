@@ -113,6 +113,8 @@
     <string name="error_invalid_auth_code">无效验证码</string>
     <string name="error_register">注册失败</string>
     <string name="previous_step">上一步</string>
-    <string name="add_to_your_likes">Add To Your Likes</string>
+    <string name="add_to_your_likes">收藏</string>
+    <string name="progress_get_goods_detail">加载中&#8230;</string>
+    <string name="dist_units">km</string>
 
 </resources>

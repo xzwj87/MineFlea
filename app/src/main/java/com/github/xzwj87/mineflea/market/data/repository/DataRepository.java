@@ -36,8 +36,7 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
     public static final String TAG = DataRepository.class.getSimpleName();
 
     @Inject FileCacheImpl mCache;
-    @Inject
-    RemoteDataSource mCloudSrc;
+    @Inject RemoteDataSource mCloudSrc;
 
     private HashMap<String,PresenterCallback> mPresenterCbs;
 
@@ -154,6 +153,13 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
     }
 
     @Override
+    public void addToMyFavorites(PublishGoodsInfo goods) {
+        Log.v(TAG,"addToMyFavorites()");
+
+        mCloudSrc.favor(goods);
+    }
+
+    @Override
     public void getUserInfoById(String id) {
         if (mCache.isCached(id, FileCache.CACHE_TYPE_USER) &&
                 !mCache.isExpired(id, FileCache.CACHE_TYPE_USER)) {
@@ -189,6 +195,27 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
         }
 
         mCloudSrc.getAllGoods();
+    }
+
+    @Override
+    public void getGoodsInfoById(String goodsId) {
+        if(TextUtils.isEmpty(goodsId)) return;
+        PresenterCallback callback = mPresenterCbs.get(PRESENTER_GOODS_DETAIL);
+
+        if(mCache.isCached(goodsId,FileCache.CACHE_TYPE_GOODS) &&
+                !mCache.isExpired(goodsId,FileCache.CACHE_TYPE_GOODS)){
+            PublishGoodsInfo goodsInfo = mCache.getGoodsCache(goodsId);
+            final Message msg = new Message();
+            msg.obj = goodsInfo;
+            msg.what = ResponseCode.RESP_GET_GOODS_SUCCESS;
+
+            Log.v(TAG,"getGoodsInfoById()");
+            if(callback != null){
+                callback.onComplete(msg);
+            }
+        }else{
+            mCloudSrc.getGoodsById(goodsId);
+        }
     }
 
     @Override
@@ -276,7 +303,17 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
 
     @Override
     public void onGetGoodsInfoDone(Message msg) {
+        Log.v(TAG,"onGetGoodsInfoDone()");
 
+        //TODO: we may want to only do EXISTING CALLBACK
+        Iterator iterator = mPresenterCbs.entrySet().iterator();
+        while(iterator.hasNext()){
+            Map.Entry entry = (Map.Entry)iterator.next();
+            PresenterCallback callback = (PresenterCallback)entry.getValue();
+            if(callback != null){
+                callback.onComplete(msg);
+            }
+        }
     }
 
     @Override
@@ -371,11 +408,13 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
             user = (UserInfo) message.obj;
             String imgUrl = user.getHeadIconUrl();
             String imgName = URLUtil.guessFileName(imgUrl,null,null);
-            String cacheImg;
-            if(!mCache.isImageCached(imgName,FileCache.CACHE_TYPE_USER)){
-                cacheImg  = mCache.saveImgToFile(imgUrl,FileCache.CACHE_TYPE_USER);
-            }else{
-                cacheImg = mCache.getImageFilePath(imgName,FileCache.CACHE_TYPE_USER);
+            String cacheImg = null;
+            if(imgUrl != null) {
+                if (!mCache.isImageCached(imgName, FileCache.CACHE_TYPE_USER)) {
+                    cacheImg = mCache.saveImgToFile(imgUrl, FileCache.CACHE_TYPE_USER);
+                } else {
+                    cacheImg = mCache.getImageFilePath(imgName, FileCache.CACHE_TYPE_USER);
+                }
             }
 
             if(!mCache.isCached(user.getUserId(),FileCache.CACHE_TYPE_USER) ||

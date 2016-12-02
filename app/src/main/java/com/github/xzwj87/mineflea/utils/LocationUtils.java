@@ -9,7 +9,9 @@ import com.amap.api.maps.model.LatLng;
 
 public class LocationUtils {
 
-    public static double getDistance(LatLng l1,LatLng l2){
+    public static int getDistance(LatLng l1,LatLng l2){
+        if(l1 == null || l2 == null) return 0;
+
         double longDiff = l1.longitude - l2.longitude;
         double dist = Math.sin(degToRad(l1.latitude) * degToRad(l2.latitude) +
                     Math.cos(degToRad(l1.latitude)) * Math.cos(degToRad(l2.latitude)) * Math.cos(degToRad(longDiff)));
@@ -18,7 +20,7 @@ public class LocationUtils {
         // convert it to kilometer
         dist *= 1.609344;
 
-        return dist;
+        return (int)dist;
     }
 
     private static double degToRad(double deg){

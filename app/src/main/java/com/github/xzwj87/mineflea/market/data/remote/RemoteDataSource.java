@@ -133,7 +133,7 @@ public class RemoteDataSource implements RemoteSource{
                     message.what = ResponseCode.RESP_GET_GOODS_ERROR;
                 }
 
-                mCloudCallback.onGetUserInfoDone(message);
+                mCloudCallback.onGetGoodsInfoDone(message);
             }
         });
     }

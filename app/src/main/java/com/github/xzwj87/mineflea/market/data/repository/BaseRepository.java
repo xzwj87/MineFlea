@@ -66,11 +66,15 @@ public interface BaseRepository {
      */
     UserInfo getCurrentUser();
 
-
     /*
      * update current user info
      */
     void updateCurrentUserInfo(String key, String val);
+
+    /*
+     * add a goods to my favorite list
+     */
+    void addToMyFavorites(PublishGoodsInfo goodsInfo);
 
     /*
      * get user info by id
@@ -81,6 +85,12 @@ public interface BaseRepository {
      * get all goods
      */
     void getAllGoods();
+
+
+    /*
+     * get goods info by id
+     */
+    void getGoodsInfoById(String goodsId);
 
     /*
      * get goods list by user id
