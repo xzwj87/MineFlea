@@ -108,7 +108,7 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
         Log.v(TAG,"onActivityResult(): result = " + result);
 
         switch (request){
-            case REQUEST_LOGIN:
+            case REQUEST_REGISTER:
                 if(result == Activity.RESULT_OK && data != null) {
 
                     String nickName = data.getStringExtra(UserInfo.USER_NICK_NAME);

@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
  * Created by jason on 11/26/16.
  */
 @RunWith(AndroidJUnit4.class)
-@SmallTest
+@android.support.test.filters.SmallTest
 public class UserInfoUtilsTest {
 
     @Test

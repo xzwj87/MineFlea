@@ -317,11 +317,12 @@ public class RemoteDataSource implements RemoteSource{
                     msg.obj = UserInfoUtils.fromAvUser(avUser);
                 }
 
-                mCloudCallback.loginComplete(msg);
+                mCloudCallback.registerComplete(msg);
             }
         });
     }
 
+    //TODO: remove
     @Override
     public void registerBySms(String telNumber, String smsCode) {
         Log.v(TAG,"registerBySms()");

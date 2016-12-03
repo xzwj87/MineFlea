@@ -7,7 +7,6 @@ import android.os.Message;
  */
 
 public interface  RegisterPresenter extends BasePresenter{
-    void register();
 
     void setUserNickName(String name);
 

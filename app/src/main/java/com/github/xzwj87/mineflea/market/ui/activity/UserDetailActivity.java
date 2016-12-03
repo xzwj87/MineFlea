@@ -1,6 +1,7 @@
 package com.github.xzwj87.mineflea.market.ui.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.UserDetailPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.UserDetailView;
 import com.github.xzwj87.mineflea.market.ui.adapter.UserDetailPageAdapter;
+import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;

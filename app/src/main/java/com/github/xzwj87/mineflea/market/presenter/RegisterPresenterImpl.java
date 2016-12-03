@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.github.xzwj87.mineflea.app.AppGlobals;
+import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
@@ -45,18 +46,6 @@ public class RegisterPresenterImpl implements RegisterPresenter{
     }
 
     @Override
-    public void register() {
-        Log.v(TAG,"register()");
-        if(!TextUtils.isEmpty(mUserInfo.getHeadIconUrl())) {
-            mRepository.uploadImageById(mUserInfo.getUserId(),
-                    mUserInfo.getHeadIconUrl(),true,false);
-            //mRepository.uploadImage(mUserInfo.getHeadIconUrl(), false);
-        }
-
-        mRepository.register(mUserInfo);
-    }
-
-    @Override
     public void setUserNickName(String name) {
         mUserInfo.setNickName(name);
     }
@@ -75,6 +64,7 @@ public class RegisterPresenterImpl implements RegisterPresenter{
 
     @Override
     public void setUserIconUrl(String url) {
+        Log.v(TAG,"setUserIconUrl(): " + url);
         mUserInfo.setHeadIconUrl(url);
     }
 
@@ -128,7 +118,7 @@ public class RegisterPresenterImpl implements RegisterPresenter{
     public void signUpBySms() {
         Log.v(TAG,"signUpBySms()");
         if(!TextUtils.isEmpty(mAuthCode)) {
-            mRepository.loginBySms(mPhoneNumber, mAuthCode);
+            mRepository.registerBySms(mPhoneNumber, mAuthCode);
             return;
         }
         throw new IllegalArgumentException("auth code should not be empty");
@@ -178,20 +168,34 @@ public class RegisterPresenterImpl implements RegisterPresenter{
 
         @Override
         public void onComplete(Message message) {
-            Log.v(TAG,"onComplete(): id = " + (String)message.obj);
+            Log.v(TAG,"onComplete(): id = " + message.obj);
 
-            if(message.obj != null){
-                mView.onRegisterComplete(true);
-                mUserInfo.setUserId(((UserInfo)message.obj).getUserId());
-                // now we are sign up
-                SharePrefsHelper.getInstance(AppGlobals.getAppContext())
-                        .updateLogState(true);
-            }else {
-                mView.onRegisterComplete(false);
+            int response = message.what;
+            switch (response) {
+                case ResponseCode.RESP_REGISTER_SUCCESS:
+                    if (message.obj != null) {
+                        mView.onLoginBySmsComplete(true);
+                        mUserInfo.setUserId(((UserInfo) message.obj).getUserId());
+                        // now we are sign up
+                        SharePrefsHelper.getInstance(AppGlobals.getAppContext())
+                                .updateLogState(true);
+                    } else {
+                        mView.onLoginBySmsComplete(false);
+                    }
+                    saveUserInfo();
+                    break;
+                case ResponseCode.RESP_REGISTER_FAIL:
+                    mView.onLoginBySmsComplete(false);
+                    break;
+                case ResponseCode.RESP_IMAGE_UPLOAD_SUCCESS:
+                case ResponseCode.RESP_IMAGE_UPLOAD_ERROR:
+                    mView.onRegisterComplete(true);
+                    break;
+                default:
+                    break;
             }
 
-            saveUserInfo();
-            mView.finishView();
+            //mView.finishView();
         }
 
         @Override

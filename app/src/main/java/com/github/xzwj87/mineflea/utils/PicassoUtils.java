@@ -1,6 +1,7 @@
 package com.github.xzwj87.mineflea.utils;
 
 import android.content.Context;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.webkit.URLUtil;
 import android.widget.ImageView;
@@ -26,9 +27,9 @@ public class PicassoUtils {
                    .centerCrop()
                    .into(iv);
         // from file
-        }else if(URLUtil.isFileUrl(imgUrl)){
+        }else{
             Picasso.with(AppGlobals.getAppContext())
-                    .load(new File(imgUrl))
+                    .load(Uri.fromFile(new File(imgUrl)))
                     .resize(1024,1024)
                     .centerCrop()
                     .into(iv);

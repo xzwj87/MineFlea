@@ -74,7 +74,7 @@
     <string name="error_invalid_input">此选项不能为空</string>
     <string name="user_intro">简介</string>
     <string name="user_email">邮箱</string>
-    <string name="user_tel_number">手机号码</string>
+    <string name="user_tel_number">手机号</string>
     <string name="say_something_about_yourself">简要的介绍自己</string>
     <string name="settings_about">关于</string>
     <string name="settings_about_sum">了解MineFlea</string>
@@ -116,5 +116,7 @@
     <string name="add_to_your_likes">收藏</string>
     <string name="progress_get_goods_detail">加载中&#8230;</string>
     <string name="dist_units">km</string>
+    <string name="error_wrong_auth_code">验证码错误</string>
+    <string name="sms_auth_code">验证码</string>
 
 </resources>

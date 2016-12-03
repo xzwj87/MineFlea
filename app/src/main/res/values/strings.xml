@@ -121,6 +121,7 @@
     <string name="selected_color">selected_color</string>
     <string name="key_pref_theme_color">key_pref_theme_color</string>
     <string name="color_indigo">#3F51B5</string>
+    <string name="color_primary">#3F51B5</string>
     <string name="get_goods_list_sucess">Refresh Success</string>
     <string name="forget_password">Forget Password?</string>
     <string name="tel_number_china">+86</string>
@@ -145,4 +146,6 @@
     <string name="add_to_your_likes">Add To Your Likes</string>
     <string name="progress_get_goods_detail">Loading...</string>
     <string name="dist_units">km</string>
+    <string name="error_wrong_auth_code">Wrong Authetification Code</string>
+    <string name="sms_auth_code">Authetification Code</string>
 </resources>

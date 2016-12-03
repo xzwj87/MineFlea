@@ -111,7 +111,7 @@ public class FileCacheImpl implements FileCache{
     @Override
     public boolean isImageCached(String imgName, @CacheType String type) {
         if(TextUtils.isEmpty(imgName)){
-            return false;
+            return true;
         }
 
         File file = buildImageFile(imgName,type);

@@ -23,7 +23,7 @@
         <TextView android:id="@+id/tv_tel_country_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tel_number_china"
+            android:text="@string/user_tel_number"
             android:textColor="@color/colorDarkGrey"
             android:layout_marginEnd="@dimen/dialog_item_margin"
             android:textSize="@dimen/edit_text_size"/>
@@ -53,18 +53,15 @@
         android:layout_below="@id/input_tel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:visibility="gone"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tel_number_china"
+            android:text="@string/sms_auth_code"
             android:textColor="@color/colorDarkGrey"
             android:layout_marginEnd="@dimen/dialog_item_margin"
-            android:textSize="@dimen/edit_text_size"
-            android:visibility="invisible"/>
+            android:textSize="@dimen/edit_text_size" />
 
         <EditText
             android:id="@+id/et_input_auth_code"
@@ -72,20 +69,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/prompt_input_auth_code"
-            android:visibility="invisible"
             android:layout_weight="1"
             android:inputType="number"
             android:textSize="@dimen/edit_text_size" />
-
-        <TextView
-            android:text="@string/send_auth_code"
-            android:layout_marginStart="@dimen/register_view_margin"
-            android:background="@drawable/item_rect_background_grey"
-            android:textColor="@color/colorDarkGrey"
-            android:textSize="@dimen/button_text_size"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="invisible"/>
     </LinearLayout>
 
 

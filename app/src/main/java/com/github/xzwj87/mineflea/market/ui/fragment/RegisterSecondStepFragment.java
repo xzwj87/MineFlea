@@ -3,6 +3,7 @@ package com.github.xzwj87.mineflea.market.ui.fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -73,9 +74,7 @@ public class RegisterSecondStepFragment extends BaseFragment{
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-        inflater.inflate(R.menu.menu_register,menu);
-        MenuItem item = menu.findItem(R.menu.menu_register);
-        item.setTitle(R.string.button_ok);
+        inflater.inflate(R.menu.menu_register_done,menu);
 
         super.onCreateOptionsMenu(menu,inflater);
     }
@@ -87,25 +86,13 @@ public class RegisterSecondStepFragment extends BaseFragment{
             case android.R.id.home:
                 getActivity().finish();
                 return true;
-            case R.id.next_step:
+            case R.id.menu_ok:
                 // ok, register it
                 mPresenter.setUserNickName(mEtName.getText().toString());
                 mPresenter.setUserEmail(mEtName.getText().toString());
                 mPresenter.setUserPwd(mEtPwd.getText().toString());
                 if(mPresenter.validUserInfo()){
-                    mPresenter.signUpBySms();
-
-                    Bundle bundle = new Bundle();
-                    bundle.putString(UserInfo.USER_HEAD_ICON, mPresenter.getUserIconUrl());
-                    bundle.putString(UserInfo.UER_EMAIL, mEtEmail.getText().toString());
-                    bundle.putString(UserInfo.USER_NAME, mEtEmail.getText().toString());
-                    bundle.putString(UserInfo.USER_NICK_NAME, mEtName.getText().toString());
-                    bundle.putString(UserInfo.USER_PWD, mEtPwd.getText().toString());
-
-                    Intent intent = new Intent();
-                    intent.putExtras(bundle);
-
-                    getActivity().setResult(RESULT_OK, intent);
+                    //mPresenter.signUpBySms();
                     // must do this
                     mPresenter.updateUserInfo();
                 }
@@ -120,7 +107,8 @@ public class RegisterSecondStepFragment extends BaseFragment{
 
     @Override
     public void onActivityResult(int request, int result, Intent data){
-        Log.v(TAG,"onActivityResult(): result = " + result);
+        Log.v(TAG,"onActivityResult(): result = ");
+
 
         if(result == RESULT_OK && data != null){
             switch (request){
@@ -146,13 +134,36 @@ public class RegisterSecondStepFragment extends BaseFragment{
                 .setPreviewEnabled(true)
                 .setShowCamera(true)
                 .setShowGif(true)
-                .start(getActivity(),PhotoPicker.REQUEST_CODE);
+                .start(getActivity(),this,PhotoPicker.REQUEST_CODE);
 
     }
 
 
 
     private class RegisterViewImpl extends RegisterView {
+
+        public void onLoginBySmsComplete(boolean success){
+            Log.v(TAG,"onLoginBySmsComplete()");
+            // try it again
+        }
+
+        public void onRegisterComplete(boolean success){
+            Log.v(TAG,"onRegisterComplete()");
+            // now we back to parent
+            if(success) {
+                setResult();
+            }else{
+                FragmentManager fragmentMgr = getActivity().getSupportFragmentManager();
+                RegisterFragment fragment = (RegisterFragment)fragmentMgr.findFragmentByTag(RegisterFragment.TAG);
+                if(fragment == null){
+                    fragment = RegisterFragment.newInstance();
+                }
+
+                fragmentMgr.beginTransaction()
+                        .replace(R.id.fragment_container,fragment,RegisterFragment.TAG)
+                        .commit();
+            }
+        }
 
         @Override
         public void showNameInvalidMsg() {
@@ -191,5 +202,19 @@ public class RegisterSecondStepFragment extends BaseFragment{
         public void finishView() {
             getActivity().finish();
         }
+    }
+
+    private void setResult(){
+        Bundle bundle = new Bundle();
+        bundle.putString(UserInfo.USER_HEAD_ICON, mPresenter.getUserIconUrl());
+        bundle.putString(UserInfo.UER_EMAIL, mEtEmail.getText().toString());
+        bundle.putString(UserInfo.USER_NAME, mEtEmail.getText().toString());
+        bundle.putString(UserInfo.USER_NICK_NAME, mEtName.getText().toString());
+        bundle.putString(UserInfo.USER_PWD, mEtPwd.getText().toString());
+
+        Intent intent = new Intent();
+        intent.putExtras(bundle);
+
+        getActivity().setResult(RESULT_OK, intent);
     }
 }
