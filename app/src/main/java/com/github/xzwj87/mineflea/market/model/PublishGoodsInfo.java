@@ -1,7 +1,5 @@
 package com.github.xzwj87.mineflea.market.model;
 
-import com.avos.avoscloud.AVObject;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +17,8 @@ public class PublishGoodsInfo {
     public static final String GOODS_UPDATED_TIME = "updated_time";
     public static final String GOODS_RELEASE_DATE = "release_date";
     public static final String GOODS_LOC = "location";
+    public static final String GOODS_LAT = "lat";//纬度
+    public static final String GOODS_LNG = "lng";//经度
     public static final String GOODS_LIKES = "likes";
     public static final String GOODS_IMAGES = "images";
     public static final String GOODS_NOTE = "note";
@@ -41,6 +41,10 @@ public class PublishGoodsInfo {
     private Date mUpdateTime;
 
     private String mLoc;
+
+    private double mLng;//经度
+
+    private double mLat;//纬度
 
     private List<String> mImageUri;
     //users who likes me
@@ -67,6 +71,20 @@ public class PublishGoodsInfo {
         mName = name;
         mUserId = userId;
         mPrice = price;
+
+        mReleasedDate = new Date();
+        mUpdateTime = new Date();
+        mImageUri = new ArrayList<>();
+        mFavorUserList = new ArrayList<>();
+    }
+
+    public PublishGoodsInfo(String id, String name, String userId, double price, double lat, double lng){
+        mId = id;
+        mName = name;
+        mUserId = userId;
+        mPrice = price;
+        mLat = lat;
+        mLng = lng;
 
         mReleasedDate = new Date();
         mUpdateTime = new Date();
@@ -173,6 +191,21 @@ public class PublishGoodsInfo {
         mFavorUserList.remove(id);
     }
 
+    public double getLng(){
+        return mLng;
+    }
+
+    public void setLng(double l){
+        this.mLng = l;
+    }
+
+    public double getLat(){
+        return mLat;
+    }
+
+    public void setLat(double l){
+        this.mLat = l;
+    }
 
     @Override
     public String toString(){

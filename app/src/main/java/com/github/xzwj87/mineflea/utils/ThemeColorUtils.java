@@ -1,7 +1,6 @@
 package com.github.xzwj87.mineflea.utils;
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -12,7 +11,6 @@ import android.text.TextUtils;
 
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
-import com.github.xzwj87.mineflea.market.ui.activity.UserDetailActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,8 +64,8 @@ public class ThemeColorUtils {
 
         int ind = sThemeColorList.indexOf(color);
         if(ind != -1){
-            activity.getWindow().setStatusBarColor(
-                    Color.parseColor(sThemeDarkColorList.get(ind)));
+            //activity.getWindow().setStatusBarColor(
+                    //Color.parseColor(sThemeDarkColorList.get(ind)));
         }
     }
 

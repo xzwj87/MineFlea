@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.api.services.core.AMapException;
+import com.github.xzwj87.mineflea.app.AppGlobals;
 
 public class ToastUtil {
 	
@@ -52,7 +53,11 @@ public class ToastUtil {
 	public static void show(Context context, int info) {
 		Toast.makeText(context, info, Toast.LENGTH_LONG).show();
 	}
-	
+
+    public static void showToast(String str){
+        Toast.makeText(AppGlobals.getAppContext(), str, Toast.LENGTH_SHORT).show();
+    }
+
 	public static void showerror(Context context, int rCode){
 	    try {
 	        switch (rCode) {

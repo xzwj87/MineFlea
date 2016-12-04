@@ -52,6 +52,9 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.model.NearbyGoodsInfo;
+import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
+import com.github.xzwj87.mineflea.market.presenter.NearbyGoodsPresenterImpl;
+import com.github.xzwj87.mineflea.market.ui.NearbyGoodsView;
 import com.github.xzwj87.mineflea.market.ui.activity.HomeActivity;
 import com.github.xzwj87.mineflea.market.ui.activity.NearbyGoodsActivity;
 import com.github.xzwj87.mineflea.market.ui.alimap.BusResultListAdapter;
@@ -60,22 +63,26 @@ import com.github.xzwj87.mineflea.market.ui.alimap.DrivingRouteOverLay;
 import com.github.xzwj87.mineflea.market.ui.alimap.WalkRouteDetailActivity;
 import com.github.xzwj87.mineflea.utils.AMapUtil;
 import com.github.xzwj87.mineflea.utils.Constants;
-import com.github.xzwj87.mineflea.utils.NearbyProtocol;
 import com.github.xzwj87.mineflea.utils.ToastUtil;
 import com.github.xzwj87.mineflea.utils.UiUtils;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
 //Created by jason on 10/9/16.
-public class NearbyTabFragment extends BaseFragment implements View.OnClickListener, AMap.OnMarkerClickListener,
+public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, View.OnClickListener, AMap.OnMarkerClickListener,
         AMap.OnInfoWindowClickListener, AMap.OnMarkerDragListener, AMap.OnMapLoadedListener, AMap.InfoWindowAdapter, LocationSource,
         AMapLocationListener, RouteSearch.OnRouteSearchListener, AMap.OnMapClickListener {
     public static final String TAG = "[NearbyTabFragment]";
+
+    @Inject
+    NearbyGoodsPresenterImpl mPresenter;
 
     private AMap aMap;
 
@@ -87,19 +94,32 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
     private final int ROUTE_TYPE_WALK = 3;
     private final int ROUTE_TYPE_CROSSTOWN = 4;
 
-    @BindView(R.id.map) MapView mapView;
-    @BindView(R.id.bottom_layout) RelativeLayout mBottomLayout;
-    @BindView(R.id.bus_result) LinearLayout mBusResultLayout;
-    @BindView(R.id.firstline) TextView mRotueTimeDes;
-    @BindView(R.id.secondline) TextView mRouteDetailDes;
-    @BindView(R.id.route_drive) ImageView mDrive;
-    @BindView(R.id.route_bus) ImageView mBus;
-    @BindView(R.id.route_walk) ImageView mWalk;
-    @BindView(R.id.route_CrosstownBus) TextView mCrossBus;
-    @BindView(R.id.bus_result_list) ListView mBusResultList;
-    @BindView(R.id.fam_search) FloatingActionButton fam_search;
-    @BindView(R.id.fam_reset) FloatingActionButton fam_reset;
-    @BindView(R.id.multiple_actions_left) FloatingActionsMenu fam_menu;
+    @BindView(R.id.map)
+    MapView mapView;
+    @BindView(R.id.bottom_layout)
+    RelativeLayout mBottomLayout;
+    @BindView(R.id.bus_result)
+    LinearLayout mBusResultLayout;
+    @BindView(R.id.firstline)
+    TextView mRotueTimeDes;
+    @BindView(R.id.secondline)
+    TextView mRouteDetailDes;
+    @BindView(R.id.route_drive)
+    ImageView mDrive;
+    @BindView(R.id.route_bus)
+    ImageView mBus;
+    @BindView(R.id.route_walk)
+    ImageView mWalk;
+    @BindView(R.id.route_CrosstownBus)
+    TextView mCrossBus;
+    @BindView(R.id.bus_result_list)
+    ListView mBusResultList;
+    @BindView(R.id.fam_search)
+    FloatingActionButton fam_search;
+    @BindView(R.id.fam_reset)
+    FloatingActionButton fam_reset;
+    @BindView(R.id.multiple_actions_left)
+    FloatingActionsMenu fam_menu;
 
     private ProgressDialog progDialog = null;// 搜索时进度条
 
@@ -120,7 +140,8 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
     private EditText etSearchDis;
     private Spinner spinner;
 
-    private List<NearbyGoodsInfo> list;
+    private List<PublishGoodsInfo> list;
+    //private List<NearbyGoodsInfo> list;
     private BroadcastReceiver receiver;
 
     private static final int KM = 1;
@@ -133,7 +154,18 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
     private AMapLocation mCurrentAmapLocation;
 
     @Override
-    public void onMapClick(LatLng latLng) {}
+    public void onMapClick(LatLng latLng) {
+    }
+
+    @Override
+    public void finishView() {
+    }
+
+    @Override
+    public void updateMarkerDisplay(List<PublishGoodsInfo> list) {
+        this.list = list;
+        addMarkersToMap();
+    }
 
     //广播接收器
     private class Receiver extends BroadcastReceiver {
@@ -152,7 +184,9 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedSate) {
         View root = inflater.inflate(R.layout.fragment_nearby_tab, container, false);
-        ButterKnife.bind(this,root);
+        ButterKnife.bind(this, root);
+        mPresenter.setView(this);
+        mPresenter.init();
         mapView = (MapView) root.findViewById(R.id.map);
         mapView.onCreate(savedSate);
         initView(root);
@@ -162,9 +196,10 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
 
     //加载数据
     private void loadData() {
-        NearbyProtocol protocol = new NearbyProtocol();
-        list = protocol.loadNearbyData();
-        addMarkersToMap();
+        //NearbyProtocol protocol = new NearbyProtocol();
+        //list = protocol.loadNearbyData();
+        //addMarkersToMap();
+        mPresenter.loadDataFromServer();
     }
 
     private void initView(View root) {
@@ -272,7 +307,8 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
         });
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
-            public void onDismiss(DialogInterface dialog) {}
+            public void onDismiss(DialogInterface dialog) {
+            }
         });
         dialog.show();
     }
@@ -294,12 +330,12 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
                 break;
             case R.id.fam_reset:
                 fam_menu.toggle();
-                ToastUtil.show(AppGlobals.getAppContext(),"clear_map");
+                ToastUtil.show(AppGlobals.getAppContext(), "clear_map");
                 resetMap();
                 break;
             case R.id.fam_search:
                 fam_menu.toggle();
-                ToastUtil.show(AppGlobals.getAppContext(),"fam_search");
+                ToastUtil.show(AppGlobals.getAppContext(), "fam_search");
                 showSearchDialog();
                 break;
             default:
@@ -352,7 +388,7 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
 
     //开始搜索路径规划方案
     public void searchRouteResult(int routeType, int mode) {
-        mStartPoint = new LatLonPoint(myLocation.latitude,myLocation.longitude);
+        mStartPoint = new LatLonPoint(myLocation.latitude, myLocation.longitude);
         if (mStartPoint == null) {
             ToastUtil.show(AppGlobals.getAppContext(), "起点未设置");
             return;
@@ -382,7 +418,8 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
         }
     }
 
-    public NearbyTabFragment() {}
+    public NearbyTabFragment() {
+    }
 
     public static NearbyTabFragment newInstance() {
         NearbyTabFragment fragment = new NearbyTabFragment();
@@ -391,9 +428,16 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
 
     //添加地图覆盖物
     private void addMarkersToMap() {
-        for (NearbyGoodsInfo info : list) {
+        if (list == null) {
+            ToastUtil.showToast("附近没有数据");
+            return;
+        }
+        if (list.size() <= 0)
+            return;
+        for (PublishGoodsInfo info : list) {
+            LatLng pos = new LatLng(info.getLng(), info.getLat());
             MarkerOptions options = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                    .title(info.getName()).position(info.getLatlng()).draggable(true);
+                    .title(info.getName()).position(pos).draggable(true);
             Marker marker = aMap.addMarker(options);
             marker.setObject(info);
         }
@@ -405,14 +449,15 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
         if (aMap != null) {
             aMap.clear();
             //markerLy.setVisibility(View.INVISIBLE);
-            for (NearbyGoodsInfo info : list) {
-                double l = UiUtils.getDistanceM(myLocation, info.getLatlng());
+            for (PublishGoodsInfo info : list) {
+                LatLng pos = new LatLng(info.getLng(), info.getLat());
+                double l = UiUtils.getDistanceM(myLocation, pos);
                 if (select == KM) {
-                    l = UiUtils.getDistanceKm(myLocation, info.getLatlng());
+                    l = UiUtils.getDistanceKm(myLocation, pos);
                 }
                 if (l <= dis) {
                     MarkerOptions options = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                            .title(info.getName()).position(info.getLatlng()).draggable(true);
+                            .title(info.getName()).position(pos).draggable(true);
                     Marker marker = aMap.addMarker(options);
                     marker.setObject(info);
                 }
@@ -540,7 +585,7 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
         getLocation();
     }
 
-    private void getLocation(){
+    private void getLocation() {
         if (mlocationClient == null) {
             mlocationClient = new AMapLocationClient(AppGlobals.getAppContext());
             //设置定位监听
@@ -592,6 +637,7 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
     public void onPause() {
         super.onPause();
         mapView.onPause();
+        mPresenter.onPause();
     }
 
     //方法必须重写
@@ -607,6 +653,7 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
         super.onDestroy();
         mapView.onDestroy();
         unRegisterReceiver();
+        mPresenter.onDestroy();
     }
 
     @Override
@@ -734,7 +781,8 @@ public class NearbyTabFragment extends BaseFragment implements View.OnClickListe
     }
 
     @Override
-    public void onRideRouteSearched(RideRouteResult rideRouteResult, int i) {}
+    public void onRideRouteSearched(RideRouteResult rideRouteResult, int i) {
+    }
 
     //显示进度框
     private void showProgressDialog() {
