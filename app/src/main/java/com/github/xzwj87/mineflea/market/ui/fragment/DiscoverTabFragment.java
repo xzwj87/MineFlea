@@ -46,8 +46,7 @@ public class DiscoverTabFragment extends BaseFragment
     public static final String TAG = DiscoverTabFragment.class.getSimpleName();
 
     private DiscoverGoodsAdapter mRvAdapter;
-    @Inject
-    DiscoverGoodsPresenterImpl mPresenter;
+    @Inject DiscoverGoodsPresenterImpl mPresenter;
 
     @BindView(R.id.discover_recycler_view)
     RecyclerView mRvDiscover;

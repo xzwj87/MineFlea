@@ -77,8 +77,8 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
     }
 
     @Override
-    public void loginBySms(String telNumber, String authCode) {
-        mCloudSrc.loginBySms(telNumber,authCode);
+    public void loginBySms(String telNumber, String pwd) {
+        mCloudSrc.loginBySms(telNumber,pwd);
     }
 
     @Override
@@ -93,7 +93,13 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
     }
 
     @Override
-    public void resetPwdByAccount(String account) {
+    public void resetPwdBySms(String authCode, String newPwd) {
+        Log.v(TAG,"resetPwdBySms()");
+        mCloudSrc.resetPwdBySms(authCode,newPwd);
+    }
+
+    @Override
+    public void getAuthCodeByAccount(String account) {
         if(UserInfoUtils.isTelNumberValid(account)){
             mCloudSrc.sendResetPwdBySms(account);
         }else{
@@ -122,9 +128,8 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
 
         if(!mCache.isCached(id,type)){
             mCache.saveImgToFile(imgUri,type);
+            mCloudSrc.uploadImg(imgUri,showProcess);
         }
-
-        mCloudSrc.uploadImg(imgUri,showProcess);
     }
 
     @Override
@@ -146,8 +151,8 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
     public void updateCurrentUserInfo(String key, String val) {
         mCloudSrc.updateCurrentUserInfo(key,val);
 
-        if(mCache.isExpired(getCurrentUserId(),FileCache.CACHE_TYPE_USER)
-            && mCache.isCached(getCurrentUserId(),FileCache.CACHE_TYPE_USER)){
+        if(mCache.isCached(getCurrentUserId(),FileCache.CACHE_TYPE_USER) &&
+                mCache.isExpired(getCurrentUserId(),FileCache.CACHE_TYPE_USER)){
             mCache.updateFile(getCurrentUser());
         }
     }
@@ -353,6 +358,15 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
         PresenterCallback callback = mPresenterCbs.get(PRESENTER_LOGIN);
         if(callback != null){
             callback.onComplete(message);
+        }
+    }
+
+    @Override
+    public void onResetPwdBySms(Message msg) {
+        Log.v(TAG,"onResetPwdBySms()");
+        PresenterCallback callback = mPresenterCbs.get(PRESENTER_LOGIN);
+        if(callback != null){
+            callback.onComplete(msg);
         }
     }
 

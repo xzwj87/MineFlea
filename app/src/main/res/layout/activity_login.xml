@@ -82,23 +82,17 @@
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/action_sign_in"
+        android:text="@string/button_ok"
         android:textColor="@color/white"
         android:background="@color/colorLightGrey" />
 
-    <RelativeLayout
+    <TextView android:id="@+id/tv_forget_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/login_item_margin">
-
-        <TextView android:id="@+id/tv_forget_password"
-            android:layout_alignParentStart="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/login_text_size"
-            android:text="@string/forget_password"
-            android:textColor="@color/colorLightGrey"
-            android:background="@drawable/edit_item_selected_background"
-            android:drawableStart="@drawable/ic_arrow_right_grey_24dp"/>
-    </RelativeLayout>
+        android:textSize="@dimen/login_text_size"
+        android:text="@string/forget_password"
+        android:textColor="@color/colorLightGrey"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/goods_item_margin"
+        android:background="@drawable/edit_item_selected_background" />
 </LinearLayout>

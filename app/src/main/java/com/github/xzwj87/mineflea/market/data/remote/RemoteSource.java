@@ -46,4 +46,6 @@ public interface RemoteSource extends DataSource {
     void sendResetPwdEmail(String emailAddress);
 
     void sendResetPwdBySms(String telNumber);
+
+    void resetPwdBySms(String authCode,String newPwd);
 }

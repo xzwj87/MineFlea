@@ -22,6 +22,4 @@ public abstract class RegisterView implements BaseView{
     public void showPwdInvalidMsg(){}
 
     public void showHeadIconNullMsg(){}
-
-    public void showProgress(){}
 }

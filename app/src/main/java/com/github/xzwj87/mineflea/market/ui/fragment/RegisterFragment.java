@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.annotation.DimenRes;
+import android.support.annotation.Dimension;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -123,6 +125,11 @@ public class RegisterFragment extends BaseFragment{
                     mEtInputAuthCode.setError(getString(R.string.error_invalid_auth_code));
                 }
 
+                if(mDownTimer != null) {
+                    mDownTimer.onFinish();
+                    mDownTimer.cancel();
+                }
+
                 return true;
         }
 
@@ -157,21 +164,6 @@ public class RegisterFragment extends BaseFragment{
         startActivityForResult(intent,REQUEST_LOGIN);
     }
 
-    @OnFocusChange({R.id.et_input_auth_code})
-    public void onFocusChanged(View view,boolean hasFocus){
-        int id = view.getId();
-        switch (id){
-            case R.id.et_input_auth_code:
-                if(mDownTimer != null) {
-                    mDownTimer.onFinish();
-                    mDownTimer.cancel();
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
     @OnTextChanged(value = R.id.et_tel_number,callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     public void onTelNumberChanged(Editable editable){
         String tel = editable.toString();
@@ -190,17 +182,21 @@ public class RegisterFragment extends BaseFragment{
 
     private void startCountDown(){
         sIsTimerStarted = true;
-        mTvGetAuthCode.setText("     " + String.valueOf(MAX_COUNTS) + "     ");
+        final String orig = mTvGetAuthCode.getText().toString();
+        //float textSize = getResources().getDimension(R.dimen.button_text_size_small);
+        //mTvGetAuthCode.setTextSize(Dimension.SP,textSize);
+        mTvGetAuthCode.setText(orig + "(" + String.valueOf(MAX_COUNTS) + ")");
         mDownTimer = new CountDownTimer(MAX_COUNT_DOWN_MS, COUNT_DOWN_INTERVAL) {
             @Override
             public void onTick(long millisUntilFinished) {
-                mTvGetAuthCode.setText("     " +
-                        String.valueOf(millisUntilFinished/COUNT_DOWN_INTERVAL) + "     ");
+                mTvGetAuthCode.setText(orig + "(" +
+                        String.valueOf(millisUntilFinished/COUNT_DOWN_INTERVAL) + ")");
             }
 
             @Override
             public void onFinish() {
                 mTvGetAuthCode.setText(R.string.send_auth_code);
+                sIsTimerStarted = false;
             }
         }.start();
     }

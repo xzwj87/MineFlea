@@ -46,7 +46,7 @@ public class PicassoUtils {
                     .centerCrop()
                     .into(iv);
             // from file
-        }else if(URLUtil.isFileUrl(imgUrl)){
+        }else{
             Picasso.with(context)
                     .load(new File(imgUrl))
                     .resize(1024,1024)

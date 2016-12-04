@@ -26,5 +26,7 @@ public interface  LoginPresenter extends BasePresenter{
 
     String getHeadIconUrl();
 
-    void resetPwdByAccount(String account);
+    void sendAuthCodeByAccount(String account);
+
+    void resetPwdBySms(String authCode,String newPwd);
 }

@@ -33,8 +33,6 @@ public class RegisterPresenterImpl implements RegisterPresenter{
     private String mPhoneNumber;
     private String mAuthCode;
 
-    private static boolean sIsUserDataSaved = false;
-
     @Inject
     public RegisterPresenterImpl(DataRepository repository){
         mRepository = repository;
@@ -51,6 +49,11 @@ public class RegisterPresenterImpl implements RegisterPresenter{
     }
 
     @Override
+    public String getUserNickName() {
+        return mUserInfo.getNickName();
+    }
+
+    @Override
     public void setUserEmail(String email) {
         // just keep user name/email the same
         mUserInfo.setUserName(email);
@@ -58,8 +61,18 @@ public class RegisterPresenterImpl implements RegisterPresenter{
     }
 
     @Override
+    public String getUserEmail() {
+        return mUserInfo.getUserEmail();
+    }
+
+    @Override
     public void setUserPwd(String pwd) {
         mUserInfo.setUserPwd(pwd);
+    }
+
+    @Override
+    public String getUserPwd() {
+        return mUserInfo.getUserPwd();
     }
 
     @Override
@@ -73,6 +86,11 @@ public class RegisterPresenterImpl implements RegisterPresenter{
         if(!TextUtils.isEmpty(authCode)) {
             mAuthCode = authCode;
         }
+    }
+
+    @Override
+    public String getTelNumber() {
+        return mPhoneNumber;
     }
 
     @Override
@@ -127,7 +145,7 @@ public class RegisterPresenterImpl implements RegisterPresenter{
     @Override
     public void updateUserInfo() {
         Log.v(TAG,"updateUserInfo()");
-        if(!sIsUserDataSaved && mUserInfo != null) {
+        if(mUserInfo != null) {
             mRepository.updateCurrentUserInfo(UserInfo.USER_NICK_NAME, mUserInfo.getNickName());
             mRepository.updateCurrentUserInfo(UserInfo.USER_NAME, mUserInfo.getUserName());
             mRepository.updateCurrentUserInfo(UserInfo.UER_EMAIL, mUserInfo.getUserEmail());
@@ -135,8 +153,6 @@ public class RegisterPresenterImpl implements RegisterPresenter{
             // upload head icon
             mRepository.uploadImageById(mUserInfo.getUserId(), mUserInfo.getHeadIconUrl(),
                     true, false);
-
-            sIsUserDataSaved = true;
         }
     }
 
@@ -151,7 +167,7 @@ public class RegisterPresenterImpl implements RegisterPresenter{
 
     @Override
     public void onPause() {
-
+        //sIsUserDataSaved = false;
     }
 
     @Override

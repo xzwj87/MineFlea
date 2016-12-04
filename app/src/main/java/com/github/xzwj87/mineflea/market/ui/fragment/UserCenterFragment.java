@@ -23,6 +23,7 @@ import com.github.xzwj87.mineflea.market.ui.activity.RegisterActivity;
 import com.github.xzwj87.mineflea.market.ui.activity.UserDetailActivity;
 import com.github.xzwj87.mineflea.market.ui.activity.UserGoodsActivity;
 import com.github.xzwj87.mineflea.market.ui.settings.SettingsActivity;
+import com.github.xzwj87.mineflea.utils.PicassoUtils;
 import com.github.xzwj87.mineflea.utils.SharePrefsHelper;
 import com.squareup.picasso.Picasso;
 
@@ -34,6 +35,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by jason on 10/9/16.
@@ -109,29 +112,13 @@ public class UserCenterFragment extends BaseFragment implements UserCenterView{
 
         switch (request){
             case REQUEST_REGISTER:
-                if(result == Activity.RESULT_OK && data != null) {
+                if(result == RESULT_OK && data != null) {
 
                     String nickName = data.getStringExtra(UserInfo.USER_NICK_NAME);
                     //String name = data.getStringExtra(UserInfo.USER_NAME);
                     String email = data.getStringExtra(UserInfo.UER_EMAIL);
                     String iconUrl = data.getStringExtra(UserInfo.USER_HEAD_ICON);
-
-                    if(!TextUtils.isEmpty(iconUrl)) {
-                        if(URLUtil.isNetworkUrl(iconUrl)) {
-                            Picasso.with(getActivity())
-                                   .load(iconUrl)
-                                   .resize(512,512)
-                                   .centerCrop()
-                                   .into(mCivHeader);
-
-                        }else {
-                            Picasso.with(getActivity())
-                                    .load(Uri.fromFile(new File(iconUrl)))
-                                    .resize(512, 512)
-                                    .centerCrop()
-                                    .into(mCivHeader);
-                        }
-                    }
+                    PicassoUtils.loadImage(getActivity(),mCivHeader,iconUrl);
                     mTvNickName.setText(nickName);
                     mTvUserEmail.setVisibility(View.VISIBLE);
                     mTvUserEmail.setText(email);

@@ -10,17 +10,25 @@ public interface  RegisterPresenter extends BasePresenter{
 
     void setUserNickName(String name);
 
+    String getUserNickName();
+
     void setUserEmail(String email);
+
+    String getUserEmail();
 
     void setUserPwd(String pwd);
 
+    String getUserPwd();
+
     void setUserIconUrl(String url);
+
+    String getUserIconUrl();
 
     void setSmsAuthCode(String authCode);
 
-    boolean validUserInfo();
+    String getTelNumber();
 
-    String getUserIconUrl();
+    boolean validUserInfo();
 
     void getSmsAuthCode(String telNumber);
 

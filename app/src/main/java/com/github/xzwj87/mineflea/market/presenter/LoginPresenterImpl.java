@@ -2,7 +2,6 @@ package com.github.xzwj87.mineflea.market.presenter;
 
 import android.os.Message;
 import android.util.Log;
-import android.webkit.URLUtil;
 
 import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
@@ -36,18 +35,28 @@ public class LoginPresenterImpl implements LoginPresenter{
 
     @Override
     public void login() {
-        mDataRepo.login(mUserInfo);
+        if(mIsEmail) {
+            mDataRepo.login(mUserInfo);
+        }else{
+            mDataRepo.loginBySms(mUserInfo.getUserTelNumber(),mUserInfo.getUserPwd());
+        }
         mView.showProgress(true);
     }
 
     @Override
     public boolean validLoginInfo() {
-        boolean ret = UserInfoUtils.isEmailValid(mUserInfo.getUserEmail());
-        if(!ret){
+        boolean isValid = false;
+        if(mIsEmail) {
+            isValid = UserInfoUtils.isEmailValid(mUserInfo.getUserEmail());
+        }else {
+            isValid = UserInfoUtils.isTelNumber(mUserInfo.getUserTelNumber());
+        }
+
+        if(!isValid){
             mView.showAccountInvalidMsg();
         }
 
-        return ret;
+        return isValid;
     }
 
     @Override
@@ -90,9 +99,15 @@ public class LoginPresenterImpl implements LoginPresenter{
     }
 
     @Override
-    public void resetPwdByAccount(String account) {
-        Log.v(TAG,"resetPwdByAccount()");
-        mDataRepo.resetPwdByAccount(account);
+    public void sendAuthCodeByAccount(String account) {
+        Log.v(TAG,"getAuthCodeByAccount()");
+        mDataRepo.getAuthCodeByAccount(account);
+    }
+
+    @Override
+    public void resetPwdBySms(String authCode, String newPwd) {
+        Log.v(TAG,"resetPwdBySms()");
+        mDataRepo.resetPwdBySms(authCode,newPwd);
     }
 
     @Override
@@ -140,7 +155,6 @@ public class LoginPresenterImpl implements LoginPresenter{
                         UserPrefsUtil.updateUserInfoBoolean(UserInfo.IS_LOGIN,false);
                         break;
 
-                    case ResponseCode.RESP_RESET_PWD_BY_EMAIL_SUCCESS:
                     case ResponseCode.RESP_RESET_PWD_BY_SMS_SUCCESS:
                         mView.resetPwdSuccess();
                         break;

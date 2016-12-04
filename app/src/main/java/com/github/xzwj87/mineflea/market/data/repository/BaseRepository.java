@@ -28,7 +28,7 @@ public interface BaseRepository {
     /*
      * login by SMS auth code
      */
-    void loginBySms(String telNumber, String authCode);
+    void loginBySms(String telNumber, String pwd);
 
     /*
      * register by SMS auth code
@@ -42,9 +42,15 @@ public interface BaseRepository {
 
 
     /*
-     * reset password by email or SMS
+     * reset password by SMS code
      */
-    void resetPwdByAccount(String account);
+    void resetPwdBySms(String authCode,String newPwd);
+
+
+    /*
+     * send SMS or email to reset password
+     */
+    void getAuthCodeByAccount(String account);
 
     /*
      * logout

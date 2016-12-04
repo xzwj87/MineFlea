@@ -18,6 +18,7 @@
         android:src="@drawable/ic_camera_grey_48dp" />
 
     <RelativeLayout
+        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,6 +27,7 @@
         <TextView android:id="@+id/name"
             android:layout_alignParentStart="true"
             android:layout_marginBottom="@dimen/register_second_item_margin"
+            android:layout_marginStart="@dimen/register_view_margin"
             android:text="@string/user_nick_name"
             style="@style/RegisterTextView" />
 
@@ -36,6 +38,8 @@
             android:layout_toEndOf="@id/name"
             android:layout_alignParentEnd="true"
             android:layout_alignBaseline="@id/name"
+            android:layout_marginStart="@dimen/register_view_margin"
+            android:layout_marginEnd="@dimen/register_view_margin"
             android:inputType="textPersonName"
             android:maxLines="1"
             android:textSize="@dimen/edit_text_size" />
@@ -44,6 +48,7 @@
         <TextView android:id="@+id/email"
             android:layout_marginBottom="@dimen/register_second_item_margin"
             android:layout_below="@id/name"
+            android:layout_marginStart="@dimen/register_view_margin"
             android:layout_alignParentStart="true"
             android:text="@string/user_email"
             style="@style/RegisterTextView" />
@@ -55,6 +60,8 @@
             android:layout_toEndOf="@id/email"
             android:layout_below="@id/et_nick_name"
             android:layout_alignParentEnd="true"
+            android:layout_marginStart="@dimen/register_view_margin"
+            android:layout_marginEnd="@dimen/register_view_margin"
             android:layout_alignBaseline="@id/email"
             android:inputType="textEmailAddress"
             android:textSize="@dimen/edit_text_size"
@@ -64,6 +71,7 @@
         <TextView android:id="@+id/password"
             android:layout_below="@id/email"
             android:layout_marginBottom="@dimen/register_second_item_margin"
+            android:layout_marginStart="@dimen/register_view_margin"
             android:layout_alignParentStart="true"
             android:text="@string/user_password"
             style="@style/RegisterTextView" />
@@ -72,6 +80,8 @@
             android:id="@+id/et_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/register_view_margin"
+            android:layout_marginEnd="@dimen/register_view_margin"
             android:layout_toEndOf="@id/password"
             android:layout_below="@id/et_email"
             android:layout_alignParentEnd="true"

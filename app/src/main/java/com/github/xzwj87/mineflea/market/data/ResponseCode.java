@@ -72,6 +72,14 @@ public class ResponseCode {
 
     public static final int RESP_RESET_PWD_BY_SMS_FAIL = 0x403;
 
+    public static final int RESP_SEND_SMS_CODE_SUCCESS = 0x404;
+
+    public static final int RESP_SEND_SMS_CODE_FAIL = 0x405;
+
+    public static final int RESP_SEND_EMAIL_SUCCESS = 0x406;
+
+    public static final int RESP_SEND_EMAIL_FAIL = 0x407;
+
 
     @Override
     public String toString(){

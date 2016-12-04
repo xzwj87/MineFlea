@@ -148,4 +148,8 @@
     <string name="dist_units">km</string>
     <string name="error_wrong_auth_code">Wrong Authetification Code</string>
     <string name="sms_auth_code">Authetification Code</string>
+    <string name="reset_password_explanation">This will send a SMS code to your telephone or send you an EMAIL</string>
+    <string name="find_your_password">Find Your Password</string>
+    <string name="sms_auth_code_has_been_sent">SMS authentification code has been sent!</string>
+    <string name="prompt_input_new_pwd">Please Input New Password</string>
 </resources>

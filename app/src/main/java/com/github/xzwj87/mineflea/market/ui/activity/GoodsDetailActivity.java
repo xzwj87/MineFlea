@@ -83,8 +83,8 @@ public class GoodsDetailActivity extends BaseActivity implements GoodsDetailView
         mPresenter.setView(this);
         mPresenter.getGoodsInfo(mGoodsId);
 
-        mProgress = ProgressDialog.show(this,"",
-                getString(R.string.progress_get_goods_detail));
+/*        mProgress = ProgressDialog.show(this,"",
+                getString(R.string.progress_get_goods_detail));*/
     }
 
     @Override
@@ -132,9 +132,9 @@ public class GoodsDetailActivity extends BaseActivity implements GoodsDetailView
 
     @Override
     public void onGetGoodsInfoDone(boolean success) {
-        if(mProgress != null && mProgress.isShowing()) {
+/*        if(mProgress != null && mProgress.isShowing()) {
             mProgress.dismiss();
-        }
+        }*/
     }
 
     @Override
