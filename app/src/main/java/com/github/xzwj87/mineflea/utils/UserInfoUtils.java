@@ -1,11 +1,9 @@
 package com.github.xzwj87.mineflea.utils;
 
 import android.text.TextUtils;
-import android.widget.TextView;
 
 import com.avos.avoscloud.AVUser;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
-import com.tencent.qc.stat.common.User;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,8 +22,8 @@ public class UserInfoUtils {
     private static final String VALIDATE_TEL_REGEX = "^[1-9]{1}[0-9]{10}";
 
     public static boolean isEmailValid(String email) {
-
-        return !TextUtils.isEmpty(email) && email.contains("@") && isEmail(email);
+        return true;
+        //return !TextUtils.isEmpty(email) && email.contains("@") && isEmail(email);
     }
 
     public static boolean isPossibleEmail(String account){

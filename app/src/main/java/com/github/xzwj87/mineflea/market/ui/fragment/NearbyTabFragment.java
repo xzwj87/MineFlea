@@ -51,7 +51,6 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
-import com.github.xzwj87.mineflea.market.model.NearbyGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.presenter.NearbyGoodsPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.NearbyGoodsView;
@@ -67,6 +66,7 @@ import com.github.xzwj87.mineflea.utils.ToastUtil;
 import com.github.xzwj87.mineflea.utils.UiUtils;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -140,7 +140,7 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
     private EditText etSearchDis;
     private Spinner spinner;
 
-    private List<PublishGoodsInfo> list;
+    private List<PublishGoodsInfo> list = new ArrayList<>();
     //private List<NearbyGoodsInfo> list;
     private BroadcastReceiver receiver;
 
@@ -198,8 +198,8 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
     private void loadData() {
         //NearbyProtocol protocol = new NearbyProtocol();
         //list = protocol.loadNearbyData();
-        //addMarkersToMap();
-        mPresenter.loadDataFromServer();
+        addMarkersToMap();
+        //mPresenter.loadDataFromServer();
     }
 
     private void initView(View root) {
@@ -234,6 +234,7 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
         aMap.setLocationSource(this);// 设置定位监听
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
         aMap.getUiSettings().setScaleControlsEnabled(true);//显示比例尺控件
+        aMap.getUiSettings().setZoomControlsEnabled(false);
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         aMap.setOnMapClickListener(this);
     }
@@ -428,6 +429,20 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
 
     //添加地图覆盖物
     private void addMarkersToMap() {
+
+        PublishGoodsInfo infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 113.00, 23.00);
+        list.add(infoP);
+        infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 113.15, 23.00);
+        list.add(infoP);
+        infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 113.15, 23.50);
+        list.add(infoP);
+        infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 112.00, 22.00);
+        list.add(infoP);
+        infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 110.15, 20.00);
+        list.add(infoP);
+        infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 115.15, 23.00);
+        list.add(infoP);
+
         if (list == null) {
             ToastUtil.showToast("附近没有数据");
             return;
@@ -487,7 +502,7 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
     //覆盖物点击事件
     @Override
     public boolean onMarkerClick(Marker marker) {
-        NearbyGoodsInfo info = (NearbyGoodsInfo) marker.getObject();
+        PublishGoodsInfo info = (PublishGoodsInfo) marker.getObject();
         showGoodsInfoDialog(info);
         showRoutGuide(marker);
         mEndPoint = new LatLonPoint(marker.getPosition().latitude, marker.getPosition().longitude);
@@ -502,7 +517,7 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
     }
 
     //显示点击物品的信息
-    private void showGoodsInfoDialog(NearbyGoodsInfo info) {
+    private void showGoodsInfoDialog(PublishGoodsInfo info) {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final AlertDialog dialog = builder.create();
@@ -516,10 +531,10 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
         Button btnOK = (Button) searchView.findViewById(R.id.goods_btn_ok);
         ImageButton btnCl = (ImageButton) searchView.findViewById(R.id.goods_btn_cancel);
 
-        goodsPicIv.setImageResource(info.getImgId());
+        //goodsPicIv.setImageResource(info.getImgId());
         DecimalFormat decimalFormat = new DecimalFormat("#.00");
-        goodsDisTv.setText(decimalFormat.format(UiUtils.getDistanceKm(myLocation, info.getLatlng())) + "km");
-        goodsPriseTv.setText(info.getZan() + "");
+        //goodsDisTv.setText(decimalFormat.format(UiUtils.getDistanceKm(myLocation, info.getLatlng())) + "km");
+        //goodsPriseTv.setText(info.getZan() + "");
         goodsNameTv.setText(info.getName());
 
         btnOK.setOnClickListener(new View.OnClickListener() {
@@ -601,7 +616,7 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
             //不允许模拟位置
             mLocationOption.setMockEnable(false);
             //设置定位间隔，单位毫秒，默认为2000ms
-            mLocationOption.setInterval(20000);
+            mLocationOption.setInterval(2000);
             //设置为高精度定位模式
             mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
             //设置定位参数

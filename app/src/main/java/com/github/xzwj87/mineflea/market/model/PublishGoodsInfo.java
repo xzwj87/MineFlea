@@ -92,6 +92,20 @@ public class PublishGoodsInfo {
         mFavorUserList = new ArrayList<>();
     }
 
+    public PublishGoodsInfo(String name, String userId, double price, double lat, double lng){
+        mName = name;
+        mUserId = userId;
+        mPrice = price;
+        mLat = lat;
+        mLng = lng;
+
+        mReleasedDate = new Date();
+        mUpdateTime = new Date();
+        mImageUri = new ArrayList<>();
+        mFavorUserList = new ArrayList<>();
+    }
+
+
     public String getId(){
         return mId;
     }
