@@ -2,6 +2,7 @@ package com.github.xzwj87.mineflea.market.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +13,8 @@ import com.github.xzwj87.mineflea.market.presenter.RegisterPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.fragment.RegisterFragment;
 import com.github.xzwj87.mineflea.market.ui.fragment.RegisterSecondStepFragment;
 import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -61,6 +64,24 @@ public class RegisterActivity extends BaseActivity implements RegisterFragment.N
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+
+        FragmentManager fragmentMgr = getSupportFragmentManager();
+        List<Fragment> fragments = fragmentMgr.getFragments();
+        for(int i = 0; i < fragments.size(); ++i){
+            Fragment fragment = fragments.get(i);
+            if(fragment != null ) {
+                if (RegisterFragment.TAG.equals(fragment.getTag())) {
+                    ((RegisterFragment) fragment).setPresenter(mPresenter);
+                } else {
+                    ((RegisterSecondStepFragment) fragment).setPresenter(mPresenter);
+                }
+            }
+        }
+    }
+
+    @Override
     public void onPause(){
         super.onPause();
 
@@ -86,11 +107,11 @@ public class RegisterActivity extends BaseActivity implements RegisterFragment.N
 
     @Override
     public void onActivityResult(int request, int result, Intent data){
+        super.onActivityResult(request,result,data);
         Log.v(TAG,"onActivityResult(): result = " + result);
-
-        if(request == RESULT_OK && data != null){
+/*        if(request == RESULT_OK && data != null){
             setResult(result,data);
-        }
+        }*/
     }
 
     @Override

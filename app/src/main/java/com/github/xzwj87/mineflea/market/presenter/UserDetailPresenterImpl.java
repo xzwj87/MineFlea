@@ -129,6 +129,12 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
         if(!TextUtils.isEmpty(mUserInfo.getUserEmail())){
             mView.renderEmail(mUserInfo.getUserEmail());
         }
+
+        if(isMe()){
+            mView.updateActionButton(UserDetailView.IS_ME);
+        }else if(isMyFollowee(mUserInfo.getUserId())){
+            mView.updateActionButton(UserDetailView.ALREADY_FOLLOW);
+        }
     }
 
     private class DetailPresenterCallback implements PresenterCallback {

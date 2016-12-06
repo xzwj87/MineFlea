@@ -1,6 +1,7 @@
 package com.github.xzwj87.mineflea.market.ui.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -23,6 +25,8 @@ import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.UserDetailPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.UserDetailView;
 import com.github.xzwj87.mineflea.market.ui.adapter.UserDetailPageAdapter;
+import com.github.xzwj87.mineflea.utils.PicassoUtils;
+import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -125,19 +129,8 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
 
     @Override
     public void renderHeadIcon(String iconUrl) {
-        if(!TextUtils.isEmpty(iconUrl)) {
-            Picasso.with(this)
-                    .load(iconUrl)
-                    .resize(1024, 1024)
-                    .centerCrop()
-                    .into(mIvHeadIcon);
-        }else{
-            Picasso.with(this)
-                    .load(Uri.fromFile(new File(iconUrl)))
-                    .resize(1024, 1024)
-                    .centerCrop()
-                    .into(mIvHeadIcon);
-        }
+        Log.v(TAG,"renderHeadIcon()");
+        PicassoUtils.loadImage(this,mIvHeadIcon,iconUrl);
     }
 
     @Override

@@ -28,7 +28,7 @@ public interface BaseRepository {
     /*
      * login by SMS auth code
      */
-    void loginBySms(String telNumber, String authCode);
+    void loginBySms(String telNumber, String pwd);
 
     /*
      * register by SMS auth code
@@ -42,9 +42,15 @@ public interface BaseRepository {
 
 
     /*
-     * reset password by email or SMS
+     * reset password by SMS code
      */
-    void resetPwdByAccount(String account);
+    void resetPwdBySms(String authCode,String newPwd);
+
+
+    /*
+     * send SMS or email to reset password
+     */
+    void getAuthCodeByAccount(String account);
 
     /*
      * logout
@@ -66,11 +72,15 @@ public interface BaseRepository {
      */
     UserInfo getCurrentUser();
 
-
     /*
      * update current user info
      */
     void updateCurrentUserInfo(String key, String val);
+
+    /*
+     * add a goods to my favorite list
+     */
+    void addToMyFavorites(PublishGoodsInfo goodsInfo);
 
     /*
      * get user info by id
@@ -81,6 +91,12 @@ public interface BaseRepository {
      * get all goods
      */
     void getAllGoods();
+
+
+    /*
+     * get goods info by id
+     */
+    void getGoodsInfoById(String goodsId);
 
     /*
      * get goods list by user id

@@ -30,4 +30,6 @@ public interface RemoteSourceCallBack {
     void onResetPwdByEmailDone(Message message);
 
     void onResetPwdByTelDone(Message message);
+
+    void onResetPwdBySms(Message message);
 }

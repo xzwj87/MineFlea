@@ -1,5 +1,6 @@
 package com.github.xzwj87.mineflea.market.model;
 
+import com.amap.api.maps.model.LatLng;
 import com.avos.avoscloud.AVObject;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class PublishGoodsInfo {
 
     private Date mUpdateTime;
 
-    private String mLoc;
+    private LatLng mLoc;
 
     private List<String> mImageUri;
     //users who likes me
@@ -131,11 +132,11 @@ public class PublishGoodsInfo {
         mUpdateTime = time;
     }
 
-    public void setLocation(String location){
+    public void setLocation(LatLng location){
         mLoc = location;
     }
 
-    public String getLocation(){
+    public LatLng getLocation(){
         return mLoc;
     }
 

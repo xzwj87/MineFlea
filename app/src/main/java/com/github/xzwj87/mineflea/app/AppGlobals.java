@@ -30,11 +30,10 @@ public class AppGlobals extends Application
     private static final String LEAN_CLOUD_APP_ID = "4OaElXuRPCVDqxMLyXIRk4Ai-gzGzoHsz";
     private static final String LEAN_CLOUD_APP_KEY = "gEtmxOIxF0LrCT0jJaHSL9uU";
 
+    public static final String FILE_DIR_PARENT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/MinFlea";
+
 
     private AppComponent mAppComponent;
-
-    public static final String FILE_DIR_PARENT = Environment.getExternalStorageDirectory().getAbsolutePath() + "/MinFlea";
-    public static final String FILE_DIR_MISC = FILE_DIR_PARENT + "/misc";
 
     private static int mainThreadId;
     private static Handler handler;
@@ -57,7 +56,7 @@ public class AppGlobals extends Application
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                initFileDir();
+                //initFileDir();
                 initMap();
                 checkLoginState();
             }
@@ -67,7 +66,7 @@ public class AppGlobals extends Application
 
     private void initMap() {
         try {
-            MapsInitializer.initialize(sContext);
+            MapsInitializer.initialize(getApplicationContext());
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -88,21 +87,6 @@ public class AppGlobals extends Application
 
     private void initLeanCloudService(){
         AVOSCloud.initialize(this,LEAN_CLOUD_APP_ID,LEAN_CLOUD_APP_KEY);
-    }
-
-    private void initFileDir(){
-        File file = new File(FILE_DIR_MISC);
-
-        Boolean isSuccess = true;
-        if(!file.exists()){
-            isSuccess = file.mkdirs();
-        }
-
-        if(isSuccess){
-            Log.v(TAG,"create directory:" + FILE_DIR_MISC + " successfully");
-        }else {
-            Log.v(TAG, "fail to create directory " + FILE_DIR_MISC);
-        }
     }
 
     private void checkLoginState(){

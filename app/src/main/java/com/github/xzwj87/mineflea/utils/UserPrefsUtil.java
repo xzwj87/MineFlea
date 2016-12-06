@@ -2,7 +2,9 @@ package com.github.xzwj87.mineflea.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
+import com.amap.api.maps.model.LatLng;
 import com.avos.avoscloud.AVUser;
 import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
@@ -32,6 +34,26 @@ public class UserPrefsUtil {
         editor.putBoolean(UserInfo.IS_LOGIN,state);
 
         editor.apply();
+    }
+
+    public static void updateCurrentLocation(LatLng loc){
+        String current = loc.latitude + "-" + loc.longitude;
+
+        updateUserInfoString(UserInfo.USER_LOCATION,current);
+    }
+
+    public static LatLng getCurrentLocation(){
+        String current = getString(UserInfo.USER_LOCATION,"");
+
+        if(!TextUtils.isEmpty(current)){
+            String[] strs = current.split("-");
+            LatLng loc = new LatLng(Double.parseDouble(strs[0]),
+                    Double.parseDouble(strs[1]));
+
+            return loc;
+        }
+
+        return null;
     }
 
     public static String getString(String key, String defaultVal){

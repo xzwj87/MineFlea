@@ -20,6 +20,7 @@ import com.avos.avoscloud.ProgressCallback;
 import com.avos.avoscloud.RequestMobileCodeCallback;
 import com.avos.avoscloud.RequestPasswordResetCallback;
 import com.avos.avoscloud.SaveCallback;
+import com.avos.avoscloud.UpdatePasswordCallback;
 import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.model.AvCloudConstants;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
@@ -133,7 +134,7 @@ public class RemoteDataSource implements RemoteSource{
                     message.what = ResponseCode.RESP_GET_GOODS_ERROR;
                 }
 
-                mCloudCallback.onGetUserInfoDone(message);
+                mCloudCallback.onGetGoodsInfoDone(message);
             }
         });
     }
@@ -301,16 +302,16 @@ public class RemoteDataSource implements RemoteSource{
     }
 
     @Override
-    public void loginBySms(String telNumber, String smsCode) {
+    public void loginBySms(String telNumber, String pwd) {
         Log.v(TAG,"loginBySms()");
 
-        AVUser.signUpOrLoginByMobilePhoneInBackground(telNumber, smsCode, new LogInCallback<AVUser>() {
+        AVUser.loginByMobilePhoneNumberInBackground(telNumber, pwd, new LogInCallback<AVUser>() {
             @Override
             public void done(AVUser avUser, AVException e) {
                 final Message msg = new Message();
                 if(e != null){
                     msg.what = ResponseCode.RESP_LOGIN_FAIL;
-                    msg.obj = e.getCode();
+                    msg.obj = null;
                     e.printStackTrace();
                 }else{
                     msg.what = ResponseCode.RESP_LOGIN_SUCCESS;
@@ -332,7 +333,7 @@ public class RemoteDataSource implements RemoteSource{
                 final Message msg = new Message();
                 if(e != null){
                     msg.what = ResponseCode.RESP_REGISTER_FAIL;
-                    msg.obj = e.getCode();
+                    msg.obj = null;
                     e.printStackTrace();
                 }else{
                     msg.what = ResponseCode.RESP_REGISTER_SUCCESS;
@@ -371,10 +372,10 @@ public class RemoteDataSource implements RemoteSource{
                 if(e != null){
                     e.printStackTrace();
                     // tell user to try again
-                    msg.what = ResponseCode.RESP_RESET_PWD_BY_EMAIL_FAIL;
+                    msg.what = ResponseCode.RESP_SEND_EMAIL_FAIL;
                     msg.obj = e.toString();
                 }else{
-                    msg.what = ResponseCode.RESP_RESET_PWD_BY_EMAIL_SUCCESS;
+                    msg.what = ResponseCode.RESP_SEND_EMAIL_SUCCESS;
                     msg.obj = null;
                 }
 
@@ -392,15 +393,33 @@ public class RemoteDataSource implements RemoteSource{
             public void done(AVException e) {
                 final Message msg = new Message();
                 if(e != null){
-                    msg.what = ResponseCode.RESP_RESET_PWD_BY_SMS_FAIL;
-                    msg.obj = e.toString();
+                    msg.what = ResponseCode.RESP_SEND_SMS_CODE_FAIL;
                     e.printStackTrace();
                 }else{
-                    msg.what = ResponseCode.RESP_RESET_PWD_BY_SMS_SUCCESS;
-                    msg.obj = null;
+                    msg.what = ResponseCode.RESP_SEND_SMS_CODE_SUCCESS;
                 }
 
                 mCloudCallback.onResetPwdByTelDone(msg);
+            }
+        });
+    }
+
+    @Override
+    public void resetPwdBySms(String authCode, String newPwd) {
+        Log.v(TAG,"resetPwdBySms()");
+
+        AVUser.resetPasswordBySmsCodeInBackground(authCode, newPwd, new UpdatePasswordCallback() {
+            @Override
+            public void done(AVException e) {
+                final  Message msg = new Message();
+                if(e != null){
+                    e.printStackTrace();
+                    msg.what = ResponseCode.RESP_RESET_PWD_BY_SMS_FAIL;
+                }else{
+                    msg.what = ResponseCode.RESP_SEND_SMS_CODE_SUCCESS;
+                }
+
+                mCloudCallback.onResetPwdBySms(msg);
             }
         });
     }

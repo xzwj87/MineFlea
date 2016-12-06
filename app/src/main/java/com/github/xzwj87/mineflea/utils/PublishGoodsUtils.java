@@ -1,5 +1,7 @@
 package com.github.xzwj87.mineflea.utils;
 
+import com.amap.api.maps.model.LatLng;
+import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import static com.github.xzwj87.mineflea.market.model.PublishGoodsInfo.*;
@@ -19,13 +21,15 @@ public class PublishGoodsUtils {
         if(info == null) return null;
 
         AVObject avObject = new AVObject(AV_OBJ_GOODS);
+        AVGeoPoint loc = new AVGeoPoint(info.getLocation().latitude,info.getLocation().longitude);
+        avObject.put("whereCreated", loc);
         avObject.put(GOODS_NAME,info.getName());
         avObject.put(GOODS_PUBLISHER,info.getUserId());
         avObject.put(GOODS_PRICE,info.getPrice());
         avObject.put(GOODS_NOTE,info.getNote());
         avObject.put(GOODS_RELEASE_DATE,info.getReleasedDate());
         avObject.put(GOODS_UPDATED_TIME,info.getUpdateTime());
-        avObject.put(GOODS_LOC,info.getLocation());
+        //avObject.put(GOODS_LOC,info.getLocation());
         avObject.put(GOODS_IMAGES,info.getImageUri());
         avObject.put(GOODS_FAVOR_USER,info.getFavorUserList());
 
@@ -44,7 +48,10 @@ public class PublishGoodsUtils {
         info.setNote((String)object.get(GOODS_NOTE));
         info.setReleasedDate(object.getCreatedAt());
         info.setUpdateTime(object.getUpdatedAt());
-        info.setLocation((String)object.get(GOODS_LOC));
+
+        AVGeoPoint loc = (AVGeoPoint)object.get("whereCreated");
+        LatLng latLng = new LatLng(loc.getLatitude(),loc.getLongitude());
+        info.setLocation(latLng);
         info.setImageUri(object.getList(GOODS_IMAGES));
         info.setGoodsFavorUser(object.getList(GOODS_FAVOR_USER));
 

@@ -19,12 +19,10 @@ public class BaseFragment extends Fragment{
     @Override
     public void onResume(){
         super.onResume();
-
-        checkThemeColor();
     }
 
     public void showToast(String msg){
-        Toast.makeText(getActivity(),msg,Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(),msg,Toast.LENGTH_SHORT).show();
     }
 
 
@@ -33,7 +31,4 @@ public class BaseFragment extends Fragment{
         return componentType.cast(((HasComponent<C>)getActivity()).getComponent());
     }
 
-    private void checkThemeColor(){
-        ThemeColorUtils.changeThemeColor((AppCompatActivity)getActivity());
-    }
 }

@@ -15,18 +15,25 @@ import java.util.List;
  * an image page adapter to show a list of images on ViewPage
  */
 
-
 public class ImagePageAdapter extends PagerAdapter{
 
+    private Context mContext;
     private List<View> mImgList;
 
-    public ImagePageAdapter(Context context, List<String> imgList){
-        createViews(context,imgList);
+    public ImagePageAdapter(Context context){
+        mContext = context;
     }
 
+    public void setImageList(List<String> imgList){
+        if(imgList == null) return;
+
+        createViews(mContext,imgList);
+    }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
+        if(mImgList == null || mImgList.size() == 0) return null;
+
         ImageView iv = (ImageView)mImgList.get(position);
         container.addView(iv);
 
@@ -40,7 +47,7 @@ public class ImagePageAdapter extends PagerAdapter{
 
     @Override
     public int getCount() {
-        return mImgList.size();
+        return mImgList == null ? 0 : mImgList.size();
     }
 
     @Override
@@ -57,7 +64,9 @@ public class ImagePageAdapter extends PagerAdapter{
 
             PicassoUtils.loadImage(context,iv,urlList.get(i));
 
-            mImgList.add(iv);
+            if(iv.getDrawable() != null) {
+                mImgList.add(iv);
+            }
         }
     }
 }

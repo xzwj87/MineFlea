@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.annotation.DimenRes;
+import android.support.annotation.Dimension;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,12 +24,20 @@ import com.github.xzwj87.mineflea.market.presenter.RegisterPresenter;
 import com.github.xzwj87.mineflea.market.presenter.RegisterPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.RegisterView;
 import com.github.xzwj87.mineflea.market.ui.activity.LoginActivity;
+import com.github.xzwj87.mineflea.utils.PicassoUtils;
+import com.github.xzwj87.mineflea.utils.UserInfoUtils;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnFocusChange;
+import butterknife.OnTextChanged;
+import me.iwf.photopicker.PhotoPicker;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by jason on 11/20/16.
@@ -43,7 +54,7 @@ public class RegisterFragment extends BaseFragment{
     private WeakReference<RegisterPresenter> mPresenter;
 
     private static boolean sIsTimerStarted = false;
-    private CountDownTimer mDownTimer;
+    private CountDownTimer mDownTimer = null;
     private NextStepCallback mCallback;
 
     @BindView(R.id.et_tel_number) EditText mEtTelNumber;
@@ -110,9 +121,13 @@ public class RegisterFragment extends BaseFragment{
                 mPresenter.get().setSmsAuthCode(authCode);
                 if(!TextUtils.isEmpty(authCode)){
                     mPresenter.get().signUpBySms();
-                    nextStep();
                 }else {
                     mEtInputAuthCode.setError(getString(R.string.error_invalid_auth_code));
+                }
+
+                if(mDownTimer != null) {
+                    mDownTimer.onFinish();
+                    mDownTimer.cancel();
                 }
 
                 return true;
@@ -128,8 +143,6 @@ public class RegisterFragment extends BaseFragment{
             startCountDown();
             // get SMS auth code
             mPresenter.get().getSmsAuthCode(telNumber);
-            mInputAuthLayout.setVisibility(View.VISIBLE);
-            mEtInputAuthCode.setVisibility(View.VISIBLE);
             mEtInputAuthCode.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -139,7 +152,7 @@ public class RegisterFragment extends BaseFragment{
                     mTvGetAuthCode.setText(R.string.send_auth_code);
                 }
             });
-        }else{
+        }else if(TextUtils.isEmpty(telNumber)){
             mEtTelNumber.setError(getString(R.string.error_field_required));
         }
     }
@@ -151,19 +164,39 @@ public class RegisterFragment extends BaseFragment{
         startActivityForResult(intent,REQUEST_LOGIN);
     }
 
+    @OnTextChanged(value = R.id.et_tel_number,callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
+    public void onTelNumberChanged(Editable editable){
+        String tel = editable.toString();
+        if(UserInfoUtils.isTelNumber(tel)){
+            if(mDownTimer != null) {
+                mDownTimer.onFinish();
+                mDownTimer.cancel();
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int request, int result, Intent data){
+        Log.v(TAG,"onActivityResult(): result = " + result);
+    }
+
     private void startCountDown(){
         sIsTimerStarted = true;
-        mTvGetAuthCode.setText("     " + String.valueOf(MAX_COUNTS) + "     ");
+        final String orig = mTvGetAuthCode.getText().toString();
+        //float textSize = getResources().getDimension(R.dimen.button_text_size_small);
+        //mTvGetAuthCode.setTextSize(Dimension.SP,textSize);
+        mTvGetAuthCode.setText(orig + "(" + String.valueOf(MAX_COUNTS) + ")");
         mDownTimer = new CountDownTimer(MAX_COUNT_DOWN_MS, COUNT_DOWN_INTERVAL) {
             @Override
             public void onTick(long millisUntilFinished) {
-                mTvGetAuthCode.setText("     " +
-                        String.valueOf(millisUntilFinished/COUNT_DOWN_INTERVAL) + "     ");
+                mTvGetAuthCode.setText(orig + "(" +
+                        String.valueOf(millisUntilFinished/COUNT_DOWN_INTERVAL) + ")");
             }
 
             @Override
             public void onFinish() {
                 mTvGetAuthCode.setText(R.string.send_auth_code);
+                sIsTimerStarted = false;
             }
         }.start();
     }
@@ -179,13 +212,22 @@ public class RegisterFragment extends BaseFragment{
     private class RegisterViewImpl extends RegisterView {
 
         @Override
+        public void onLoginBySmsComplete(boolean success){
+            if(!success){
+                mEtInputAuthCode.setError(getString(R.string.error_wrong_auth_code));
+            }else{
+                nextStep();
+            }
+        }
+
+        @Override
         public void onRegisterComplete(boolean success){
             if(!success){
                 showToast(getString(R.string.error_register));
-            }else{
+            }/*else{
                 // success, next step
                 nextStep();
-            }
+            }*/
         }
 
         @Override
