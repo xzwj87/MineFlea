@@ -81,6 +81,8 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
         AMapLocationListener, RouteSearch.OnRouteSearchListener, AMap.OnMapClickListener {
     public static final String TAG = "[NearbyTabFragment]";
 
+    private boolean DBG = true;//用于调试
+
     @Inject
     NearbyGoodsPresenterImpl mPresenter;
 
@@ -198,8 +200,11 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
     private void loadData() {
         //NearbyProtocol protocol = new NearbyProtocol();
         //list = protocol.loadNearbyData();
-        addMarkersToMap();
-        //mPresenter.loadDataFromServer();
+        if (DBG) {
+            addMarkersToMap();
+        } else {
+            mPresenter.loadDataFromServer();
+        }
     }
 
     private void initView(View root) {
@@ -430,18 +435,20 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
     //添加地图覆盖物
     private void addMarkersToMap() {
 
-        PublishGoodsInfo infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 113.00, 23.00);
-        list.add(infoP);
-        infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 113.15, 23.00);
-        list.add(infoP);
-        infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 113.15, 23.50);
-        list.add(infoP);
-        infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 112.00, 22.00);
-        list.add(infoP);
-        infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 110.15, 20.00);
-        list.add(infoP);
-        infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 115.15, 23.00);
-        list.add(infoP);
+        if (DBG) {
+            PublishGoodsInfo infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 113.00, 23.00);
+            list.add(infoP);
+            infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 113.15, 23.00);
+            list.add(infoP);
+            infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 113.15, 23.50);
+            list.add(infoP);
+            infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 112.00, 22.00);
+            list.add(infoP);
+            infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 110.15, 20.00);
+            list.add(infoP);
+            infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 115.15, 23.00);
+            list.add(infoP);
+        }
 
         if (list == null) {
             ToastUtil.showToast("附近没有数据");
