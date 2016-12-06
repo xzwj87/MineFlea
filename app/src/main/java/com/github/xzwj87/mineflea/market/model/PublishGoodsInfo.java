@@ -1,11 +1,7 @@
 package com.github.xzwj87.mineflea.market.model;
 
-<<<<<<< HEAD
-=======
 import com.amap.api.maps.model.LatLng;
-import com.avos.avoscloud.AVObject;
 
->>>>>>> xzwj87/master
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

@@ -22,13 +22,8 @@ public class UserInfoUtils {
     private static final String VALIDATE_TEL_REGEX = "^[1-9]{1}[0-9]{10}";
 
     public static boolean isEmailValid(String email) {
-<<<<<<< HEAD
         return true;
-        //return !TextUtils.isEmpty(email) && email.contains("@") && isEmail(email);
-=======
-
-        return !TextUtils.isEmpty(email) && isEmail(email);
->>>>>>> xzwj87/master
+        //return !TextUtils.isEmpty(email) && isEmail(email);
     }
 
     public static boolean isPossibleEmail(String account){

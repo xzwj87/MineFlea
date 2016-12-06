@@ -75,13 +75,10 @@ public class RegisterSecondStepFragment extends BaseFragment{
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-<<<<<<< HEAD
         inflater.inflate(R.menu.menu_register,menu);
-        //MenuItem item = menu.findItem(R.menu.menu_register);
-        //item.setTitle(R.string.button_ok);
-=======
+        MenuItem item = menu.findItem(R.menu.menu_register);
+        item.setTitle(R.string.button_ok);
         inflater.inflate(R.menu.menu_register_done,menu);
->>>>>>> xzwj87/master
 
         super.onCreateOptionsMenu(menu,inflater);
     }
