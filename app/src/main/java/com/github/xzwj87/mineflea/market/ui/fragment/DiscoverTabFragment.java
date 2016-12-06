@@ -23,8 +23,6 @@ import com.amap.api.maps.model.LatLng;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
-import com.github.xzwj87.mineflea.market.model.UserInfo;
-import com.github.xzwj87.mineflea.market.presenter.DiscoverGoodsPresenter;
 import com.github.xzwj87.mineflea.market.presenter.DiscoverGoodsPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.DiscoverGoodsView;
 import com.github.xzwj87.mineflea.market.ui.adapter.DiscoverGoodsAdapter;
@@ -90,7 +88,7 @@ public class DiscoverTabFragment extends BaseFragment
         mPresenter.setView(this);
         mPresenter.init();
 
-        setUpAmapLocationClient();
+        startLocating();
     }
 
     @Override
@@ -192,7 +190,8 @@ public class DiscoverTabFragment extends BaseFragment
         // empty
     }
 
-    private void setUpAmapLocationClient(){
+    private void startLocating(){
+        Log.v(TAG,"startLocating()");
         mLocClient = new AMapLocationClient(getActivity());
         AMapLocationClientOption locOptions = new AMapLocationClientOption();
         locOptions.setNeedAddress(true);

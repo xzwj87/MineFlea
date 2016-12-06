@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.github.xzwj87.mineflea.R;
@@ -86,8 +85,6 @@ public class RegisterActivity extends BaseActivity implements RegisterFragment.N
         super.onPause();
 
         mPresenter.onPause();
-        // make sure data is saved correctly
-        mPresenter.updateUserInfo();
     }
 
     @Override

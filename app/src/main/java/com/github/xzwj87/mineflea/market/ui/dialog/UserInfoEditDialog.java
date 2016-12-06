@@ -6,6 +6,9 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.github.xzwj87.mineflea.R;
@@ -49,6 +52,19 @@ public class UserInfoEditDialog extends DialogFragment{
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedState){
+        View root = inflater.inflate(R.layout.dialog_input_text,container,false);
+        //Dialog dialog = getDialog();
+        String content = getArguments().getString("content");
+        EditText editText = (EditText)root.findViewById(R.id.et_input);
+        editText.setText(content);
+
+        return root;
+    }
+
+
+    @Override
     public Dialog onCreateDialog(Bundle savedState){
 
         String title = getArguments().getString("title");
@@ -68,10 +84,6 @@ public class UserInfoEditDialog extends DialogFragment{
                        mListener.onNegativeClick(UserInfoEditDialog.this);
                    }
                }).create();
-
-        String content = getArguments().getString("content");
-        EditText editText = (EditText)dialog.findViewById(R.id.et_input);
-        editText.setText(content);
 
         return dialog;
     }

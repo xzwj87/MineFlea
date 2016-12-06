@@ -62,6 +62,11 @@ public class HomeActivity extends BaseActivity
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
 
         ThemeColorUtils.changeThemeColor(this);
     }

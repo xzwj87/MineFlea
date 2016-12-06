@@ -15,6 +15,8 @@ public class UserInfo {
 
     public static final String IS_LOGIN = "is_login";
 
+    public static final String IS_PHONE_VERIFIED = "phone_verified";
+
     public static final String USER_NICK_NAME = "nick_name";
 
     public static final String UER_EMAIL = "user_email";

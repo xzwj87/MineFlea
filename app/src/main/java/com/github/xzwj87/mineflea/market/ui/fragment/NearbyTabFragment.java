@@ -75,7 +75,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-//Created by jason on 10/9/16.
 public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, View.OnClickListener, AMap.OnMarkerClickListener,
         AMap.OnInfoWindowClickListener, AMap.OnMarkerDragListener, AMap.OnMapLoadedListener, AMap.InfoWindowAdapter, LocationSource,
         AMapLocationListener, RouteSearch.OnRouteSearchListener, AMap.OnMapClickListener {
@@ -187,12 +186,16 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedSate) {
         View root = inflater.inflate(R.layout.fragment_nearby_tab, container, false);
         ButterKnife.bind(this, root);
-        mPresenter.setView(this);
-        mPresenter.init();
+
         mapView = (MapView) root.findViewById(R.id.map);
         mapView.onCreate(savedSate);
         initView(root);
+
+        mPresenter.setView(this);
+        mPresenter.init();
+
         loadData();
+
         return root;
     }
 

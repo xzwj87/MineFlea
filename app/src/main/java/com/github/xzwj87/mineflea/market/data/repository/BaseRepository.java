@@ -18,7 +18,7 @@ public interface BaseRepository {
     /*
      * register user
      */
-    void register(UserInfo userInfo);
+    void register(UserInfo userInfo,String authCode);
 
     /*
      * login

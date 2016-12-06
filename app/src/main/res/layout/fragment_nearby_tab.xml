@@ -95,7 +95,7 @@
             android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:layout_marginLeft="12dp"
-            android:singleLine="true"
+            android:lines="1"
             android:textColor="#333333"
             android:textSize="16sp" />
 
@@ -106,7 +106,7 @@
             android:layout_below="@+id/firstline"
             android:layout_marginLeft="12dp"
             android:gravity="right"
-            android:singleLine="true"
+            android:lines="1"
             android:textColor="#999999"
             android:textSize="13sp"
             android:visibility="gone"/>

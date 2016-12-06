@@ -67,6 +67,11 @@ public class LoginActivity extends BaseActivity implements LoginView,
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_back_white_24dp);
         }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
 
         ThemeColorUtils.changeThemeColor(this);
     }

@@ -1,11 +1,13 @@
 package com.github.xzwj87.mineflea.market.data.remote;
 
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVMobilePhoneVerifyCallback;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVPowerfulUtils;
@@ -464,7 +466,7 @@ public class RemoteDataSource implements RemoteSource{
     }
 
     @Override
-    public void register(final UserInfo userInfo) {
+    public void register(final UserInfo userInfo, final String authCode) {
         Log.v(TAG,"register(): user info " + userInfo);
 
         final AVUser avUser = UserInfoUtils.toAvUser(userInfo);
@@ -476,12 +478,16 @@ public class RemoteDataSource implements RemoteSource{
                 if(e == null){
                     userInfo.setUserId(avUser.getObjectId());
                     msg.obj = userInfo;
-                    msg.arg1 = ResponseCode.RESP_REGISTER_SUCCESS;
+                    msg.what = ResponseCode.RESP_REGISTER_SUCCESS;
+                    // verify SMS auth code
+                    if(!TextUtils.isEmpty(authCode)){
+                        verifySmsCode(authCode);
+                    }
                 }else{
                     Log.v(TAG,"avException = " + e.toString());
                     e.printStackTrace();
                     msg.obj = null;
-                    msg.arg1 = ResponseCode.RESP_REGISTER_FAIL;
+                    msg.what = ResponseCode.RESP_REGISTER_FAIL;
                 }
 
                 mCloudCallback.registerComplete(msg);
@@ -648,5 +654,20 @@ public class RemoteDataSource implements RemoteSource{
         if(current == null){
             Log.v(TAG,"log out successfully");
         }
+    }
+
+    private void verifySmsCode(String authCode){
+        AVUser.verifyMobilePhoneInBackground(authCode, new AVMobilePhoneVerifyCallback() {
+            @Override
+            public void done(AVException e) {
+                Log.v(TAG,"verifyMobilePhoneInBackground():done");
+                final Message msg = new Message();
+                if(e == null){
+                    msg.what = ResponseCode.RESP_PHONE_NUMBER_VERIFIED_SUCCESS;
+                }else{
+                    msg.what = ResponseCode.RESP_PHONE_NUMBER_VERIFIED_ERROR;
+                }
+            }
+        });
     }
 }

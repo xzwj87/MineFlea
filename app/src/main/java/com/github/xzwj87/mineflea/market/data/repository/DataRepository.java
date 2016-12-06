@@ -67,8 +67,8 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
     }
 
     @Override
-    public void register(UserInfo userInfo) {
-        mCloudSrc.register(userInfo);
+    public void register(UserInfo userInfo,String authCode) {
+        mCloudSrc.register(userInfo,authCode);
     }
 
     @Override
@@ -126,7 +126,7 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
           type = FileCache.CACHE_TYPE_GOODS;
         }
 
-        if(!mCache.isCached(id,type)){
+        if(!mCache.isCached(id,type) && mCache.isExpired(id,type)){
             mCache.saveImgToFile(imgUri,type);
             mCloudSrc.uploadImg(imgUri,showProcess);
         }
@@ -368,6 +368,12 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
         if(callback != null){
             callback.onComplete(msg);
         }
+    }
+
+    @Override
+    public void onTelNumberVerifiedComplete(Message msg) {
+        Log.v(TAG,"onTelNumberVerifiedComplete()");
+
     }
 
 

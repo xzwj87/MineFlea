@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,6 +38,7 @@ public class RegisterSecondStepFragment extends BaseFragment{
     
     // share Presenter between different fragments
     private RegisterPresenterImpl mPresenter;
+    private ProgressDialog mProgress;
 
     @BindView(R.id.civ_header_icon) CircleImageView mCivHeader;
     @BindView(R.id.et_nick_name) EditText mEtName;
@@ -75,9 +75,6 @@ public class RegisterSecondStepFragment extends BaseFragment{
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-        inflater.inflate(R.menu.menu_register,menu);
-        MenuItem item = menu.findItem(R.menu.menu_register);
-        item.setTitle(R.string.button_ok);
         inflater.inflate(R.menu.menu_register_done,menu);
 
         super.onCreateOptionsMenu(menu,inflater);
@@ -98,9 +95,9 @@ public class RegisterSecondStepFragment extends BaseFragment{
                 if(mPresenter.validUserInfo()){
                     //mPresenter.signUpBySms();
                     // must do this
-                    mPresenter.updateUserInfo();
+                    mPresenter.registerAndVerify();
                     // ToDo: make sure all information has been saved to server
-                    setResult(true);
+                    //setResult(true);
                 }
 
                 return true;
@@ -183,6 +180,17 @@ public class RegisterSecondStepFragment extends BaseFragment{
         public void finishView() {
             getActivity().finish();
         }
+
+
+        @Override
+        public void showProgress(boolean isShowed){
+            if(isShowed){
+                mProgress = ProgressDialog.show(getContext(),"",
+                        getString(R.string.register_progress_info));
+            }else if(mProgress.isShowing()){
+                mProgress.dismiss();
+            }
+        }
     }
 
     private void setResult(boolean success){
@@ -200,6 +208,8 @@ public class RegisterSecondStepFragment extends BaseFragment{
         intent.putExtras(bundle);
 
         getActivity().setResult(RESULT_OK, intent);
+
+        getActivity().finish();
     }
 
     private void navigateToPreviousStep(){

@@ -17,9 +17,11 @@ public abstract class RegisterView implements BaseView{
 
     public void showEmailInvalidMsg(){}
 
-    //void showTelInvalidMsg();
+    public void showTelInvalidMsg(){}
 
     public void showPwdInvalidMsg(){}
 
     public void showHeadIconNullMsg(){}
+
+    public void showProgress(boolean isShowed){}
 }

@@ -128,7 +128,10 @@ public class RegisterPresenterImpl implements RegisterPresenter{
         Log.v(TAG,"getSmsAuthCode()");
         if(UserInfoUtils.isTelNumberValid(telNumber)) {
             mPhoneNumber = telNumber;
+            mUserInfo.setUserTelNumber(mPhoneNumber);
             mRepository.sendSmsAuthCode(telNumber);
+        }else{
+            mView.showTelInvalidMsg();
         }
     }
 
@@ -136,23 +139,27 @@ public class RegisterPresenterImpl implements RegisterPresenter{
     public void signUpBySms() {
         Log.v(TAG,"signUpBySms()");
         if(!TextUtils.isEmpty(mAuthCode)) {
-            mRepository.registerBySms(mPhoneNumber, mAuthCode);
+
+            //mRepository.registerBySms(mPhoneNumber, mAuthCode);
             return;
         }
         throw new IllegalArgumentException("auth code should not be empty");
     }
 
     @Override
-    public void updateUserInfo() {
-        Log.v(TAG,"updateUserInfo()");
+    public void registerAndVerify() {
+        Log.v(TAG,"registerAndVerify()");
         if(mUserInfo != null) {
-            mRepository.updateCurrentUserInfo(UserInfo.USER_NICK_NAME, mUserInfo.getNickName());
+/*            mRepository.updateCurrentUserInfo(UserInfo.USER_NICK_NAME, mUserInfo.getNickName());
             mRepository.updateCurrentUserInfo(UserInfo.USER_NAME, mUserInfo.getUserName());
             mRepository.updateCurrentUserInfo(UserInfo.UER_EMAIL, mUserInfo.getUserEmail());
             mRepository.updateCurrentUserInfo(UserInfo.USER_PWD, mUserInfo.getUserPwd());
+            */
             // upload head icon
             mRepository.uploadImageById(mUserInfo.getUserId(), mUserInfo.getHeadIconUrl(),
                     true, false);
+            mRepository.register(mUserInfo,mAuthCode);
+            mView.showProgress(true);
         }
     }
 
@@ -190,23 +197,31 @@ public class RegisterPresenterImpl implements RegisterPresenter{
             switch (response) {
                 case ResponseCode.RESP_REGISTER_SUCCESS:
                     if (message.obj != null) {
-                        mView.onLoginBySmsComplete(true);
                         mUserInfo.setUserId(((UserInfo) message.obj).getUserId());
                         // now we are sign up
                         SharePrefsHelper.getInstance(AppGlobals.getAppContext())
                                 .updateLogState(true);
-                    } else {
-                        mView.onLoginBySmsComplete(false);
                     }
+                    mView.onRegisterComplete(true);
                     saveUserInfo();
+                    mView.showProgress(false);
                     break;
                 case ResponseCode.RESP_REGISTER_FAIL:
-                    mView.onLoginBySmsComplete(false);
+                    mView.onRegisterComplete(false);
+                    mView.showProgress(false);
                     break;
                 case ResponseCode.RESP_IMAGE_UPLOAD_SUCCESS:
+                    mRepository.updateCurrentUserInfo(UserInfo.USER_HEAD_ICON,(String)message.obj);
+                    mView.onRegisterComplete(true);
+                    mView.showProgress(false);
+                    break;
                 case ResponseCode.RESP_IMAGE_UPLOAD_ERROR:
                     mView.onRegisterComplete(true);
+                    mView.showProgress(false);
+                    // update icon URL
                     break;
+                case ResponseCode.RESP_PHONE_NUMBER_VERIFIED_ERROR:
+                    mView.showProgress(false);
                 default:
                     break;
             }
