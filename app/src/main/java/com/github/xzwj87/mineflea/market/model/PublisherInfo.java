@@ -1,5 +1,8 @@
 package com.github.xzwj87.mineflea.market.model;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.maps.model.LatLng;
+
 /**
  * Created by JasonWang on 2016/9/22.
  */
@@ -27,7 +30,7 @@ public class PublisherInfo {
 
     private int mGoodsCount;
 
-    private String mLocation;
+    private LatLng mLocation;
 
     private double mDistance;
 
@@ -108,11 +111,11 @@ public class PublisherInfo {
         return mGoodsCount;
     }
 
-    public void setLocation(String location){
+    public void setLocation(LatLng location){
         mLocation = location;
     }
 
-    public String getLocation(){
+    public LatLng getLocation(){
         return mLocation;
     }
 

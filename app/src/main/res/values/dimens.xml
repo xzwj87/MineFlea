@@ -8,7 +8,7 @@
 
     <dimen name="input_text_size">16sp</dimen>
     <dimen name="edit_text_size">14sp</dimen>
-    <dimen name="dialog_input_text_size">14sp</dimen>
+    <dimen name="dialog_input_text_size">12sp</dimen>
 
     <dimen name="drawable_padding">16dp</dimen>
     <dimen name="card_view_item_margin">16dp</dimen>
@@ -44,7 +44,7 @@
     <dimen name="personal_info_title_size">14sp</dimen>
     <dimen name="personal_info_edit_margin">16dp</dimen>
     <dimen name="edit_activity_item_height">48dp</dimen>
-    <dimen name="edit_head_icon_size">60dp</dimen>
+    <dimen name="edit_head_icon_size">72dp</dimen>
     <dimen name="edit_activity_icon_height">96dp</dimen>
     <dimen name="user_center_title_size">14sp</dimen>
     <dimen name="user_center_sub_title_size">12sp</dimen>
@@ -75,7 +75,7 @@
     <dimen name="goods_detail_head_size">48dp</dimen>
     <dimen name="login_text_size">14sp</dimen>
     <dimen name="login_item_margin">12dp</dimen>
-    <dimen name="register_head_view_margin">30dp</dimen>
+    <dimen name="register_head_view_margin">16dp</dimen>
     <dimen name="register_view_margin">12dp</dimen>
     <dimen name="dialog_item_margin">12dp</dimen>
     <dimen name="login_drawable_padding">8dp</dimen>
@@ -85,4 +85,8 @@
     <dimen name="goods_detail_margin">12dp</dimen>
     <dimen name="goods_detail_price_size">18sp</dimen>
     <dimen name="goods_detail_text_size">14sp</dimen>
+    <dimen name="goods_detail_view_pager_height">210dp</dimen>
+    <dimen name="register_second_item_margin">32dp</dimen>
+    <dimen name="button_text_size_small">10sp</dimen>
+    <dimen name="dialog_title_margin">24dp</dimen>
 </resources>

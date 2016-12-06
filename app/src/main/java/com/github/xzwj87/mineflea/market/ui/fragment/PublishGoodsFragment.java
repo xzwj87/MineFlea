@@ -17,6 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps.model.LatLng;
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
@@ -54,10 +59,11 @@ public class PublishGoodsFragment extends BaseFragment
     EditText mEtGoodsName;
     EditText mEtPrice;
 
-    @Inject
-    PublishGoodsPresenterImpl mPresenter;
+    @Inject PublishGoodsPresenterImpl mPresenter;
     private ArrayList<String> mFilePath;
     private PublishGoodsImageAdapter mGoodsImgAdapter;
+    // get location
+    private AMapLocationClient mLocClient;
 
     public PublishGoodsFragment(){}
 
@@ -92,12 +98,19 @@ public class PublishGoodsFragment extends BaseFragment
         }
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        setUpAmapLocationClient();
+    }
 
     @Override
     public void onPause(){
         super.onPause();
 
         mPresenter.onPause();
+        mLocClient.stopLocation();
     }
 
     @Override
@@ -306,4 +319,32 @@ public class PublishGoodsFragment extends BaseFragment
         mEtPrice = (EditText)mCollapsingToolbar.findViewById(R.id.et_goods_price);
     }
 
+    private void setUpAmapLocationClient(){
+        mLocClient = new AMapLocationClient(getActivity());
+        AMapLocationClientOption locOptions = new AMapLocationClientOption();
+        locOptions.setNeedAddress(true);
+        locOptions.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        locOptions.setHttpTimeOut(10*1000);
+        locOptions.setInterval(2*1000);
+        mLocClient.setLocationListener(new AMapLocationListener() {
+            @Override
+            public void onLocationChanged(AMapLocation aMapLocation) {
+                if(aMapLocation != null){
+                    if(aMapLocation.getErrorCode() == 0){
+                        mPresenter.setLocation(new LatLng(aMapLocation.getLatitude(),
+                                aMapLocation.getLongitude()));
+                        // save current location
+                        LatLng current = new LatLng(aMapLocation.getLatitude(),aMapLocation.getLongitude());
+                        UserPrefsUtil.updateCurrentLocation(current);
+                    }else{
+                        Log.e("AmapError","location Error, ErrCode:"
+                                    + aMapLocation.getErrorCode() + ", errInfo:"
+                                    + aMapLocation.getErrorInfo());
+                    }
+                }
+            }
+        });
+
+        mLocClient.startLocation();
+    }
 }

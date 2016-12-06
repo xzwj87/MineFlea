@@ -9,17 +9,17 @@ import butterknife.BindView;
  */
 
 public abstract class RegisterView implements BaseView{
-    public void onRegisterComplete(boolean success){};
+    public void onLoginBySmsComplete(boolean success){}
 
-    public void showNameInvalidMsg(){};
+    public void onRegisterComplete(boolean success){}
 
-    public void showEmailInvalidMsg(){};
+    public void showNameInvalidMsg(){}
+
+    public void showEmailInvalidMsg(){}
 
     //void showTelInvalidMsg();
 
-    public void showPwdInvalidMsg(){};
+    public void showPwdInvalidMsg(){}
 
-    public void showHeadIconNullMsg(){};
-
-    public void showProgress(){};
+    public void showHeadIconNullMsg(){}
 }

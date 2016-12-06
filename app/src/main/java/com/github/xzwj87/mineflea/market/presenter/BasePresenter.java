@@ -19,7 +19,11 @@ public interface BasePresenter {
             PRESENTER_PUBLISH,PRESENTER_REGISTER,PRESENTER_CENTER,
             PRESENTER_USER_DETAIL,PRESENTER_FAVOR,PRESENTER_FOLLOWEE,
             PRESENTER_FOLLOWER,PRESENTER_GOODS, PRESENTER_GOODS_LIST,
+<<<<<<< HEAD
             PRESENTER_NEARBY_GOODS})
+=======
+            PRESENTER_GOODS_DETAIL})
+>>>>>>> xzwj87/master
     @interface PRESENTER_TYPE{}
 
     String PRESENTER_EDIT = "edit";
@@ -34,7 +38,12 @@ public interface BasePresenter {
     String PRESENTER_FOLLOWER = "follower";
     String PRESENTER_GOODS = "goods";
     String PRESENTER_GOODS_LIST = "goodsList";
+<<<<<<< HEAD
     String PRESENTER_NEARBY_GOODS = "nearbyGoods";
+=======
+    String PRESENTER_GOODS_DETAIL = "goodsDetail";
+
+>>>>>>> xzwj87/master
 
     void init();
 

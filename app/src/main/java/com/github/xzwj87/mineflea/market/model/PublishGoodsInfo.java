@@ -1,5 +1,11 @@
 package com.github.xzwj87.mineflea.market.model;
 
+<<<<<<< HEAD
+=======
+import com.amap.api.maps.model.LatLng;
+import com.avos.avoscloud.AVObject;
+
+>>>>>>> xzwj87/master
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,7 +46,7 @@ public class PublishGoodsInfo {
 
     private Date mUpdateTime;
 
-    private String mLoc;
+    private LatLng mLoc;
 
     private double mLng;//经度
 
@@ -163,11 +169,11 @@ public class PublishGoodsInfo {
         mUpdateTime = time;
     }
 
-    public void setLocation(String location){
+    public void setLocation(LatLng location){
         mLoc = location;
     }
 
-    public String getLocation(){
+    public LatLng getLocation(){
         return mLoc;
     }
 

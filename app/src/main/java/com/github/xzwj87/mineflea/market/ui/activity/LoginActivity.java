@@ -36,7 +36,7 @@ import static com.github.xzwj87.mineflea.utils.UserInfoUtils.isEmailValid;
 
 
 public class LoginActivity extends BaseActivity implements LoginView,
-        ResetPasswordDialog.DialogButtonClickCallback{
+        ResetPasswordDialog.ResetPwdCallback {
     public static final String TAG = LoginActivity.class.getSimpleName();
 
     private static final int REQUEST_USER_REGISTER = 1;
@@ -46,7 +46,6 @@ public class LoginActivity extends BaseActivity implements LoginView,
     @BindView(R.id.et_account) EditText mEtAccount;
     @BindView(R.id.et_password) EditText mEtPassword;
     @BindView(R.id.tv_forget_password) TextView mTvForgetPwd;
-    @BindView(R.id.tv_login) TextView mTvRegister;
     @BindView(R.id.iv_show_pwd) ImageView mIvShowPwd;
     @BindView(R.id.btn_login) Button mBtnLogin;
 
@@ -89,15 +88,12 @@ public class LoginActivity extends BaseActivity implements LoginView,
         tryLogin();
     }
 
-    @OnClick({R.id.tv_login,R.id.tv_forget_password})
+    @OnClick({R.id.tv_forget_password})
     void onTextClick(View view){
         int id = view.getId();
         switch (id){
             case R.id.tv_forget_password:
                 resetPassword();
-                break;
-            case R.id.tv_login:
-                startRegister();
                 break;
             default:
                 break;
@@ -157,13 +153,8 @@ public class LoginActivity extends BaseActivity implements LoginView,
 
     @Override
     public void resetPwdSuccess() {
-        ResetPasswordDialog dialog = (ResetPasswordDialog)getFragmentManager()
-                .findFragmentByTag(ResetPasswordDialog.class.getSimpleName());
-        if(dialog != null) {
-            dialog.resetPwdSuccess();
-        }else{
-            showToast(getString(R.string.reset_pwd_success));
-        }
+        Log.v(TAG,"resetPwdSuccess()");
+        showToast(getString(R.string.sms_auth_code_has_been_sent));
     }
 
     @Override
@@ -232,9 +223,17 @@ public class LoginActivity extends BaseActivity implements LoginView,
     }
 
     @Override
-    public void onResetPwd(String account) {
-        Log.v(TAG,"onResetPwd()");
-        mPresenter.resetPwdByAccount(account);
+    public void onSendSmsOrEmail(String account) {
+        Log.v(TAG,"onSendSmsOrEmail()");
+        mPresenter.sendAuthCodeByAccount(account);
+    }
+
+    @Override
+    public void onResetPwdBySms(String authCode, String pwd) {
+        Log.v(TAG,"onResetPwdBySms()");
+        if(!TextUtils.isEmpty(authCode) && !TextUtils.isEmpty(pwd)) {
+            mPresenter.resetPwdBySms(authCode, pwd);
+        }
     }
 
     @Override
@@ -302,12 +301,6 @@ public class LoginActivity extends BaseActivity implements LoginView,
         ResetPasswordDialog dialog = ResetPasswordDialog.newInstance();
         dialog.show(getFragmentManager(),ResetPasswordDialog.class.getSimpleName());
         dialog.setButtonClickCallback(this);
-    }
-
-    private void startRegister(){
-        Log.v(TAG,"startRegister()");
-        Intent intent = new Intent(this,RegisterActivity.class);
-        startActivity(intent);
     }
 }
 

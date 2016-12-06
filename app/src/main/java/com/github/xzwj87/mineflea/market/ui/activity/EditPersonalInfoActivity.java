@@ -29,6 +29,7 @@ import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.presenter.EditPersonalInfoPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.EditPersonalInfoView;
 import com.github.xzwj87.mineflea.market.ui.dialog.UserInfoEditDialog;
+import com.github.xzwj87.mineflea.utils.PicassoUtils;
 import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
 import com.squareup.picasso.Picasso;
 
@@ -145,7 +146,8 @@ public class EditPersonalInfoActivity extends BaseActivity
         return false;
     }
 
-    @OnClick({R.id.head_icon,R.id.nick_name,R.id.introduction})
+    @OnClick({R.id.head_icon,R.id.email,R.id.tel_number,
+            R.id.nick_name,R.id.introduction})
     public void showDialog(View view){
         int id = view.getId();
         String title;
@@ -156,19 +158,19 @@ public class EditPersonalInfoActivity extends BaseActivity
                 break;
             case R.id.nick_name:
                 title = getString(R.string.edit_nick_name);
-                showEditDialog(title,id);
+                showEditDialog(title,mTvNickName.getText().toString());
                 break;
             case R.id.email:
                 title = getString(R.string.edit_email);
-                showEditDialog(title,id);
+                showEditDialog(title,mTvEmail.getText().toString());
                 break;
             case R.id.tel_number:
                 title = getString(R.string.edit_tel_number);
-                showEditDialog(title,id);
+                showEditDialog(title,mTvTel.getText().toString());
                 break;
             case R.id.introduction:
                 title = getString(R.string.edit_intro);
-                showEditDialog(title,id);
+                showEditDialog(title,mTvIntro.getText().toString());
                 break;
             default:
                 break;
@@ -178,19 +180,8 @@ public class EditPersonalInfoActivity extends BaseActivity
     @Override
     public void updateHeadIcon(String url) {
         Log.v(TAG,"updateHeadIcon(): url = " + url);
-        if(URLUtil.isNetworkUrl(url)) {
-            Picasso.with(this)
-                    .load(url)
-                    .resize(1024, 1024)
-                    .centerCrop()
-                    .into(mCivHeadIcon);
-        }else{
-            Picasso.with(this)
-                    .load(Uri.fromFile(new File(url)))
-                    .resize(1024, 1024)
-                    .centerCrop()
-                    .into(mCivHeadIcon);
-        }
+
+        PicassoUtils.loadImage(this,mCivHeadIcon,url);
     }
 
     @Override
@@ -282,10 +273,10 @@ public class EditPersonalInfoActivity extends BaseActivity
                 .show();
     }
 
-    private void showEditDialog(String title,int id){
+    private void showEditDialog(String title,String content){
         if(TextUtils.isEmpty(title)) return;
 
-        UserInfoEditDialog dialog = UserInfoEditDialog.newInstance(title,id);
+        UserInfoEditDialog dialog = UserInfoEditDialog.newInstance(title,content);
 
         dialog.show(getFragmentManager(),"UserInfoEditDialog");
     }

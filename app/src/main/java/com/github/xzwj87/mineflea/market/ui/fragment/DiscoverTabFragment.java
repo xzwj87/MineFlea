@@ -15,15 +15,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps.model.LatLng;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
+import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.DiscoverGoodsPresenter;
 import com.github.xzwj87.mineflea.market.presenter.DiscoverGoodsPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.DiscoverGoodsView;
 import com.github.xzwj87.mineflea.market.ui.adapter.DiscoverGoodsAdapter;
 import com.github.xzwj87.mineflea.market.ui.activity.GoodsDetailActivity;
 import com.github.xzwj87.mineflea.utils.SharePrefsHelper;
+import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 
 import javax.inject.Inject;
 
@@ -39,13 +46,14 @@ public class DiscoverTabFragment extends BaseFragment
     public static final String TAG = DiscoverTabFragment.class.getSimpleName();
 
     private DiscoverGoodsAdapter mRvAdapter;
-    @Inject
-    DiscoverGoodsPresenterImpl mPresenter;
+    @Inject DiscoverGoodsPresenterImpl mPresenter;
 
     @BindView(R.id.discover_recycler_view)
     RecyclerView mRvDiscover;
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout mSrlDiscover;
+
+    private AMapLocationClient mLocClient;
 
     public DiscoverTabFragment() {
     }
@@ -81,6 +89,15 @@ public class DiscoverTabFragment extends BaseFragment
 
         mPresenter.setView(this);
         mPresenter.init();
+
+        setUpAmapLocationClient();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+
+        mLocClient.stopLocation();
     }
 
     @Override
@@ -103,6 +120,12 @@ public class DiscoverTabFragment extends BaseFragment
 
         mRvAdapter.setCallback(this);
         mRvDiscover.setAdapter(mRvAdapter);
+        // current location
+
+        LatLng loc = UserPrefsUtil.getCurrentLocation();
+        if(loc != null) {
+            mRvAdapter.setCurrentLoc(loc);
+        }
     }
 
     //设置下拉刷新
@@ -167,5 +190,36 @@ public class DiscoverTabFragment extends BaseFragment
     @Override
     public void finishView() {
         // empty
+    }
+
+    private void setUpAmapLocationClient(){
+        mLocClient = new AMapLocationClient(getActivity());
+        AMapLocationClientOption locOptions = new AMapLocationClientOption();
+        locOptions.setNeedAddress(true);
+        locOptions.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        locOptions.setHttpTimeOut(10*1000);
+        locOptions.setInterval(50*1000);
+        mLocClient.setLocationListener(new AMapLocationListener() {
+            @Override
+            public void onLocationChanged(AMapLocation aMapLocation) {
+                if(aMapLocation != null){
+                    if(aMapLocation.getErrorCode() == 0){
+                        if(mRvAdapter != null){
+                            mRvAdapter.setCurrentLoc(new LatLng(aMapLocation.getLatitude(),
+                                    aMapLocation.getLongitude()));
+                            // save current location
+                            LatLng loc = new LatLng(aMapLocation.getLatitude(),aMapLocation.getLongitude());
+                            UserPrefsUtil.updateCurrentLocation(loc);
+                        }
+                    }else{
+                        Log.e("AmapError","location Error, ErrCode:"
+                                + aMapLocation.getErrorCode() + ", errInfo:"
+                                + aMapLocation.getErrorInfo());
+                    }
+                }
+            }
+        });
+
+        mLocClient.startLocation();
     }
 }

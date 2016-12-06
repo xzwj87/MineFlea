@@ -3,6 +3,8 @@ package com.github.xzwj87.mineflea.market.ui.fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -38,8 +40,6 @@ public class RegisterSecondStepFragment extends BaseFragment{
     // share Presenter between different fragments
     private RegisterPresenterImpl mPresenter;
 
-    private ProgressDialog mProgress;
-
     @BindView(R.id.civ_header_icon) CircleImageView mCivHeader;
     @BindView(R.id.et_nick_name) EditText mEtName;
     @BindView(R.id.et_email) EditText mEtEmail;
@@ -62,8 +62,10 @@ public class RegisterSecondStepFragment extends BaseFragment{
 
         ButterKnife.bind(this,root);
 
-        if(getActivity() != null) {
-            getActivity().setTitle(R.string.previous_step);
+        android.app.ActionBar actionBar = getActivity().getActionBar();
+        if(actionBar != null) {
+            //getActivity().setTitle(R.string.previous_step);
+            actionBar.setTitle(R.string.previous_step);
         }
 
         setHasOptionsMenu(true);
@@ -73,9 +75,13 @@ public class RegisterSecondStepFragment extends BaseFragment{
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+<<<<<<< HEAD
         inflater.inflate(R.menu.menu_register,menu);
         //MenuItem item = menu.findItem(R.menu.menu_register);
         //item.setTitle(R.string.button_ok);
+=======
+        inflater.inflate(R.menu.menu_register_done,menu);
+>>>>>>> xzwj87/master
 
         super.onCreateOptionsMenu(menu,inflater);
     }
@@ -85,32 +91,20 @@ public class RegisterSecondStepFragment extends BaseFragment{
         int id = item.getItemId();
         switch (id){
             case android.R.id.home:
-                getActivity().finish();
+                navigateToPreviousStep();
                 return true;
-            case R.id.next_step:
+            case R.id.menu_ok:
                 // ok, register it
                 mPresenter.setUserNickName(mEtName.getText().toString());
-                mPresenter.setUserEmail(mEtName.getText().toString());
+                mPresenter.setUserEmail(mEtEmail.getText().toString());
                 mPresenter.setUserPwd(mEtPwd.getText().toString());
                 if(mPresenter.validUserInfo()){
-                    mPresenter.signUpBySms();
-
-                    Bundle bundle = new Bundle();
-                    bundle.putString(UserInfo.USER_HEAD_ICON, mPresenter.getUserIconUrl());
-                    bundle.putString(UserInfo.UER_EMAIL, mEtEmail.getText().toString());
-                    bundle.putString(UserInfo.USER_NAME, mEtEmail.getText().toString());
-                    bundle.putString(UserInfo.USER_NICK_NAME, mEtName.getText().toString());
-                    bundle.putString(UserInfo.USER_PWD, mEtPwd.getText().toString());
-
-                    Intent intent = new Intent();
-                    intent.putExtras(bundle);
-
-                    getActivity().setResult(RESULT_OK, intent);
+                    //mPresenter.signUpBySms();
                     // must do this
                     mPresenter.updateUserInfo();
+                    // ToDo: make sure all information has been saved to server
+                    setResult(true);
                 }
-
-
 
                 return true;
         }
@@ -120,7 +114,7 @@ public class RegisterSecondStepFragment extends BaseFragment{
 
     @Override
     public void onActivityResult(int request, int result, Intent data){
-        Log.v(TAG,"onActivityResult(): result = " + result);
+        Log.v(TAG,"onActivityResult(): result = ");
 
         if(result == RESULT_OK && data != null){
             switch (request){
@@ -146,13 +140,19 @@ public class RegisterSecondStepFragment extends BaseFragment{
                 .setPreviewEnabled(true)
                 .setShowCamera(true)
                 .setShowGif(true)
-                .start(getActivity(),PhotoPicker.REQUEST_CODE);
+                .start(getActivity(),this,PhotoPicker.REQUEST_CODE);
 
     }
 
 
 
     private class RegisterViewImpl extends RegisterView {
+
+        public void onRegisterComplete(boolean success){
+            Log.v(TAG,"onRegisterComplete()");
+            // now we back to parent
+            setResult(success);
+        }
 
         @Override
         public void showNameInvalidMsg() {
@@ -183,13 +183,37 @@ public class RegisterSecondStepFragment extends BaseFragment{
         }
 
         @Override
-        public void showProgress() {
-            mProgress = ProgressDialog.show(getActivity(), null, getString(R.string.register_progress_info));
-        }
-
-        @Override
         public void finishView() {
             getActivity().finish();
         }
+    }
+
+    private void setResult(boolean success){
+        Bundle bundle = new Bundle();
+        bundle.putString(UserInfo.USER_TEL,mPresenter.getTelNumber());
+        if(success) {
+            bundle.putString(UserInfo.USER_HEAD_ICON, mPresenter.getUserIconUrl());
+            bundle.putString(UserInfo.UER_EMAIL, mPresenter.getUserEmail());
+            bundle.putString(UserInfo.USER_NAME, mPresenter.getUserEmail());
+            bundle.putString(UserInfo.USER_NICK_NAME, mPresenter.getUserNickName());
+            bundle.putString(UserInfo.USER_PWD, mPresenter.getUserPwd());
+        }
+
+        Intent intent = new Intent();
+        intent.putExtras(bundle);
+
+        getActivity().setResult(RESULT_OK, intent);
+    }
+
+    private void navigateToPreviousStep(){
+        FragmentManager fragmentMgr = getActivity().getSupportFragmentManager();
+        RegisterFragment fragment = (RegisterFragment)fragmentMgr.findFragmentByTag(RegisterFragment.TAG);
+        if(fragment == null){
+            fragment = RegisterFragment.newInstance();
+        }
+
+        fragmentMgr.beginTransaction()
+                .replace(R.id.fragment_container,fragment,RegisterFragment.TAG)
+                .commit();
     }
 }

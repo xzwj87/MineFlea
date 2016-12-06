@@ -9,14 +9,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.amap.api.maps.model.LatLng;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
+import com.github.xzwj87.mineflea.utils.LocationUtils;
 import com.github.xzwj87.mineflea.utils.PicassoUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by seaice on 2016/8/22.
@@ -24,11 +26,17 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class DiscoverGoodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final long MIN_RESOLUTION = DateUtils.MINUTE_IN_MILLIS; // 1 minute
-    private static final long TRANSITION_RESOLUTION = 3*DateUtils.DAY_IN_MILLIS; // 3 days
+    private static final long TRANSITION_RESOLUTION = 3*DateUtils.DAY_IN_MILLIS;
+
+    private static String DIST_UNITS = AppGlobals.getAppContext().
+            getString(R.string.dist_units);
+    // 3 days
     //get data from presenter
     //private List<DiscoverInfo> infoList;
     private LayoutInflater mInflate;
     private DiscoverGoodsCallback mCallback;
+    // current location
+    private LatLng mCurrent;
 
     public DiscoverGoodsAdapter() {
         mInflate = LayoutInflater.from(AppGlobals.getAppContext());
@@ -45,6 +53,10 @@ public class DiscoverGoodsAdapter extends RecyclerView.Adapter<RecyclerView.View
         int getItemCount();
         String getPublisherHeadIcon(int pos);
         String getPublisherNickName(int pos);
+    }
+
+    public void setCurrentLoc(LatLng loc){
+        mCurrent = loc;
     }
 
     @Override
@@ -80,7 +92,8 @@ public class DiscoverGoodsAdapter extends RecyclerView.Adapter<RecyclerView.View
             holder.updatedTime.setText(DateUtils.getRelativeDateTimeString(
                     AppGlobals.getAppContext(),updatedTime, MIN_RESOLUTION,TRANSITION_RESOLUTION,0));
             // Todo: like time, we may want to get relative distance
-            holder.loc.setText(info.getLocation());
+            double dist = LocationUtils.getDistance(info.getLocation(),mCurrent);
+            holder.loc.setText(String.valueOf(dist) + " " + DIST_UNITS);
             if(!TextUtils.isEmpty(info.getNote())){
                 holder.note.setText(info.getNote());
             }

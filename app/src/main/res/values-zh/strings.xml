@@ -74,7 +74,7 @@
     <string name="error_invalid_input">此选项不能为空</string>
     <string name="user_intro">简介</string>
     <string name="user_email">邮箱</string>
-    <string name="user_tel_number">手机号码</string>
+    <string name="user_tel_number">手机号</string>
     <string name="say_something_about_yourself">简要的介绍自己</string>
     <string name="settings_about">关于</string>
     <string name="settings_about_sum">了解MineFlea</string>
@@ -103,7 +103,7 @@
     <string name="error_invalid_account">无效邮箱/手机号</string>
     <string name="please_input_email_or_telephone_number">邮箱或手机号</string>
     <string name="send_auth_code">获取验证码</string>
-    <string name="reset_your_password">找回密码</string>
+    <string name="reset_your_password">重置密码</string>
     <string name="reset_password_email_sent">重置密码邮件已发送，请查收!</string>
     <string name="error_reset_pwd_by_email">邮件发送失败，请重试!</string>
     <string name="error_reset_pwd_by_sms">短信发送错误，请重试!</string>
@@ -113,6 +113,14 @@
     <string name="error_invalid_auth_code">无效验证码</string>
     <string name="error_register">注册失败</string>
     <string name="previous_step">上一步</string>
-    <string name="add_to_your_likes">Add To Your Likes</string>
+    <string name="add_to_your_likes">收藏</string>
+    <string name="progress_get_goods_detail">加载中&#8230;</string>
+    <string name="dist_units">km</string>
+    <string name="error_wrong_auth_code">验证码错误</string>
+    <string name="sms_auth_code">验证码</string>
+    <string name="reset_password_explanation">发送短信验证码或者验证邮件</string>
+    <string name="find_your_password">找回密码</string>
+    <string name="sms_auth_code_has_been_sent">短信验证码已发送!</string>
+    <string name="prompt_input_new_pwd">请输入新密码</string>
 
 </resources>

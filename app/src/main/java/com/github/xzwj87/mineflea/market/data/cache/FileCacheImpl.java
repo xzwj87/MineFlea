@@ -103,7 +103,7 @@ public class FileCacheImpl implements FileCache{
     @Override
     public boolean isImageCached(String imgName, @CacheType String type) {
         if(TextUtils.isEmpty(imgName)){
-            return false;
+            return true;
         }
 
         File file = buildImageFile(imgName,type);
@@ -183,7 +183,7 @@ public class FileCacheImpl implements FileCache{
 
         List<PublishGoodsInfo> goodsList = new ArrayList<>();
 
-        if(goodsFile.exists() && files.length > 0){
+        if(goodsFile.exists() && files != null && files.length > 0){
             mCurrentRetrieved = (mCurrentRetrieved >= files.length) ? 0 : mCurrentRetrieved;
             // only retrieve 30 items a time
             int i;
