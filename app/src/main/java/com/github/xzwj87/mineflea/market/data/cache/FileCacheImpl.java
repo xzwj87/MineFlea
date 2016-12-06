@@ -1,35 +1,27 @@
 package com.github.xzwj87.mineflea.market.data.cache;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Environment;
-import android.support.annotation.IntDef;
 import android.text.TextUtils;
 import android.webkit.URLUtil;
 
-import com.alibaba.fastjson.JSON;
 import com.avos.avoscloud.AVUser;
-import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.data.cache.serializer.JsonSerializer;
 import com.github.xzwj87.mineflea.market.executor.JobExecutor;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
-import com.tencent.qc.stat.common.Env;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 /**
@@ -147,6 +139,8 @@ public class FileCacheImpl implements FileCache{
     public String saveImgToFile(String imgUri,@CacheType String type) {
 
         if(!URLUtil.isNetworkUrl(imgUri)) {
+            if(imgUri == null)
+                return null;
             File in = new File(imgUri);
             File out = buildImageFile(in.getName(), type);
 
