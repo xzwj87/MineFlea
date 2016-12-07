@@ -203,6 +203,28 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
     }
 
     @Override
+    public void follow(String userId) {
+        mCloudSrc.follow(userId);
+
+        UserInfo info = mCache.getUserCache(userId);
+        if(info != null) {
+            info.addFollowee(userId);
+            mCache.updateFile(info);
+        }
+    }
+
+    @Override
+    public void unFollow(String userId) {
+        mCloudSrc.unFollow(userId);
+
+        UserInfo info = mCache.getUserCache(userId);
+        if(info != null) {
+            info.removeFollowee(userId);
+            mCache.updateFile(info);
+        }
+    }
+
+    @Override
     public void getGoodsInfoById(String goodsId) {
         if(TextUtils.isEmpty(goodsId)) return;
         PresenterCallback callback = mPresenterCbs.get(PRESENTER_GOODS_DETAIL);
@@ -375,7 +397,6 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
         Log.v(TAG,"onTelNumberVerifiedComplete()");
 
     }
-
 
     @Override
     public void publishComplete(Message message) {

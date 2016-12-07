@@ -24,10 +24,11 @@ public class UserInfoEditDialog extends DialogFragment{
 
     public UserInfoEditDialog(){}
 
-    public static UserInfoEditDialog newInstance(String title,String content){
+    public static UserInfoEditDialog newInstance(int id,String title,String content){
         UserInfoEditDialog fragment = new UserInfoEditDialog();
 
         Bundle bundle = new Bundle();
+        bundle.putInt("id",id);
         bundle.putString("title",title);
         bundle.putString("content",content);
         fragment.setArguments(bundle);
@@ -55,12 +56,21 @@ public class UserInfoEditDialog extends DialogFragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedState){
         View root = inflater.inflate(R.layout.dialog_input_text,container,false);
-        //Dialog dialog = getDialog();
-        String content = getArguments().getString("content");
-        EditText editText = (EditText)root.findViewById(R.id.et_input);
-        editText.setText(content);
 
         return root;
+    }
+
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        String content = getArguments().getString("content");
+        Dialog dialog = getDialog();
+        if(dialog != null) {
+            EditText editText = (EditText) dialog.findViewById(R.id.et_input);
+            editText.setText(content);
+        }
     }
 
 

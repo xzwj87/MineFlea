@@ -17,7 +17,7 @@
         android:layout_marginStart="@dimen/user_detail_title_margin"
         android:layout_marginTop="@dimen/user_detail_title_margin"
         android:orientation="vertical"
-        android:gravity="center|start"
+        android:layout_gravity="center|start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 

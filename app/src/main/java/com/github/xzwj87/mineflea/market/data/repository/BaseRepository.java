@@ -92,6 +92,17 @@ public interface BaseRepository {
      */
     void getAllGoods();
 
+    /*
+     * follow a user
+     */
+    void follow(String userId);
+
+
+    /*
+     * unfollow a user
+     */
+    void unFollow(String userId);
+
 
     /*
      * get goods info by id

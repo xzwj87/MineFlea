@@ -66,6 +66,7 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
 
         Intent intent = getIntent();
         mUserId = intent.getStringExtra(UserInfo.USER_ID);
+        mIsMe = intent.getBooleanExtra(UserInfo.CURRENT_USER,false);
 
         setContentView(R.layout.activity_user_detail);
 
@@ -129,7 +130,8 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
 
     @Override
     public void renderHeadIcon(String iconUrl) {
-        Log.v(TAG,"renderHeadIcon()");
+        Log.v(TAG,"renderHeadIcon(): url = " + iconUrl);
+        //FIXME: sometimes, head icon and other view is empty
         PicassoUtils.loadImage(this,mIvHeadIcon,iconUrl);
     }
 
@@ -200,6 +202,7 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
                 startActivity(intent);
                 break;
             case R.id.favorite:
+                follow();
                 break;
         }
 
@@ -228,20 +231,16 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
 
         mInflateMenuId = R.menu.menu_user_detail_others;
 
-        mIsMe = false;
-        if(mPresenter != null){
-            if(mPresenter.isMe()){
-                mIsMe = true;
-                mInflateMenuId = R.menu.menu_user_detail_me;
-                mTvAction.setText(R.string.action_edit);
+        if(mIsMe){
+            mInflateMenuId = R.menu.menu_user_detail_me;
+            mTvAction.setText(R.string.action_edit);
 
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mTvAction.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_edit_white_16dp),
-                            null, null, null);
-                }else{
-                    mTvAction.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_edit_white_16dp),
-                            null, null, null);
-                }
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mTvAction.setCompoundDrawablesWithIntrinsicBounds(getDrawable(R.drawable.ic_edit_white_16dp),
+                        null, null, null);
+            }else{
+                mTvAction.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_edit_white_16dp),
+                        null, null, null);
             }
         }
 
@@ -259,5 +258,9 @@ public class UserDetailActivity extends BaseActivity implements UserDetailView{
                 }
             }
         });
+    }
+
+    private void follow(){
+        mPresenter.follow(mUserId);
     }
 }

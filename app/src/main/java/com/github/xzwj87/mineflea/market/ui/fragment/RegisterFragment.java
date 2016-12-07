@@ -180,6 +180,11 @@ public class RegisterFragment extends BaseFragment{
     @Override
     public void onActivityResult(int request, int result, Intent data){
         Log.v(TAG,"onActivityResult(): result = " + result);
+
+        if(request == REQUEST_LOGIN) {
+            getActivity().setResult(result, data);
+            getActivity().finish();
+        }
     }
 
     private void startCountDown(){

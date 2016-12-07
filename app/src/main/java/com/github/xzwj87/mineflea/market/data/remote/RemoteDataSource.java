@@ -172,7 +172,14 @@ public class RemoteDataSource implements RemoteSource{
 
     @Override
     public void follow(String userId) {
+        Log.v(TAG,"follow()");
         AVUser current = AVUser.getCurrentUser();
+        // update list
+        UserInfo userInfo = UserInfoUtils.fromAvUser(current);
+        userInfo.addFollowee(userId);
+        current.put(UserInfo.USER_FOLLOWEES,userInfo.getFolloweeList());
+        current.saveInBackground();
+
         current.followInBackground(userId, new FollowCallback() {
             @Override
             public void done(AVObject object, AVException e) {
@@ -189,9 +196,16 @@ public class RemoteDataSource implements RemoteSource{
 
     @Override
     public void unFollow(String userId) {
-        AVUser user = AVUser.getCurrentUser();
+        Log.v(TAG,"unFollow()");
+        AVUser current = AVUser.getCurrentUser();
 
-        user.unfollowInBackground(userId, new FollowCallback() {
+        // update list
+        UserInfo userInfo = UserInfoUtils.fromAvUser(current);
+        userInfo.removeFollowee(userId);
+        current.put(UserInfo.USER_FOLLOWEES,userInfo.getFolloweeList());
+        current.saveInBackground();
+
+        current.unfollowInBackground(userId, new FollowCallback() {
             @Override
             public void done(AVObject object, AVException e) {
                 if(e == null){

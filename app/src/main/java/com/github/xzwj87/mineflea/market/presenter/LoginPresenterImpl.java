@@ -49,7 +49,7 @@ public class LoginPresenterImpl implements LoginPresenter{
         if(mIsEmail) {
             isValid = UserInfoUtils.isEmailValid(mUserInfo.getUserEmail());
         }else {
-            isValid = UserInfoUtils.isTelNumber(mUserInfo.getUserTelNumber());
+            isValid = UserInfoUtils.isTelNumberValid(mUserInfo.getUserTelNumber());
         }
 
         if(!isValid){

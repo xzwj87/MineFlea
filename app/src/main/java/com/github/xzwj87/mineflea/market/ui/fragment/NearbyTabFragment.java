@@ -191,6 +191,7 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
         mapView.onCreate(savedSate);
         initView(root);
 
+        // FIXME: a lot of bugs
         mPresenter.setView(this);
         mPresenter.init();
 

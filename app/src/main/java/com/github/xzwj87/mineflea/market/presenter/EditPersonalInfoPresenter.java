@@ -6,11 +6,19 @@ import android.os.Message;
  * Created by jason on 11/2/16.
  */
 
-public abstract class EditPersonalInfoPresenter implements BasePresenter{
+public interface EditPersonalInfoPresenter extends BasePresenter{
 
-    public abstract void setNickName(String nickName);
-    public abstract void setHeadIcon(String iconUrl);
-    public abstract void setEmail(String email);
-    public abstract void setTelNumber(String telNumber);
-    public abstract void setIntro(String intro);
+    void setNickName(String nickName);
+
+    void setHeadIcon(String iconUrl);
+
+    void setEmail(String email);
+
+    void setTelNumber(String telNumber);
+
+    void setIntro(String intro);
+
+    boolean isEmailVerified();
+
+    boolean isTelVerified();
 }

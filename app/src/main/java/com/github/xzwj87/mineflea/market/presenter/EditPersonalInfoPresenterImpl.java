@@ -15,7 +15,7 @@ import javax.inject.Inject;
  */
 
 @PerActivity
-public class EditPersonalInfoPresenterImpl extends EditPersonalInfoPresenter{
+public class EditPersonalInfoPresenterImpl implements EditPersonalInfoPresenter{
 
     private EditPersonalInfoView mView;
     @Inject
@@ -88,6 +88,16 @@ public class EditPersonalInfoPresenterImpl extends EditPersonalInfoPresenter{
         mRepo.updateCurrentUserInfo(UserInfo.USER_INTRO,intro);
 
         mView.updateIntro(intro);
+    }
+
+    @Override
+    public boolean isEmailVerified() {
+        return mCurrent != null && mCurrent.getEmailVerified();
+    }
+
+    @Override
+    public boolean isTelVerified() {
+        return mCurrent != null && mCurrent.getTelVerified();
     }
 
     private void initView(){
