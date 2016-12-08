@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
-import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps2d.model.LatLng;
 import com.avos.avoscloud.AVUser;
 import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
@@ -37,6 +37,8 @@ public class UserPrefsUtil {
     }
 
     public static void updateCurrentLocation(LatLng loc){
+        if(loc == null)
+            return;
         String current = loc.latitude + "-" + loc.longitude;
 
         updateUserInfoString(UserInfo.USER_LOCATION,current);

@@ -11,9 +11,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -187,8 +189,8 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedSate) {
         View root = inflater.inflate(R.layout.fragment_nearby_tab, container, false);
         ButterKnife.bind(this, root);
-        mPresenter.setView(this);
         mPresenter.init();
+        mPresenter.setView(this);
         mapView = (MapView) root.findViewById(R.id.map);
         mapView.onCreate(savedSate);
         initView(root);
@@ -567,6 +569,16 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
 
         dialog.setView(searchView);
         dialog.getWindow().setWindowAnimations(R.style.dialogWindowAnim);
+
+        //获取当前Activity所在的窗体
+        Window dialogWindow = dialog.getWindow();
+        //设置Dialog从窗体底部弹出
+        dialogWindow.setGravity( Gravity.BOTTOM);
+        //获得窗体的属性
+//        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+//        lp.y = 20;//设置Dialog距离底部的距离
+////       将属性设//窗体
+        //dialogWindow.setAttributes(lp);
         dialog.show();
     }
 
@@ -824,6 +836,10 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
         if (progDialog != null) {
             progDialog.dismiss();
         }
+    }
+
+    public LatLng getMyLocation(){
+        return myLocation;
     }
 
 }

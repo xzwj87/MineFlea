@@ -1,6 +1,7 @@
 package com.github.xzwj87.mineflea.utils;
 
-import com.amap.api.maps.model.LatLng;
+
+import com.amap.api.maps2d.model.LatLng;
 
 /**
  * a utility class to get distance between two points
