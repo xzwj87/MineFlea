@@ -303,7 +303,7 @@ public class FileCacheImpl implements FileCache{
         String str = FILE_DIR_PARENT + File.separator +
                 DIR_USER_DATA;
 
-        return new File(new File(str),id);
+        return new File(new File(str),"123");
     }
 
     /*

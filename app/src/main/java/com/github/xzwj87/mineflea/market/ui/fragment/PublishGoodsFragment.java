@@ -21,7 +21,6 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.amap.api.maps.model.LatLng;
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
@@ -29,6 +28,7 @@ import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.PublishGoodsPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.PublishGoodsView;
 import com.github.xzwj87.mineflea.market.ui.activity.HomeActivity;
+import com.github.xzwj87.mineflea.market.ui.activity.PublishGoodsActivity;
 import com.github.xzwj87.mineflea.market.ui.adapter.PublishGoodsImageAdapter;
 import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 
@@ -143,6 +143,8 @@ public class PublishGoodsFragment extends BaseFragment
         mPresenter.setGoodsNote(mEtNote.getText().toString());
         mPresenter.setGoodsImgUrl(mFilePath.subList(0,mFilePath.size()-1));
         mPresenter.setPublisherName(UserPrefsUtil.getString(UserInfo.USER_NAME,"dummy"));
+        mPresenter.setLocation(((PublishGoodsActivity)getActivity()).getMyLoc());
+        UserPrefsUtil.updateCurrentLocation(((PublishGoodsActivity)getActivity()).getMyLoc());
 
         if(mPresenter.validGoodsInfo()) {
             mPresenter.publishGoods();
@@ -331,11 +333,11 @@ public class PublishGoodsFragment extends BaseFragment
             public void onLocationChanged(AMapLocation aMapLocation) {
                 if(aMapLocation != null){
                     if(aMapLocation.getErrorCode() == 0){
-                        mPresenter.setLocation(new LatLng(aMapLocation.getLatitude(),
-                                aMapLocation.getLongitude()));
+                        //mPresenter.setLocation(new LatLng(aMapLocation.getLatitude(),
+                                //aMapLocation.getLongitude()));
                         // save current location
-                        LatLng current = new LatLng(aMapLocation.getLatitude(),aMapLocation.getLongitude());
-                        UserPrefsUtil.updateCurrentLocation(current);
+                        //LatLng current = new LatLng(aMapLocation.getLatitude(),aMapLocation.getLongitude());
+                        //
                     }else{
                         Log.e("AmapError","location Error, ErrCode:"
                                     + aMapLocation.getErrorCode() + ", errInfo:"

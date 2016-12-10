@@ -1,9 +1,7 @@
 package com.github.xzwj87.mineflea.market.presenter;
 
-import android.os.Message;
 
-import com.amap.api.maps.model.LatLng;
-import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
+import com.amap.api.maps2d.model.LatLng;
 
 import java.util.List;
 
