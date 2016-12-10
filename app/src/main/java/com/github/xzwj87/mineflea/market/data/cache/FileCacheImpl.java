@@ -87,7 +87,7 @@ public class FileCacheImpl implements FileCache{
     @Override
     public boolean isCached(String id, @CacheType String type) {
         if(TextUtils.isEmpty(id)){
-            return false;
+            return true;
         }
 
         File file;
@@ -162,6 +162,8 @@ public class FileCacheImpl implements FileCache{
 
     @Override
     public UserInfo getUserCache(String id) {
+        if(TextUtils.isEmpty(id)) return null;
+
         File file = buildUserFile(id);
         String json = mCacheMgr.readFromFile(file);
 
@@ -170,6 +172,8 @@ public class FileCacheImpl implements FileCache{
 
     @Override
     public PublishGoodsInfo getGoodsCache(String id) {
+        if(TextUtils.isEmpty(id)) return null;
+
         File file = buildGoodsFile(id);
         String json = mCacheMgr.readFromFile(file);
 

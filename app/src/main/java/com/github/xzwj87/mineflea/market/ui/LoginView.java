@@ -22,4 +22,6 @@ public interface LoginView extends BaseView{
     void showEmailResetPwdFailMsg();
 
     void showSmsResetPwdFailMsg();
+
+    void showNoNetConnectionMsg();
 }

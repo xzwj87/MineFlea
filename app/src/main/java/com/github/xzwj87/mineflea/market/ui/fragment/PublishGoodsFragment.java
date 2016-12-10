@@ -1,6 +1,7 @@
 package com.github.xzwj87.mineflea.market.ui.fragment;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -53,7 +54,8 @@ public class PublishGoodsFragment extends BaseFragment
 
     @BindView(R.id.et_note) EditText mEtNote;
     @BindView(R.id.rv_goods_image) RecyclerView mRvGoodsImg;
-    @BindView(R.id.process_upload_image) NumberProgressBar mProcessBar;
+
+    ProgressDialog mProcessBar;
 
     CollapsingToolbarLayout mCollapsingToolbar;
     EditText mEtGoodsName;
@@ -128,6 +130,7 @@ public class PublishGoodsFragment extends BaseFragment
         ButterKnife.bind(this,rootView);
 
         initView();
+
         init();
 
         return rootView;
@@ -146,8 +149,8 @@ public class PublishGoodsFragment extends BaseFragment
 
         if(mPresenter.validGoodsInfo()) {
             mPresenter.publishGoods();
-            mProcessBar.setVisibility(View.VISIBLE);
-            mProcessBar.setProgress(0);
+
+            mProcessBar = ProgressDialog.show(getContext(),"",getString(R.string.progress_publish_goods));
         }
     }
 
@@ -163,36 +166,51 @@ public class PublishGoodsFragment extends BaseFragment
                 showToast(getString(R.string.publish_goods_success));
             }
 
-            mProcessBar.setVisibility(View.GONE);
-
-            finishView();
+            if(mProcessBar.isShowing()){
+                mProcessBar.dismiss();
+            }
         }
     }
 
     @Override
     public void updateUploadProcess(int count) {
         Log.v(TAG,"updateUploadProcess(): count = " + count);
-        mProcessBar.setProgress(count);
+        //mProcessBar.setProgress(count);
     }
 
     @Override
     public void showNameInvalidMsg() {
-        showToast(getString(R.string.error_invalid_goods_name));
+        mEtGoodsName.setError(getString(R.string.error_field_required));
+        //showToast(getString(R.string.error_invalid_goods_name));
     }
 
     @Override
     public void showPriceInvalidMsg() {
-        showToast(getString(R.string.error_invalid_goods_price));
+        mEtPrice.setError(getString(R.string.error_field_required));
+        //showToast(getString(R.string.error_invalid_goods_price));
     }
 
     @Override
     public void showNoteInvalidMsg() {
+        mEtNote.setError(getString(R.string.error_field_required));
         showToast(getString(R.string.error_no_note));
     }
 
     @Override
     public void showNoPicturesMsg() {
         showToast(getString(R.string.error_no_pictures));
+    }
+
+    @Override
+    public void showNoNetConnectionMsg() {
+        Log.v(TAG,"showNoNetConnectionMsg()");
+        showToast(getString(R.string.hint_no_network_connection));
+    }
+
+    @Override
+    public void showNeedLoginMsg() {
+        Log.v(TAG,"showNeedLoginMsg()");
+        showToast(getString(R.string.need_to_login));
     }
 
     @Override

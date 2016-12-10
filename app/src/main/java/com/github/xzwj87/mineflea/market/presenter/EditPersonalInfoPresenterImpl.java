@@ -62,7 +62,7 @@ public class EditPersonalInfoPresenterImpl implements EditPersonalInfoPresenter{
     @Override
     public void setHeadIcon(String iconUrl) {
         mCurrent.setHeadIconUrl(iconUrl);
-        mRepo.uploadImageById(mCurrent.getUserId(),iconUrl,true,false);
+        mRepo.uploadImageById(iconUrl,true,false);
         //mRepo.uploadImage(iconUrl,false);
         mView.updateHeadIcon(iconUrl);
     }

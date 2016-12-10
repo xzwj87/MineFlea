@@ -191,6 +191,12 @@ public class RegisterSecondStepFragment extends BaseFragment{
                 mProgress.dismiss();
             }
         }
+
+        @Override
+        public void showNoNetConnectionMsg(){
+            Log.v(TAG,"showNoNetConnectionMsg()");
+            showToast(getString(R.string.hint_no_network_connection));
+        }
     }
 
     private void setResult(boolean success){

@@ -24,4 +24,6 @@ public abstract class RegisterView implements BaseView{
     public void showHeadIconNullMsg(){}
 
     public void showProgress(boolean isShowed){}
+
+    public void showNoNetConnectionMsg(){};
 }

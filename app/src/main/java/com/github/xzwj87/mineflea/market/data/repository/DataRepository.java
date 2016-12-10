@@ -12,7 +12,6 @@ import com.github.xzwj87.mineflea.market.data.remote.RemoteDataSource;
 import com.github.xzwj87.mineflea.market.data.remote.RemoteSourceCallBack;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
-import com.github.xzwj87.mineflea.market.presenter.BasePresenter;
 import com.github.xzwj87.mineflea.market.presenter.PresenterCallback;
 import com.github.xzwj87.mineflea.utils.UserInfoUtils;
 
@@ -40,8 +39,6 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
 
     private HashMap<String,PresenterCallback> mPresenterCbs;
 
-    private PublishGoodsInfo mGoodsInfo;
-
     @Inject
     public DataRepository(FileCacheImpl cache, RemoteDataSource cloudSource){
         mCloudSrc = cloudSource;
@@ -56,12 +53,6 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
     @Override
     public void publishGoods(PublishGoodsInfo goods) {
         Log.v(TAG,"publishGoods(): goods = " + goods);
-
-        mGoodsInfo = goods;
-
-        if(!mCache.isCached(goods.getId(), FileCache.CACHE_TYPE_GOODS)){
-            mCache.saveToFile(goods);
-        }
 
         mCloudSrc.publishGoods(goods);
     }
@@ -112,24 +103,33 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
         mCloudSrc.logOut();
 
         String currentUserId = getCurrentUserId();
-        if(mCache.isCached(currentUserId,FileCache.CACHE_TYPE_USER)){
+        if(!TextUtils.isEmpty(currentUserId)
+                && mCache.isCached(currentUserId,FileCache.CACHE_TYPE_USER)){
             mCache.delete(currentUserId,FileCache.CACHE_TYPE_USER);
         }
     }
 
     @Override
-    public void uploadImageById(String id, String imgUri, boolean isUser, boolean showProcess) {
-        if(TextUtils.isEmpty(imgUri) || TextUtils.isEmpty(id))  return;
+    public void uploadImageById(String imgUri, boolean isUser, boolean showProcess) {
+        if(TextUtils.isEmpty(imgUri))  return;
 
         String type = FileCache.CACHE_TYPE_USER;
         if(!isUser){
           type = FileCache.CACHE_TYPE_GOODS;
         }
 
-        if(!mCache.isCached(id,type) && mCache.isExpired(id,type)){
+        if(!mCache.isImageCached(imgUri,type)){
             mCache.saveImgToFile(imgUri,type);
             mCloudSrc.uploadImg(imgUri,showProcess);
         }
+
+    }
+
+    @Override
+    public void uploadImages(List<String> imgList, boolean showProgress) {
+        Log.v(TAG,"uploadImages()");
+
+        mCloudSrc.uploadImg(imgList,showProgress);
     }
 
     @Override
@@ -296,6 +296,12 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
 
     @Override
     public void registerCallBack(@PRESENTER_TYPE String type, PresenterCallback callback) {
+        mPresenterCbs.put(type, callback);
+        if(type.equals(PRESENTER_PUBLISH)){
+            if(mPresenterCbs.get(PRESENTER_PUBLISH) != null){
+                Log.v(TAG,"there is a publish callback");
+            }
+        }
         if(!mPresenterCbs.containsKey(type)) {
             mPresenterCbs.put(type, callback);
         }
@@ -403,12 +409,21 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
         Log.v(TAG,"publishComplete(): goods id = " + message.obj);
 
         if(message.obj != null) {
-            mGoodsInfo.setId((String) message.obj);
+            PublishGoodsInfo goods = (PublishGoodsInfo)message.obj;
+            if(!mCache.isCached(goods.getId(), FileCache.CACHE_TYPE_GOODS)){
+                mCache.saveToFile(goods);
+            }
         }
 
-        PresenterCallback listener = mPresenterCbs.get(PRESENTER_PUBLISH);
-        if(listener != null){
-            listener.onComplete(message);
+        if(mPresenterCbs.get(PRESENTER_PUBLISH) != null){
+            Log.v(TAG,"there is a publish callback");
+        }else{
+            Log.v(TAG,"there is no publish callback");
+        }
+
+        PresenterCallback callback = mPresenterCbs.get(PRESENTER_PUBLISH);
+        if(callback != null){
+            callback.onComplete(message);
         }
     }
 
@@ -432,6 +447,7 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
 
         PresenterCallback listener = mPresenterCbs.get(PRESENTER_PUBLISH);
         if(listener != null){
+            Log.v(TAG,"updateProcess(): count = " + count);
             final Message message = new Message();
             message.obj = count;
             listener.onNext(message);

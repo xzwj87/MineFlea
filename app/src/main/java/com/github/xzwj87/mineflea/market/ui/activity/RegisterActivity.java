@@ -104,11 +104,12 @@ public class RegisterActivity extends BaseActivity implements RegisterFragment.N
 
     @Override
     public void onActivityResult(int request, int result, Intent data){
-        super.onActivityResult(request,result,data);
+        //super.onActivityResult(request,result,data);
         Log.v(TAG,"onActivityResult(): result = " + result);
-/*        if(request == RESULT_OK && data != null){
+        if(request == RegisterFragment.REQUEST_LOGIN){
             setResult(result,data);
-        }*/
+            finish();
+        }
     }
 
     @Override

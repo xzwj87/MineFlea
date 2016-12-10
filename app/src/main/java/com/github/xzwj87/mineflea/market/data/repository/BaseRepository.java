@@ -5,6 +5,8 @@ import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.BasePresenter;
 import com.github.xzwj87.mineflea.market.presenter.PresenterCallback;
 
+import java.util.List;
+
 /**
  * Created by jason on 10/11/16.
  */
@@ -60,7 +62,12 @@ public interface BaseRepository {
     /*
      * upload image by user id or goods id
      */
-    void uploadImageById(String id,String imgUri,boolean isUser,boolean showProcess);
+    void uploadImageById(String imgUri,boolean isUser,boolean showProcess);
+
+    /*
+     * upload image list
+     */
+    void uploadImages(List<String> imgList, boolean showProgress);
 
     /*
      * get current user id

@@ -17,6 +17,7 @@ import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.internal.di.HasComponent;
 import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
 import com.github.xzwj87.mineflea.market.ui.adapter.SectionsPageAdapter;
+import com.github.xzwj87.mineflea.utils.NetConnectionUtils;
 import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
 
 public class HomeActivity extends BaseActivity
@@ -96,8 +97,12 @@ public class HomeActivity extends BaseActivity
     }
 
     private void startPublishActivity(){
-        Intent intent = new Intent(this,PublishGoodsActivity.class);
-        startActivity(intent);
+        if(NetConnectionUtils.isNetworkConnected()) {
+            Intent intent = new Intent(this, PublishGoodsActivity.class);
+            startActivity(intent);
+        }else{
+            showToast(getString(R.string.hint_no_network_connection));
+        }
     }
 
     @Override

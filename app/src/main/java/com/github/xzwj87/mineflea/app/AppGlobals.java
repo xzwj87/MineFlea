@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.RemoteException;
-import android.util.Log;
 
 import com.amap.api.maps2d.MapsInitializer;
 import com.avos.avoscloud.AVOSCloud;

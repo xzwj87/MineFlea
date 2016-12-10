@@ -138,6 +138,16 @@ public class RegisterFragment extends BaseFragment{
         return super.onOptionsItemSelected(item);
     }
 
+
+    @Override
+    public void onActivityResult(int request, int result, Intent data){
+        Log.v(TAG,"onActivityResult(): result = " + result);
+        if(request == RegisterFragment.REQUEST_LOGIN){
+            getActivity().setResult(result,data);
+            getActivity().finish();
+        }
+    }
+
     @OnClick({R.id.tv_get_auth_code})
     public void getAuthCode(){
         String telNumber = mEtTelNumber.getText().toString();
@@ -174,16 +184,6 @@ public class RegisterFragment extends BaseFragment{
                 mDownTimer.onFinish();
                 mDownTimer.cancel();
             }
-        }
-    }
-
-    @Override
-    public void onActivityResult(int request, int result, Intent data){
-        Log.v(TAG,"onActivityResult(): result = " + result);
-
-        if(request == REQUEST_LOGIN) {
-            getActivity().setResult(result, data);
-            getActivity().finish();
         }
     }
 

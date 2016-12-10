@@ -156,8 +156,7 @@ public class RegisterPresenterImpl implements RegisterPresenter{
             mRepository.updateCurrentUserInfo(UserInfo.USER_PWD, mUserInfo.getUserPwd());
             */
             // upload head icon
-            mRepository.uploadImageById(mUserInfo.getUserId(), mUserInfo.getHeadIconUrl(),
-                    true, false);
+            mRepository.uploadImageById(mUserInfo.getHeadIconUrl(), true, false);
             mRepository.register(mUserInfo,mAuthCode);
             mView.showProgress(true);
         }
@@ -222,6 +221,10 @@ public class RegisterPresenterImpl implements RegisterPresenter{
                     break;
                 case ResponseCode.RESP_PHONE_NUMBER_VERIFIED_ERROR:
                     mView.showProgress(false);
+                    break;
+                case ResponseCode.RESP_NETWORK_NOT_CONNECTED:
+                    mView.showNoNetConnectionMsg();
+                    break;
                 default:
                     break;
             }
