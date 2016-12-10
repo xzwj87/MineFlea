@@ -22,6 +22,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps2d.model.LatLng;
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
@@ -345,17 +346,17 @@ public class PublishGoodsFragment extends BaseFragment
         locOptions.setNeedAddress(true);
         locOptions.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
         locOptions.setHttpTimeOut(10*1000);
-        locOptions.setInterval(2*1000);
+        locOptions.setInterval(30*1000);
         mLocClient.setLocationListener(new AMapLocationListener() {
             @Override
             public void onLocationChanged(AMapLocation aMapLocation) {
                 if(aMapLocation != null){
                     if(aMapLocation.getErrorCode() == 0){
-                        //mPresenter.setLocation(new LatLng(aMapLocation.getLatitude(),
-                                //aMapLocation.getLongitude()));
-                        // save current location
+/*                        mPresenter.setLocation(new LatLng(aMapLocation.getLatitude(),
+                                aMapLocation.getLongitude()));*/
+                         //save current location
                         //LatLng current = new LatLng(aMapLocation.getLatitude(),aMapLocation.getLongitude());
-                        //
+
                     }else{
                         Log.e("AmapError","location Error, ErrCode:"
                                     + aMapLocation.getErrorCode() + ", errInfo:"

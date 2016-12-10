@@ -65,6 +65,7 @@ public class SectionsPageAdapter extends FragmentPagerAdapter {
         return TabHolderFragment.newInstance(position + 1);
     }
 
+    //FIXME: too complex, we need a simple public API to get location
     public LatLng getLocation() {
         if (fragment2 != null) {
             LatLng loc = fragment2.getMyLocation();

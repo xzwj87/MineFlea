@@ -4,13 +4,14 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps2d.model.LatLng;
 import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.PublishGoodsView;
+import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ import javax.inject.Inject;
  */
 
 @PerActivity
-public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
+public class PublishGoodsPresenterImpl implements PublishGoodsPresenter{
     public static final String TAG = PublishGoodsPresenterImpl.class.getSimpleName();
 
     @Inject

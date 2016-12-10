@@ -10,6 +10,7 @@ import java.util.List;
 
 import static com.github.xzwj87.mineflea.market.model.PublishGoodsInfo.GOODS_FAVOR_USER;
 import static com.github.xzwj87.mineflea.market.model.PublishGoodsInfo.GOODS_IMAGES;
+import static com.github.xzwj87.mineflea.market.model.PublishGoodsInfo.GOODS_LOC;
 import static com.github.xzwj87.mineflea.market.model.PublishGoodsInfo.GOODS_NAME;
 import static com.github.xzwj87.mineflea.market.model.PublishGoodsInfo.GOODS_NOTE;
 import static com.github.xzwj87.mineflea.market.model.PublishGoodsInfo.GOODS_PRICE;
