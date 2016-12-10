@@ -125,6 +125,8 @@ public class RegisterFragment extends BaseFragment{
                     mEtInputAuthCode.setError(getString(R.string.error_invalid_auth_code));
                 }
 
+                nextStep();
+
                 if(mDownTimer != null) {
                     mDownTimer.onFinish();
                     mDownTimer.cancel();
@@ -134,6 +136,16 @@ public class RegisterFragment extends BaseFragment{
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    public void onActivityResult(int request, int result, Intent data){
+        Log.v(TAG,"onActivityResult(): result = " + result);
+        if(request == RegisterFragment.REQUEST_LOGIN){
+            getActivity().setResult(result,data);
+            getActivity().finish();
+        }
     }
 
     @OnClick({R.id.tv_get_auth_code})
@@ -175,11 +187,6 @@ public class RegisterFragment extends BaseFragment{
         }
     }
 
-    @Override
-    public void onActivityResult(int request, int result, Intent data){
-        Log.v(TAG,"onActivityResult(): result = " + result);
-    }
-
     private void startCountDown(){
         sIsTimerStarted = true;
         final String orig = mTvGetAuthCode.getText().toString();
@@ -210,6 +217,13 @@ public class RegisterFragment extends BaseFragment{
     }
 
     private class RegisterViewImpl extends RegisterView {
+
+        @Override
+        public void showTelInvalidMsg(){
+            mTvGetAuthCode.setText(R.string.send_auth_code);
+            mEtTelNumber.setError(getString(R.string.error_invalid_user_tel));
+        }
+
 
         @Override
         public void onLoginBySmsComplete(boolean success){

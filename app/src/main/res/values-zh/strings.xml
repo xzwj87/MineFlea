@@ -122,5 +122,9 @@
     <string name="find_your_password">找回密码</string>
     <string name="sms_auth_code_has_been_sent">短信验证码已发送!</string>
     <string name="prompt_input_new_pwd">请输入新密码</string>
+    <string name="already_verified">已验证</string>
+    <string name="not_verified">未验证</string>
+    <string name="hint_no_network_connection">无网络链接</string>
+    <string name="progress_publish_goods">发布中&#8230;请稍候</string>
 
 </resources>

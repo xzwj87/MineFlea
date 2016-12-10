@@ -1,5 +1,7 @@
 package com.github.xzwj87.mineflea.market.data.cache.serializer;
 
+import android.text.TextUtils;
+
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.google.gson.Gson;
@@ -22,10 +24,12 @@ public class JsonSerializer {
     }
 
     public static UserInfo fromUserJson(String jsonString){
+        if(TextUtils.isEmpty(jsonString)) return null;
         return (UserInfo)gson.fromJson(jsonString,UserInfo.class);
     }
 
     public static PublishGoodsInfo fromGoodsJson(String jsonString){
+        if(TextUtils.isEmpty(jsonString)) return null;
         return (PublishGoodsInfo)gson.fromJson(jsonString,PublishGoodsInfo.class);
     }
 }

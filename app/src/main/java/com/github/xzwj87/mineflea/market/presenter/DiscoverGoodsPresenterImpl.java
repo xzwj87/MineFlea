@@ -103,24 +103,29 @@ public class DiscoverGoodsPresenterImpl implements DiscoverGoodsPresenter{
         @Override
         public void onComplete(Message message) {
             Log.v(TAG,"onComplete()");
-            // sync cache/cloud callback
-            synchronized (mCompleteLock){
-                List<PublishGoodsInfo> goods = (List<PublishGoodsInfo>)message.obj;
-                if(goods != null) {
-                    for (int i = 0; i < goods.size(); ++i) {
-                        PublishGoodsInfo goodsInfo = goods.get(i);
-                        if(!mGoodsSet.contains(goodsInfo.getId())){
-                            mGoodsSet.add(goodsInfo.getId());
-                            mGoodsList.add(goodsInfo);
+            int resp = message.what;
+            switch (resp) {
+                case ResponseCode.RESP_GET_GOODS_LIST_SUCCESS:
+                    // sync cache/cloud callback
+                    synchronized (mCompleteLock) {
+                        List<PublishGoodsInfo> goods = (List<PublishGoodsInfo>) message.obj;
+                        if (goods != null) {
+                            for (int i = 0; i < goods.size(); ++i) {
+                                PublishGoodsInfo goodsInfo = goods.get(i);
+                                if (!mGoodsSet.contains(goodsInfo.getId())) {
+                                    mGoodsSet.add(goodsInfo.getId());
+                                    mGoodsList.add(goodsInfo);
+                                }
+                            }
                         }
                     }
-                }
-            }
-
-            if(message.what == ResponseCode.RESP_GET_GOODS_LIST_SUCCESS){
-                mView.onGetGoodsListDone(true);
-            }else{
-                mView.onGetGoodsListDone(false);
+                    mView.onGetGoodsListDone(true);
+                    break;
+                case ResponseCode.RESP_GET_GOODS_LIST_ERROR:
+                    mView.onGetGoodsListDone(false);
+                    break;
+                default:
+                    break;
             }
         }
 

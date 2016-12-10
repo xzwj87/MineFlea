@@ -15,7 +15,7 @@ import javax.inject.Inject;
  */
 
 @PerActivity
-public class EditPersonalInfoPresenterImpl extends EditPersonalInfoPresenter{
+public class EditPersonalInfoPresenterImpl implements EditPersonalInfoPresenter{
 
     private EditPersonalInfoView mView;
     @Inject
@@ -62,7 +62,7 @@ public class EditPersonalInfoPresenterImpl extends EditPersonalInfoPresenter{
     @Override
     public void setHeadIcon(String iconUrl) {
         mCurrent.setHeadIconUrl(iconUrl);
-        mRepo.uploadImageById(mCurrent.getUserId(),iconUrl,true,false);
+        mRepo.uploadImageById(iconUrl,true,false);
         //mRepo.uploadImage(iconUrl,false);
         mView.updateHeadIcon(iconUrl);
     }
@@ -88,6 +88,16 @@ public class EditPersonalInfoPresenterImpl extends EditPersonalInfoPresenter{
         mRepo.updateCurrentUserInfo(UserInfo.USER_INTRO,intro);
 
         mView.updateIntro(intro);
+    }
+
+    @Override
+    public boolean isEmailVerified() {
+        return mCurrent != null && mCurrent.getEmailVerified();
+    }
+
+    @Override
+    public boolean isTelVerified() {
+        return mCurrent != null && mCurrent.getTelVerified();
     }
 
     private void initView(){

@@ -3,6 +3,7 @@ package com.github.xzwj87.mineflea.market.presenter;
 import android.os.Message;
 
 import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
+import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.NearbyGoodsView;
@@ -16,8 +17,8 @@ import javax.inject.Inject;
  * Created by jason on 9/27/16.
  */
 
+@PerActivity
 public class NearbyGoodsPresenterImpl extends NearbyGoodsPresenter {
-
 
     @Inject
     DataRepository mRepository;

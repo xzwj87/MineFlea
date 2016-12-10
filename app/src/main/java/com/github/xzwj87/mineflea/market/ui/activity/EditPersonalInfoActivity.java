@@ -53,7 +53,7 @@ public class EditPersonalInfoActivity extends BaseActivity
     private static final String TAG = EditPersonalInfoActivity.class.getSimpleName();
 
     private static final int REQUEST_IMAGE_CAPTURE = 0x3001;
-    private static final String KEY_ITEM_LAYOUT_ID = "item";
+    private static final String KEY_ITEM_LAYOUT_ID = "id";
 
     @BindView(R.id.head_icon) RelativeLayout mRlHeadIcon;
     @BindView(R.id.nick_name) LinearLayout mRlNickName;
@@ -119,12 +119,14 @@ public class EditPersonalInfoActivity extends BaseActivity
                     if(data != null) {
                         ArrayList<String> urlList = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
                         mPresenter.setHeadIcon(urlList.get(0));
+                        PicassoUtils.loadImage(this,mCivHeadIcon,urlList.get(0));
                     }
                     break;
                 case REQUEST_IMAGE_CAPTURE:
                     File file = new File(sCameraImgPath);
                     if(file.exists()){
                         mPresenter.setHeadIcon(sCameraImgPath);
+                        PicassoUtils.loadImage(this,mCivHeadIcon,sCameraImgPath);
                     }
                     break;
             }
@@ -158,19 +160,19 @@ public class EditPersonalInfoActivity extends BaseActivity
                 break;
             case R.id.nick_name:
                 title = getString(R.string.edit_nick_name);
-                showEditDialog(title,mTvNickName.getText().toString());
+                showEditDialog(id,title,mTvNickName.getText().toString());
                 break;
             case R.id.email:
                 title = getString(R.string.edit_email);
-                showEditDialog(title,mTvEmail.getText().toString());
+                showEditDialog(id,title,mTvEmail.getText().toString());
                 break;
             case R.id.tel_number:
                 title = getString(R.string.edit_tel_number);
-                showEditDialog(title,mTvTel.getText().toString());
+                showEditDialog(id,title,mTvTel.getText().toString());
                 break;
             case R.id.introduction:
                 title = getString(R.string.edit_intro);
-                showEditDialog(title,mTvIntro.getText().toString());
+                showEditDialog(id,title,mTvIntro.getText().toString());
                 break;
             default:
                 break;
@@ -192,12 +194,24 @@ public class EditPersonalInfoActivity extends BaseActivity
 
     @Override
     public void updateEmail(String email) {
-        mTvEmail.setText(email);
+        if(mPresenter.isEmailVerified()) {
+            String verified = getString(R.string.already_verified);
+            mTvEmail.setText(email + "(" + verified + ")");
+        }else{
+            String noVerified = getString(R.string.not_verified);
+            mTvEmail.setText(email+ "(" + noVerified + ")");
+        }
     }
 
     @Override
     public void updateTelNumber(String tel) {
-        mTvTel.setText(tel);
+        if(mPresenter.isTelVerified()) {
+            String verified = getString(R.string.already_verified);
+            mTvTel.setText(tel + "(" + verified + ")");
+        }else{
+            String noVerified = getString(R.string.not_verified);
+            mTvTel.setText(tel + "(" + noVerified + ")");
+        }
     }
 
     @Override
@@ -212,7 +226,6 @@ public class EditPersonalInfoActivity extends BaseActivity
 
     @Override
     public void onPositiveClick(DialogFragment dialog) {
-        Log.v(TAG,"onPositiveClick()");
         int id = dialog.getArguments().getInt(KEY_ITEM_LAYOUT_ID);
 
         EditText et = (EditText)dialog.getDialog().findViewById(R.id.et_input);
@@ -227,15 +240,19 @@ public class EditPersonalInfoActivity extends BaseActivity
         switch (id){
             case R.id.nick_name:
                 mPresenter.setNickName(input);
+                mTvNickName.setText(input);
                 break;
             case R.id.email:
                 mPresenter.setEmail(input);
+                mTvEmail.setText(input);
                 break;
             case R.id.tel_number:
                 mPresenter.setTelNumber(input);
+                mTvTel.setText(input);
                 break;
             case R.id.introduction:
                 mPresenter.setIntro(input);
+                mTvIntro.setText(input);
                 break;
             default:
                 break;
@@ -250,7 +267,6 @@ public class EditPersonalInfoActivity extends BaseActivity
 
         dialog.dismiss();
     }
-
 
     private void showGetHeadIconDialog(){
         Log.v(TAG,"showGetHeadIconDialog()");
@@ -273,10 +289,11 @@ public class EditPersonalInfoActivity extends BaseActivity
                 .show();
     }
 
-    private void showEditDialog(String title,String content){
+    private void showEditDialog(int id,String title,String content){
         if(TextUtils.isEmpty(title)) return;
 
-        UserInfoEditDialog dialog = UserInfoEditDialog.newInstance(title,content);
+        UserInfoEditDialog dialog = UserInfoEditDialog.newInstance(
+                id,title,content);
 
         dialog.show(getFragmentManager(),"UserInfoEditDialog");
     }

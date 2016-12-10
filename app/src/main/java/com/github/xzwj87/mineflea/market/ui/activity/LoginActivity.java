@@ -67,6 +67,11 @@ public class LoginActivity extends BaseActivity implements LoginView,
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_back_white_24dp);
         }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
 
         ThemeColorUtils.changeThemeColor(this);
     }
@@ -178,6 +183,12 @@ public class LoginActivity extends BaseActivity implements LoginView,
     }
 
     @Override
+    public void showNoNetConnectionMsg() {
+        Log.v(TAG,"showNoNetConnectionMsg()");
+        showToast(getString(R.string.hint_no_network_connection));
+    }
+
+    @Override
     public void onLoginSuccess() {
         Log.v(TAG,"onLoginSuccess()");
 
@@ -193,8 +204,6 @@ public class LoginActivity extends BaseActivity implements LoginView,
         SharePrefsHelper.getInstance(this).updateLogState(true);
 
         setResult(RESULT_OK,intent);
-
-        finishView();
     }
 
     @Override

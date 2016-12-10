@@ -34,5 +34,5 @@ public interface  RegisterPresenter extends BasePresenter{
 
     void signUpBySms();
 
-    void updateUserInfo();
+    void registerAndVerify();
 }

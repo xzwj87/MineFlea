@@ -14,6 +14,9 @@ import java.util.regex.Pattern;
 
 public class UserInfoUtils {
 
+    private static final String KEY_EMAIL_VERIFIED  = "emailVerified";
+    private static final String KEY_TEL_VERIFIED = "mobilePhoneVerified";
+
     private static final int MIN_PWD_LEN = 6;
     private static final int TEL_NUMBER_LEN = 11;
 
@@ -22,8 +25,7 @@ public class UserInfoUtils {
     private static final String VALIDATE_TEL_REGEX = "^[1-9]{1}[0-9]{10}";
 
     public static boolean isEmailValid(String email) {
-        return true;
-        //return !TextUtils.isEmpty(email) && isEmail(email);
+        return !TextUtils.isEmpty(email) && isEmail(email);
     }
 
     public static boolean isPossibleEmail(String account){
@@ -69,7 +71,8 @@ public class UserInfoUtils {
         userInfo.setUserName(avUser.getUsername());
         userInfo.setUerEmail(avUser.getEmail());
         userInfo.setUserTelNumber(avUser.getMobilePhoneNumber());
-
+        userInfo.setEmailVerified(avUser.getBoolean(KEY_EMAIL_VERIFIED));
+        userInfo.setTelVerified(avUser.getBoolean(KEY_TEL_VERIFIED));
         userInfo.setNickName((String)avUser.get(UserInfo.USER_NICK_NAME));
         userInfo.setHeadIconUrl((String)avUser.get(UserInfo.USER_HEAD_ICON));
         userInfo.setLocation((String)avUser.get(UserInfo.USER_LOCATION));
@@ -93,6 +96,8 @@ public class UserInfoUtils {
         avUser.setMobilePhoneNumber(userInfo.getUserTelNumber());
         avUser.setPassword(userInfo.getUserPwd());
 
+        avUser.put(KEY_EMAIL_VERIFIED,userInfo.getEmailVerified());
+        avUser.put(KEY_TEL_VERIFIED,userInfo.getTelVerified());
         avUser.put(UserInfo.USER_NICK_NAME,userInfo.getNickName());
         avUser.put(UserInfo.USER_HEAD_ICON,userInfo.getHeadIconUrl());
         avUser.put(UserInfo.USER_LOCATION,userInfo.getLocation());

@@ -31,6 +31,8 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
     private List<PublishGoodsInfo> mGoodsList;
     private List<AVUser> mFolloweeList;
     private UserInfo mUserInfo;
+    private UserInfo mCurrent;
+    private boolean mIsMe;
 
     @Inject
     public UserDetailPresenterImpl(DataRepository repository){
@@ -44,12 +46,18 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
 
     @Override
     public void follow(String userId) {
+        Log.v(TAG,"follow()");
+        mDataRepo.follow(userId);
 
+        mView.updateActionButton(UserDetailView.ALREADY_FOLLOW);
     }
 
     @Override
     public void unFollow(String userId) {
+        Log.v(TAG,"unFollow()");
+        mDataRepo.follow(userId);
 
+        mView.updateActionButton(UserDetailView.NOT_FOLLOW);
     }
 
     @Override
@@ -88,18 +96,19 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
 
     @Override
     public boolean isMe() {
-        if(mUserInfo == null) return false;
+        return mIsMe;
+    }
 
-        String id = mUserInfo.getUserId();
-        String currentId = getCurrentUserId();
-
-        return id != null && id.equals(currentId);
+    @Override
+    public void setIsMe(boolean state) {
+        mIsMe = state;
     }
 
     @Override
     public void init() {
         mDataRepo.init();
         mDataRepo.registerCallBack(PRESENTER_USER_DETAIL,new DetailPresenterCallback());
+        mCurrent = mDataRepo.getCurrentUser();
     }
 
     @Override
@@ -134,6 +143,8 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
             mView.updateActionButton(UserDetailView.IS_ME);
         }else if(isMyFollowee(mUserInfo.getUserId())){
             mView.updateActionButton(UserDetailView.ALREADY_FOLLOW);
+        }else{
+            mView.updateActionButton(UserDetailView.NOT_FOLLOW);
         }
     }
 

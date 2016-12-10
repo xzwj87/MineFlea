@@ -15,6 +15,10 @@ public class UserInfo {
 
     public static final String IS_LOGIN = "is_login";
 
+    public static final String IS_PHONE_VERIFIED = "phone_verified";
+
+    public static final String IS_EMAIL_VERIFIED = "email_verified";
+
     public static final String USER_NICK_NAME = "nick_name";
 
     public static final String UER_EMAIL = "user_email";
@@ -43,7 +47,9 @@ public class UserInfo {
     private String mNickName;
     private String mUserName;
     private String mUserEmail;
+    private boolean mIsEmailVerified;
     private String mTelNumber;
+    private boolean mIsTelVerified;
     private String mUserPwd;
     private String mHeadIconUrl;
     private List<String> mGoodsList;
@@ -78,6 +84,9 @@ public class UserInfo {
         mFollowerList = new ArrayList<>();
         // published goods list
         mGoodsList = new ArrayList<>();
+
+        mIsEmailVerified = false;
+        mIsTelVerified = false;
     }
 
     public void setUserId(String id){
@@ -102,6 +111,14 @@ public class UserInfo {
         return mUserEmail;
     }
 
+    public void setEmailVerified(boolean state){
+        mIsEmailVerified = state;
+    }
+
+    public boolean getEmailVerified(){
+        return mIsEmailVerified;
+    }
+
     public void setUserName(String name){
         mUserName = name;
     }
@@ -116,6 +133,14 @@ public class UserInfo {
 
     public String getUserTelNumber(){
         return mTelNumber;
+    }
+
+    public void setTelVerified(boolean state){
+        mIsTelVerified = state;
+    }
+
+    public boolean getTelVerified(){
+        return mIsTelVerified;
     }
 
     public void setUserPwd(String pwd){

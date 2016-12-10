@@ -52,7 +52,7 @@ public class DataRepositoryTest extends TestCase{
     public void register_test(){
         UserInfo user = new UserInfo("妮子","qaz123@163.com","qaz123@163.com",mIconUrl);
         user.setUserTelNumber("18923233233");
-        mRepo.register(user);
+        //mRepo.register(user);
     }
 
     @Test

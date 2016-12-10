@@ -24,7 +24,7 @@ public interface DataSource {
     /*
      * register account
      */
-    void register(UserInfo userInfo);
+    void register(UserInfo userInfo,String authCode);
 
     /*
      * login
