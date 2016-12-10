@@ -1,6 +1,6 @@
 package com.github.xzwj87.mineflea.market.model;
 
-import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps2d.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Date;

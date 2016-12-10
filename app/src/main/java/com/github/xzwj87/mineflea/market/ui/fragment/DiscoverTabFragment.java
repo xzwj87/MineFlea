@@ -19,14 +19,14 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps2d.model.LatLng;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.presenter.DiscoverGoodsPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.DiscoverGoodsView;
-import com.github.xzwj87.mineflea.market.ui.adapter.DiscoverGoodsAdapter;
 import com.github.xzwj87.mineflea.market.ui.activity.GoodsDetailActivity;
+import com.github.xzwj87.mineflea.market.ui.adapter.DiscoverGoodsAdapter;
 import com.github.xzwj87.mineflea.utils.SharePrefsHelper;
 import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 

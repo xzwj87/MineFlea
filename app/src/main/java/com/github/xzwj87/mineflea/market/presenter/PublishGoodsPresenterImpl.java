@@ -11,7 +11,6 @@ import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.PublishGoodsView;
-import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 
 import java.util.List;
 

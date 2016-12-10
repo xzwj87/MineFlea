@@ -3,8 +3,6 @@ package com.github.xzwj87.mineflea.market.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -12,7 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-
+import com.amap.api.maps2d.model.LatLng;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.internal.di.HasComponent;
 import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
@@ -27,6 +25,8 @@ public class HomeActivity extends BaseActivity
 
     public static int DRIVE_ACTIVITY_CODE = 0;
     public static int WALK_ACTIVITY_CODE = 1;
+
+    public LatLng myLoc = null;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -70,6 +70,16 @@ public class HomeActivity extends BaseActivity
         super.onResume();
 
         ThemeColorUtils.changeThemeColor(this);
+    }
+
+    public LatLng getMyLoc(){
+        if(mSectionsPagerAdapter != null){
+            myLoc = mSectionsPagerAdapter.getLocation();
+            if(myLoc != null){
+                return myLoc;
+            }
+        }
+        return null;
     }
 
     @Override

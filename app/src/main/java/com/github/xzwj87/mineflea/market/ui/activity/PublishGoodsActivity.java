@@ -1,20 +1,13 @@
 package com.github.xzwj87.mineflea.market.ui.activity;
 
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.ColorRes;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 
+import com.amap.api.maps2d.model.LatLng;
 import com.github.xzwj87.mineflea.R;
-import com.github.xzwj87.mineflea.market.internal.di.HasComponent;
-import com.github.xzwj87.mineflea.market.internal.di.component.DaggerMarketComponent;
-import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
 import com.github.xzwj87.mineflea.market.ui.fragment.PublishGoodsFragment;
-import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,6 +18,8 @@ import butterknife.ButterKnife;
 
 public class PublishGoodsActivity extends BaseActivity {
     public static final String TAG = PublishGoodsActivity.class.getSimpleName();
+
+    public LatLng myLoc = null;
 
     @BindView(R.id.toolbar) Toolbar mToolBar;
 
@@ -52,6 +47,18 @@ public class PublishGoodsActivity extends BaseActivity {
 
             mMarketComponent.inject(fragment);
         }
+    }
+
+    public LatLng getMyLoc(){
+        if(getParent() == null)
+            return null;
+        if(getParent().isFinishing() || getParent().isDestroyed())
+            return null;
+        if(getParent() instanceof HomeActivity){
+            myLoc = ((HomeActivity)getParent()).getMyLoc();
+            return myLoc;
+        }
+        return null;
     }
 
     @Override
