@@ -9,12 +9,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import com.amap.api.maps2d.model.LatLng;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.internal.di.HasComponent;
 import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
 import com.github.xzwj87.mineflea.market.ui.adapter.SectionsPageAdapter;
+import com.github.xzwj87.mineflea.market.ui.view.CustomerViewPager;
 import com.github.xzwj87.mineflea.utils.NetConnectionUtils;
 import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
 import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
@@ -42,7 +42,7 @@ public class HomeActivity extends BaseActivity
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    private ViewPager mViewPager;
+    private CustomerViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,7 @@ public class HomeActivity extends BaseActivity
         mSectionsPagerAdapter = new SectionsPageAdapter(getSupportFragmentManager());
         mSectionsPagerAdapter.setMarketComponent(mMarketComponent);
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = (CustomerViewPager) findViewById(R.id.container);
         if(mViewPager != null) {
             mViewPager.setAdapter(mSectionsPagerAdapter);
         }
