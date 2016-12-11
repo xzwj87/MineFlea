@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -21,7 +20,6 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps2d.model.LatLng;
 import com.github.xzwj87.mineflea.R;
-import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.presenter.DiscoverGoodsPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.DiscoverGoodsView;
@@ -96,6 +94,15 @@ public class DiscoverTabFragment extends BaseFragment
         super.onPause();
 
         mLocClient.stopLocation();
+
+        mPresenter.onPause();
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+
+        mPresenter.onDestroy();
     }
 
     @Override
@@ -110,8 +117,8 @@ public class DiscoverTabFragment extends BaseFragment
     }
 
     private void init() {
-        mRvAdapter = new DiscoverGoodsAdapter();
-        LinearLayoutManager layoutManager = new LinearLayoutManager(AppGlobals.getAppContext());
+        mRvAdapter = new DiscoverGoodsAdapter(getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRvDiscover.setLayoutManager(layoutManager);
         setSwipeLayout();
@@ -119,7 +126,6 @@ public class DiscoverTabFragment extends BaseFragment
         mRvAdapter.setCallback(this);
         mRvDiscover.setAdapter(mRvAdapter);
         // current location
-
         LatLng loc = UserPrefsUtil.getCurrentLocation();
         if(loc != null) {
             mRvAdapter.setCurrentLoc(loc);
@@ -141,7 +147,6 @@ public class DiscoverTabFragment extends BaseFragment
 
     @Override
     public void onItemClick(int position) {
-        Toast.makeText(AppGlobals.getAppContext(), "显示", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getActivity(), GoodsDetailActivity.class);
         startActivity(intent);
     }
@@ -162,27 +167,36 @@ public class DiscoverTabFragment extends BaseFragment
     }
 
     @Override
-    public String getPublisherHeadIcon(int pos) {
-        return mPresenter.getPublisherHeadIcon(pos);
-    }
-
-    @Override
     public String getPublisherNickName(int pos) {
         return mPresenter.getPublisherNickName(pos);
     }
 
     @Override
+    public void addToMyFavor(int pos) {
+        Log.v(TAG,"addToMyFavor()");
+        mPresenter.addToMyFavor(pos);
+    }
+
+    @Override
     public void onGetGoodsListDone(boolean success) {
         Log.v(TAG,"onGetGoodsListDone(): " + (success ? "success" : "fail"));
+        mRvAdapter.notifyDataSetChanged();
+
         if(mSrlDiscover.isRefreshing()){
             mSrlDiscover.setRefreshing(false);
 
             if(success){
-                showToast(getString(R.string.get_goods_list_sucess));
+                showToast(getString(R.string.get_goods_list_success));
             }else{
                 showToast(getString(R.string.error_get_goods_list));
             }
         }
+    }
+
+    @Override
+    public void updateLikesView(int pos, int likes) {
+        Log.v(TAG,"updateLikesView()");
+        mRvAdapter.updateLikesView(pos,likes);
     }
 
     @Override

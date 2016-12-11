@@ -60,6 +60,7 @@ public class RemoteDataSource implements RemoteSource{
 
     @Override
     public void getUserInfoById(String id) {
+        Log.v(TAG,"getUserInfoById()");
         UserInfo user = getCurrentUser();
         if(user != null && user.getUserId().equals(id)){
             final  Message msg = new Message();
@@ -72,6 +73,7 @@ public class RemoteDataSource implements RemoteSource{
             query.getInBackground(id, new GetCallback<AVUser>() {
                 @Override
                 public void done(AVUser avUser, AVException e) {
+                    Log.v(TAG,"getUserInfoById(): done");
                     final Message msg = new Message();
                     if (e == null) {
                         msg.obj = UserInfoUtils.fromAvUser(avUser);
@@ -79,6 +81,7 @@ public class RemoteDataSource implements RemoteSource{
                     } else {
                         msg.obj = null;
                         msg.what = ResponseCode.RESP_GET_USER_INFO_ERROR;
+                        e.printStackTrace();
                     }
 
                     mCloudCallback.onGetUserInfoDone(msg);
@@ -287,12 +290,14 @@ public class RemoteDataSource implements RemoteSource{
 
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void getAllGoods() {
+        Log.v(TAG,"getAllGoods()");
         AVQuery<AVObject> query = new AVQuery(AvCloudConstants.AV_OBJ_GOODS);
 
         query.setLimit(MAX_GOODS_TO_GET_ONE_TIME);
-        query.orderByAscending(AvCloudConstants.AV_UPDATE_TIME);
+        query.orderByAscending(PublishGoodsInfo.GOODS_UPDATED_TIME);
 
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
@@ -627,17 +632,24 @@ public class RemoteDataSource implements RemoteSource{
 
         final AVUser user = AVUser.getCurrentUser();
 
-        final AVObject object = PublishGoodsUtils.toAvObject(goodsInfo);
-        object.put(AvCloudConstants.AV_GOODS_NAME,goodsInfo.getName());
+        final AVObject object = AVObject.createWithoutData(
+                AvCloudConstants.AV_OBJ_GOODS,goodsInfo.getId());
+        object.put(PublishGoodsInfo.GOODS_FAVOR_USER,goodsInfo.getFavorUserList());
+        //object.put(AvCloudConstants.AV_GOODS_NAME,goodsInfo.getName());
 
-        object.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(AVException e) {
-                AVRelation<AVObject> relation = user.getRelation(AvCloudConstants.AV_RELATION_USER_GOODS);
-                relation.add(object);
-                user.saveInBackground();
-            }
-        });
+        if(user != null) {
+            object.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    AVRelation<AVObject> relation = user.getRelation(AvCloudConstants.AV_RELATION_USER_GOODS);
+                    relation.add(object);
+                    user.saveInBackground();
+                    // Todo: we want to do callback to notify uppper layer
+                }
+            });
+        }else{
+            object.saveInBackground();
+        }
     }
 
     @Override

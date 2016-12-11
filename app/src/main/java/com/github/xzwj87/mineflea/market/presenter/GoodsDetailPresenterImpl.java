@@ -3,6 +3,7 @@ package com.github.xzwj87.mineflea.market.presenter;
 import android.os.Message;
 import android.util.Log;
 
+import com.amap.api.maps2d.AMapUtils;
 import com.amap.api.maps2d.model.LatLng;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
@@ -13,7 +14,6 @@ import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.GoodsDetailView;
-import com.github.xzwj87.mineflea.utils.LocationUtils;
 import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 
 import javax.inject.Inject;
@@ -120,7 +120,7 @@ public class GoodsDetailPresenterImpl implements GoodsDetailPresenter{
             mView.updateImageListPage(mGoods.getImageUri());
             mView.updateGoodsName(mGoods.getName());
 
-            String dist = LocationUtils.getDistance(mGoods.getLocation(),mCurrent) + " " + DIST_UNITS;
+            String dist = AMapUtils.calculateLineDistance(mGoods.getLocation(),mCurrent) + " " + DIST_UNITS;
             mView.updateGoodsLocation(dist);
             mView.updateLikes(mGoods.getStars());
         }

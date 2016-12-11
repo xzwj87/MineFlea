@@ -8,12 +8,14 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <ImageView
             android:id="@+id/iv_title"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_alignParentRight="true"
             android:layout_margin="5dp" />
+
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
@@ -25,6 +27,7 @@
             android:textColor="@android:color/black"
             android:textSize="18sp"
             android:ellipsize="end" />
+
         <TextView
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"

@@ -15,12 +15,11 @@ public class PublishGoodsInfo {
     public static final String GOODS_ID = "id";
     public static final String GOODS_NAME = "name";
     public static final String GOODS_PUBLISHER = "publisher_id";
-    public static final String GOODS_PRICE = "Price";
+    public static final String GOODS_PRICE = "price";
     public static final String GOODS_UPDATED_TIME = "updatedAt";
     public static final String GOODS_RELEASE_DATE = "createdAt";
     public static final String GOODS_LOC = "whereCreated";
-    public static final String GOODS_LAT = "lat";//纬度
-    public static final String GOODS_LNG = "lng";//经度
+    public static final String GOODS_LOC_DETAIL = "location_detail";
     public static final String GOODS_LIKES = "likes";
     public static final String GOODS_IMAGES = "images";
     public static final String GOODS_NOTE = "note";
@@ -42,9 +41,8 @@ public class PublishGoodsInfo {
 
     private LatLng mLoc;
 
-    private double mLng;//经度
-
-    private double mLat;//纬度
+    // save location detail string, such as "广州天河区“
+    private String mLocDetail;
 
     private List<String> mImageUri;
     //users who likes me
@@ -66,7 +64,7 @@ public class PublishGoodsInfo {
         this(id,name,userId,0);
     }
 
-    public PublishGoodsInfo(String id,String name,String userId,double price){
+    public PublishGoodsInfo(String id, String name, String userId, double price){
         mId = id;
         mName = name;
         mUserId = userId;
@@ -78,26 +76,10 @@ public class PublishGoodsInfo {
         mFavorUserList = new ArrayList<>();
     }
 
-    public PublishGoodsInfo(String id, String name, String userId, double price, double lat, double lng){
-        mId = id;
+    public PublishGoodsInfo(String name, String userId, double price){
         mName = name;
         mUserId = userId;
         mPrice = price;
-        mLat = lat;
-        mLng = lng;
-
-        mReleasedDate = new Date();
-        mUpdateTime = new Date();
-        mImageUri = new ArrayList<>();
-        mFavorUserList = new ArrayList<>();
-    }
-
-    public PublishGoodsInfo(String name, String userId, double price, double lat, double lng){
-        mName = name;
-        mUserId = userId;
-        mPrice = price;
-        mLat = lat;
-        mLng = lng;
 
         mReleasedDate = new Date();
         mUpdateTime = new Date();
@@ -171,6 +153,14 @@ public class PublishGoodsInfo {
         return mLoc;
     }
 
+    public void setLocDetail(String locDetail){
+        mLocDetail = locDetail;
+    }
+
+    public String getLocDetail(){
+        return mLocDetail;
+    }
+
     public List<String> getImageUri(){
         return mImageUri;
     }
@@ -203,22 +193,6 @@ public class PublishGoodsInfo {
         if(mFavorUserList == null) return;
 
         mFavorUserList.remove(id);
-    }
-
-    public double getLng(){
-        return mLng;
-    }
-
-    public void setLng(double l){
-        this.mLng = l;
-    }
-
-    public double getLat(){
-        return mLat;
-    }
-
-    public void setLat(double l){
-        this.mLat = l;
     }
 
     @Override

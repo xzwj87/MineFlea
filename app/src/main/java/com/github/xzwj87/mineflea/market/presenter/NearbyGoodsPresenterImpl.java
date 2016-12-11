@@ -9,6 +9,8 @@ import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.NearbyGoodsView;
 import com.github.xzwj87.mineflea.utils.NearbyProtocol;
 
+import static com.github.xzwj87.mineflea.market.data.ResponseCode.*;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -41,7 +43,7 @@ public class NearbyGoodsPresenterImpl extends NearbyGoodsPresenter {
     public void init() {
         protocol = new NearbyProtocol();
         mRepository.init();
-        mRepository.registerCallBack(PRESENTER_PUBLISH, new UserGoodsPresenterCallback());
+        mRepository.registerCallBack(PRESENTER_GOODS_LIST, new UserGoodsPresenterCallback());
     }
 
     @Override
@@ -66,10 +68,18 @@ public class NearbyGoodsPresenterImpl extends NearbyGoodsPresenter {
         @SuppressWarnings("unchecked")
         @Override
         public void onComplete(Message message) {
-            if(message.obj != null){
-                mGoodsList = (List<PublishGoodsInfo>)message.obj;
-                mView.updateMarkerDisplay(mGoodsList);
+            int what = message.what;
+            switch (what){
+                case RESP_GET_GOODS_LIST_SUCCESS:
+                    if(message.obj != null){
+                        mGoodsList = (List<PublishGoodsInfo>)message.obj;
+                        mView.updateMarkerDisplay(mGoodsList);
+                    }
+                    break;
+                default:
+                    break;
             }
+
         }
 
         @Override

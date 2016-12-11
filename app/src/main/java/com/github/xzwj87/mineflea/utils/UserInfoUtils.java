@@ -71,8 +71,8 @@ public class UserInfoUtils {
         userInfo.setUserName(avUser.getUsername());
         userInfo.setUerEmail(avUser.getEmail());
         userInfo.setUserTelNumber(avUser.getMobilePhoneNumber());
-        userInfo.setEmailVerified(avUser.getBoolean(KEY_EMAIL_VERIFIED));
-        userInfo.setTelVerified(avUser.getBoolean(KEY_TEL_VERIFIED));
+        userInfo.setEmailVerified(avUser.getBoolean(UserInfo.IS_EMAIL_VERIFIED));
+        userInfo.setTelVerified(avUser.getBoolean(UserInfo.IS_PHONE_VERIFIED));
         userInfo.setNickName((String)avUser.get(UserInfo.USER_NICK_NAME));
         userInfo.setHeadIconUrl((String)avUser.get(UserInfo.USER_HEAD_ICON));
         userInfo.setLocation((String)avUser.get(UserInfo.USER_LOCATION));
@@ -80,6 +80,7 @@ public class UserInfoUtils {
         userInfo.setGoodsList(avUser.getList(UserInfo.PUBLISHED_GOODS));
         userInfo.setFolloweeList(avUser.getList(UserInfo.USER_FOLLOWEES));
         userInfo.setFollowerList(avUser.getList(UserInfo.USER_FOLLOWERS));
+        userInfo.setFavorGoodsList(avUser.getList(UserInfo.FAVOR_GOODS));
         return userInfo;
     }
 
@@ -96,16 +97,16 @@ public class UserInfoUtils {
         avUser.setMobilePhoneNumber(userInfo.getUserTelNumber());
         avUser.setPassword(userInfo.getUserPwd());
 
-        avUser.put(KEY_EMAIL_VERIFIED,userInfo.getEmailVerified());
-        avUser.put(KEY_TEL_VERIFIED,userInfo.getTelVerified());
+        avUser.put(UserInfo.IS_EMAIL_VERIFIED,userInfo.getEmailVerified());
+        avUser.put(UserInfo.IS_PHONE_VERIFIED,userInfo.getTelVerified());
         avUser.put(UserInfo.USER_NICK_NAME,userInfo.getNickName());
         avUser.put(UserInfo.USER_HEAD_ICON,userInfo.getHeadIconUrl());
         avUser.put(UserInfo.USER_LOCATION,userInfo.getLocation());
         avUser.put(UserInfo.USER_FOLLOWERS,userInfo.getFollowerList());
         avUser.put(UserInfo.USER_FOLLOWEES,userInfo.getFolloweeList());
+        avUser.put(UserInfo.FAVOR_GOODS,userInfo.getFavorGoodsList());
         avUser.put(UserInfo.USER_INTRO,userInfo.getIntro());
         avUser.put(UserInfo.PUBLISHED_GOODS,userInfo.getGoodsList());
-
 
         return avUser;
     }

@@ -7,5 +7,7 @@ import com.github.xzwj87.mineflea.market.presenter.BasePresenter;
  */
 
 public interface DiscoverGoodsView extends BaseView{
-        void onGetGoodsListDone(boolean success);
-    }
+    void onGetGoodsListDone(boolean success);
+
+    void updateLikesView(int pos,int likes);
+}

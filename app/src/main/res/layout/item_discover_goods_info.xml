@@ -14,7 +14,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <FrameLayout
@@ -38,14 +38,14 @@
                 android:textColor="@color/colorWhite"
                 android:textSize="@dimen/card_view_title_size"
                 android:layout_gravity="start|bottom"
-                android:maxEms="8"
+                android:maxEms="6"
                 android:ellipsize="end" />
 
             <TextView android:id="@+id/tv_likes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:layout_marginEnd="@dimen/card_view_item_margin"
+                android:layout_marginEnd="@dimen/card_view_layout_margin"
                 android:textColor="@color/colorWhite"
                 android:layout_gravity="bottom|end"
                 android:text="@string/goods_name"
@@ -55,45 +55,43 @@
 
         <RelativeLayout android:id="@+id/layout_publisher"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/card_view_item_margin">
+
+            <TextView android:id="@+id/tv_goods_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/card_view_item_margin"
+                android:layout_alignParentStart="true"
+                android:textSize="@dimen/card_view_sub_title_size"
+                android:textColor="@color/ColorRed"/>
 
             <TextView
                 android:id="@+id/tv_user_nick_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="@dimen/card_view_item_margin"
-                android:textColor="@color/colorDarkGrey"
-                android:textSize="@dimen/user_center_title_size" />
+                style="@style/CardViewTextView"
+                android:layout_below="@id/tv_goods_price"
+                android:layout_alignParentStart="true"
+                android:layout_alignStart="@id/tv_goods_price"
+                android:layout_marginBottom="@dimen/card_view_item_margin"
+                android:drawableStart="@drawable/ic_access_time_grey_16dp" />
 
             <TextView
                 android:id="@+id/tv_updated_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical"
-                android:layout_alignParentEnd="true"
-                android:layout_centerInParent="true"
-                android:layout_marginRight="@dimen/card_view_item_margin"
+                android:layout_toEndOf="@id/tv_user_nick_name"
+                android:layout_alignBaseline="@id/tv_user_nick_name"
+                android:layout_marginEnd="@dimen/card_view_item_margin"
                 android:textColor="@color/colorLightGrey"
-                android:textSize="@dimen/user_center_sub_title_size" />
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginStart="@dimen/card_view_item_margin">
+                android:textSize="@dimen/card_view_text_size" />
 
             <TextView
                 android:id="@+id/tv_location"
                 style="@style/CardViewTextView"
-                android:drawableStart="@drawable/ic_location_grey_24dp"/>
+                android:layout_below="@id/tv_user_nick_name"
+                android:layout_marginBottom="@dimen/card_view_item_margin"
+                android:drawableStart="@drawable/ic_location_grey_24dp" />
 
-            <TextView android:id="@+id/tv_note"
-                style="@style/CardViewTextView"
-                android:visibility="gone"
-                android:drawableStart="@drawable/ic_label_grey_16dp"/>
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

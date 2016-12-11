@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -132,6 +133,7 @@ public class GoodsDetailActivity extends BaseActivity implements GoodsDetailView
 
     @Override
     public void onGetGoodsInfoDone(boolean success) {
+        Log.v(TAG,"onGetGoodsInfoDone()");
 /*        if(mProgress != null && mProgress.isShowing()) {
             mProgress.dismiss();
         }*/

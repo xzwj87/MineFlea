@@ -55,6 +55,11 @@ public interface FileCache {
     void saveToFile(PublishGoodsInfo goods);
 
     /*
+     * update goods info to file
+     */
+    void updateFile(PublishGoodsInfo goodsInfo);
+
+    /*
      * save image file to user data
      * @return cache dir of the image
      */

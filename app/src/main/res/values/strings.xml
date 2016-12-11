@@ -122,7 +122,7 @@
     <string name="key_pref_theme_color">key_pref_theme_color</string>
     <string name="color_indigo">#3F51B5</string>
     <string name="color_primary">#3F51B5</string>
-    <string name="get_goods_list_sucess">Refresh Success</string>
+    <string name="get_goods_list_success">Refresh Success</string>
     <string name="forget_password">Forget Password?</string>
     <string name="tel_number_china">+86</string>
     <string name="use_tel_number_register">Use  Telephone Number To Register</string>
@@ -156,4 +156,7 @@
     <string name="not_verified">Not Verified</string>
     <string name="hint_no_network_connection">Network is not connected</string>
     <string name="progress_publish_goods">Publishing...wait for a while</string>
+    <string name="distance_from_you">distance from you</string>
+    <string name="currency_symbol">$</string>
+    <string name="updated_at">updated at</string>
 </resources>

@@ -2,6 +2,7 @@ package com.github.xzwj87.mineflea.market.presenter;
 
 import android.os.Message;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
@@ -12,7 +13,9 @@ import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.DiscoverGoodsView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -31,16 +34,17 @@ public class DiscoverGoodsPresenterImpl implements DiscoverGoodsPresenter{
     // a id set to check whether a goods has been retrieved already
     private HashSet<String> mGoodsSet;
     private List<PublishGoodsInfo> mGoodsList;
-    private List<UserInfo> mPublisherList;
-    private final Object mCompleteLock;
+    private HashMap<String,UserInfo> mPublisherList;
+    // mark an item to be liked
+    private Hashtable<String,Boolean> mIsLiked;
 
     @Inject
     public DiscoverGoodsPresenterImpl(DataRepository repository){
         mRepo = repository;
         mGoodsList = new ArrayList<>();
-        mPublisherList = new ArrayList<>();
+        mPublisherList = new HashMap<>();
         mGoodsSet = new HashSet<>();
-        mCompleteLock = new Object();
+        mIsLiked = new Hashtable<>();
     }
 
     @Override
@@ -61,17 +65,25 @@ public class DiscoverGoodsPresenterImpl implements DiscoverGoodsPresenter{
     }
 
     @Override
-    public String getPublisherHeadIcon(int pos) {
-        if(mPublisherList.size() == 0) return null;
-
-        return mPublisherList.get(pos).getHeadIconUrl();
+    public void addToMyFavor(int pos) {
+        Log.v(TAG,"addToMyFavor()");
+        PublishGoodsInfo goodsInfo = mGoodsList.get(pos);
+        String id = goodsInfo.getId();
+        if(mIsLiked.get(id) == null || !mIsLiked.get(id)) {
+            goodsInfo.addFavorUser("unknown");
+            mRepo.addToMyFavorites(goodsInfo);
+            mIsLiked.put(id,true);
+            mView.updateLikesView(pos,mGoodsList.get(pos).getStars());
+        }
     }
 
     @Override
     public String getPublisherNickName(int pos) {
         if(mPublisherList.size() == 0) return null;
 
-        return mPublisherList.get(pos).getNickName();
+        String userId = mGoodsList.get(pos).getUserId();
+
+        return (mPublisherList.get(userId)).getNickName();
     }
 
     @Override
@@ -89,6 +101,7 @@ public class DiscoverGoodsPresenterImpl implements DiscoverGoodsPresenter{
     @Override
     public void onDestroy() {
         mRepo.unregisterCallback(PRESENTER_GOODS_LIST);
+        mGoodsSet = null;
         mGoodsList = null;
         mPublisherList = null;
     }
@@ -107,7 +120,7 @@ public class DiscoverGoodsPresenterImpl implements DiscoverGoodsPresenter{
             switch (resp) {
                 case ResponseCode.RESP_GET_GOODS_LIST_SUCCESS:
                     // sync cache/cloud callback
-                    synchronized (mCompleteLock) {
+                    synchronized (this) {
                         List<PublishGoodsInfo> goods = (List<PublishGoodsInfo>) message.obj;
                         if (goods != null) {
                             for (int i = 0; i < goods.size(); ++i) {
@@ -116,6 +129,8 @@ public class DiscoverGoodsPresenterImpl implements DiscoverGoodsPresenter{
                                     mGoodsSet.add(goodsInfo.getId());
                                     mGoodsList.add(goodsInfo);
                                 }
+                                // get user info
+                                mRepo.getUserInfoById(goodsInfo.getUserId());
                             }
                         }
                     }
@@ -123,6 +138,17 @@ public class DiscoverGoodsPresenterImpl implements DiscoverGoodsPresenter{
                     break;
                 case ResponseCode.RESP_GET_GOODS_LIST_ERROR:
                     mView.onGetGoodsListDone(false);
+                    break;
+                case ResponseCode.RESP_GET_USER_INFO_SUCCESS:
+                    Log.v(TAG,"onComplete(): get user info success");
+                    UserInfo user = (UserInfo)message.obj;
+                    if(!mPublisherList.containsKey(user.getUserId())){
+                        mPublisherList.put(user.getUserId(),user);
+                    }
+                    // we want to set refresh to false
+                    mView.onGetGoodsListDone(true);
+                    break;
+                case ResponseCode.RESP_GET_USER_INFO_ERROR:
                     break;
                 default:
                     break;

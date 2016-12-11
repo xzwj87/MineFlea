@@ -17,20 +17,23 @@ import java.io.File;
 
 public class PicassoUtils {
 
+    private static final int RESIZE_DEFAULT_RESOLUTION = 512;
+    private static final int RESIZE_HIGH_RESOLUTION = 1024;
+
     public static void loadImage(ImageView iv, String imgUrl){
         if(iv == null || TextUtils.isEmpty(imgUrl)) return;
 
         if(URLUtil.isNetworkUrl(imgUrl)){
             Picasso.with(AppGlobals.getAppContext())
                    .load(imgUrl)
-                   .resize(1024,1024)
+                   .resize(RESIZE_HIGH_RESOLUTION, RESIZE_HIGH_RESOLUTION)
                    .centerCrop()
                    .into(iv);
         // from file
         }else{
             Picasso.with(AppGlobals.getAppContext())
                     .load(Uri.fromFile(new File(imgUrl)))
-                    .resize(1024,1024)
+                    .resize(RESIZE_HIGH_RESOLUTION, RESIZE_HIGH_RESOLUTION)
                     .centerCrop()
                     .into(iv);
         }
@@ -42,14 +45,14 @@ public class PicassoUtils {
         if(URLUtil.isNetworkUrl(imgUrl)){
             Picasso.with(context)
                     .load(imgUrl)
-                    .resize(1024,1024)
+                    .resize(RESIZE_HIGH_RESOLUTION, RESIZE_HIGH_RESOLUTION)
                     .centerCrop()
                     .into(iv);
             // from file
         }else{
             Picasso.with(context)
                     .load(new File(imgUrl))
-                    .resize(1024,1024)
+                    .resize(RESIZE_HIGH_RESOLUTION, RESIZE_HIGH_RESOLUTION)
                     .centerCrop()
                     .into(iv);
         }

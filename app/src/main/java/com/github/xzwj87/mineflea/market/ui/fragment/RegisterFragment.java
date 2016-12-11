@@ -46,7 +46,7 @@ import static android.app.Activity.RESULT_OK;
 public class RegisterFragment extends BaseFragment{
     public static final String TAG = RegisterFragment.class.getSimpleName();
 
-    public static final int REQUEST_LOGIN = 1;
+    public static final int REQUEST_LOGIN = 110;
     private static final int MAX_COUNTS = 60; // 60s
     private static final int COUNT_DOWN_INTERVAL = 1000;
     private static final int MAX_COUNT_DOWN_MS = MAX_COUNTS*COUNT_DOWN_INTERVAL;
@@ -173,7 +173,7 @@ public class RegisterFragment extends BaseFragment{
     public void login(){
         Log.v(TAG,"login()");
         Intent intent = new Intent(getActivity(), LoginActivity.class);
-        startActivityForResult(intent,REQUEST_LOGIN);
+        getActivity().startActivityForResult(intent,REQUEST_LOGIN);
     }
 
     @OnTextChanged(value = R.id.et_tel_number,callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)

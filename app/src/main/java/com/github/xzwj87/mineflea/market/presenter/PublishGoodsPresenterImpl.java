@@ -31,6 +31,8 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter{
     private PublishGoodsInfo mGoodsInfo;
 
     private List<String> mImgUris;
+    // cache current user id
+    private String mCurrentUserId;
 
     @Inject
     public PublishGoodsPresenterImpl(DataRepository repository){
@@ -57,12 +59,10 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter{
         if(UserPrefsUtil.isLogin()) {
             mRepository.publishGoods(mGoodsInfo);
             mImgUris = mGoodsInfo.getImageUri();
+            mCurrentUserId = mRepository.getCurrentUserId();
         }else{
             mView.showNeedLoginMsg();
         }
-
-        //mRepository.uploadImageById(mImgUris.get(0),false,true);
-        //mRepository.uploadImage(mImgUris.get(mUploadImgCount),true);
     }
 
     @Override
@@ -90,13 +90,18 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter{
     }
 
     @Override
+    public void setLocationDetail(String detail) {
+        mGoodsInfo.setLocDetail(detail);
+    }
+
+    @Override
     public void setGoodsImgUrl(List<String> urls) {
         mGoodsInfo.setImageUri(urls);
         mImgUris = urls;
     }
 
     @Override
-    public void setPublisherName(String name) {
+    public void setPublisherId(String name) {
         mGoodsInfo.setUserId(name);
     }
 
@@ -129,6 +134,15 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter{
     }
 
     @Override
+    public String getCurrentUserId() {
+        if(!TextUtils.isEmpty(mCurrentUserId)) {
+            return mCurrentUserId;
+        }
+
+        return mRepository.getCurrentUserId();
+    }
+
+    @Override
     public void onPause() {
     }
 
@@ -150,6 +164,7 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter{
                     mRepository.uploadImages(mGoodsInfo.getImageUri(),false);
                     mGoodsInfo.setId(((PublishGoodsInfo)message.obj).getId());
                     mView.onPublishComplete(true);
+                    mView.finishView();
                     break;
                 case ResponseCode.RESP_PUBLISH_GOODS_ERROR:
                     mView.onPublishComplete(false);

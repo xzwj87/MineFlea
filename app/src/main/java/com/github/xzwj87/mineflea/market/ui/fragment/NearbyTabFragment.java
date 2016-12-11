@@ -445,17 +445,17 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
     private void addMarkersToMap() {
 
         if (DBG) {
-            PublishGoodsInfo infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 113.00, 23.00);
+            PublishGoodsInfo infoP = new PublishGoodsInfo("显示物品名字", "1234");
             list.add(infoP);
-            infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 113.15, 23.00);
+            infoP = new PublishGoodsInfo("显示物品名字", "1234");
             list.add(infoP);
-            infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 113.15, 23.50);
+            infoP = new PublishGoodsInfo("显示物品名字", "1234");
             list.add(infoP);
-            infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 112.00, 22.00);
+            infoP = new PublishGoodsInfo("显示物品名字", "1234");
             list.add(infoP);
-            infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 110.15, 20.00);
+            infoP = new PublishGoodsInfo("显示物品名字", "1234");
             list.add(infoP);
-            infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 115.15, 23.00);
+            infoP = new PublishGoodsInfo("显示物品名字", "1234");
             list.add(infoP);
         }
 
@@ -466,7 +466,7 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
         if (list.size() <= 0)
             return;
         for (PublishGoodsInfo info : list) {
-            LatLng pos = new LatLng(info.getLng(), info.getLat());
+            LatLng pos = new LatLng(info.getLocation().latitude,info.getLocation().longitude);
             MarkerOptions options = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
                     .title(info.getName()).position(pos).draggable(true);
             Marker marker = aMap.addMarker(options);
@@ -481,7 +481,7 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
             aMap.clear();
             //markerLy.setVisibility(View.INVISIBLE);
             for (PublishGoodsInfo info : list) {
-                LatLng pos = new LatLng(info.getLng(), info.getLat());
+                LatLng pos = new LatLng(info.getLocation().latitude,info.getLocation().longitude);
                 double l = UiUtils.getDistanceM(myLocation, pos);
                 if (select == KM) {
                     l = UiUtils.getDistanceKm(myLocation, pos);

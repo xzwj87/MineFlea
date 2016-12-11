@@ -36,6 +36,15 @@ public class UserPrefsUtil {
         editor.apply();
     }
 
+    public static void updateCurrentLocDetail(String locDetail){
+        updateUserInfoString(UserInfo.USER_LOC_DETAIL,locDetail);
+    }
+
+    public static String getCurrentLocDetail(){
+
+        return getString(UserInfo.USER_LOC_DETAIL,"");
+    }
+
     public static void updateCurrentLocation(LatLng loc){
         if(loc == null)
             return;

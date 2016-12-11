@@ -3,6 +3,7 @@ package com.github.xzwj87.mineflea.market.data.cache;
 import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.webkit.URLUtil;
 
 import com.avos.avoscloud.AVUser;
@@ -30,6 +31,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class FileCacheImpl implements FileCache{
+    private static final String TAG = "FileCache";
 
     private static final long MAX_EXPIRATION_TIME = 12*60*60*1000;
     private static final int MAX_CACHE_SIZE = 50; //50MB
@@ -136,6 +138,14 @@ public class FileCacheImpl implements FileCache{
     }
 
     @Override
+    public void updateFile(PublishGoodsInfo goods) {
+        String json = JsonSerializer.toJson(goods);
+        File file = buildGoodsFile(goods.getId());
+
+        executeAsync(new CacheWriter(mCacheMgr,file,json,true));
+    }
+
+    @Override
     public String saveImgToFile(String imgUri,@CacheType String type) {
 
         if(!URLUtil.isNetworkUrl(imgUri)) {
@@ -182,26 +192,26 @@ public class FileCacheImpl implements FileCache{
 
     @Override
     public List<PublishGoodsInfo> getAllGoodsCache() {
+        Log.v(TAG,"getAllGoodsCache()");
         File goodsFile = new File(getGoodsCacheDir());
         File[] files = goodsFile.listFiles();
 
-        List<PublishGoodsInfo> goodsList = new ArrayList<>();
-
         if(goodsFile.exists() && files != null && files.length > 0){
+            List<PublishGoodsInfo> goodsList = new ArrayList<>();
             mCurrentRetrieved = (mCurrentRetrieved >= files.length) ? 0 : mCurrentRetrieved;
             // only retrieve 30 items a time
             int i;
             for(i = mCurrentRetrieved; i < (mCurrentRetrieved + MAX_ITEMS_TO_GET_A_TIME) &&
                     i < files.length; ++i){
-                if(files[i] != null && files[i].isFile()){
-                    goodsList.add(getGoodsCache(files[i].getName()));
-                }
+                goodsList.add(getGoodsCache(files[i].getName()));
             }
 
             mCurrentRetrieved = i + MAX_ITEMS_TO_GET_A_TIME;
+
+            return goodsList;
         }
 
-        return goodsList;
+        return null;
     }
 
     @Override

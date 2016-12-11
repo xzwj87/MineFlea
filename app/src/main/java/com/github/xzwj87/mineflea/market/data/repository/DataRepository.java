@@ -109,6 +109,7 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
         }
     }
 
+    @Deprecated
     @Override
     public void uploadImageById(String imgUri, boolean isUser, boolean showProcess) {
         if(TextUtils.isEmpty(imgUri))  return;
@@ -151,8 +152,7 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
     public void updateCurrentUserInfo(String key, String val) {
         mCloudSrc.updateCurrentUserInfo(key,val);
 
-        if(mCache.isCached(getCurrentUserId(),FileCache.CACHE_TYPE_USER) &&
-                mCache.isExpired(getCurrentUserId(),FileCache.CACHE_TYPE_USER)){
+        if(mCache.isCached(getCurrentUserId(),FileCache.CACHE_TYPE_USER)){
             mCache.updateFile(getCurrentUser());
         }
     }
@@ -162,20 +162,44 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
         Log.v(TAG,"addToMyFavorites()");
 
         mCloudSrc.favor(goods);
+
+        String myId = getCurrentUserId();
+        if(!TextUtils.isEmpty(myId) &&
+            mCache.isCached(myId,FileCache.CACHE_TYPE_USER)){
+            UserInfo info = mCache.getUserCache(myId);
+            info.addFavorGoods(goods.getId());
+            mCache.updateFile(info);
+        }
+
+        if(mCache.isCached(goods.getId(),FileCache.CACHE_TYPE_GOODS)){
+            mCache.updateFile(goods);
+        }else{
+            mCache.saveToFile(goods);
+        }
     }
 
     @Override
     public void getUserInfoById(String id) {
-        if (mCache.isCached(id, FileCache.CACHE_TYPE_USER) &&
-                !mCache.isExpired(id, FileCache.CACHE_TYPE_USER)) {
+        Log.v(TAG,"getUserInfoById()");
+        if (mCache.isCached(id, FileCache.CACHE_TYPE_USER)) {
             UserInfo userInfo = mCache.getUserCache(id);
             PresenterCallback callback = mPresenterCbs.get(PRESENTER_USER_DETAIL);
+
             if(callback != null){
                 final Message message = new Message();
                 message.obj = userInfo;
                 message.what = ResponseCode.RESP_GET_USER_INFO_SUCCESS;
 
                 callback.onComplete(message);
+            }else{
+                callback = mPresenterCbs.get(PRESENTER_PUBLISH);
+                if(callback != null){
+                    final Message message = new Message();
+                    message.obj = userInfo;
+                    message.what = ResponseCode.RESP_GET_USER_INFO_SUCCESS;
+
+                    callback.onComplete(message);
+                }
             }
         }else {
             mCloudSrc.getUserInfoById(id);
@@ -188,7 +212,7 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
         Log.v(TAG,"getAllGoods()");
 
         List<PublishGoodsInfo> goodsList = mCache.getAllGoodsCache();
-        if(goodsList.size() > 0){
+        if(goodsList != null && goodsList.size() > 0){
             final Message msg = new Message();
             msg.obj = goodsList;
             msg.what = ResponseCode.RESP_GET_GOODS_LIST_SUCCESS;
@@ -328,9 +352,14 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
 
     @Override
     public void onGetUserInfoDone(Message msg) {
-        PresenterCallback listener = mPresenterCbs.get(PRESENTER_USER_DETAIL);
-        if(listener != null){
-            listener.onComplete(msg);
+        PresenterCallback callback = mPresenterCbs.get(PRESENTER_USER_DETAIL);
+        if(callback != null){
+            callback.onComplete(msg);
+        }else{
+            callback = mPresenterCbs.get(PRESENTER_GOODS_LIST);
+            if(callback != null){
+                callback.onComplete(msg);
+            }
         }
     }
 
@@ -349,11 +378,22 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onGetGoodsListDone(Message msg) {
         PresenterCallback callback = mPresenterCbs.get(PRESENTER_GOODS_LIST);
         if(callback != null) {
             callback.onComplete(msg);
+        }
+
+        // save it to cache
+        if(msg.what == ResponseCode.RESP_GET_GOODS_LIST_SUCCESS) {
+            List<PublishGoodsInfo> goodsList = (ArrayList<PublishGoodsInfo>) msg.obj;
+            for(PublishGoodsInfo goods: goodsList){
+                if(!mCache.isCached(goods.getId(),FileCache.CACHE_TYPE_GOODS)){
+                    mCache.saveToFile(goods);
+                }
+            }
         }
     }
 

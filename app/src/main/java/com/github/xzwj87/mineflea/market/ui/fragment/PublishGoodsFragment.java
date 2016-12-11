@@ -23,7 +23,6 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps2d.model.LatLng;
-import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
@@ -67,6 +66,7 @@ public class PublishGoodsFragment extends BaseFragment
     private PublishGoodsImageAdapter mGoodsImgAdapter;
     // get location
     private AMapLocationClient mLocClient;
+    private boolean mIsLocated;
 
     public PublishGoodsFragment(){}
 
@@ -146,9 +146,16 @@ public class PublishGoodsFragment extends BaseFragment
         mPresenter.setGoodsPrice(mEtPrice.getText().toString());
         mPresenter.setGoodsNote(mEtNote.getText().toString());
         mPresenter.setGoodsImgUrl(mFilePath.subList(0,mFilePath.size()-1));
-        mPresenter.setPublisherName(UserPrefsUtil.getString(UserInfo.USER_NAME,"dummy"));
-        mPresenter.setLocation(((PublishGoodsActivity)getActivity()).getMyLoc());
-        UserPrefsUtil.updateCurrentLocation(((PublishGoodsActivity)getActivity()).getMyLoc());
+        mPresenter.setPublisherId(mPresenter.getCurrentUserId());
+        if(!mIsLocated) {
+            //mPresenter.setLocation(((PublishGoodsActivity) getActivity()).getMyLoc());
+            String locDetail = UserPrefsUtil.getCurrentLocDetail();
+            LatLng loc = UserPrefsUtil.getCurrentLocation();
+
+            mPresenter.setLocationDetail(locDetail);
+            mPresenter.setLocation(loc);
+        }
+        //UserPrefsUtil.updateCurrentLocation(((PublishGoodsActivity)getActivity()).getMyLoc());
 
         if(mPresenter.validGoodsInfo()) {
             mPresenter.publishGoods();
@@ -222,6 +229,8 @@ public class PublishGoodsFragment extends BaseFragment
     }
 
     private void init(){
+
+        mIsLocated = false;
 
         getComponent(MarketComponent.class).inject(this);
 
@@ -352,11 +361,19 @@ public class PublishGoodsFragment extends BaseFragment
             public void onLocationChanged(AMapLocation aMapLocation) {
                 if(aMapLocation != null){
                     if(aMapLocation.getErrorCode() == 0){
-/*                        mPresenter.setLocation(new LatLng(aMapLocation.getLatitude(),
-                                aMapLocation.getLongitude()));*/
-                         //save current location
-                        //LatLng current = new LatLng(aMapLocation.getLatitude(),aMapLocation.getLongitude());
+                        LatLng loc = new LatLng(aMapLocation.getLatitude(),
+                                aMapLocation.getLongitude());
+                        mPresenter.setLocation(loc);
+                        // mark location has been got
+                        mIsLocated = true;
+                        String city = aMapLocation.getCity();
+                        String district = aMapLocation.getDistrict();
 
+                        String detail = city + district;
+                        mPresenter.setLocationDetail(detail);
+                         //save current location
+                        UserPrefsUtil.updateCurrentLocation(loc);
+                        UserPrefsUtil.updateCurrentLocDetail(detail);
                     }else{
                         Log.e("AmapError","location Error, ErrCode:"
                                     + aMapLocation.getErrorCode() + ", errInfo:"

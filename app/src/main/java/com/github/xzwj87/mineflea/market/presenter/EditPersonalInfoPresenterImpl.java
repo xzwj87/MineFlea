@@ -8,6 +8,9 @@ import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.EditPersonalInfoView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import javax.inject.Inject;
 
 /**
@@ -62,7 +65,8 @@ public class EditPersonalInfoPresenterImpl implements EditPersonalInfoPresenter{
     @Override
     public void setHeadIcon(String iconUrl) {
         mCurrent.setHeadIconUrl(iconUrl);
-        mRepo.uploadImageById(iconUrl,true,false);
+        ArrayList<String> list = (ArrayList<String>) Arrays.asList(iconUrl);
+        mRepo.uploadImages(list,false);
         //mRepo.uploadImage(iconUrl,false);
         mView.updateHeadIcon(iconUrl);
     }
