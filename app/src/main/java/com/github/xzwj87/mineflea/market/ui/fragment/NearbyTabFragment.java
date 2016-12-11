@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -49,15 +48,13 @@ import com.amap.api.services.route.RideRouteResult;
 import com.amap.api.services.route.RouteSearch;
 import com.amap.api.services.route.WalkPath;
 import com.amap.api.services.route.WalkRouteResult;
-import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.presenter.NearbyGoodsPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.NearbyGoodsView;
+import com.github.xzwj87.mineflea.market.ui.activity.GoodsDetailActivity;
 import com.github.xzwj87.mineflea.market.ui.activity.HomeActivity;
-import com.github.xzwj87.mineflea.market.ui.activity.NearbyGoodsActivity;
 import com.github.xzwj87.mineflea.market.ui.alimap.BusResultListAdapter;
 import com.github.xzwj87.mineflea.market.ui.alimap.DriveRouteDetailActivity;
 import com.github.xzwj87.mineflea.market.ui.alimap.DrivingRouteOverLay;
@@ -83,7 +80,7 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
         AMapLocationListener, RouteSearch.OnRouteSearchListener, AMap.OnMapClickListener {
     public static final String TAG = "[NearbyTabFragment]";
 
-    private boolean DBG = false;//用于调试
+    private boolean DBG = true;//用于调试
 
     @Inject
     NearbyGoodsPresenterImpl mPresenter;
@@ -118,12 +115,12 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
     TextView mCrossBus;
     @BindView(R.id.bus_result_list)
     ListView mBusResultList;
-    @BindView(R.id.fam_search)
-    FloatingActionButton fam_search;
-    @BindView(R.id.fam_reset)
-    FloatingActionButton fam_reset;
-    @BindView(R.id.multiple_actions_left)
-    FloatingActionsMenu fam_menu;
+//    @BindView(R.id.fam_search)
+//    FloatingActionButton fam_search;
+//    @BindView(R.id.fam_reset)
+//    FloatingActionButton fam_reset;
+//    @BindView(R.id.multiple_actions_left)
+//    FloatingActionsMenu fam_menu;
 
     private ProgressDialog progDialog = null;// 搜索时进度条
 
@@ -167,6 +164,7 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
 
     @Override
     public void updateMarkerDisplay(List<PublishGoodsInfo> list) {
+        Log.e(TAG, list.toString());
         this.list = list;
         addMarkersToMap();
     }
@@ -219,7 +217,6 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
     private void initView(View root) {
         setUpMap();
         setupLocationStyle();
-        registerReceiver();
         setSearchView(root);
     }
 
@@ -230,8 +227,8 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
         mBus.setOnClickListener(this);
         mWalk.setOnClickListener(this);
         mCrossBus.setOnClickListener(this);
-        fam_search.setOnClickListener(this);
-        fam_reset.setOnClickListener(this);
+//        fam_search.setOnClickListener(this);
+//        fam_reset.setOnClickListener(this);
     }
 
     //设置一些amap的属性
@@ -248,7 +245,8 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
         aMap.setLocationSource(this);// 设置定位监听
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
         aMap.getUiSettings().setScaleControlsEnabled(true);//显示比例尺控件
-        aMap.getUiSettings().setZoomControlsEnabled(false);
+        aMap.getUiSettings().setZoomControlsEnabled(true);
+        aMap.getUiSettings().setZoomGesturesEnabled(true);
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         aMap.setOnMapClickListener(this);
     }
@@ -260,11 +258,11 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
         // 自定义定位蓝点图标
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.mipmap.gps_point));
         // 自定义精度范围的圆形边框颜色
-        //myLocationStyle.strokeColor(STROKE_COLOR);
+        myLocationStyle.strokeColor(STROKE_COLOR);
         //自定义精度范围的圆形边框宽度
-        //myLocationStyle.strokeWidth(5);
+        myLocationStyle.strokeWidth(1.0f);
         // 设置圆形的填充颜色
-        //myLocationStyle.radiusFillColor(FILL_COLOR);
+        myLocationStyle.radiusFillColor(FILL_COLOR);
         // 将自定义的 myLocationStyle 对象添加到地图上
         myLocationStyle.radiusFillColor(Color.TRANSPARENT);
         myLocationStyle.strokeColor(Color.TRANSPARENT);
@@ -273,14 +271,15 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
 
     //注册广播监听
     private void registerReceiver() {
-        IntentFilter filter = new IntentFilter(Constants.COM_SEARCH_GOODS_ACTION);
-        receiver = new Receiver();
-        getActivity().registerReceiver(receiver, filter);
+        //IntentFilter filter = new IntentFilter(Constants.COM_SEARCH_GOODS_ACTION);
+        //receiver = new Receiver();
+        //getActivity().registerReceiver(receiver, filter);
     }
 
     //取消广播监听
     private void unRegisterReceiver() {
-        getActivity().unregisterReceiver(receiver);
+            //getActivity().isFinishing() || getActivity().isDestroyed())
+        //getActivity().unregisterReceiver(receiver);
     }
 
     //设置搜索的弹框
@@ -343,16 +342,16 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
             case R.id.route_CrosstownBus:
                 onCrosstownBusClick();
                 break;
-            case R.id.fam_reset:
-                fam_menu.toggle();
-                ToastUtil.show(AppGlobals.getAppContext(), "clear_map");
-                resetMap();
-                break;
-            case R.id.fam_search:
-                fam_menu.toggle();
-                ToastUtil.show(AppGlobals.getAppContext(), "fam_search");
-                showSearchDialog();
-                break;
+//            case R.id.fam_reset:
+//                //fam_menu.toggle();
+//                ToastUtil.show(AppGlobals.getAppContext(), "clear_map");
+//                resetMap();
+//                break;
+//            case fam_search:
+//                //fam_menu.toggle();
+//                ToastUtil.show(AppGlobals.getAppContext(), "fam_search");
+//                showSearchDialog();
+//                break;
             default:
                 break;
         }
@@ -549,17 +548,16 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
 
         //goodsPicIv.setImageResource(info.getImgId());
         DecimalFormat decimalFormat = new DecimalFormat("#.00");
-        //goodsDisTv.setText(decimalFormat.format(UiUtils.getDistanceKm(myLocation, info.getLatlng())) + "km");
-        //goodsPriseTv.setText(info.getZan() + "");
+        goodsDisTv.setText(decimalFormat.format(UiUtils.getDistanceKm(myLocation, info.getLocation())) + "km");
+        goodsPriseTv.setText(info.getStars() + "");
         goodsNameTv.setText(info.getName());
-
+        //PicassoUtils.loadImage(goodsPicIv, info.getImageUri().get(0));
         btnOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), NearbyGoodsActivity.class);
-                getActivity().startActivity(intent);
+                Intent intent = new Intent(getActivity(), GoodsDetailActivity.class);
+                startActivity(intent);
             }
         });
         btnCl.setOnClickListener(new View.OnClickListener() {
@@ -671,6 +669,7 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
     public void onResume() {
         super.onResume();
         mapView.onResume();
+        registerReceiver();
     }
 
     //方法必须重写
@@ -686,6 +685,12 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        unRegisterReceiver();
     }
 
     //方法必须重写
