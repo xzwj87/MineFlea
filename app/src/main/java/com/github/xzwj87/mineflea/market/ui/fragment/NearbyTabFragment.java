@@ -74,13 +74,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-//Created by jason on 10/9/16.
 public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, View.OnClickListener, AMap.OnMarkerClickListener,
         AMap.OnInfoWindowClickListener, AMap.OnMarkerDragListener, AMap.OnMapLoadedListener, AMap.InfoWindowAdapter, LocationSource,
         AMapLocationListener, RouteSearch.OnRouteSearchListener, AMap.OnMapClickListener {
     public static final String TAG = "[NearbyTabFragment]";
 
-    private boolean DBG = true;//用于调试
+    private boolean DBG = false;//用于调试
 
     @Inject
     NearbyGoodsPresenterImpl mPresenter;
@@ -458,12 +457,11 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
             list.add(infoP);
         }
 
-        if (list == null) {
+        if (list == null || list.size() <= 0) {
             ToastUtil.showToast("附近没有数据");
             return;
         }
-        if (list.size() <= 0)
-            return;
+
         for (PublishGoodsInfo info : list) {
             LatLng pos = new LatLng(info.getLocation().latitude,info.getLocation().longitude);
             MarkerOptions options = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))

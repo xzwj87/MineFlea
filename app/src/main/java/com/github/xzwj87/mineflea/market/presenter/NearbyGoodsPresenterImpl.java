@@ -35,7 +35,6 @@ public class NearbyGoodsPresenterImpl extends NearbyGoodsPresenter {
     private List<PublishGoodsInfo> mGoodsList;
     private HashSet<String> mGoodsSet;
     private List<UserInfo> mPublisherList;
-    private Object mCompleteLock;
 
     @Inject
     public NearbyGoodsPresenterImpl(DataRepository repository){
@@ -45,18 +44,16 @@ public class NearbyGoodsPresenterImpl extends NearbyGoodsPresenter {
     @Override
     public void loadDataFromServer() {
         mRepository.getAllGoods();
-        Log.e(TAG, "GET  ALL GOODS");
+        Log.e(TAG, "getAllGoods()");
     }
 
     @Override
     public void init() {
         //protocol = new NearbyProtocol();
         mRepository.init();
-        mRepository.registerCallBack(PRESENTER_PUBLISH, new UserGoodsPresenterCallback());
         mGoodsList = new ArrayList<>();
         mPublisherList = new ArrayList<>();
         mGoodsSet = new HashSet<>();
-        mCompleteLock = new Object();
         mRepository.registerCallBack(PRESENTER_GOODS_LIST, new UserGoodsPresenterCallback());
     }
 
@@ -82,22 +79,12 @@ public class NearbyGoodsPresenterImpl extends NearbyGoodsPresenter {
         @SuppressWarnings("unchecked")
         @Override
         public void onComplete(Message message) {
-            int what = message.what;
-            switch (what){
-                case RESP_GET_GOODS_LIST_SUCCESS:
-                    if(message.obj != null){
-                        mGoodsList = (List<PublishGoodsInfo>)message.obj;
-                        mView.updateMarkerDisplay(mGoodsList);
-                    }
-                    break;
-                default:
-                    break;
             Log.v(TAG,"onComplete()");
             int resp = message.what;
             switch (resp) {
                 case ResponseCode.RESP_GET_GOODS_LIST_SUCCESS:
                     // sync cache/cloud callback
-                    synchronized (mCompleteLock) {
+                    synchronized (this) {
                         List<PublishGoodsInfo> goods = (List<PublishGoodsInfo>) message.obj;
                         if (goods != null) {
                             for (int i = 0; i < goods.size(); ++i) {

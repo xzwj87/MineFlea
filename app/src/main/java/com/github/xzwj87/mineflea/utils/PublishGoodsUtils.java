@@ -13,8 +13,7 @@ import static com.github.xzwj87.mineflea.market.model.PublishGoodsInfo.GOODS_NAM
 import static com.github.xzwj87.mineflea.market.model.PublishGoodsInfo.GOODS_NOTE;
 import static com.github.xzwj87.mineflea.market.model.PublishGoodsInfo.GOODS_PRICE;
 import static com.github.xzwj87.mineflea.market.model.PublishGoodsInfo.GOODS_PUBLISHER;
-import static com.github.xzwj87.mineflea.market.model.PublishGoodsInfo.GOODS_RELEASE_DATE;
-import static com.github.xzwj87.mineflea.market.model.PublishGoodsInfo.GOODS_UPDATED_TIME;
+
 /**
  * Created by jason on 10/24/16.
  */
