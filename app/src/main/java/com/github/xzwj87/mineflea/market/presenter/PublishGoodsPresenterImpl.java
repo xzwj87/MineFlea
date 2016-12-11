@@ -1,18 +1,25 @@
 package com.github.xzwj87.mineflea.market.presenter;
 
+import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.amap.api.maps2d.model.LatLng;
+import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.PublishGoodsView;
+import com.github.xzwj87.mineflea.market.ui.fragment.PublishGoodsFragment;
 import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -25,8 +32,11 @@ import javax.inject.Inject;
 public class PublishGoodsPresenterImpl implements PublishGoodsPresenter{
     public static final String TAG = PublishGoodsPresenterImpl.class.getSimpleName();
 
+    private static final long DEFAULT_TIMEOUT = 30*1000;
+
     @Inject
     DataRepository mRepository;
+    Context mContext;
     private PublishGoodsView mView;
     private PublishGoodsInfo mGoodsInfo;
 
@@ -42,6 +52,7 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter{
     @Override
     public void setView(BaseView view){
         mView = (PublishGoodsView)view;
+        mContext = ((PublishGoodsFragment)view).getContext();
     }
 
     @Override
@@ -54,6 +65,8 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter{
         mRepository.registerCallBack(PRESENTER_PUBLISH,new PublishPresenterCallback());
     }
 
+    //FIXME: upload images takes too much time
+    // reduce the image size
     @Override
     public void publishGoods() {
         if(UserPrefsUtil.isLogin()) {
@@ -96,7 +109,8 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter{
 
     @Override
     public void setGoodsImgUrl(List<String> urls) {
-        mGoodsInfo.setImageUri(urls);
+        // use a remote URL
+        //mGoodsInfo.setImageUri(urls);
         mImgUris = urls;
     }
 
@@ -144,6 +158,7 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter{
 
     @Override
     public void onPause() {
+
     }
 
     @Override
@@ -163,8 +178,15 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter{
                 case ResponseCode.RESP_PUBLISH_GOODS_SUCCESS:
                     mRepository.uploadImages(mGoodsInfo.getImageUri(),false);
                     mGoodsInfo.setId(((PublishGoodsInfo)message.obj).getId());
-                    mView.onPublishComplete(true);
-                    mView.finishView();
+                    // time out 15s to upload images
+                    H handler = new H(mContext.getMainLooper());
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mView.onPublishComplete(true);
+                            mView.finishView();
+                        }
+                    },DEFAULT_TIMEOUT);
                     break;
                 case ResponseCode.RESP_PUBLISH_GOODS_ERROR:
                     mView.onPublishComplete(false);
@@ -172,6 +194,13 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter{
                 case ResponseCode.RESP_NETWORK_NOT_CONNECTED:
                     mView.showNoNetConnectionMsg();
                     break;
+                case ResponseCode.RESP_IMAGE_UPLOAD_SUCCESS:
+                    @SuppressWarnings("unchecked")
+                    List<String> imgList = (ArrayList<String>)message.obj;
+                    mRepository.updateGoodsInfo(mGoodsInfo.getId(),
+                            PublishGoodsInfo.GOODS_IMAGES,imgList);
+                    mView.onPublishComplete(true);
+                    mView.finishView();
                 default:
                     break;
             }
@@ -196,5 +225,16 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter{
         public void onError(Throwable e) {
 
         }
+    }
+
+    private class H extends Handler{
+        H(Looper looper){
+            super(looper);
+        }
+
+/*        @Override
+        public void handleMessage(Message msg){
+
+        }*/
     }
 }

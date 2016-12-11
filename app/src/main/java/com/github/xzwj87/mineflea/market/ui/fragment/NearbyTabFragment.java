@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -50,6 +52,7 @@ import com.amap.api.services.route.WalkPath;
 import com.amap.api.services.route.WalkRouteResult;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
+import com.github.xzwj87.mineflea.market.internal.di.component.AppComponent;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.presenter.NearbyGoodsPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.NearbyGoodsView;
@@ -534,6 +537,13 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final AlertDialog dialog = builder.create();
+
+        Window win = dialog.getWindow();
+        WindowManager.LayoutParams layoutParams = win.getAttributes();
+        layoutParams.width |= WindowManager.LayoutParams.MATCH_PARENT;
+        layoutParams.gravity |= Gravity.BOTTOM;
+        layoutParams.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        win.setAttributes(layoutParams);
 
         View searchView = inflater.inflate(R.layout.nearby_fragment_goods_dialog, null, false);
         ImageView goodsPicIv = (ImageView) searchView.findViewById(R.id.goods_pic_iv);

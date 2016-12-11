@@ -174,6 +174,16 @@ public class RemoteDataSource implements RemoteSource{
     }
 
     @Override
+    public void updateGoodsInfo(String id,String key, List<String> val) {
+        Log.v(TAG,"updateGoodsInfo()");
+
+        AVObject object = AVObject.createWithoutData(AvCloudConstants.AV_OBJ_GOODS,id);
+        object.put(key,val);
+
+        object.saveInBackground();
+    }
+
+    @Override
     public void follow(String userId) {
         Log.v(TAG,"follow()");
         AVUser current = AVUser.getCurrentUser();
@@ -451,32 +461,23 @@ public class RemoteDataSource implements RemoteSource{
 
         Log.v(TAG,"uploadImg(): size = " + imgList.size());
 
+        final List<String> imgUrls = new ArrayList<>(imgList.size());
+        final Message msg = new Message();
+
         for(int i = 0; i < imgList.size(); ++i) {
             String imgUri = imgList.get(i);
             if (showProcess) {
-                final int totalProgress = imgList.size()*100;
-                final int idx = i;
                 try {
                     final File file = new File(imgUri);
-                    AVFile avFile = AVFile.withAbsoluteLocalPath(file.getName(), file.getPath());
-                    avFile.saveInBackground();
-
-/*                    avFile.saveInBackground(new SaveCallback() {
+                    final AVFile avFile = AVFile.withAbsoluteLocalPath(file.getName(), file.getPath());
+                    avFile.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(AVException e) {
-                            if (e != null) {
-                                Log.e(TAG, "fail to upload image: " + file.getPath());
+                            if(e == null) {
+                                imgUrls.add(avFile.getUrl());
                             }
-                            Log.v(TAG, "saveInBackground(): done");
                         }
-                    }, new ProgressCallback() {
-                        @Override
-                        public void done(Integer integer) {
-                            final int current = integer*(idx+1)/totalProgress;
-                            Log.v(TAG, "uploadImg(): current process = " + current);
-                            mCloudCallback.updateProcess(current);
-                        }
-                    });*/
+                    });
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                     mCloudCallback.updateProcess(100);
@@ -485,33 +486,26 @@ public class RemoteDataSource implements RemoteSource{
                 try {
                     final File file = new File(imgUri);
                     final AVFile avFile = AVFile.withAbsoluteLocalPath(file.getName(), file.getPath());
-                    avFile.saveInBackground();
-                    // FIXME: we need to get the image URL
-/*                    avFile.saveInBackground(new SaveCallback() {
+                    avFile.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(AVException e) {
-                            Log.v(TAG, "saveInBackground(): done");
-                            final Message msg = new Message();
-                            if (e != null) {
-                                msg.what = ResponseCode.RESP_IMAGE_UPLOAD_ERROR;
-                                msg.obj = e.getCode();
-                                Log.e(TAG, "fail to upload image: " + file.getPath());
-                            } else {
-                                msg.what = ResponseCode.RESP_IMAGE_UPLOAD_SUCCESS;
-                                msg.obj = avFile.getUrl();
+                            if(e == null) {
+                                imgUrls.add(avFile.getUrl());
                             }
-                            mCloudCallback.onImgUploadComplete(msg);
                         }
-                    });*/
+                    });
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
-                    Message msg = new Message();
                     msg.what = ResponseCode.RESP_FILE_NOT_FOUND;
                     msg.obj = null;
                     mCloudCallback.onImgUploadComplete(msg);
                 }
             }
         }
+        // ok, done
+        msg.what = ResponseCode.RESP_IMAGE_UPLOAD_SUCCESS;
+        msg.obj = imgUrls;
+        mCloudCallback.onImgUploadComplete(msg);
     }
 
     /**

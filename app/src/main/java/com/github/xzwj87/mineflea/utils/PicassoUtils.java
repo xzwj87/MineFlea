@@ -7,6 +7,7 @@ import android.webkit.URLUtil;
 import android.widget.ImageView;
 
 import com.github.xzwj87.mineflea.app.AppGlobals;
+import com.github.xzwj87.mineflea.market.internal.di.HasComponent;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -30,7 +31,7 @@ public class PicassoUtils {
                    .centerCrop()
                    .into(iv);
         // from file
-        }else{
+        }else {
             Picasso.with(AppGlobals.getAppContext())
                     .load(Uri.fromFile(new File(imgUrl)))
                     .resize(RESIZE_HIGH_RESOLUTION, RESIZE_HIGH_RESOLUTION)
@@ -56,5 +57,21 @@ public class PicassoUtils {
                     .centerCrop()
                     .into(iv);
         }
+    }
+
+    public static void loadImage(Context context, ImageView iv, int resId){
+        Picasso.with(context)
+               .load(resId)
+               .centerCrop()
+               .resize(RESIZE_HIGH_RESOLUTION, RESIZE_HIGH_RESOLUTION)
+               .into(iv);
+    }
+
+    public static void loadImage(ImageView iv, int resId){
+        Picasso.with(AppGlobals.getAppContext())
+                .load(resId)
+                .centerCrop()
+                .resize(RESIZE_HIGH_RESOLUTION, RESIZE_HIGH_RESOLUTION)
+                .into(iv);
     }
 }

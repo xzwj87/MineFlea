@@ -158,6 +158,25 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
     }
 
     @Override
+    public void updateGoodsInfo(String id,String key, List<String> val) {
+        Log.v(TAG,"updateGoodsInfo()");
+
+        mCloudSrc.updateGoodsInfo(id, key, val);
+
+        PublishGoodsInfo goodsInfo = mCache.getGoodsCache(id);
+        List<String> localUrls = new ArrayList<>(val.size());
+        for(String url: val){
+            String img = mCache.saveImgToFile(url,FileCache.CACHE_TYPE_GOODS);
+            localUrls.add(img);
+            //Log.v(TAG,"updateGoodsInfo(): updated local urls = " + img);
+        }
+
+        goodsInfo.setImageUri(localUrls);
+        mCache.updateFile(goodsInfo);
+
+    }
+
+    @Override
     public void addToMyFavorites(PublishGoodsInfo goods) {
         Log.v(TAG,"addToMyFavorites()");
 
@@ -212,6 +231,7 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
         Log.v(TAG,"getAllGoods()");
 
         List<PublishGoodsInfo> goodsList = mCache.getAllGoodsCache();
+
         if(goodsList != null && goodsList.size() > 0){
             final Message msg = new Message();
             msg.obj = goodsList;
@@ -253,8 +273,7 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
         if(TextUtils.isEmpty(goodsId)) return;
         PresenterCallback callback = mPresenterCbs.get(PRESENTER_GOODS_DETAIL);
 
-        if(mCache.isCached(goodsId,FileCache.CACHE_TYPE_GOODS) &&
-                !mCache.isExpired(goodsId,FileCache.CACHE_TYPE_GOODS)){
+        if(mCache.isCached(goodsId,FileCache.CACHE_TYPE_GOODS)){
             PublishGoodsInfo goodsInfo = mCache.getGoodsCache(goodsId);
             final Message msg = new Message();
             msg.obj = goodsInfo;
@@ -352,11 +371,11 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
 
     @Override
     public void onGetUserInfoDone(Message msg) {
-        PresenterCallback callback = mPresenterCbs.get(PRESENTER_USER_DETAIL);
-        if(callback != null){
-            callback.onComplete(msg);
-        }else{
-            callback = mPresenterCbs.get(PRESENTER_GOODS_LIST);
+        Log.v(TAG,"onGetUserInfoDone()");
+        Iterator iterator = mPresenterCbs.entrySet().iterator();
+        while(iterator.hasNext()){
+            Map.Entry entry = (Map.Entry)iterator.next();
+            PresenterCallback callback = (PresenterCallback)entry.getValue();
             if(callback != null){
                 callback.onComplete(msg);
             }
@@ -381,6 +400,7 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
     @SuppressWarnings("unchecked")
     @Override
     public void onGetGoodsListDone(Message msg) {
+        Log.v(TAG,"onGetGoodsListDone()");
         PresenterCallback callback = mPresenterCbs.get(PRESENTER_GOODS_LIST);
         if(callback != null) {
             callback.onComplete(msg);
@@ -390,8 +410,23 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
         if(msg.what == ResponseCode.RESP_GET_GOODS_LIST_SUCCESS) {
             List<PublishGoodsInfo> goodsList = (ArrayList<PublishGoodsInfo>) msg.obj;
             for(PublishGoodsInfo goods: goodsList){
-                if(!mCache.isCached(goods.getId(),FileCache.CACHE_TYPE_GOODS)){
-                    mCache.saveToFile(goods);
+                // save image to local
+                List<String> imgList = goods.getImageUri();
+                List<String> imgLocal = new ArrayList<>(imgList.size());
+                for(String url: imgList) {
+                    String name = URLUtil.guessFileName(url, null, null);
+                    if (!mCache.isImageCached(name, FileCache.CACHE_TYPE_GOODS)) {
+                        String path = mCache.saveImgToFile(url, FileCache.CACHE_TYPE_GOODS);
+                        imgLocal.add(path);
+                    }
+                    Log.v(TAG, "onGetGoodsListDone(): url = " + url);
+                }
+                // ok,save it now
+                if(imgLocal.size() > 0) {
+                    goods.setImageUri(imgLocal);
+                    if (!mCache.isCached(goods.getId(), FileCache.CACHE_TYPE_GOODS)) {
+                        mCache.saveToFile(goods);
+                    }
                 }
             }
         }
@@ -453,12 +488,6 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
             if(!mCache.isCached(goods.getId(), FileCache.CACHE_TYPE_GOODS)){
                 mCache.saveToFile(goods);
             }
-        }
-
-        if(mPresenterCbs.get(PRESENTER_PUBLISH) != null){
-            Log.v(TAG,"there is a publish callback");
-        }else{
-            Log.v(TAG,"there is no publish callback");
         }
 
         PresenterCallback callback = mPresenterCbs.get(PRESENTER_PUBLISH);

@@ -148,6 +148,8 @@ public class DiscoverTabFragment extends BaseFragment
     @Override
     public void onItemClick(int position) {
         Intent intent = new Intent(getActivity(), GoodsDetailActivity.class);
+        String id = mPresenter.getItemAtPos(position).getId();
+        intent.putExtra(PublishGoodsInfo.GOODS_ID,id);
         startActivity(intent);
     }
 

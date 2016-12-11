@@ -15,11 +15,13 @@ public interface GoodsDetailView extends BaseView{
 
     void updateGoodsName(String name);
 
-    void updateGoodsPrice(double price);
+    void updateTitle(String title);
+
+    void updateGoodsPrice(String price);
 
     void updateGoodsLocation(String location);
 
-    void updateLikes(int likes);
+    void updateLikes(String likes);
 
     void updateUserInfo(UserInfo userInfo);
 }

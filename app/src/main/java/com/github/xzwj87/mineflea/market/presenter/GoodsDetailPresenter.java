@@ -5,6 +5,8 @@ package com.github.xzwj87.mineflea.market.presenter;
  */
 
 public interface GoodsDetailPresenter extends BasePresenter{
+
     void getGoodsInfo(String goodsId);
-    void addToFavorites(String goodsId);
+
+    void addToFavorites();
 }

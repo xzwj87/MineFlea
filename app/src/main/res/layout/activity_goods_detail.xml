@@ -1,94 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:attrs="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/vp_photos"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/goods_detail_view_pager_height">
-
-    </android.support.v4.view.ViewPager>
-
-    <com.rd.PageIndicatorView
-        android:id="@+id/pageIndicatorView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        attrs:piv_radius="12dp"
-        attrs:piv_padding="24dp"
-        android:layout_marginBottom="48dp"
-        attrs:piv_animationType="thinWorm"
-        attrs:piv_interactiveAnimation="true"
-        attrs:piv_viewPager="@id/vp_photos" />
+    android:layout_height="wrap_content">
 
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/goods_detail_margin"
-        android:orientation="vertical"
-        android:elevation="5dp">
+        android:background="@color/colorWhite">
 
-        <TextView android:id="@+id/tv_goods_name"
+        <FrameLayout
+            android:layout_margin="3dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorDarkGrey"
-            android:layout_marginBottom="@dimen/goods_detail_item_margin"
-            android:textSize="@dimen/goods_detail_name_size" />
+            android:layout_height="@dimen/goods_detail_view_pager_height">
 
-        <TextView android:id="@+id/tv_goods_price"
-            android:textColor="@color/ColorRed"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textSize="@dimen/goods_detail_price_size"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/goods_detail_item_margin" />
-
-        <View style="@style/VerticalDivider"/>
-
-        <TextView android:id="@+id/tv_location"
-            android:layout_marginTop="@dimen/goods_detail_item_margin"
-            android:layout_marginBottom="@dimen/goods_detail_item_margin"
-            android:textColor="@color/colorLightGrey"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/goods_detail_text_size"
-            android:drawableStart="@drawable/ic_location_grey_24dp"/>
-
-        <View style="@style/VerticalDivider"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView android:id="@+id/tv_likes"
-                android:layout_marginTop="@dimen/goods_detail_item_margin"
-                android:layout_marginBottom="@dimen/goods_detail_item_margin"
+            <android.support.v4.view.ViewPager
+                android:id="@+id/vp_photos"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="@dimen/goods_detail_text_size"
-                android:textColor="@color/colorLightGrey"
-                android:drawableStart="@drawable/ic_favorite_grey_24dp"/>
+                android:layout_height="match_parent">
 
-            <ImageView android:id="@+id/iv_more"
+            </android.support.v4.view.ViewPager>
+
+            <com.rd.PageIndicatorView
+                android:id="@+id/page_indicator_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:contentDescription="@string/add_to_your_likes"
-                android:src="@drawable/ic_more_grey_24dp"
-                android:layout_alignParentEnd="true"/>
-        </RelativeLayout>
+                attrs:piv_radius="@dimen/piv_radius"
+                attrs:piv_padding="@dimen/piv_padding"
+                android:layout_marginBottom="@dimen/goods_detail_item_margin"
+                android:layout_gravity="center|bottom"
+                attrs:piv_animationType="thinWorm"
+                attrs:piv_interactiveAnimation="true"
+                attrs:piv_viewPager="@id/vp_photos"
+                attrs:piv_selectedColor="@color/colorDarkGrey"
+                attrs:piv_unselectedColor="@color/colorLightGrey"/>
+        </FrameLayout>
 
-        <View style="@style/VerticalDivider"/>
+        <LinearLayout android:id="@+id/layout_goods_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/goods_detail_item_margin"
+            android:elevation="5dp">
 
-        <include android:id="@+id/layout_user_info"
-            layout="@layout/item_publisher_info"/>
+            <TextView android:id="@+id/tv_goods_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorDarkGrey"
+                android:layout_marginBottom="@dimen/goods_detail_item_margin"
+                android:textSize="@dimen/goods_detail_name_size" />
+
+            <TextView android:id="@+id/tv_goods_price"
+                android:textColor="@color/ColorRed"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textSize="@dimen/goods_detail_price_size"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/goods_detail_item_margin" />
+
+            <View style="@style/VerticalDivider"
+                android:layout_marginTop="@dimen/goods_detail_item_margin"
+                android:layout_marginBottom="@dimen/goods_detail_item_margin"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/goods_detail_item_margin"
+                android:layout_marginBottom="@dimen/goods_detail_item_margin">
+
+                <TextView android:id="@+id/tv_likes"
+                    android:layout_marginBottom="@dimen/goods_detail_item_margin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="@dimen/goods_detail_text_size"
+                    android:textColor="@color/colorDarkGrey"
+                    android:drawableStart="@drawable/ic_favorite_grey_24dp"
+                    android:drawablePadding="@dimen/goods_detail_padding"/>
+
+                <ImageView android:id="@+id/iv_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@string/add_to_your_likes"
+                    android:src="@drawable/ic_more_grey_24dp"
+                    android:layout_alignParentEnd="true"/>
+            </RelativeLayout>
+
+            <TextView android:id="@+id/tv_location"
+                android:layout_marginBottom="@dimen/goods_detail_item_margin"
+                android:textColor="@color/colorDarkGrey"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/goods_detail_text_size"
+                android:drawableStart="@drawable/ic_location_grey_24dp"
+                android:drawablePadding="@dimen/goods_detail_padding"/>
+
+            <View style="@style/VerticalDivider"
+                android:layout_marginTop="@dimen/goods_detail_item_margin"
+                android:layout_marginBottom="@dimen/goods_detail_item_margin"/>
+
+            <include android:id="@+id/layout_user_info"
+                layout="@layout/item_publisher_info"/>
+        </LinearLayout>
+
     </LinearLayout>
-
-</android.support.design.widget.CoordinatorLayout>
+</ScrollView>

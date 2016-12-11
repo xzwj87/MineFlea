@@ -6,7 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.utils.PicassoUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +22,11 @@ public class ImagePageAdapter extends PagerAdapter{
     private Context mContext;
     private List<View> mImgList;
 
-    public ImagePageAdapter(Context context){
-        mContext = context;
-    }
-
-    public void setImageList(List<String> imgList){
+    public ImagePageAdapter(Context context,List<String> imgList){
         if(imgList == null) return;
+
+        mContext = context;
+        mImgList = new ArrayList<>(imgList.size());
 
         createViews(mContext,imgList);
     }
@@ -56,15 +57,19 @@ public class ImagePageAdapter extends PagerAdapter{
     }
 
     private void createViews(Context context,List<String> urlList){
-        mImgList = new ArrayList<>();
-
-        for(int i = 0; i < urlList.size(); ++i){
+        if(urlList.size() == 0){
             ImageView iv = new ImageView(context,null);
             iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-            PicassoUtils.loadImage(context,iv,urlList.get(i));
+            PicassoUtils.loadImage(iv, R.mipmap.a_x);
+            mImgList.add(iv);
+        }else {
+            for (int i = 0; i < urlList.size(); ++i) {
+                ImageView iv = new ImageView(context, null);
+                iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-            if(iv.getDrawable() != null) {
+                PicassoUtils.loadImage(context, iv, urlList.get(i));
+
                 mImgList.add(iv);
             }
         }

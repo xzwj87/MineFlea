@@ -1,19 +1,26 @@
 package com.github.xzwj87.mineflea.market.data.cache;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.URLUtil;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.avos.avoscloud.AVUser;
+import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.data.cache.serializer.JsonSerializer;
 import com.github.xzwj87.mineflea.market.executor.JobExecutor;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
+import com.github.xzwj87.mineflea.utils.FileManager;
+import com.github.xzwj87.mineflea.utils.PicassoUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -147,27 +154,30 @@ public class FileCacheImpl implements FileCache{
 
     @Override
     public String saveImgToFile(String imgUri,@CacheType String type) {
+        Log.v(TAG,"saveImgToFile()");
 
-        if(!URLUtil.isNetworkUrl(imgUri)) {
-            if(imgUri == null)
-                return null;
-            File in = new File(imgUri);
-            File out = buildImageFile(in.getName(), type);
-
-            if (in.exists()) {
-                mCacheMgr.writeImgToFile(in, out);
-            }
-
-            return out.getPath();
-        //ok,from network
-        }else{
+        String path;
+        if(URLUtil.isNetworkUrl(imgUri)) {
             String imgName = URLUtil.guessFileName(imgUri,null,null);
             File out = buildImageFile(imgName,type);
-
+            path = out.getAbsolutePath();
             executeAsync(new ImageDownloader(out,imgUri));
+        }else{
+            final File in = new File(imgUri);
+            final File out = buildImageFile(in.getName(), type);
+            path = out.getAbsolutePath();
 
-            return out.getPath();
+            if (in.exists()) {
+                executeAsync(new Runnable() {
+                    @Override
+                    public void run() {
+                        mCacheMgr.writeImgToFile(in, out);
+                    }
+                });
+            }
         }
+
+        return path;
     }
 
     @Override
@@ -407,7 +417,14 @@ public class FileCacheImpl implements FileCache{
         private void downloadImg(File dest, String imgUrl){
             if(dest == null || imgUrl == null) return;
 
-            try {
+            ImageView iv = new ImageView(AppGlobals.getAppContext(),null);
+            iv.setDrawingCacheEnabled(true);
+            PicassoUtils.loadImage(iv,imgUrl);
+            FileManager.saveBitmapToFile(dest,iv.getDrawingCache());
+
+            Log.v(TAG,"downloadImg(): url = " + imgUrl);
+
+/*            try {
                 URL url = new URL(imgUrl);
 
                 HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
@@ -432,7 +449,7 @@ public class FileCacheImpl implements FileCache{
                 e.printStackTrace();
             }catch (IOException e){
                 e.printStackTrace();
-            }
+            }*/
         }
     }
 

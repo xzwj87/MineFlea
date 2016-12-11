@@ -12,9 +12,9 @@
     <string name="add_pictures">图片</string>
     <string name="logout">未登录</string>
     <string name="published_goods">已发布</string>
-    <string name="my_favorites">收藏</string>
-    <string name="my_followees">我的粉丝</string>
-    <string name="my_followers">我的关注</string>
+    <string name="favorites">收藏</string>
+    <string name="followees">粉丝</string>
+    <string name="followers">关注</string>
     <string name="about">关于</string>
     <string name="settings">设置</string>
     <string name="button_ok">确定</string>
@@ -117,7 +117,6 @@
     <string name="previous_step">上一步</string>
     <string name="add_to_your_likes">收藏</string>
     <string name="progress_get_goods_detail">加载中&#8230;</string>
-    <string name="dist_units">km</string>
     <string name="error_wrong_auth_code">验证码错误</string>
     <string name="sms_auth_code">验证码</string>
     <string name="reset_password_explanation">发送短信验证码或者验证邮件</string>
@@ -131,4 +130,5 @@
     <string name="distance_from_you">距离</string>
     <string name="currency_symbol">¥</string>
     <string name="updated_at">更新于</string>
+    <string name="favored_user">人气</string>
 </resources>

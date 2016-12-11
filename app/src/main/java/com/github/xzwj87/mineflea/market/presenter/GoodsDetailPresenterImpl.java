@@ -49,7 +49,7 @@ public class GoodsDetailPresenterImpl implements GoodsDetailPresenter{
     }
 
     @Override
-    public void addToFavorites(String goodsId) {
+    public void addToFavorites() {
         if(mGoods != null){
             mRepo.addToMyFavorites(mGoods);
         }
@@ -118,11 +118,25 @@ public class GoodsDetailPresenterImpl implements GoodsDetailPresenter{
         Log.v(LOG_TAG,"renderGoodsView()");
         if(mGoods != null){
             mView.updateImageListPage(mGoods.getImageUri());
-            mView.updateGoodsName(mGoods.getName());
 
-            String dist = AMapUtils.calculateLineDistance(mGoods.getLocation(),mCurrent) + " " + DIST_UNITS;
+            String name = mGoods.getName() + "(" + mGoods.getNote() + ")";
+            mView.updateGoodsName(name);
+
+            mView.updateTitle(mGoods.getName());
+
+            String curSymbol = AppGlobals.getAppContext().getString(R.string.currency_symbol);
+            String p = curSymbol + String.valueOf(mGoods.getPrice());
+            mView.updateGoodsPrice(p);
+
+            String detail = mGoods.getLocDetail();
+            String distFrom = AppGlobals.getAppContext().getString(R.string.distance_from_you);
+            String d = String.valueOf((int)AMapUtils.calculateLineDistance(mGoods.getLocation(),mCurrent));
+            String dist = detail + "," + distFrom + d + DIST_UNITS;
             mView.updateGoodsLocation(dist);
-            mView.updateLikes(mGoods.getStars());
+
+            String favoredNo = AppGlobals.getAppContext().getString(R.string.favored_user) +
+                    " " + String.valueOf(mGoods.getStars());
+            mView.updateLikes(favoredNo);
         }
     }
 

@@ -84,10 +84,13 @@
     <dimen name="button_text_size">12sp</dimen>
     <dimen name="goods_detail_name_size">14sp</dimen>
     <dimen name="goods_detail_margin">12dp</dimen>
-    <dimen name="goods_detail_price_size">18sp</dimen>
+    <dimen name="goods_detail_price_size">16sp</dimen>
     <dimen name="goods_detail_text_size">14sp</dimen>
-    <dimen name="goods_detail_view_pager_height">270dp</dimen>
+    <dimen name="goods_detail_view_pager_height">210dp</dimen>
     <dimen name="register_second_item_margin">32dp</dimen>
     <dimen name="button_text_size_small">10sp</dimen>
     <dimen name="dialog_title_margin">24dp</dimen>
+    <dimen name="piv_padding">8dp</dimen>
+    <dimen name="piv_radius">8dp</dimen>
+    <dimen name="goods_detail_padding">8dp</dimen>
 </resources>

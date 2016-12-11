@@ -245,6 +245,14 @@ public class UserInfo {
         return mFavorGoodsList;
     }
 
+    public int getFavorCount(){
+        if(mFavorGoodsList == null){
+            return 0;
+        }
+
+        return mFavorGoodsList.size();
+    }
+
     public void addFavorGoods(String goodsId){
         mFavorGoodsList.add(goodsId);
     }

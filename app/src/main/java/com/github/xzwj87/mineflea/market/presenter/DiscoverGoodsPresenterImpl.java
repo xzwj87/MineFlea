@@ -4,6 +4,7 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
@@ -13,6 +14,7 @@ import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.DiscoverGoodsView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
