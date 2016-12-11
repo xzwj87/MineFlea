@@ -5,11 +5,13 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.amap.api.maps2d.model.LatLng;
+import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.PublishGoodsView;
+import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 
 import java.util.List;
 
@@ -20,7 +22,7 @@ import javax.inject.Inject;
  */
 
 @PerActivity
-public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
+public class PublishGoodsPresenterImpl implements PublishGoodsPresenter{
     public static final String TAG = PublishGoodsPresenterImpl.class.getSimpleName();
 
     @Inject
@@ -28,9 +30,6 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
     private PublishGoodsView mView;
     private PublishGoodsInfo mGoodsInfo;
 
-    private int mUploadImgCount;
-    private int mCurrentProcess;
-    private static int sImgNumber;
     private List<String> mImgUris;
 
     @Inject
@@ -45,25 +44,24 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
 
     @Override
     public void init() {
+        Log.v(TAG,"init()");
+
         mGoodsInfo = new PublishGoodsInfo();
         mRepository.init();
         //mRepository.setPresenterCallback(this);
         mRepository.registerCallBack(PRESENTER_PUBLISH,new PublishPresenterCallback());
-
-        mCurrentProcess = 0;
-        mUploadImgCount = 0;
     }
 
     @Override
     public void publishGoods() {
+        if(UserPrefsUtil.isLogin()) {
+            mRepository.publishGoods(mGoodsInfo);
+            mImgUris = mGoodsInfo.getImageUri();
+        }else{
+            mView.showNeedLoginMsg();
+        }
 
-        mRepository.publishGoods(mGoodsInfo);
-        sImgNumber = mGoodsInfo.getImageUri().size();
-        mImgUris = mGoodsInfo.getImageUri();
-        mUploadImgCount = 0;
-        mCurrentProcess = 0;
-        mRepository.uploadImageById(mGoodsInfo.getId(),
-                mImgUris.get(0),false,true);
+        //mRepository.uploadImageById(mImgUris.get(0),false,true);
         //mRepository.uploadImage(mImgUris.get(mUploadImgCount),true);
     }
 
@@ -124,6 +122,7 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
 
         if(TextUtils.isEmpty(mGoodsInfo.getNote())){
             mGoodsInfo.setNote("");
+            mView.showNoteInvalidMsg();
         }
 
         return true;
@@ -131,14 +130,12 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
 
     @Override
     public void onPause() {
-
     }
 
     @Override
     public void onDestroy() {
         mGoodsInfo = null;
         mImgUris = null;
-
         mRepository.unregisterCallback(PRESENTER_PUBLISH);
     }
 
@@ -146,10 +143,22 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
 
         @Override
         public void onComplete(Message message) {
-            if(message.obj == null){
-                mView.onPublishComplete(false);
-            }else{
-                mView.onPublishComplete(true);
+            Log.v(TAG,"onComplete()");
+            int what = message.what;
+            switch (what){
+                case ResponseCode.RESP_PUBLISH_GOODS_SUCCESS:
+                    mRepository.uploadImages(mGoodsInfo.getImageUri(),false);
+                    mGoodsInfo.setId(((PublishGoodsInfo)message.obj).getId());
+                    mView.onPublishComplete(true);
+                    break;
+                case ResponseCode.RESP_PUBLISH_GOODS_ERROR:
+                    mView.onPublishComplete(false);
+                    break;
+                case ResponseCode.RESP_NETWORK_NOT_CONNECTED:
+                    mView.showNoNetConnectionMsg();
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -158,20 +167,14 @@ public class PublishGoodsPresenterImpl extends PublishGoodsPresenter{
             int count = (Integer)message.obj;
             Log.v(TAG,"onNext(): count = " + count);
 
-            if((count == 100) && (++mUploadImgCount < sImgNumber)){
-                mRepository.uploadImageById(mGoodsInfo.getId(),
-                        mImgUris.get(mUploadImgCount),false,true);
-                //mRepository.uploadImage(mImgUris.get(mUploadImgCount),true);
-            }else if(mUploadImgCount == sImgNumber){
+            if(count == 100){
                 mView.onPublishComplete(true);
-                mUploadImgCount = 0;
-                mCurrentProcess = 0;
+                mView.finishView();
                 return;
             }
 
-            mCurrentProcess = (count/sImgNumber) + mUploadImgCount*100/sImgNumber;
-            Log.v(TAG,"updateUploadProcess(): count = " + mCurrentProcess);
-            mView.updateUploadProcess(mCurrentProcess);
+            Log.v(TAG,"updateUploadProcess(): count = " + count);
+            mView.updateUploadProcess(count);
         }
 
         @Override

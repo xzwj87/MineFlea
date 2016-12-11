@@ -152,4 +152,8 @@
     <string name="find_your_password">Find Your Password</string>
     <string name="sms_auth_code_has_been_sent">SMS authentification code has been sent!</string>
     <string name="prompt_input_new_pwd">Please Input New Password</string>
+    <string name="already_verified">Verified</string>
+    <string name="not_verified">Not Verified</string>
+    <string name="hint_no_network_connection">Network is not connected</string>
+    <string name="progress_publish_goods">Publishing...wait for a while</string>
 </resources>

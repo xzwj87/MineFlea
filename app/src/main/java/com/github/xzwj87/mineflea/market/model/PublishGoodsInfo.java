@@ -16,17 +16,15 @@ public class PublishGoodsInfo {
     public static final String GOODS_NAME = "name";
     public static final String GOODS_PUBLISHER = "publisher_id";
     public static final String GOODS_PRICE = "Price";
-    public static final String GOODS_UPDATED_TIME = "updated_time";
-    public static final String GOODS_RELEASE_DATE = "release_date";
-    public static final String GOODS_LOC = "location";
+    public static final String GOODS_UPDATED_TIME = "updatedAt";
+    public static final String GOODS_RELEASE_DATE = "createdAt";
+    public static final String GOODS_LOC = "whereCreated";
     public static final String GOODS_LAT = "lat";//纬度
     public static final String GOODS_LNG = "lng";//经度
     public static final String GOODS_LIKES = "likes";
     public static final String GOODS_IMAGES = "images";
     public static final String GOODS_NOTE = "note";
     public static final String GOODS_FAVOR_USER = "favor_user";
-
-    public static final String GOODS_IMG_STRING_SEP = "-";
 
     private String mId;
 

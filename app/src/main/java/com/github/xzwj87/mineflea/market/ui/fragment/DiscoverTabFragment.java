@@ -88,7 +88,7 @@ public class DiscoverTabFragment extends BaseFragment
         mPresenter.setView(this);
         mPresenter.init();
 
-        setUpAmapLocationClient();
+        startLocating();
     }
 
     @Override
@@ -190,7 +190,8 @@ public class DiscoverTabFragment extends BaseFragment
         // empty
     }
 
-    private void setUpAmapLocationClient(){
+    private void startLocating(){
+        Log.v(TAG,"startLocating()");
         mLocClient = new AMapLocationClient(getActivity());
         AMapLocationClientOption locOptions = new AMapLocationClientOption();
         locOptions.setNeedAddress(true);

@@ -1,6 +1,7 @@
 package com.github.xzwj87.mineflea.market.ui.fragment;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -21,6 +22,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps2d.model.LatLng;
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
@@ -53,7 +55,8 @@ public class PublishGoodsFragment extends BaseFragment
 
     @BindView(R.id.et_note) EditText mEtNote;
     @BindView(R.id.rv_goods_image) RecyclerView mRvGoodsImg;
-    @BindView(R.id.process_upload_image) NumberProgressBar mProcessBar;
+
+    ProgressDialog mProcessBar;
 
     CollapsingToolbarLayout mCollapsingToolbar;
     EditText mEtGoodsName;
@@ -128,6 +131,7 @@ public class PublishGoodsFragment extends BaseFragment
         ButterKnife.bind(this,rootView);
 
         initView();
+
         init();
 
         return rootView;
@@ -148,8 +152,8 @@ public class PublishGoodsFragment extends BaseFragment
 
         if(mPresenter.validGoodsInfo()) {
             mPresenter.publishGoods();
-            mProcessBar.setVisibility(View.VISIBLE);
-            mProcessBar.setProgress(0);
+
+            mProcessBar = ProgressDialog.show(getContext(),"",getString(R.string.progress_publish_goods));
         }
     }
 
@@ -165,36 +169,51 @@ public class PublishGoodsFragment extends BaseFragment
                 showToast(getString(R.string.publish_goods_success));
             }
 
-            mProcessBar.setVisibility(View.GONE);
-
-            finishView();
+            if(mProcessBar.isShowing()){
+                mProcessBar.dismiss();
+            }
         }
     }
 
     @Override
     public void updateUploadProcess(int count) {
         Log.v(TAG,"updateUploadProcess(): count = " + count);
-        mProcessBar.setProgress(count);
+        //mProcessBar.setProgress(count);
     }
 
     @Override
     public void showNameInvalidMsg() {
-        showToast(getString(R.string.error_invalid_goods_name));
+        mEtGoodsName.setError(getString(R.string.error_field_required));
+        //showToast(getString(R.string.error_invalid_goods_name));
     }
 
     @Override
     public void showPriceInvalidMsg() {
-        showToast(getString(R.string.error_invalid_goods_price));
+        mEtPrice.setError(getString(R.string.error_field_required));
+        //showToast(getString(R.string.error_invalid_goods_price));
     }
 
     @Override
     public void showNoteInvalidMsg() {
+        mEtNote.setError(getString(R.string.error_field_required));
         showToast(getString(R.string.error_no_note));
     }
 
     @Override
     public void showNoPicturesMsg() {
         showToast(getString(R.string.error_no_pictures));
+    }
+
+    @Override
+    public void showNoNetConnectionMsg() {
+        Log.v(TAG,"showNoNetConnectionMsg()");
+        showToast(getString(R.string.hint_no_network_connection));
+    }
+
+    @Override
+    public void showNeedLoginMsg() {
+        Log.v(TAG,"showNeedLoginMsg()");
+        showToast(getString(R.string.need_to_login));
     }
 
     @Override
@@ -327,17 +346,17 @@ public class PublishGoodsFragment extends BaseFragment
         locOptions.setNeedAddress(true);
         locOptions.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
         locOptions.setHttpTimeOut(10*1000);
-        locOptions.setInterval(2*1000);
+        locOptions.setInterval(30*1000);
         mLocClient.setLocationListener(new AMapLocationListener() {
             @Override
             public void onLocationChanged(AMapLocation aMapLocation) {
                 if(aMapLocation != null){
                     if(aMapLocation.getErrorCode() == 0){
-                        //mPresenter.setLocation(new LatLng(aMapLocation.getLatitude(),
-                                //aMapLocation.getLongitude()));
-                        // save current location
+/*                        mPresenter.setLocation(new LatLng(aMapLocation.getLatitude(),
+                                aMapLocation.getLongitude()));*/
+                         //save current location
                         //LatLng current = new LatLng(aMapLocation.getLatitude(),aMapLocation.getLongitude());
-                        //
+
                     }else{
                         Log.e("AmapError","location Error, ErrCode:"
                                     + aMapLocation.getErrorCode() + ", errInfo:"

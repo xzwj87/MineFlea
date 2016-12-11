@@ -6,11 +6,20 @@ package com.github.xzwj87.mineflea.market.ui;
 
 public interface PublishGoodsView extends BaseView{
     void publishGoods();
+
     void onPublishComplete(boolean success);
+
     void updateUploadProcess(int count);
 
     void showNameInvalidMsg();
+
     void showPriceInvalidMsg();
+
     void showNoteInvalidMsg();
+
     void showNoPicturesMsg();
+
+    void showNoNetConnectionMsg();
+
+    void showNeedLoginMsg();
 }

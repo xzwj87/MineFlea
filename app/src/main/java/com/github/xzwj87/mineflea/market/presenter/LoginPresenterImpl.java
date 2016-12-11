@@ -49,7 +49,7 @@ public class LoginPresenterImpl implements LoginPresenter{
         if(mIsEmail) {
             isValid = UserInfoUtils.isEmailValid(mUserInfo.getUserEmail());
         }else {
-            isValid = UserInfoUtils.isTelNumber(mUserInfo.getUserTelNumber());
+            isValid = UserInfoUtils.isTelNumberValid(mUserInfo.getUserTelNumber());
         }
 
         if(!isValid){
@@ -143,8 +143,10 @@ public class LoginPresenterImpl implements LoginPresenter{
                     case ResponseCode.RESP_LOGIN_SUCCESS:
                         UserInfo user = (UserInfo) message.obj;
                         UserPrefsUtil.saveUserLoginInfo(user);
+                        UserPrefsUtil.setLoginState(true);
 
                         mView.onLoginSuccess();
+                        mView.finishView();
                         break;
 
                     case ResponseCode.RESP_LOGIN_FAIL:
@@ -152,7 +154,7 @@ public class LoginPresenterImpl implements LoginPresenter{
                         if(message.arg1 == ResponseCode.RESP_LOGIN_INVALID_PASSWORD){
                             mView.showPwdInvalidMsg();
                         }
-                        UserPrefsUtil.updateUserInfoBoolean(UserInfo.IS_LOGIN,false);
+                        UserPrefsUtil.setLoginState(false);
                         break;
 
                     case ResponseCode.RESP_RESET_PWD_BY_SMS_SUCCESS:
@@ -164,6 +166,8 @@ public class LoginPresenterImpl implements LoginPresenter{
                     case ResponseCode.RESP_RESET_PWD_BY_SMS_FAIL:
                         mView.showSmsResetPwdFailMsg();
                         break;
+                    case ResponseCode.RESP_NETWORK_NOT_CONNECTED:
+                        mView.showNoNetConnectionMsg();
                     default:
                         break;
                 }

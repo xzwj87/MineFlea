@@ -32,4 +32,6 @@ public interface RemoteSourceCallBack {
     void onResetPwdByTelDone(Message message);
 
     void onResetPwdBySms(Message message);
+
+    void onTelNumberVerifiedComplete(Message msg);
 }

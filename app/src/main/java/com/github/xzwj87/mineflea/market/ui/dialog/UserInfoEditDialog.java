@@ -6,6 +6,9 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.github.xzwj87.mineflea.R;
@@ -21,10 +24,11 @@ public class UserInfoEditDialog extends DialogFragment{
 
     public UserInfoEditDialog(){}
 
-    public static UserInfoEditDialog newInstance(String title,String content){
+    public static UserInfoEditDialog newInstance(int id,String title,String content){
         UserInfoEditDialog fragment = new UserInfoEditDialog();
 
         Bundle bundle = new Bundle();
+        bundle.putInt("id",id);
         bundle.putString("title",title);
         bundle.putString("content",content);
         fragment.setArguments(bundle);
@@ -49,6 +53,28 @@ public class UserInfoEditDialog extends DialogFragment{
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedState){
+        View root = inflater.inflate(R.layout.dialog_input_text,container,false);
+
+        return root;
+    }
+
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        String content = getArguments().getString("content");
+        Dialog dialog = getDialog();
+        if(dialog != null) {
+            EditText editText = (EditText) dialog.findViewById(R.id.et_input);
+            editText.setText(content);
+        }
+    }
+
+
+    @Override
     public Dialog onCreateDialog(Bundle savedState){
 
         String title = getArguments().getString("title");
@@ -68,10 +94,6 @@ public class UserInfoEditDialog extends DialogFragment{
                        mListener.onNegativeClick(UserInfoEditDialog.this);
                    }
                }).create();
-
-        String content = getArguments().getString("content");
-        EditText editText = (EditText)dialog.findViewById(R.id.et_input);
-        editText.setText(content);
 
         return dialog;
     }

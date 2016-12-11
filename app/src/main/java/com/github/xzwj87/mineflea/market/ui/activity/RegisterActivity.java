@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.github.xzwj87.mineflea.R;
@@ -86,8 +85,6 @@ public class RegisterActivity extends BaseActivity implements RegisterFragment.N
         super.onPause();
 
         mPresenter.onPause();
-        // make sure data is saved correctly
-        mPresenter.updateUserInfo();
     }
 
     @Override
@@ -107,11 +104,12 @@ public class RegisterActivity extends BaseActivity implements RegisterFragment.N
 
     @Override
     public void onActivityResult(int request, int result, Intent data){
-        super.onActivityResult(request,result,data);
+        //super.onActivityResult(request,result,data);
         Log.v(TAG,"onActivityResult(): result = " + result);
-/*        if(request == RESULT_OK && data != null){
+        if(request == RegisterFragment.REQUEST_LOGIN){
             setResult(result,data);
-        }*/
+            finish();
+        }
     }
 
     @Override

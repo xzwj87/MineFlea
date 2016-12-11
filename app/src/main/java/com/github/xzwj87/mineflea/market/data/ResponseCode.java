@@ -80,6 +80,10 @@ public class ResponseCode {
 
     public static final int RESP_SEND_EMAIL_FAIL = 0x407;
 
+    public static final int RESP_PHONE_NUMBER_VERIFIED_SUCCESS = 0x501;
+
+    public static final int RESP_PHONE_NUMBER_VERIFIED_ERROR = 0x502;
+
 
     @Override
     public String toString(){

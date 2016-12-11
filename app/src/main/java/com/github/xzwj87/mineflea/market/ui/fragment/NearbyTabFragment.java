@@ -83,7 +83,7 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
         AMapLocationListener, RouteSearch.OnRouteSearchListener, AMap.OnMapClickListener {
     public static final String TAG = "[NearbyTabFragment]";
 
-    private boolean DBG = true;//用于调试
+    private boolean DBG = false;//用于调试
 
     @Inject
     NearbyGoodsPresenterImpl mPresenter;
@@ -191,10 +191,17 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
         ButterKnife.bind(this, root);
         mPresenter.init();
         mPresenter.setView(this);
+
         mapView = (MapView) root.findViewById(R.id.map);
         mapView.onCreate(savedSate);
         initView(root);
+
+        // FIXME: a lot of bugs
+        mPresenter.setView(this);
+        mPresenter.init();
+
         loadData();
+
         return root;
     }
 
@@ -604,7 +611,7 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
                 mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
                 mCurrentAmapLocation = amapLocation;
                 myLocation = new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude());
-                Log.e(TAG, myLocation.toString());
+                //Log.e(TAG, myLocation.toString());
             } else {
                 String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
                 Log.e("AmapErr", errText);

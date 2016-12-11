@@ -4,6 +4,8 @@ import com.github.xzwj87.mineflea.market.data.DataSource;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 
+import java.util.List;
+
 /**
  * Created by jason on 10/24/16.
  */
@@ -48,4 +50,8 @@ public interface RemoteSource extends DataSource {
     void sendResetPwdBySms(String telNumber);
 
     void resetPwdBySms(String authCode,String newPwd);
+
+    void uploadImg(String imgUrl, boolean showProcess);
+
+    void uploadImg(List<String> imgList, boolean showProcess);
 }

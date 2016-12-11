@@ -10,6 +10,7 @@ import java.util.List;
 
 import static com.github.xzwj87.mineflea.market.model.PublishGoodsInfo.GOODS_FAVOR_USER;
 import static com.github.xzwj87.mineflea.market.model.PublishGoodsInfo.GOODS_IMAGES;
+import static com.github.xzwj87.mineflea.market.model.PublishGoodsInfo.GOODS_LOC;
 import static com.github.xzwj87.mineflea.market.model.PublishGoodsInfo.GOODS_NAME;
 import static com.github.xzwj87.mineflea.market.model.PublishGoodsInfo.GOODS_NOTE;
 import static com.github.xzwj87.mineflea.market.model.PublishGoodsInfo.GOODS_PRICE;
@@ -30,7 +31,7 @@ public class PublishGoodsUtils {
 
         AVObject avObject = new AVObject(AV_OBJ_GOODS);
         AVGeoPoint loc = new AVGeoPoint(info.getLocation().latitude,info.getLocation().longitude);
-        avObject.put("whereCreated", loc);
+        avObject.put(GOODS_LOC, loc);
         avObject.put(GOODS_NAME,info.getName());
         avObject.put(GOODS_PUBLISHER,info.getUserId());
         avObject.put(GOODS_PRICE,info.getPrice());
@@ -57,19 +58,12 @@ public class PublishGoodsUtils {
         info.setReleasedDate(object.getCreatedAt());
         info.setUpdateTime(object.getUpdatedAt());
 
-        AVGeoPoint loc = (AVGeoPoint)object.get("whereCreated");
+        AVGeoPoint loc = (AVGeoPoint)object.get(GOODS_LOC);
         LatLng latLng = new LatLng(loc.getLatitude(),loc.getLongitude());
         info.setLocation(latLng);
         info.setImageUri(object.getList(GOODS_IMAGES));
         info.setGoodsFavorUser(object.getList(GOODS_FAVOR_USER));
 
         return info;
-    }
-
-    public static List<String> getImgUrls(AVObject avObject){
-        String imgList = (String)avObject.get(PublishGoodsInfo.GOODS_IMAGES);
-        String urls[] = imgList.split(PublishGoodsInfo.GOODS_IMG_STRING_SEP);
-
-        return Arrays.asList(urls);
     }
 }

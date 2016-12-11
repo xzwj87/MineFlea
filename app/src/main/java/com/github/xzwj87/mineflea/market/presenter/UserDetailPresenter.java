@@ -29,5 +29,7 @@ public abstract class UserDetailPresenter implements BasePresenter{
 
     public abstract boolean isMe();
 
+    public abstract void setIsMe(boolean state);
+
     public abstract int getGoodsNumber();
 }
