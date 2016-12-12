@@ -3,7 +3,6 @@ package com.github.xzwj87.mineflea.market.data.remote;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MotionEvent;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
@@ -171,6 +170,15 @@ public class RemoteDataSource implements RemoteSource{
             user.put(key, val);
             user.saveInBackground();
         }
+    }
+
+    @Override
+    public void updateCurrentUserInfo(String key, List<String> val) {
+        Log.v(TAG,"updateCurrentUserInfo()");
+
+        AVUser user = AVUser.getCurrentUser();
+        user.put(key,val);
+        user.saveInBackground();
     }
 
     @Override

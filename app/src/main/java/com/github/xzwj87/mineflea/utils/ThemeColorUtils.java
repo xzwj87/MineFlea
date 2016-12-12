@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 
+import com.github.xzwj87.mineflea.BuildConfig;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
 
@@ -32,12 +33,14 @@ public class ThemeColorUtils {
     }
 
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void changeThemeColor(AppCompatActivity activity,String color){
         if(activity == null || TextUtils.isEmpty(color)) return;
 
         int c = Color.parseColor(color);
 
+        String keyThemeColor = activity.getString(R.string.key_pref_theme_color);
+        SharePrefsHelper.getInstance(activity).updateValue(keyThemeColor,color);
+
         ActionBar actionBar = activity.getSupportActionBar();
         if(actionBar != null){
             actionBar.setBackgroundDrawable(new ColorDrawable(c));
@@ -45,17 +48,23 @@ public class ThemeColorUtils {
 
         int ind = sThemeColorList.indexOf(color);
         if(ind != -1){
-            activity.getWindow().setStatusBarColor(
-                    Color.parseColor(sThemeDarkColorList.get(ind)));
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                activity.getWindow().setStatusBarColor(
+                        Color.parseColor(sThemeDarkColorList.get(ind)));
+            }
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void changeThemeColor(AppCompatActivity activity){
         if(activity == null) return;
 
-        String color = SharePrefsHelper.getInstance(activity).getThemeColor();
+        SharePrefsHelper helper = SharePrefsHelper.getInstance(activity);
+        String color = helper.getThemeColor();
         int c = Color.parseColor(color);
+
+        String keyThemeColor = activity.getString(R.string.key_pref_theme_color);
+        helper.updateValue(keyThemeColor,color);
+
 
         ActionBar actionBar = activity.getSupportActionBar();
         if(actionBar != null){
@@ -64,8 +73,10 @@ public class ThemeColorUtils {
 
         int ind = sThemeColorList.indexOf(color);
         if(ind != -1){
-            //activity.getWindow().setStatusBarColor(
-                    //Color.parseColor(sThemeDarkColorList.get(ind)));
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                activity.getWindow().setStatusBarColor(
+                        Color.parseColor(sThemeDarkColorList.get(ind)));
+            }
         }
     }
 

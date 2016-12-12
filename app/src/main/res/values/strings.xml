@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">MineFlea</string>
-    <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="app_name" translatable="false">MineFlea</string>
+    <string name="action_settings" translatable="false">Settings</string>
+    <string name="section_format" translatable="false">Hello World from section: %1$d</string>
 
     <string name="tab_trends">Trends</string>
     <string name="tab_nearby">Nearby</string>
@@ -40,14 +40,14 @@
     <string name="register_progress_info">Registering, please wait for a while</string>
     <string name="prompt_login_failure">Fail to login; Incorrect account or password!</string>
     <string name="pictures_over_max_count_hints">only 5 pictures should be picked</string>
-    <string name="iv_goods_img">Goods Image</string>
+    <string name="iv_goods_img" translatable="false">Goods Image</string>
     <string name="get_user_detail_progress_hint">loading data,please wait for a while</string>
     <string name="error_get_user_info">Fail to get user info</string>
     <string name="error_get_goods_list">Fail to get goods list</string>
-    <string name="assure_not_pick_head_icon">No head icon picked</string>
+    <string name="assure_not_pick_head_icon" translatable="false">No head icon picked</string>
     <string name="hint_login_success">Success to login</string>
     <string name="user_head_icon">User Head Icon</string>
-    <string name="none"> </string>
+    <string name="none" translatable="false"> </string>
     <string name="error_no_note">no input note</string>
     <string name="error_no_pictures">No pictures added</string>
     <string name="edit">Edit</string>
@@ -70,36 +70,36 @@
     <string name="settings_about_sum">know more about authors</string>
     <string name="settings_about_mineflea">About MineFlea</string>
     <string name="about_mineflea">This app is created by Jason and Icesea</string>
-    <string name="button_remove">Remove an image</string>
+    <string name="button_remove" translatable="false">Remove an image</string>
     <string name="pref_data_sync">Data Sync</string>
     <string name="wifi_only_sync">Sync only wifi connected</string>
     <string name="pref_theme_color">Change Theme Color</string>
     <string name="change_theme_color">Change your theme color</string>
     <string name="choose_color_you_like">Choose Color You Like</string>
-    <string name="key_pref_wifi_only_sync">key_wifi_only_sync</string>
+    <string name="key_pref_wifi_only_sync" translatable="false">key_wifi_only_sync</string>
     <string name="network_connected_sync">Network Connencted Sync</string>
-    <string name="key_login_state">key_login_state</string>
+    <string name="key_login_state" translatable="false">key_login_state</string>
     <string name="settings_logout">Logout this account</string>
     <string name="sure_to_logout">Are you sure to logout</string>
-    <string name="key_feedback">key_feedback</string>
+    <string name="key_feedback" translatable="false">key_feedback</string>
     <string name="issue_feedback">Issue Feedback</string>
     <string name="write_down_your_advice">Feedack your advice to us</string>
     <string name="hint_logining">Logining,please wait for a while</string>
-    <string name="string_false">false</string>
+    <string name="string_false" translatable="false">false</string>
     <string name="hint_logout_success">Logout Success</string>
-    <string name="follow">Follow</string>
+    <string name="follow" translatable="false">Follow</string>
     <string name="no_result">Fail to find the path！！</string>
     <string name="need_to_login">Please login firstly</string>
-    <string name="image_color">color image</string>
-    <string name="selected_color">selected_color</string>
-    <string name="key_pref_theme_color">key_pref_theme_color</string>
-    <string name="color_indigo">#3F51B5</string>
+    <string name="image_color" translatable="false">color image</string>
+    <string name="selected_color" translatable="false">selected_color</string>
+    <string name="key_pref_theme_color" translatable="false">key_pref_theme_color</string>
+    <string name="color_indigo" translatable="false">#3F51B5</string>
     <string name="get_goods_list_success">Refresh Success</string>
     <string name="forget_password">Forget Password?</string>
     <string name="use_tel_number_register">Use  Telephone Number To Register</string>
     <string name="had_account_login">No account? Register</string>
     <string name="prompt_input_auth_code">Please Input Authentification Code</string>
-    <string name="show_password">Show Password</string>
+    <string name="show_password" translatable="false">Show Password</string>
     <string name="error_invalid_account">Invalid Email or Telephone Number</string>
     <string name="please_input_email_or_telephone_number">Please Input Email or Telephone Number</string>
     <string name="send_auth_code">Send SMS</string>
@@ -113,7 +113,7 @@
     <string name="error_register">Register Failure,please try it again!</string>
     <string name="previous_step">Previous Step</string>
     <string name="add_to_your_likes">Add To Your Likes</string>
-    <string name="dist_units">km</string>
+    <string name="dist_units" translatable="false">km</string>
     <string name="error_wrong_auth_code">Wrong Authetification Code</string>
     <string name="sms_auth_code">Authetification Code</string>
     <string name="reset_password_explanation">This will send a SMS code to your telephone or send you an EMAIL</string>

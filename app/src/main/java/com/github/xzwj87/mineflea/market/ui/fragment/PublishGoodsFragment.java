@@ -25,11 +25,9 @@ import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps2d.model.LatLng;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.internal.di.component.MarketComponent;
-import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.presenter.PublishGoodsPresenterImpl;
 import com.github.xzwj87.mineflea.market.ui.PublishGoodsView;
 import com.github.xzwj87.mineflea.market.ui.activity.HomeActivity;
-import com.github.xzwj87.mineflea.market.ui.activity.PublishGoodsActivity;
 import com.github.xzwj87.mineflea.market.ui.adapter.PublishGoodsImageAdapter;
 import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 

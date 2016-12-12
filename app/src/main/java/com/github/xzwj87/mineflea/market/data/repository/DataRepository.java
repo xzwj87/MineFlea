@@ -55,6 +55,12 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
         Log.v(TAG,"publishGoods(): goods = " + goods);
 
         mCloudSrc.publishGoods(goods);
+
+        UserInfo info = getCurrentUser();
+        info.addFavorGoods(goods.getId());
+
+        mCloudSrc.updateCurrentUserInfo(UserInfo.FAVOR_GOODS,info.getFavorGoodsList());
+        mCache.updateFile(info);
     }
 
     @Override

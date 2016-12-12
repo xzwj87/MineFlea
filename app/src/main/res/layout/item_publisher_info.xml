@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/goods_detail_item_margin"
     android:background="@color/colorWhite"
-    android:layout_marginBottom="@dimen/goods_detail_item_margin">
+    android:layout_marginBottom="@dimen/goods_detail_item_margin"
+    android:clickable="true">
 
     <!-- this is a layout for showing user info in Goods detail activity -->
     <ImageView

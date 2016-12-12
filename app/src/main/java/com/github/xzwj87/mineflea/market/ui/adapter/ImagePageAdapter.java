@@ -8,7 +8,6 @@ import android.widget.ImageView;
 
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.utils.PicassoUtils;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +60,7 @@ public class ImagePageAdapter extends PagerAdapter{
             ImageView iv = new ImageView(context,null);
             iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-            PicassoUtils.loadImage(iv, R.mipmap.a_x);
+            PicassoUtils.loadImage(iv, R.mipmap.no_pictures);
             mImgList.add(iv);
         }else {
             for (int i = 0; i < urlList.size(); ++i) {

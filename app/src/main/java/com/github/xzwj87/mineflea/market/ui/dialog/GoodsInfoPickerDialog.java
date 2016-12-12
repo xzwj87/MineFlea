@@ -109,7 +109,7 @@ public class GoodsInfoPickerDialog extends DialogFragment{
         if(!TextUtils.isEmpty(url)) {
             PicassoUtils.loadImage(getContext(), image, url);
         }else{
-            PicassoUtils.loadImage(getContext(),image,R.mipmap.a_x);
+            PicassoUtils.loadImage(getContext(),image,R.mipmap.no_pictures);
         }
 
         LatLng latLng = UserPrefsUtil.getCurrentLocation();

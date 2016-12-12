@@ -42,7 +42,6 @@
     <string name="error_get_goods_list">获取物品列表出错</string>
     <string name="hint_login_success">登陆成功</string>
     <string name="user_head_icon">头像</string>
-    <string name="none"> </string>
     <string name="error_no_note">没有物品描述</string>
     <string name="error_no_pictures">没有添加图片</string>
     <string name="edit">编辑</string>

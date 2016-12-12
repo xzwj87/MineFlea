@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_marginBottom="@dimen/dialog_item_margin"
-        android:background="@mipmap/a_x"
+        android:background="@mipmap/no_pictures"
         android:contentDescription="@string/iv_goods_img"
         android:scaleType="centerCrop"/>
 

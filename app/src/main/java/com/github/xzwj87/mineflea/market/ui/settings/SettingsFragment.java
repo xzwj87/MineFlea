@@ -61,6 +61,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         String keyLogState = getString(R.string.key_login_state);
         String keyThemeColor = getString(R.string.key_pref_theme_color);
 
+
         if(!key.equals(getString(R.string.key_pref_wifi_only_sync))){
 
             String val = sharedPreferences.getString(key, "");

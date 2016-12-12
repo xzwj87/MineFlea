@@ -1,7 +1,6 @@
 package com.github.xzwj87.mineflea.market.data.cache;
 
 import android.util.Log;
-import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.File;

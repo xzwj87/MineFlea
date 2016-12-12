@@ -6,7 +6,6 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.URLUtil;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -88,7 +87,7 @@ public class DiscoverGoodsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 String imgUrl = info.getImageUri().get(0);
                 PicassoUtils.loadImage(holder.goodsImg, imgUrl);
             }else{
-                PicassoUtils.loadImage(holder.goodsImg,R.mipmap.a_x);
+                PicassoUtils.loadImage(holder.goodsImg,R.mipmap.no_pictures);
             }
 
             String p = mContext.getString(R.string.currency_symbol) + String.valueOf(info.getPrice());

@@ -1,13 +1,11 @@
 package com.github.xzwj87.mineflea.market.data.cache;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.URLUtil;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.avos.avoscloud.AVUser;
 import com.github.xzwj87.mineflea.app.AppGlobals;
@@ -19,13 +17,6 @@ import com.github.xzwj87.mineflea.utils.FileManager;
 import com.github.xzwj87.mineflea.utils.PicassoUtils;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 

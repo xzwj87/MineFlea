@@ -1,14 +1,11 @@
 package com.github.xzwj87.mineflea.market.data.cache;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.IntDef;
 import android.support.annotation.StringDef;
 
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 
 import static java.lang.annotation.RetentionPolicy.SOURCE;
