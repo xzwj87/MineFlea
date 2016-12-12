@@ -131,4 +131,6 @@
     <string name="currency_symbol">¥</string>
     <string name="updated_at">更新于</string>
     <string name="favored_user">人气</string>
+    <string name="check_goods_detail">进去看看</string>
+    <string name="no_goods_found">附近没有物品</string>
 </resources>

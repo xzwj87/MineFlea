@@ -93,4 +93,5 @@
     <dimen name="piv_padding">8dp</dimen>
     <dimen name="piv_radius">8dp</dimen>
     <dimen name="goods_detail_padding">8dp</dimen>
+    <dimen name="dialog_text_size">14sp</dimen>
 </resources>

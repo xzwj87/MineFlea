@@ -160,4 +160,6 @@
     <string name="currency_symbol">$</string>
     <string name="updated_at">updated at</string>
     <string name="favored_user">The Number User Favors</string>
+    <string name="check_goods_detail">Take a look at the detail</string>
+    <string name="no_goods_found">No Goods Found</string>
 </resources>

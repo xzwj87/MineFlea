@@ -31,6 +31,13 @@
         <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
+    <style name="FullWidthDialog" parent="Theme.AppCompat.Light.DialogWhenLarge">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowFrame">@null</item>
+    </style>
+
     <style name="InputEditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">48dp</item>

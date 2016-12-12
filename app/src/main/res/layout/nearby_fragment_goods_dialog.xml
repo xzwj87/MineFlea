@@ -1,117 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:fitsSystemWindows="true"
-                android:gravity="center">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/colorWhite">
+
+    <ImageView
+        android:id="@+id/iv_goods_image"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginBottom="@dimen/dialog_item_margin"
+        android:background="@mipmap/a_x"
+        android:contentDescription="@string/iv_goods_img"
+        android:scaleType="centerCrop"/>
 
     <RelativeLayout
+        android:id="@+id/rr1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center">
+        android:layout_marginStart="@dimen/dialog_item_margin"
+        android:layout_marginEnd="@dimen/dialog_item_margin"
+        android:layout_marginBottom="@dimen/dialog_item_margin">
 
-        <RelativeLayout
-            android:id="@+id/rr_ll"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tv_goods_name"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true">
+            android:textColor="@color/colorDarkGrey"
+            android:layout_centerInParent="true"
+            android:textSize="@dimen/dialog_text_size"/>
 
-            <ImageView
-                android:id="@+id/goods_pic_iv"
-                android:layout_width="fill_parent"
-                android:layout_height="150dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
-                android:layout_marginTop="10dp"
-                android:alpha="1.0"
-                android:background="@mipmap/test_info_iv"
-                android:padding="5dp"
-                android:scaleType="fitXY"/>
+        <TextView
+            android:id="@+id/tv_goods_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/tv_goods_name"
+            android:layout_centerInParent="true"
+            android:textSize="@dimen/dialog_text_size"
+            android:textColor="@color/ColorRed"/>
 
-            <RelativeLayout
-                android:id="@+id/rr1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/goods_pic_iv"
-                android:layout_marginTop="5dp">
+        <TextView
+            android:id="@+id/tv_likes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_centerInParent="true"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/colorDarkGrey"
+            android:drawableStart="@drawable/ic_favorite_grey_24dp"
+            android:drawablePadding="5dp"/>
 
-                <TextView
-                    android:id="@+id/goods_name_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="5dp"
-                    android:text="老米家泡馍小炒"
-                    android:textColor="@android:color/black"
-                    android:textSize="18sp"/>
-
-                <TextView
-                    android:id="@+id/goods_prise_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@id/goods_name_tv"
-                    android:layout_alignParentRight="true"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
-                    android:text="652"
-                    android:textColor="@android:color/black"/>
-            </RelativeLayout>
-
-
-
-            <RelativeLayout
-                android:id="@+id/rr2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/rr1"
-                android:layout_marginTop="5dp">
-
-                <TextView
-                    android:id="@+id/goods_dis_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
-                    android:text="距离200米"
-                    android:textColor="@android:color/black"
-                    android:textSize="15sp"/>
-
-                <ImageView
-                    android:id="@+id/goods_prise_iv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginRight="5dp"
-                    android:background="@drawable/zan"/>
-            </RelativeLayout>
-            <Button
-                android:id="@+id/goods_btn_ok"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/rr2"
-                android:text="去看看呗"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"/>
-        </RelativeLayout>
     </RelativeLayout>
 
-    <ImageButton
-        android:id="@+id/goods_btn_cancel"
+    <TextView
+        android:id="@+id/tv_loc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:background="@mipmap/cancel"/>
-</RelativeLayout>
+        android:layout_marginStart="@dimen/dialog_item_margin"
+        android:layout_marginBottom="@dimen/dialog_item_margin"
+        android:textColor="@color/colorDarkGrey"
+        android:textSize="@dimen/dialog_text_size"
+        android:drawableStart="@drawable/ic_location_grey_24dp"/>
+
+    <Button
+        android:id="@+id/btn_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dialog_item_margin"
+        android:layout_marginEnd="@dimen/dialog_item_margin"
+        android:layout_marginBottom="@dimen/dialog_item_margin"
+        android:text="@string/check_goods_detail"
+        android:textColor="@color/colorDarkGrey"
+        android:textSize="@dimen/button_text_size"
+        android:background="@drawable/e"/>
+</LinearLayout>

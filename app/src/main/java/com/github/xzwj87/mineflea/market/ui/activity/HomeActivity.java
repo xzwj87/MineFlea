@@ -19,8 +19,7 @@ import com.github.xzwj87.mineflea.utils.NetConnectionUtils;
 import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
 import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 
-public class HomeActivity extends BaseActivity
-            implements HasComponent<MarketComponent>{
+public class HomeActivity extends BaseActivity {
 
     private static final String TAG = HomeActivity.class.getSimpleName();
 
