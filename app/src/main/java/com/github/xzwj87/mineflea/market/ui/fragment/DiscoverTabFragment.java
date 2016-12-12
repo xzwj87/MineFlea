@@ -83,9 +83,6 @@ public class DiscoverTabFragment extends BaseFragment
 
         Log.v(TAG,"onResume()");
 
-        mPresenter.setView(this);
-        mPresenter.init();
-
         startLocating();
     }
 
@@ -96,6 +93,10 @@ public class DiscoverTabFragment extends BaseFragment
         mLocClient.stopLocation();
 
         mPresenter.onPause();
+
+        if(mSrlDiscover.isRefreshing()){
+            mSrlDiscover.setRefreshing(false);
+        }
     }
 
     @Override
@@ -130,6 +131,10 @@ public class DiscoverTabFragment extends BaseFragment
         if(loc != null) {
             mRvAdapter.setCurrentLoc(loc);
         }
+
+
+        mPresenter.setView(this);
+        mPresenter.init();
     }
 
     //设置下拉刷新
@@ -184,6 +189,7 @@ public class DiscoverTabFragment extends BaseFragment
         Log.v(TAG,"onGetGoodsListDone(): " + (success ? "success" : "fail"));
         mRvAdapter.notifyDataSetChanged();
 
+        //mSrlDiscover.setEnabled(false);
         if(mSrlDiscover.isRefreshing()){
             mSrlDiscover.setRefreshing(false);
 

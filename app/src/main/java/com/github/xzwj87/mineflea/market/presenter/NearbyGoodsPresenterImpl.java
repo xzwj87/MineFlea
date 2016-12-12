@@ -29,7 +29,6 @@ public class NearbyGoodsPresenterImpl extends NearbyGoodsPresenter {
 
     @Inject
     DataRepository mRepository;
-    //private NearbyProtocol protocol;
     private NearbyGoodsView mView;
 
     private List<PublishGoodsInfo> mGoodsList;
@@ -44,7 +43,7 @@ public class NearbyGoodsPresenterImpl extends NearbyGoodsPresenter {
     @Override
     public void loadDataFromServer() {
         mRepository.getAllGoods();
-        Log.e(TAG, "getAllGoods()");
+        Log.v(TAG, "getAllGoods()");
     }
 
     @Override
@@ -92,6 +91,7 @@ public class NearbyGoodsPresenterImpl extends NearbyGoodsPresenter {
                                 if (!mGoodsSet.contains(goodsInfo.getId())) {
                                     mGoodsSet.add(goodsInfo.getId());
                                     mGoodsList.add(goodsInfo);
+                                    mRepository.getUserInfoById(goodsInfo.getUserId());
                                 }
                             }
                         }
@@ -100,6 +100,11 @@ public class NearbyGoodsPresenterImpl extends NearbyGoodsPresenter {
                     break;
                 case ResponseCode.RESP_GET_GOODS_LIST_ERROR:
                     //mView.onGetGoodsListDone(false);
+                    break;
+                case RESP_GET_USER_INFO_SUCCESS:
+                    mPublisherList.add((UserInfo)message.obj);
+                    break;
+                case RESP_GET_USER_INFO_ERROR:
                     break;
                 default:
                     break;

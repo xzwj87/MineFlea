@@ -19,6 +19,8 @@ public class PublishGoodsInfo {
     public static final String GOODS_UPDATED_TIME = "updatedAt";
     public static final String GOODS_RELEASE_DATE = "createdAt";
     public static final String GOODS_LOC = "whereCreated";
+    public static final String GOODS_LOC_LAT = "latitude";
+    public static final String GOODS_LOC_LONG = "longitude";
     public static final String GOODS_LOC_DETAIL = "location_detail";
     public static final String GOODS_LIKES = "likes";
     public static final String GOODS_IMAGES = "images";

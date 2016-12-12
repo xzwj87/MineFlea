@@ -42,7 +42,6 @@
 
     </LinearLayout>
 
-
     <LinearLayout android:layout_below="@id/iv_user_header"
         android:layout_marginTop="@dimen/goods_detail_item_margin"
         android:layout_marginBottom="@dimen/goods_detail_item_margin"

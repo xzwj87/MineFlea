@@ -9,4 +9,6 @@ public interface GoodsDetailPresenter extends BasePresenter{
     void getGoodsInfo(String goodsId);
 
     void addToFavorites();
+
+    String getPublisherId();
 }

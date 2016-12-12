@@ -81,9 +81,6 @@
             android:theme="@style/AppTheme">
         </activity>
 
-        <activity android:name=".market.ui.activity.NearbyGoodsActivity">
-        </activity>
-
         <activity android:name=".market.ui.activity.GoodsDetailActivity"
             android:label=""
             android:parentActivityName=".market.ui.activity.HomeActivity"

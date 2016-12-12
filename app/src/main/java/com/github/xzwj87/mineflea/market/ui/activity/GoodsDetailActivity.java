@@ -74,15 +74,13 @@ public class GoodsDetailActivity extends BaseActivity implements GoodsDetailView
         getComponent().inject(this);
 
         ThemeColorUtils.changeThemeColor(this);
+
+        init();
     }
 
     @Override
     public void onResume(){
         super.onResume();
-
-        mPresenter.init();
-        mPresenter.setView(this);
-        mPresenter.getGoodsInfo(mGoodsId);
 
         //registerForContextMenu(mIvCheckMore);
     }
@@ -152,10 +150,11 @@ public class GoodsDetailActivity extends BaseActivity implements GoodsDetailView
 
     @Override
     public void updateImageListPage(List<String> imgList) {
-        if(imgList.size() == 0){
+        if(imgList.size()<=  1){
             mPiv.setVisibility(View.GONE);
         }
         initImageViewPager(imgList);
+        mPiv.setCount(imgList.size());
         ImagePageAdapter adapter = (ImagePageAdapter)mVpGoodsImages.getAdapter();
         adapter.notifyDataSetChanged();
     }
@@ -226,5 +225,28 @@ public class GoodsDetailActivity extends BaseActivity implements GoodsDetailView
     private void initImageViewPager(List<String> imgList){
         ImagePageAdapter adapter = new ImagePageAdapter(this,imgList);
         mVpGoodsImages.setAdapter(adapter);
+    }
+
+    private void init(){
+        mPresenter.init();
+        mPresenter.setView(this);
+        mPresenter.getGoodsInfo(mGoodsId);
+
+        mRlUserInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkUserDetail();
+            }
+        });
+    }
+
+    private void checkUserDetail(){
+        Intent intent = new Intent(this,UserDetailActivity.class);
+        String userId = mPresenter.getPublisherId();
+        if(!TextUtils.isEmpty(userId)) {
+            intent.putExtra(UserInfo.USER_ID, userId);
+        }else{
+            Log.e(TAG,"checkUserDetail(): there is no user info");
+        }
     }
 }

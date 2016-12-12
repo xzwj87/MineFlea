@@ -271,17 +271,20 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
     @Override
     public void getGoodsInfoById(String goodsId) {
         if(TextUtils.isEmpty(goodsId)) return;
-        PresenterCallback callback = mPresenterCbs.get(PRESENTER_GOODS_DETAIL);
-
+        Log.v(TAG,"getGoodsInfoById()");
         if(mCache.isCached(goodsId,FileCache.CACHE_TYPE_GOODS)){
             PublishGoodsInfo goodsInfo = mCache.getGoodsCache(goodsId);
             final Message msg = new Message();
             msg.obj = goodsInfo;
             msg.what = ResponseCode.RESP_GET_GOODS_SUCCESS;
 
-            Log.v(TAG,"getGoodsInfoById()");
-            if(callback != null){
-                callback.onComplete(msg);
+            Iterator iterator = mPresenterCbs.entrySet().iterator();
+            while(iterator.hasNext()){
+                Map.Entry entry = (Map.Entry)iterator.next();
+                PresenterCallback callback = (PresenterCallback)entry.getValue();
+                if(callback != null){
+                    callback.onComplete(msg);
+                }
             }
         }else{
             mCloudSrc.getGoodsById(goodsId);

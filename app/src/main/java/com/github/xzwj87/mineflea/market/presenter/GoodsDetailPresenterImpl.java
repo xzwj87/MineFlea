@@ -51,8 +51,17 @@ public class GoodsDetailPresenterImpl implements GoodsDetailPresenter{
     @Override
     public void addToFavorites() {
         if(mGoods != null){
+            mGoods.addFavorUser(mRepo.getCurrentUserId());
             mRepo.addToMyFavorites(mGoods);
+            mView.updateLikes(String.valueOf(mGoods.getStars()+1));
         }
+    }
+
+    @Override
+    public String getPublisherId() {
+        if(mUser == null) return "";
+
+        return mUser.getUserId();
     }
 
     @Override
