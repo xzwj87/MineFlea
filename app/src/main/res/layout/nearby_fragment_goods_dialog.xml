@@ -15,7 +15,6 @@
         android:scaleType="centerCrop"/>
 
     <RelativeLayout
-        android:id="@+id/rr1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dialog_item_margin"
@@ -73,5 +72,5 @@
         android:text="@string/check_goods_detail"
         android:textColor="@color/colorDarkGrey"
         android:textSize="@dimen/button_text_size"
-        android:background="@drawable/e"/>
+        android:background="@drawable/edit_item_selected_background"/>
 </LinearLayout>

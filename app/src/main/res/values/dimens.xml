@@ -2,7 +2,6 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="appbar_padding_top">8dp</dimen>
 
     <dimen name="goods_item_margin">12dp</dimen>
 
@@ -10,18 +9,14 @@
     <dimen name="edit_text_size">14sp</dimen>
     <dimen name="dialog_input_text_size">12sp</dimen>
 
-    <dimen name="drawable_padding">16dp</dimen>
     <dimen name="card_view_item_margin">12dp</dimen>
     <dimen name="card_view_title_size">24sp</dimen>
     <dimen name="card_view_sub_title_size">16sp</dimen>
     <dimen name="card_view_image_size">210dp</dimen>
     <dimen name="card_view_text_size">14sp</dimen>
     <dimen name="card_view_layout_margin">24dp</dimen>
-    <dimen name="rv_item_margin">8dp</dimen>
     <dimen name="user_detail_appbar_height">210dp</dimen>
     <dimen name="user_detail_title_margin">48dp</dimen>
-    <dimen name="user_detail_head_icon_size">72dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
     <dimen name="user_center_title_margin">16dp</dimen>
     <dimen name="user_detail_scroll_view_margin">16dp</dimen>
     <dimen name="user_detail_title_margin_end">64dp</dimen>
@@ -29,7 +24,6 @@
     <dimen name="toolbar_margin">32dp</dimen>
     <dimen name="toolbar_margin_top">64dp</dimen>
     <dimen name="publish_goods_text_margin">24dp</dimen>
-    <dimen name="tab_margin">8dp</dimen>
     <dimen name="user_detail_title_size">24sp</dimen>
     <dimen name="user_detail_text_size">14sp</dimen>
     <dimen name="user_detail_text_margin">42dp</dimen>
@@ -44,7 +38,6 @@
     <dimen name="personal_info_text_size">12sp</dimen>
     <dimen name="personal_info_title_size">14sp</dimen>
     <dimen name="personal_info_edit_margin">16dp</dimen>
-    <dimen name="edit_activity_item_height">48dp</dimen>
     <dimen name="edit_head_icon_size">72dp</dimen>
     <dimen name="edit_activity_icon_height">96dp</dimen>
     <dimen name="user_center_title_size">14sp</dimen>
@@ -52,27 +45,14 @@
     <dimen name="user_center_head_size">72dp</dimen>
     <dimen name="dialog_view_margin">24dp</dimen>
     <dimen name="user_center_padding">16dp</dimen>
-    <dimen name="settings_title_size">16sp</dimen>
-    <dimen name="settings_summary_size">12sp</dimen>
 
-    <dimen name="margin_top">20dp</dimen>
-    <dimen name="poi_title_size">14sp</dimen>
     <dimen name="poi_field_size">14sp</dimen>
-    <dimen name="margin_left">15dp</dimen>
-    <dimen name="margin_right">15dp</dimen>
-    <dimen name="offset_title_left">5dp</dimen>
-    <dimen name="detail_img_offset_top">8dp</dimen>
-    <dimen name="index_offset">4dp</dimen>
     <dimen name="width_title_leftImg">30dp</dimen>
     <dimen name="title_text_size">15sp</dimen>
     <dimen name="offset_title">5dp</dimen>
     <dimen name="color_board_size_grid">48dp</dimen>
     <dimen name="color_board_size">48dp</dimen>
-    <dimen name="image_view_pager_height">210dp</dimen>
-    <dimen name="goods_detail_title_size">24sp</dimen>
-    <dimen name="view_pager_margin">16dp</dimen>
     <dimen name="goods_detail_item_margin">12dp</dimen>
-    <dimen name="goods_detail_icon_margin">72dp</dimen>
     <dimen name="goods_detail_head_size">48dp</dimen>
     <dimen name="login_text_size">14sp</dimen>
     <dimen name="login_item_margin">12dp</dimen>
@@ -83,12 +63,10 @@
     <dimen name="dialog_item_padding">24dp</dimen>
     <dimen name="button_text_size">12sp</dimen>
     <dimen name="goods_detail_name_size">14sp</dimen>
-    <dimen name="goods_detail_margin">12dp</dimen>
     <dimen name="goods_detail_price_size">16sp</dimen>
     <dimen name="goods_detail_text_size">14sp</dimen>
     <dimen name="goods_detail_view_pager_height">210dp</dimen>
     <dimen name="register_second_item_margin">32dp</dimen>
-    <dimen name="button_text_size_small">10sp</dimen>
     <dimen name="dialog_title_margin">24dp</dimen>
     <dimen name="piv_padding">8dp</dimen>
     <dimen name="piv_radius">8dp</dimen>

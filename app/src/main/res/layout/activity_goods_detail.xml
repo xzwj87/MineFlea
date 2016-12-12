@@ -37,7 +37,7 @@
                 attrs:piv_unselectedColor="@color/colorLightGrey"/>
         </FrameLayout>
 
-        <LinearLayout android:id="@+id/layout_goods_info"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"

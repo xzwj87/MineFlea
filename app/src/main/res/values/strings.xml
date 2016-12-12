@@ -6,35 +6,23 @@
     <string name="tab_trends">Trends</string>
     <string name="tab_nearby">Nearby</string>
     <string name="tab_mine">Mine</string>
-    <string name="tab_friends">Friends</string>
     <string name="action_publish">Publish</string>
 
     <string name="goods_name">Name</string>
     <string name="goods_price">Price</string>
-    <string name="goods_low_Price">$Low</string>
-    <string name="goods_high_price">$High</string>
     <string name="goods_description">Descriptions</string>
     <string name="title_activity_login">Sign in</string>
-    <string name="title_activity_register">Register your account</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_name">User Name</string>
-    <string name="prompt_tel_number">Mobile Phone Number</string>
-    <string name="prompt_email_register">Email</string>
     <string name="prompt_account_login">Email or Telephone Number</string>
     <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in</string>
     <string name="action_register">Register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_invalid_user_name">This user name is invalid</string>
     <string name="error_invalid_user_tel">Telephone number should be 11 digits</string>
     <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
 
     <string name="add_pictures">Pictures</string>
     <string name="logout">Logout</string>
@@ -42,42 +30,30 @@
     <string name="followees">My Followees</string>
     <string name="favorites">My Favorites</string>
     <string name="followers">My Followers</string>
-    <string name="about">About</string>
     <string name="settings">Settings</string>
 
     <string name="publish_goods_success">Publish goods successfully</string>
     <string name="publish_goods_error">Fail to publish goods</string>
 
-    <string name="clear_map">clear_map</string>
-    <string name="reset_map">reset_map</string>
     <string name="button_ok">OK</string>
     <string name="button_cancel">Cancel</string>
     <string name="register_progress_info">Registering, please wait for a while</string>
-    <string name="error_publish_fail">Fail to publish goods</string>
     <string name="prompt_login_failure">Fail to login; Incorrect account or password!</string>
     <string name="pictures_over_max_count_hints">only 5 pictures should be picked</string>
-    <string name="iv_share_description">Share</string>
     <string name="iv_goods_img">Goods Image</string>
-    <string name="explore_more">EXPLORE MORE</string>
     <string name="get_user_detail_progress_hint">loading data,please wait for a while</string>
-    <string name="check_user_goods_list">Check User Goods List</string>
     <string name="error_get_user_info">Fail to get user info</string>
     <string name="error_get_goods_list">Fail to get goods list</string>
     <string name="assure_not_pick_head_icon">No head icon picked</string>
     <string name="hint_login_success">Success to login</string>
     <string name="user_head_icon">User Head Icon</string>
     <string name="none"> </string>
-    <string name="error_invalid_goods_name">name is too long or empty</string>
-    <string name="error_invalid_goods_price">invalid number</string>
     <string name="error_no_note">no input note</string>
     <string name="error_no_pictures">No pictures added</string>
     <string name="edit">Edit</string>
     <string name="action_edit">Edit</string>
     <string name="action_like">Like</string>
     <string name="blank_hint_no_published_goods">No Published Goods</string>
-    <string name="blank_hint_no_favorite_goods">No Favorite Goods</string>
-    <string name="blank_hint_no_followers">No Followers</string>
-    <string name="blank_hint_no_followees">No Followees</string>
     <string name="action_already_followee">Already Follow</string>
     <string name="edit_personal_info">Edit Personal Info</string>
     <string name="user_nick_name">Nick Name</string>
@@ -100,9 +76,6 @@
     <string name="pref_theme_color">Change Theme Color</string>
     <string name="change_theme_color">Change your theme color</string>
     <string name="choose_color_you_like">Choose Color You Like</string>
-    <string name="pref_data_sync_frequency">Data Sync frequency</string>
-    <string name="change_data_sync_frequency">Change Data Sync Frequency</string>
-    <string name="choose_sync_frequency">Choose Sync Frequency</string>
     <string name="key_pref_wifi_only_sync">key_wifi_only_sync</string>
     <string name="network_connected_sync">Network Connencted Sync</string>
     <string name="key_login_state">key_login_state</string>
@@ -121,14 +94,11 @@
     <string name="selected_color">selected_color</string>
     <string name="key_pref_theme_color">key_pref_theme_color</string>
     <string name="color_indigo">#3F51B5</string>
-    <string name="color_primary">#3F51B5</string>
     <string name="get_goods_list_success">Refresh Success</string>
     <string name="forget_password">Forget Password?</string>
-    <string name="tel_number_china">+86</string>
     <string name="use_tel_number_register">Use  Telephone Number To Register</string>
     <string name="had_account_login">No account? Register</string>
     <string name="prompt_input_auth_code">Please Input Authentification Code</string>
-    <string name="please_input_name_password">Please Input Account and Password</string>
     <string name="show_password">Show Password</string>
     <string name="error_invalid_account">Invalid Email or Telephone Number</string>
     <string name="please_input_email_or_telephone_number">Please Input Email or Telephone Number</string>
@@ -137,14 +107,12 @@
     <string name="reset_password_email_sent">Reset password email has been sent!</string>
     <string name="error_reset_pwd_by_email">Fail to reset password by Email ,please try it again!</string>
     <string name="error_reset_pwd_by_sms">Fail to reset password by SMS ,please try it again!</string>
-    <string name="reset_pwd_success">Success to reset password</string>
     <string name="next_step">Next Step</string>
     <string name="user_password">Password</string>
     <string name="error_invalid_auth_code">Invalid Auth Code</string>
     <string name="error_register">Register Failure,please try it again!</string>
     <string name="previous_step">Previous Step</string>
     <string name="add_to_your_likes">Add To Your Likes</string>
-    <string name="progress_get_goods_detail">Loading...</string>
     <string name="dist_units">km</string>
     <string name="error_wrong_auth_code">Wrong Authetification Code</string>
     <string name="sms_auth_code">Authetification Code</string>

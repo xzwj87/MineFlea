@@ -6,8 +6,6 @@
     <string name="action_publish">发布</string>
     <string name="goods_price">价格</string>
     <string name="goods_name">物品名称</string>
-    <string name="goods_low_Price">￥低价</string>
-    <string name="goods_high_price">￥高价</string>
     <string name="goods_description">描述</string>
     <string name="add_pictures">图片</string>
     <string name="logout">未登录</string>
@@ -15,18 +13,13 @@
     <string name="favorites">收藏</string>
     <string name="followees">粉丝</string>
     <string name="followers">关注</string>
-    <string name="about">关于</string>
     <string name="settings">设置</string>
     <string name="button_ok">确定</string>
     <string name="button_cancel">取消</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_name">用户名(昵称)</string>
-    <string name="prompt_tel_number">手机号码(可选)</string>
-    <string name="prompt_email_register">电子邮箱</string>
     <string name="prompt_account_login">邮箱或手机号码</string>
     <string name="prompt_password">密码</string>
-    <string name="action_sign_in">登陆</string>
     <string name="action_register">注册</string>
     <string name="action_sign_in_short">登陆</string>
     <string name="error_invalid_email">电子邮箱不正确</string>
@@ -34,38 +27,28 @@
     <string name="error_field_required">必须填写</string>
     <string name="error_invalid_user_name">无效用户名</string>
     <string name="error_invalid_user_tel">电话号码长度位11位</string>
-    <string name="permission_rationale">"需要联系人读权限"</string>
 
     <string name="get_goods_list_success">刷新成功</string>
 
     <string name="title_activity_login">登陆</string>
-    <string name="title_activity_register">注册账号</string>
     <string name="register_progress_info">注册中,请稍候</string>
-    <string name="error_publish_fail">发布失败</string>
     <string name="prompt_login_failure">邮箱或密码有误</string>
     <string name="pictures_over_max_count_hints">最多可选５张图片</string>
 
     <string name="publish_goods_success">发布成功</string>
     <string name="publish_goods_error">发布失败</string>
-    <string name="explore_more">更多</string>
     <string name="get_user_detail_progress_hint">加载中&#8230;请稍候</string>
-    <string name="check_user_goods_list">确认物品列表</string>
     <string name="error_get_user_info">获取用户信息出错</string>
     <string name="error_get_goods_list">获取物品列表出错</string>
     <string name="hint_login_success">登陆成功</string>
     <string name="user_head_icon">头像</string>
     <string name="none"> </string>
-    <string name="error_invalid_goods_name">物品名太长</string>
-    <string name="error_invalid_goods_price">输入的价格信息不正确</string>
     <string name="error_no_note">没有物品描述</string>
     <string name="error_no_pictures">没有添加图片</string>
     <string name="edit">编辑</string>
     <string name="action_edit">编辑</string>
     <string name="action_like">收藏</string>
     <string name="blank_hint_no_published_goods">尚未发布任何物品</string>
-    <string name="blank_hint_no_favorite_goods">没有收藏的物品</string>
-    <string name="blank_hint_no_followers">还没有关注的人</string>
-    <string name="blank_hint_no_followees">还没有关注者</string>
     <string name="action_already_followee">已关注</string>
     <string name="edit_personal_info">修改个人信息</string>
     <string name="user_nick_name">昵称</string>
@@ -101,7 +84,6 @@
     <string name="use_tel_number_register">使用手机号注册</string>
     <string name="had_account_login">已有账号?登录</string>
     <string name="prompt_input_auth_code">请输入验证码</string>
-    <string name="please_input_name_password">请输入账户和密码</string>
     <string name="error_invalid_account">无效邮箱/手机号</string>
     <string name="please_input_email_or_telephone_number">邮箱或手机号</string>
     <string name="send_auth_code">获取验证码</string>
@@ -109,14 +91,12 @@
     <string name="reset_password_email_sent">重置密码邮件已发送，请查收!</string>
     <string name="error_reset_pwd_by_email">邮件发送失败，请重试!</string>
     <string name="error_reset_pwd_by_sms">短信发送错误，请重试!</string>
-    <string name="reset_pwd_success">重置密码成功</string>
     <string name="next_step">下一步</string>
     <string name="user_password">密码</string>
     <string name="error_invalid_auth_code">无效验证码</string>
     <string name="error_register">注册失败</string>
     <string name="previous_step">上一步</string>
     <string name="add_to_your_likes">收藏</string>
-    <string name="progress_get_goods_detail">加载中&#8230;</string>
     <string name="error_wrong_auth_code">验证码错误</string>
     <string name="sms_auth_code">验证码</string>
     <string name="reset_password_explanation">发送短信验证码或者验证邮件</string>
