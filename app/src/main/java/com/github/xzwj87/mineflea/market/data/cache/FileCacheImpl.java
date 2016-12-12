@@ -168,7 +168,14 @@ public class FileCacheImpl implements FileCache{
                 executeAsync(new Runnable() {
                     @Override
                     public void run() {
-                        mCacheMgr.writeImgToFile(in, out);
+                        if(!out.exists()){
+                            try {
+                                out.createNewFile();
+                                mCacheMgr.writeImgToFile(in, out);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 });
             }
