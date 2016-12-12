@@ -158,11 +158,11 @@ public class EditPersonalInfoActivity extends BaseActivity
                 break;
             case R.id.email:
                 title = getString(R.string.edit_email);
-                showEditDialog(id,title,mTvEmail.getText().toString());
+                showEditDialog(id,title,mPresenter.getEmail());
                 break;
             case R.id.tel_number:
                 title = getString(R.string.edit_tel_number);
-                showEditDialog(id,title,mTvTel.getText().toString());
+                showEditDialog(id,title,mPresenter.getTelNumber());
                 break;
             case R.id.introduction:
                 title = getString(R.string.edit_intro);

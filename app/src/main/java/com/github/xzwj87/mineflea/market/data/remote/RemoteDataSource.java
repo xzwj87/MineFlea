@@ -183,7 +183,7 @@ public class RemoteDataSource implements RemoteSource{
 
     @Override
     public void updateGoodsInfo(String id,String key, List<String> val) {
-        Log.v(TAG,"updateGoodsInfo()");
+        Log.v(TAG,"updateGoodsInfo(): size = " + val.size());
 
         AVObject object = AVObject.createWithoutData(AvCloudConstants.AV_OBJ_GOODS,id);
         object.put(key,val);
@@ -464,7 +464,7 @@ public class RemoteDataSource implements RemoteSource{
     }
 
     @Override
-    public void uploadImg(List<String> imgList, boolean showProcess) {
+    public void uploadImg(final List<String> imgList, boolean showProcess) {
         if(imgList == null || imgList.size() == 0) return;
 
         Log.v(TAG,"uploadImg(): size = " + imgList.size());
@@ -473,7 +473,7 @@ public class RemoteDataSource implements RemoteSource{
         final Message msg = new Message();
 
         for(int i = 0; i < imgList.size(); ++i) {
-            String imgUri = imgList.get(i);
+            final String imgUri = imgList.get(i);
             if (showProcess) {
                 try {
                     final File file = new File(imgUri);
@@ -499,6 +499,14 @@ public class RemoteDataSource implements RemoteSource{
                         public void done(AVException e) {
                             if(e == null) {
                                 imgUrls.add(avFile.getUrl());
+                                // ok, done
+                                if(imgUrls.size() == imgList.size()) {
+                                    msg.what = ResponseCode.RESP_IMAGE_UPLOAD_SUCCESS;
+                                    msg.obj = imgUrls;
+                                    mCloudCallback.onImgUploadComplete(msg);
+                                }
+                            }else{
+                                e.printStackTrace();
                             }
                         }
                     });
@@ -510,10 +518,6 @@ public class RemoteDataSource implements RemoteSource{
                 }
             }
         }
-        // ok, done
-        msg.what = ResponseCode.RESP_IMAGE_UPLOAD_SUCCESS;
-        msg.obj = imgUrls;
-        mCloudCallback.onImgUploadComplete(msg);
     }
 
     /**

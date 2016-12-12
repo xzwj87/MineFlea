@@ -57,10 +57,13 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
         mCloudSrc.publishGoods(goods);
 
         UserInfo info = getCurrentUser();
-        info.addFavorGoods(goods.getId());
 
-        mCloudSrc.updateCurrentUserInfo(UserInfo.FAVOR_GOODS,info.getFavorGoodsList());
-        mCache.updateFile(info);
+        if(info != null) {
+            info.addGoods(goods.getId());
+
+            mCloudSrc.updateCurrentUserInfo(UserInfo.PUBLISHED_GOODS, info.getGoodsList());
+            mCache.updateFile(info);
+        }
     }
 
     @Override
@@ -169,16 +172,18 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
 
         mCloudSrc.updateGoodsInfo(id, key, val);
 
-        PublishGoodsInfo goodsInfo = mCache.getGoodsCache(id);
-        List<String> localUrls = new ArrayList<>(val.size());
-        for(String url: val){
-            String img = mCache.saveImgToFile(url,FileCache.CACHE_TYPE_GOODS);
-            localUrls.add(img);
-            //Log.v(TAG,"updateGoodsInfo(): updated local urls = " + img);
-        }
+        if(mCache.isCached(id,FileCache.CACHE_TYPE_GOODS)) {
+            PublishGoodsInfo goodsInfo = mCache.getGoodsCache(id);
+            List<String> localUrls = new ArrayList<>(val.size());
+            for (String url : val) {
+                String img = mCache.saveImgToFile(url, FileCache.CACHE_TYPE_GOODS);
+                localUrls.add(img);
+                //Log.v(TAG,"updateGoodsInfo(): updated local urls = " + img);
+            }
 
-        goodsInfo.setImageUri(localUrls);
-        mCache.updateFile(goodsInfo);
+            goodsInfo.setImageUri(localUrls);
+            mCache.updateFile(goodsInfo);
+        }
 
     }
 

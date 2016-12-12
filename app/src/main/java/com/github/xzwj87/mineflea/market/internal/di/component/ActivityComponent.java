@@ -1,11 +1,9 @@
 package com.github.xzwj87.mineflea.market.internal.di.component;
 
 import android.app.Activity;
-import android.content.Context;
 
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.internal.di.module.ActivityModule;
-import com.github.xzwj87.mineflea.market.internal.di.module.AppModule;
 
 import dagger.Component;
 

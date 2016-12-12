@@ -48,6 +48,9 @@ public class CacheManager {
             //file.mkdir();
             setCachedTime(file);
             try {
+                if(!file.exists()){
+                    file.createNewFile();
+                }
                 FileWriter writer = new FileWriter(file);
                 writer.write(content);
                 writer.close();

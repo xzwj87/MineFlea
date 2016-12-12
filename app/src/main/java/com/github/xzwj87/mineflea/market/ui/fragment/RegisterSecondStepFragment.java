@@ -108,7 +108,7 @@ public class RegisterSecondStepFragment extends BaseFragment{
 
     @Override
     public void onActivityResult(int request, int result, Intent data){
-        Log.v(TAG,"onActivityResult(): result = ");
+        Log.v(TAG,"onActivityResult(): result = " + request);
 
         if(result == RESULT_OK && data != null){
             switch (request){
@@ -134,7 +134,7 @@ public class RegisterSecondStepFragment extends BaseFragment{
                 .setPreviewEnabled(true)
                 .setShowCamera(true)
                 .setShowGif(true)
-                .start(getActivity(),this,PhotoPicker.REQUEST_CODE);
+                .start(getContext(),this,PhotoPicker.REQUEST_CODE);
 
     }
 

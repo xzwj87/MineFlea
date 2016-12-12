@@ -1,6 +1,7 @@
 package com.github.xzwj87.mineflea.market.ui.adapter;
 
 import android.content.Context;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -15,8 +16,10 @@ import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.utils.PicassoUtils;
+import com.rd.PageIndicatorView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -84,10 +87,19 @@ public class DiscoverGoodsAdapter extends RecyclerView.Adapter<RecyclerView.View
             ViewHolder holder = (ViewHolder) vh;
 
             if(info.getImageUri().size() > 0) {
-                String imgUrl = info.getImageUri().get(0);
-                PicassoUtils.loadImage(holder.goodsImg, imgUrl);
+                List<String> imgList = info.getImageUri();
+                holder.images.setAdapter(new ImagePageAdapter(mContext,imgList));
+                if(imgList.size() <= 1) {
+                    holder.piv.setVisibility(View.GONE);
+                }else{
+                    holder.piv.setCount(imgList.size());
+                }
+                holder.images.getAdapter().notifyDataSetChanged();
+                //String imgUrl = info.getImageUri().get(0);
+                //PicassoUtils.loadImage(holder.goodsImg, imgUrl);
             }else{
-                PicassoUtils.loadImage(holder.goodsImg,R.mipmap.no_pictures);
+                holder.piv.setVisibility(View.GONE);
+                holder.images.setAdapter(new ImagePageAdapter(mContext, new ArrayList<String>(1)));
             }
 
             String p = mContext.getString(R.string.currency_symbol) + String.valueOf(info.getPrice());
@@ -121,7 +133,9 @@ public class DiscoverGoodsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.iv_goods_img) ImageView goodsImg;
+        //@BindView(R.id.iv_goods_img) ImageView goodsImg;
+        @BindView(R.id.vp_photos) ViewPager images;
+        @BindView(R.id.page_indicator_view) PageIndicatorView piv;
         @BindView(R.id.tv_goods_price) TextView price;
         @BindView(R.id.tv_user_nick_name) TextView nickName;
         @BindView(R.id.tv_updated_time) TextView updatedTime;

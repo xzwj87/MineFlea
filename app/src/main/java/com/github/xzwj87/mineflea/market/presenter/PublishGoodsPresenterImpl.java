@@ -43,6 +43,7 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter{
     private List<String> mImgUris;
     // cache current user id
     private String mCurrentUserId;
+    private H mHandler;
 
     @Inject
     public PublishGoodsPresenterImpl(DataRepository repository){
@@ -109,8 +110,8 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter{
 
     @Override
     public void setGoodsImgUrl(List<String> urls) {
-        // use a remote URL
-        //mGoodsInfo.setImageUri(urls);
+        // should update a remote URL
+        mGoodsInfo.setImageUri(urls);
         mImgUris = urls;
     }
 
@@ -179,12 +180,14 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter{
                     mRepository.uploadImages(mGoodsInfo.getImageUri(),false);
                     mGoodsInfo.setId(((PublishGoodsInfo)message.obj).getId());
                     // time out 15s to upload images
-                    H handler = new H(mContext.getMainLooper());
-                    handler.postDelayed(new Runnable() {
+                    mHandler = new H(mContext.getMainLooper());
+                    mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            mView.onPublishComplete(true);
-                            mView.finishView();
+                            if(mView != null) {
+                                mView.onPublishComplete(true);
+                                mView.finishView();
+                            }
                         }
                     },DEFAULT_TIMEOUT);
                     break;
@@ -195,8 +198,10 @@ public class PublishGoodsPresenterImpl implements PublishGoodsPresenter{
                     mView.showNoNetConnectionMsg();
                     break;
                 case ResponseCode.RESP_IMAGE_UPLOAD_SUCCESS:
+                    Log.v(TAG,"onComplete():upload image success");
                     @SuppressWarnings("unchecked")
                     List<String> imgList = (ArrayList<String>)message.obj;
+                    //mGoodsInfo.setImageUri(imgList);
                     mRepository.updateGoodsInfo(mGoodsInfo.getId(),
                             PublishGoodsInfo.GOODS_IMAGES,imgList);
                     mView.onPublishComplete(true);

@@ -223,7 +223,9 @@ public class PublishGoodsFragment extends BaseFragment
 
     @Override
     public void finishView() {
-        getActivity().finish();
+        if(getActivity() != null) {
+            getActivity().finish();
+        }
     }
 
     private void init(){

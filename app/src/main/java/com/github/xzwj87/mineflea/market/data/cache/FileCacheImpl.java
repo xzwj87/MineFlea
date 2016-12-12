@@ -17,6 +17,12 @@ import com.github.xzwj87.mineflea.utils.FileManager;
 import com.github.xzwj87.mineflea.utils.PicassoUtils;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -398,6 +404,13 @@ public class FileCacheImpl implements FileCache{
         public ImageDownloader(File dest, String imgUrl){
             this.file = dest;
             this.url = imgUrl;
+            if(!file.exists()){
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         @Override
@@ -408,14 +421,14 @@ public class FileCacheImpl implements FileCache{
         private void downloadImg(File dest, String imgUrl){
             if(dest == null || imgUrl == null) return;
 
-            ImageView iv = new ImageView(AppGlobals.getAppContext(),null);
+/*            ImageView iv = new ImageView(AppGlobals.getAppContext(),null);
             iv.setDrawingCacheEnabled(true);
             PicassoUtils.loadImage(iv,imgUrl);
-            FileManager.saveBitmapToFile(dest,iv.getDrawingCache());
+            FileManager.saveBitmapToFile(dest,iv.getDrawingCache());*/
 
             Log.v(TAG,"downloadImg(): url = " + imgUrl);
 
-/*            try {
+            try {
                 URL url = new URL(imgUrl);
 
                 HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
@@ -440,7 +453,7 @@ public class FileCacheImpl implements FileCache{
                 e.printStackTrace();
             }catch (IOException e){
                 e.printStackTrace();
-            }*/
+            }
         }
     }
 

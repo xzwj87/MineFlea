@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,9 +68,10 @@ public class UserInfoEditDialog extends DialogFragment {
 
         String content = getArguments().getString("content");
         Dialog dialog = getDialog();
-        if(dialog != null) {
+        if(dialog != null && !TextUtils.isEmpty(content)) {
             EditText editText = (EditText) dialog.findViewById(R.id.et_input);
             editText.setText(content);
+            editText.setSelection(content.length());
         }
     }
 
