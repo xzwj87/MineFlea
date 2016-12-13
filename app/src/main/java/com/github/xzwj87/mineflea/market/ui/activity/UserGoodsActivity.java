@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
@@ -59,7 +58,7 @@ public class UserGoodsActivity extends BaseActivity{
                 fragment = UserFavoritesFragment.newInstance(mUserId);
                 getComponent().inject((UserFavoritesFragment)fragment);
                 if(actionBar != null){
-                    actionBar.setTitle(R.string.my_favorites);
+                    actionBar.setTitle(R.string.favorites);
                 }
             }
         }

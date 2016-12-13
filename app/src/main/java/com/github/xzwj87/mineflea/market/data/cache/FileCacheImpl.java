@@ -3,13 +3,18 @@ package com.github.xzwj87.mineflea.market.data.cache;
 import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.webkit.URLUtil;
+import android.widget.ImageView;
 
 import com.avos.avoscloud.AVUser;
+import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.data.cache.serializer.JsonSerializer;
 import com.github.xzwj87.mineflea.market.executor.JobExecutor;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
+import com.github.xzwj87.mineflea.utils.FileManager;
+import com.github.xzwj87.mineflea.utils.PicassoUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,6 +35,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class FileCacheImpl implements FileCache{
+    private static final String TAG = "FileCache";
 
     private static final long MAX_EXPIRATION_TIME = 12*60*60*1000;
     private static final int MAX_CACHE_SIZE = 50; //50MB
@@ -136,28 +142,46 @@ public class FileCacheImpl implements FileCache{
     }
 
     @Override
+    public void updateFile(PublishGoodsInfo goods) {
+        String json = JsonSerializer.toJson(goods);
+        File file = buildGoodsFile(goods.getId());
+
+        executeAsync(new CacheWriter(mCacheMgr,file,json,true));
+    }
+
+    @Override
     public String saveImgToFile(String imgUri,@CacheType String type) {
+        Log.v(TAG,"saveImgToFile()");
 
-        if(!URLUtil.isNetworkUrl(imgUri)) {
-            if(imgUri == null)
-                return null;
-            File in = new File(imgUri);
-            File out = buildImageFile(in.getName(), type);
-
-            if (in.exists()) {
-                mCacheMgr.writeImgToFile(in, out);
-            }
-
-            return out.getPath();
-        //ok,from network
-        }else{
+        String path;
+        if(URLUtil.isNetworkUrl(imgUri)) {
             String imgName = URLUtil.guessFileName(imgUri,null,null);
             File out = buildImageFile(imgName,type);
-
+            path = out.getAbsolutePath();
             executeAsync(new ImageDownloader(out,imgUri));
+        }else{
+            final File in = new File(imgUri);
+            final File out = buildImageFile(in.getName(), type);
+            path = out.getAbsolutePath();
 
-            return out.getPath();
+            if (in.exists()) {
+                executeAsync(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(!out.exists()){
+                            try {
+                                out.createNewFile();
+                                mCacheMgr.writeImgToFile(in, out);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+            }
         }
+
+        return path;
     }
 
     @Override
@@ -182,26 +206,26 @@ public class FileCacheImpl implements FileCache{
 
     @Override
     public List<PublishGoodsInfo> getAllGoodsCache() {
+        Log.v(TAG,"getAllGoodsCache()");
         File goodsFile = new File(getGoodsCacheDir());
         File[] files = goodsFile.listFiles();
 
-        List<PublishGoodsInfo> goodsList = new ArrayList<>();
-
         if(goodsFile.exists() && files != null && files.length > 0){
+            List<PublishGoodsInfo> goodsList = new ArrayList<>();
             mCurrentRetrieved = (mCurrentRetrieved >= files.length) ? 0 : mCurrentRetrieved;
             // only retrieve 30 items a time
             int i;
             for(i = mCurrentRetrieved; i < (mCurrentRetrieved + MAX_ITEMS_TO_GET_A_TIME) &&
                     i < files.length; ++i){
-                if(files[i] != null && files[i].isFile()){
-                    goodsList.add(getGoodsCache(files[i].getName()));
-                }
+                goodsList.add(getGoodsCache(files[i].getName()));
             }
 
             mCurrentRetrieved = i + MAX_ITEMS_TO_GET_A_TIME;
+
+            return goodsList;
         }
 
-        return goodsList;
+        return null;
     }
 
     @Override
@@ -387,6 +411,13 @@ public class FileCacheImpl implements FileCache{
         public ImageDownloader(File dest, String imgUrl){
             this.file = dest;
             this.url = imgUrl;
+            if(!file.exists()){
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         @Override
@@ -396,6 +427,13 @@ public class FileCacheImpl implements FileCache{
 
         private void downloadImg(File dest, String imgUrl){
             if(dest == null || imgUrl == null) return;
+
+/*            ImageView iv = new ImageView(AppGlobals.getAppContext(),null);
+            iv.setDrawingCacheEnabled(true);
+            PicassoUtils.loadImage(iv,imgUrl);
+            FileManager.saveBitmapToFile(dest,iv.getDrawingCache());*/
+
+            Log.v(TAG,"downloadImg(): url = " + imgUrl);
 
             try {
                 URL url = new URL(imgUrl);

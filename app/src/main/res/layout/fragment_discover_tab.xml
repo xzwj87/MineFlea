@@ -4,14 +4,19 @@
     android:id="@+id/swipe_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <android.support.v7.widget.RecyclerView
-            android:layout_margin="@dimen/card_view_layout_margin"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="@dimen/card_view_item_margin"
             android:id="@+id/discover_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </android.support.v7.widget.RecyclerView>
+
     </RelativeLayout>
+
 </android.support.v4.widget.SwipeRefreshLayout>

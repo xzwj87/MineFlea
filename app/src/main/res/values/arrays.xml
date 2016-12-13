@@ -12,6 +12,11 @@
         <item>From File</item>
     </string-array>
 
+    <string-array name="planets_array">
+        <item>m</item>
+        <item>km</item>
+    </string-array>
+
     <string-array name="dummy">dummy</string-array>
     <string-array name="dummy_values">dummy_values</string-array>
 
@@ -27,7 +32,7 @@
         <item>Teal</item>
     </string-array>
 
-    <string-array name="pref_colorList_values">
+    <string-array name="pref_colorList_values" >
         <item>#424242</item>
         <item>#E91E63</item>
         <item>#9C27B0</item>

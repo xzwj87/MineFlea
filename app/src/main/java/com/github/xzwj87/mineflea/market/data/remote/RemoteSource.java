@@ -1,7 +1,6 @@
 package com.github.xzwj87.mineflea.market.data.remote;
 
 import com.github.xzwj87.mineflea.market.data.DataSource;
-import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 
 import java.util.List;
@@ -26,6 +25,10 @@ public interface RemoteSource extends DataSource {
     UserInfo getCurrentUser();
 
     void updateCurrentUserInfo(String key, String val);
+
+    void updateCurrentUserInfo(String key, List<String> val);
+
+    void updateGoodsInfo(String id,String key, List<String> val);
 
     void follow(String userId);
 

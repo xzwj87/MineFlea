@@ -23,9 +23,9 @@ public interface DiscoverGoodsPresenter extends BasePresenter{
     int getItemCount();
 
     /*
-     * get publisher head icon
+     * add this item to my favorites
      */
-    String getPublisherHeadIcon(int pos);
+    void addToMyFavor(int pos);
 
     /*
      * get publisher nick name

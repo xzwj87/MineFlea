@@ -15,9 +15,9 @@ public class UserInfo {
 
     public static final String IS_LOGIN = "is_login";
 
-    public static final String IS_PHONE_VERIFIED = "phone_verified";
+    public static final String IS_PHONE_VERIFIED = "mobilePhoneVerified";
 
-    public static final String IS_EMAIL_VERIFIED = "email_verified";
+    public static final String IS_EMAIL_VERIFIED = "emailVerified";
 
     public static final String USER_NICK_NAME = "nick_name";
 
@@ -37,11 +37,15 @@ public class UserInfo {
 
     public static final String USER_LOCATION = "location";
 
+    public static final String USER_LOC_DETAIL = "location_detail";
+
     public static final String CURRENT_USER = "current_user";
 
     public static final String USER_INTRO = "introduction";
 
     public static final String PUBLISHED_GOODS = "published_goods";
+
+    public static final String FAVOR_GOODS = "favor_goods";
 
     private String mId;
     private String mNickName;
@@ -55,6 +59,7 @@ public class UserInfo {
     private List<String> mGoodsList;
     private List<String> mFollowerList;
     private List<String> mFolloweeList;
+    private List<String> mFavorGoodsList;
     private String mLoc;
     private String mIntro;
 
@@ -84,6 +89,7 @@ public class UserInfo {
         mFollowerList = new ArrayList<>();
         // published goods list
         mGoodsList = new ArrayList<>();
+        mFavorGoodsList = new ArrayList<>();
 
         mIsEmailVerified = false;
         mIsTelVerified = false;
@@ -193,12 +199,6 @@ public class UserInfo {
         return mFolloweeList;
     }
 
-    public int getFolloweesCount(){
-        if(mFolloweeList == null) return 0;
-
-        return mFolloweeList.size();
-    }
-
     public void addFollowee(String userId){
         if(mFolloweeList == null) return;
 
@@ -235,6 +235,30 @@ public class UserInfo {
         if(mGoodsList == null) return;
 
         mGoodsList.remove(goodsId);
+    }
+
+    public void setFavorGoodsList(List<String> favorList){
+        mFavorGoodsList = favorList;
+    }
+
+    public List<String> getFavorGoodsList(){
+        return mFavorGoodsList;
+    }
+
+    public int getFavorCount(){
+        if(mFavorGoodsList == null){
+            return 0;
+        }
+
+        return mFavorGoodsList.size();
+    }
+
+    public void addFavorGoods(String goodsId){
+        mFavorGoodsList.add(goodsId);
+    }
+
+    public void removeFavorGoods(String goodsId){
+        mFavorGoodsList.remove(goodsId);
     }
 
     public void setLocation(String location){

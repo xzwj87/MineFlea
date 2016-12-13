@@ -20,9 +20,13 @@ interface PublishGoodsPresenter extends BasePresenter{
 
     void setLocation(LatLng loc);
 
+    void setLocationDetail(String detail);
+
     void setGoodsImgUrl(List<String> url);
 
-    void setPublisherName(String name);
+    void setPublisherId(String name);
 
     boolean validGoodsInfo();
+
+    String getCurrentUserId();
 }

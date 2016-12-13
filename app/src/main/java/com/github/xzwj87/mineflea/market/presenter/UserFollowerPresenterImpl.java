@@ -3,6 +3,7 @@ package com.github.xzwj87.mineflea.market.presenter;
 import android.os.Message;
 import android.util.Log;
 
+import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.UserFollowInfo;
@@ -75,14 +76,23 @@ public class UserFollowerPresenterImpl extends UserFollowerPresenter {
         @Override
         public void onComplete(Message message) {
             Log.v(TAG,"onComplete()");
-            if(message.obj == null){
-                mView.showBlankPage();
-            }else{
-                mUserFollowList = (List<UserFollowInfo>)message.obj;
-                mView.renderView();
+            switch (message.what) {
+                case ResponseCode.RESP_QUERY_FOLLOWERS_SUCESS:
+                    if (message.obj == null) {
+                        mView.showBlankPage();
+                    } else {
+                        mUserFollowList = (List<UserFollowInfo>) message.obj;
+                        mView.renderView();
+                    }
+                    mView.showProgress(false);
+                    break;
+                case ResponseCode.RESP_QUERY_FOLLOWERS_ERROR:
+                    mView.showBlankPage();
+                    mView.showProgress(false);
+                    break;
+                default:
+                    break;
             }
-
-            mView.showProgress(false);
         }
 
         @Override

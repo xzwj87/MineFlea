@@ -2,6 +2,7 @@ package com.github.xzwj87.mineflea.market.presenter;
 
 import android.os.Message;
 
+import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.UserFollowInfo;
@@ -77,14 +78,20 @@ public class UserFolloweePresenterImpl extends UserFolloweePresenter{
         @SuppressWarnings("unchecked")
         @Override
         public void onComplete(Message message) {
-            if(message.obj == null){
-                mView.showBlankPage();
-            }else{
-                mUserFollowList = (List<UserFollowInfo>)message.obj;
-                mView.renderView();
+            int what = message.what;
+            switch (what) {
+                case ResponseCode.RESP_QUERY_FOLLOWEES_SUCCESS:
+                    if (message.obj == null) {
+                        mView.showBlankPage();
+                    } else {
+                        mUserFollowList = (List<UserFollowInfo>) message.obj;
+                        mView.renderView();
+                    }
+                    mView.showProgress(false);
+                    break;
+                case ResponseCode.RESP_QUERY_FOLLOWEES_ERROR:
+                    break;
             }
-
-            mView.showProgress(false);
         }
 
         @Override

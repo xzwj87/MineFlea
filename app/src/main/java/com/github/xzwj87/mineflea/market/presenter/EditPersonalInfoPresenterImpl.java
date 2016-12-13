@@ -2,11 +2,15 @@ package com.github.xzwj87.mineflea.market.presenter;
 
 import android.os.Message;
 
+import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.EditPersonalInfoView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.inject.Inject;
 
@@ -62,7 +66,8 @@ public class EditPersonalInfoPresenterImpl implements EditPersonalInfoPresenter{
     @Override
     public void setHeadIcon(String iconUrl) {
         mCurrent.setHeadIconUrl(iconUrl);
-        mRepo.uploadImageById(iconUrl,true,false);
+        ArrayList<String> list = (ArrayList<String>) Arrays.asList(iconUrl);
+        mRepo.uploadImages(list,false);
         //mRepo.uploadImage(iconUrl,false);
         mView.updateHeadIcon(iconUrl);
     }
@@ -74,11 +79,21 @@ public class EditPersonalInfoPresenterImpl implements EditPersonalInfoPresenter{
         mView.updateEmail(email);
     }
 
+    @Override
+    public String getEmail() {
+        return mCurrent.getUserEmail();
+    }
+
     // Todo: request to verify telephony number
     @Override
     public void setTelNumber(String telNumber) {
         mCurrent.setUserTelNumber(telNumber);
         mView.updateTelNumber(telNumber);
+    }
+
+    @Override
+    public String getTelNumber() {
+        return mCurrent.getUserTelNumber();
     }
 
     @Override
@@ -113,9 +128,16 @@ public class EditPersonalInfoPresenterImpl implements EditPersonalInfoPresenter{
 
         @Override
         public void onComplete(Message message) {
-            if (message.obj != null) {
-                String url = (String) message.obj;
-                mRepo.updateCurrentUserInfo(UserInfo.USER_HEAD_ICON, url);
+            int what = message.what;
+            switch (what) {
+                case ResponseCode.RESP_IMAGE_UPLOAD_SUCCESS:
+                    if (message.obj != null) {
+                        String url = (String) message.obj;
+                        mRepo.updateCurrentUserInfo(UserInfo.USER_HEAD_ICON, url);
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 

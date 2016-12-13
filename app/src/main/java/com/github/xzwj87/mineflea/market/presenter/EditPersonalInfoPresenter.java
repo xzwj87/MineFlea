@@ -14,7 +14,11 @@ public interface EditPersonalInfoPresenter extends BasePresenter{
 
     void setEmail(String email);
 
+    String getEmail();
+
     void setTelNumber(String telNumber);
+
+    String getTelNumber();
 
     void setIntro(String intro);
 

@@ -1,7 +1,6 @@
 package com.github.xzwj87.mineflea.market.internal.di.module;
 
 import android.app.Application;
-import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 
 import javax.inject.Singleton;

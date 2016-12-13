@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/goods_detail_item_margin"
     android:layout_marginBottom="@dimen/goods_detail_item_margin"
-    >
+    android:clickable="true">
 
     <!-- this is a layout for showing user info in Goods detail activity -->
     <ImageView
@@ -43,7 +42,6 @@
 
     </LinearLayout>
 
-
     <LinearLayout android:layout_below="@id/iv_user_header"
         android:layout_marginTop="@dimen/goods_detail_item_margin"
         android:layout_marginBottom="@dimen/goods_detail_item_margin"
@@ -52,42 +50,79 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center"
-            android:layout_marginStart="@dimen/goods_detail_item_margin"
             android:layout_marginEnd="@dimen/goods_detail_item_margin"
-            android:layout_gravity="start">
+            android:gravity="center">
             <TextView android:id="@+id/tv_published_goods_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <TextView android:id="@+id/published"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
+                android:textSize="@dimen/goods_detail_text_size"
                 android:text="@string/published_goods"/>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginStart="@dimen/goods_detail_item_margin"
             android:layout_marginEnd="@dimen/goods_detail_item_margin"
-            android:gravity="center"
-            android:layout_gravity="end">
+            android:gravity="center">
+            <TextView android:id="@+id/tv_favors"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView android:id="@+id/favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/goods_detail_text_size"
+                android:text="@string/favorites"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/goods_detail_item_margin"
+            android:layout_marginEnd="@dimen/goods_detail_item_margin"
+            android:gravity="center">
+            <TextView android:id="@+id/tv_followees"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/goods_detail_text_size"
+                android:text="@string/followees"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/goods_detail_item_margin"
+            android:orientation="vertical"
+            android:gravity="center">
             <TextView android:id="@+id/tv_followers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <TextView android:id="@+id/followers"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:text="@string/my_followers"/>
+                android:textSize="@dimen/goods_detail_text_size"
+                android:text="@string/followers"/>
         </LinearLayout>
+
     </LinearLayout>
 
 </RelativeLayout>
