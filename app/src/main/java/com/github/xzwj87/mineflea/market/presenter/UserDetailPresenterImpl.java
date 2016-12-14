@@ -172,6 +172,8 @@ public class UserDetailPresenterImpl extends UserDetailPresenter{
                         mFolloweeList = (List<AVUser>) message.obj;
                     }
                     break;
+                default:
+                    break;
             }
         }
 

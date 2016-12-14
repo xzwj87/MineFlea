@@ -17,9 +17,9 @@ import com.github.xzwj87.mineflea.market.ui.adapter.SectionsPageAdapter;
 import com.github.xzwj87.mineflea.market.ui.view.CustomerViewPager;
 import com.github.xzwj87.mineflea.utils.NetConnectionUtils;
 import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
+import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 
-public class HomeActivity extends BaseActivity
-            implements HasComponent<MarketComponent>{
+public class HomeActivity extends BaseActivity {
 
     private static final String TAG = HomeActivity.class.getSimpleName();
 
@@ -107,6 +107,11 @@ public class HomeActivity extends BaseActivity
     }
 
     private void startPublishActivity(){
+        if(!UserPrefsUtil.isLogin()){
+            showToast(getString(R.string.need_to_login));
+            return;
+        }
+
         if(NetConnectionUtils.isNetworkConnected()) {
             Intent intent = new Intent(this, PublishGoodsActivity.class);
             startActivity(intent);

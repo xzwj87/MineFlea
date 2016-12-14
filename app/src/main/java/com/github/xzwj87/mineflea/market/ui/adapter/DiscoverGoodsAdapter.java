@@ -1,21 +1,26 @@
 package com.github.xzwj87.mineflea.market.ui.adapter;
 
+import android.content.Context;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amap.api.maps2d.AMapUtils;
 import com.amap.api.maps2d.model.LatLng;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
-import com.github.xzwj87.mineflea.utils.LocationUtils;
 import com.github.xzwj87.mineflea.utils.PicassoUtils;
+import com.rd.PageIndicatorView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,20 +31,23 @@ import butterknife.ButterKnife;
 public class DiscoverGoodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final long MIN_RESOLUTION = DateUtils.MINUTE_IN_MILLIS; // 1 minute
-    private static final long TRANSITION_RESOLUTION = 3*DateUtils.DAY_IN_MILLIS;
+    private static final long TRANSITION_RESOLUTION = DateUtils.DAY_IN_MILLIS*3;
 
     private static String DIST_UNITS = AppGlobals.getAppContext().
             getString(R.string.dist_units);
-    // 3 days
+
+    private Context mContext;
     //get data from presenter
-    //private List<DiscoverInfo> infoList;
     private LayoutInflater mInflate;
     private DiscoverGoodsCallback mCallback;
     // current location
     private LatLng mCurrent;
+    private List<TextView> mTvLikesList;
 
-    public DiscoverGoodsAdapter() {
-        mInflate = LayoutInflater.from(AppGlobals.getAppContext());
+    public DiscoverGoodsAdapter(Context context) {
+        mInflate = LayoutInflater.from(context);
+        mContext = context;
+        mTvLikesList = new ArrayList<>();
     }
 
     public void setCallback(DiscoverGoodsCallback callback){
@@ -51,12 +59,16 @@ public class DiscoverGoodsAdapter extends RecyclerView.Adapter<RecyclerView.View
         void onItemLongClick(View root, int pos);
         PublishGoodsInfo getItemAtPos(int pos);
         int getItemCount();
-        String getPublisherHeadIcon(int pos);
         String getPublisherNickName(int pos);
+        void addToMyFavor(int pos);
     }
 
     public void setCurrentLoc(LatLng loc){
         mCurrent = loc;
+    }
+
+    public void updateLikesView(int pos,int stars){
+        ((TextView)mTvLikesList.get(pos)).setText(String.valueOf(stars));
     }
 
     @Override
@@ -69,34 +81,49 @@ public class DiscoverGoodsAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder vh, int position) {
         PublishGoodsInfo info = mCallback.getItemAtPos(position);
-        String userHeadIcon = mCallback.getPublisherHeadIcon(position);
         String userNickName = mCallback.getPublisherNickName(position);
 
         if(info != null) {
             ViewHolder holder = (ViewHolder) vh;
 
-            if(info.getImageUri() != null && info.getImageUri().size() > 0) {
-                String imgUrl = info.getImageUri().get(0);
-                PicassoUtils.loadImage(holder.goodsImg, imgUrl);
+            if(info.getImageUri().size() > 0) {
+                List<String> imgList = info.getImageUri();
+                holder.images.setAdapter(new ImagePageAdapter(mContext,imgList));
+                if(imgList.size() <= 1) {
+                    holder.piv.setVisibility(View.GONE);
+                }else{
+                    holder.piv.setCount(imgList.size());
+                }
+                holder.images.getAdapter().notifyDataSetChanged();
+                //String imgUrl = info.getImageUri().get(0);
+                //PicassoUtils.loadImage(holder.goodsImg, imgUrl);
+            }else{
+                holder.piv.setVisibility(View.GONE);
+                holder.images.setAdapter(new ImagePageAdapter(mContext, new ArrayList<String>(1)));
             }
+
+            String p = mContext.getString(R.string.currency_symbol) + String.valueOf(info.getPrice());
+            holder.price.setText(p);
             holder.likes.setText(String.valueOf(info.getStars()));
+            mTvLikesList.add(holder.likes);
             holder.title.setText(info.getName());
-/*            if (!TextUtils.isEmpty(userHeadIcon)) {
-                PicassoUtils.loadImage(holder.headIcon, userHeadIcon);
-            }*/
 
-
-            holder.userNickName.setText(userNickName);
+            holder.nickName.setText(userNickName);
 
             long updatedTime = info.getReleasedDate().getTime();
-            holder.updatedTime.setText(DateUtils.getRelativeDateTimeString(
-                    AppGlobals.getAppContext(),updatedTime, MIN_RESOLUTION,TRANSITION_RESOLUTION,0));
-            // Todo: like time, we may want to get relative distance
-            double dist = LocationUtils.getDistance(info.getLocation(),mCurrent);
-            holder.loc.setText(String.valueOf(dist) + " " + DIST_UNITS);
-            if(!TextUtils.isEmpty(info.getNote())){
-                holder.note.setText(info.getNote());
-            }
+/*            String time = DateUtils.getRelativeDateTimeString(mContext,updatedTime,
+                    MIN_RESOLUTION,TRANSITION_RESOLUTION,DateUtils.FORMAT_SHOW_TIME).toString();*/
+            String time = DateUtils.getRelativeTimeSpanString(updatedTime,System.currentTimeMillis(),
+                    MIN_RESOLUTION).toString();
+            String dateStr = (time.split(", "))[0];
+            String updateAt = " " + mContext.getString(R.string.updated_at) + " " +  dateStr;
+
+            holder.updatedTime.setText(updateAt);
+
+            int dist = (int)AMapUtils.calculateLineDistance(info.getLocation(),mCurrent);
+            String distGap = mContext.getString(R.string.distance_from_you);
+            holder.loc.setText(info.getLocDetail() + "," + distGap + " " +
+                    String.valueOf(dist)  + DIST_UNITS);
         }
     }
 
@@ -106,24 +133,21 @@ public class DiscoverGoodsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.iv_goods_img) ImageView goodsImg;
+        //@BindView(R.id.iv_goods_img) ImageView goodsImg;
+        @BindView(R.id.vp_photos) ViewPager images;
+        @BindView(R.id.page_indicator_view) PageIndicatorView piv;
+        @BindView(R.id.tv_goods_price) TextView price;
+        @BindView(R.id.tv_user_nick_name) TextView nickName;
+        @BindView(R.id.tv_updated_time) TextView updatedTime;
         @BindView(R.id.tv_title) TextView title;
         @BindView(R.id.tv_likes) TextView likes;
         @BindView(R.id.tv_location) TextView loc;
-        @BindView(R.id.tv_note) TextView note;
-        //public CircleImageView headIcon;
-        public TextView userNickName;
-        public TextView updatedTime;
+
 
         public ViewHolder(View view) {
             super(view);
 
             ButterKnife.bind(this,view);
-
-            RelativeLayout rl = (RelativeLayout)view.findViewById(R.id.layout_publisher);
-            //headIcon = (CircleImageView) rl.findViewById(R.id.civ_user_header);
-            userNickName = (TextView) rl.findViewById(R.id.tv_user_nick_name);
-            updatedTime = (TextView) rl.findViewById(R.id.tv_updated_time);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -137,6 +161,13 @@ public class DiscoverGoodsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 public boolean onLongClick(View v) {
                     mCallback.onItemLongClick(v,getLayoutPosition());
                     return true;
+                }
+            });
+
+            likes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCallback.addToMyFavor(getLayoutPosition());
                 }
             });
         }

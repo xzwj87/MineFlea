@@ -16,6 +16,30 @@ import java.io.IOException;
 
 public class FileManager {
 
+
+    public static String saveBitmapToFile(File imgFile, Bitmap bitmap){
+        FileOutputStream fos = null;
+
+        try{
+            fos = new FileOutputStream(imgFile);
+            bitmap.compress(Bitmap.CompressFormat.PNG,100,fos);
+
+            return imgFile.getPath();
+        }catch (IOException e){
+            e.printStackTrace();
+        }finally {
+            if(fos != null){
+                try {
+                    fos.close();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return null;
+    }
+
     public static String saveBitmapToFile(String path, String fileName, Bitmap bitmap){
         File dir = new File(path);
         File imgFile = new File(dir,fileName);

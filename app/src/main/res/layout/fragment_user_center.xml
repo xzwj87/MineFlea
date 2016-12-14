@@ -31,7 +31,7 @@
     <TextView android:id="@+id/tv_favorite_goods"
         style="@style/HeaderTextView"
         android:drawableStart="@drawable/ic_favorite_grey_24dp"
-        android:text="@string/my_favorites"/>
+        android:text="@string/favorites"/>
 
     <View style="@style/VerticalDivider" />
 

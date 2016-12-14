@@ -55,6 +55,15 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
         Log.v(TAG,"publishGoods(): goods = " + goods);
 
         mCloudSrc.publishGoods(goods);
+
+        UserInfo info = getCurrentUser();
+
+        if(info != null) {
+            info.addGoods(goods.getId());
+
+            mCloudSrc.updateCurrentUserInfo(UserInfo.PUBLISHED_GOODS, info.getGoodsList());
+            mCache.updateFile(info);
+        }
     }
 
     @Override
@@ -109,6 +118,7 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
         }
     }
 
+    @Deprecated
     @Override
     public void uploadImageById(String imgUri, boolean isUser, boolean showProcess) {
         if(TextUtils.isEmpty(imgUri))  return;
@@ -151,10 +161,30 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
     public void updateCurrentUserInfo(String key, String val) {
         mCloudSrc.updateCurrentUserInfo(key,val);
 
-        if(mCache.isCached(getCurrentUserId(),FileCache.CACHE_TYPE_USER) &&
-                mCache.isExpired(getCurrentUserId(),FileCache.CACHE_TYPE_USER)){
+        if(mCache.isCached(getCurrentUserId(),FileCache.CACHE_TYPE_USER)){
             mCache.updateFile(getCurrentUser());
         }
+    }
+
+    @Override
+    public void updateGoodsInfo(String id,String key, List<String> val) {
+        Log.v(TAG,"updateGoodsInfo()");
+
+        mCloudSrc.updateGoodsInfo(id, key, val);
+
+        if(mCache.isCached(id,FileCache.CACHE_TYPE_GOODS)) {
+            PublishGoodsInfo goodsInfo = mCache.getGoodsCache(id);
+            List<String> localUrls = new ArrayList<>(val.size());
+            for (String url : val) {
+                String img = mCache.saveImgToFile(url, FileCache.CACHE_TYPE_GOODS);
+                localUrls.add(img);
+                //Log.v(TAG,"updateGoodsInfo(): updated local urls = " + img);
+            }
+
+            goodsInfo.setImageUri(localUrls);
+            mCache.updateFile(goodsInfo);
+        }
+
     }
 
     @Override
@@ -162,20 +192,44 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
         Log.v(TAG,"addToMyFavorites()");
 
         mCloudSrc.favor(goods);
+
+        String myId = getCurrentUserId();
+        if(!TextUtils.isEmpty(myId) &&
+            mCache.isCached(myId,FileCache.CACHE_TYPE_USER)){
+            UserInfo info = mCache.getUserCache(myId);
+            info.addFavorGoods(goods.getId());
+            mCache.updateFile(info);
+        }
+
+        if(mCache.isCached(goods.getId(),FileCache.CACHE_TYPE_GOODS)){
+            mCache.updateFile(goods);
+        }else{
+            mCache.saveToFile(goods);
+        }
     }
 
     @Override
     public void getUserInfoById(String id) {
-        if (mCache.isCached(id, FileCache.CACHE_TYPE_USER) &&
-                !mCache.isExpired(id, FileCache.CACHE_TYPE_USER)) {
+        Log.v(TAG,"getUserInfoById()");
+        if (mCache.isCached(id, FileCache.CACHE_TYPE_USER)) {
             UserInfo userInfo = mCache.getUserCache(id);
             PresenterCallback callback = mPresenterCbs.get(PRESENTER_USER_DETAIL);
+
             if(callback != null){
                 final Message message = new Message();
                 message.obj = userInfo;
                 message.what = ResponseCode.RESP_GET_USER_INFO_SUCCESS;
 
                 callback.onComplete(message);
+            }else{
+                callback = mPresenterCbs.get(PRESENTER_PUBLISH);
+                if(callback != null){
+                    final Message message = new Message();
+                    message.obj = userInfo;
+                    message.what = ResponseCode.RESP_GET_USER_INFO_SUCCESS;
+
+                    callback.onComplete(message);
+                }
             }
         }else {
             mCloudSrc.getUserInfoById(id);
@@ -188,7 +242,8 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
         Log.v(TAG,"getAllGoods()");
 
         List<PublishGoodsInfo> goodsList = mCache.getAllGoodsCache();
-        if(goodsList.size() > 0){
+
+        if(goodsList != null && goodsList.size() > 0){
             final Message msg = new Message();
             msg.obj = goodsList;
             msg.what = ResponseCode.RESP_GET_GOODS_LIST_SUCCESS;
@@ -227,18 +282,20 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
     @Override
     public void getGoodsInfoById(String goodsId) {
         if(TextUtils.isEmpty(goodsId)) return;
-        PresenterCallback callback = mPresenterCbs.get(PRESENTER_GOODS_DETAIL);
-
-        if(mCache.isCached(goodsId,FileCache.CACHE_TYPE_GOODS) &&
-                !mCache.isExpired(goodsId,FileCache.CACHE_TYPE_GOODS)){
+        Log.v(TAG,"getGoodsInfoById()");
+        if(mCache.isCached(goodsId,FileCache.CACHE_TYPE_GOODS)){
             PublishGoodsInfo goodsInfo = mCache.getGoodsCache(goodsId);
             final Message msg = new Message();
             msg.obj = goodsInfo;
             msg.what = ResponseCode.RESP_GET_GOODS_SUCCESS;
 
-            Log.v(TAG,"getGoodsInfoById()");
-            if(callback != null){
-                callback.onComplete(msg);
+            Iterator iterator = mPresenterCbs.entrySet().iterator();
+            while(iterator.hasNext()){
+                Map.Entry entry = (Map.Entry)iterator.next();
+                PresenterCallback callback = (PresenterCallback)entry.getValue();
+                if(callback != null){
+                    callback.onComplete(msg);
+                }
             }
         }else{
             mCloudSrc.getGoodsById(goodsId);
@@ -328,9 +385,14 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
 
     @Override
     public void onGetUserInfoDone(Message msg) {
-        PresenterCallback listener = mPresenterCbs.get(PRESENTER_USER_DETAIL);
-        if(listener != null){
-            listener.onComplete(msg);
+        Log.v(TAG,"onGetUserInfoDone()");
+        Iterator iterator = mPresenterCbs.entrySet().iterator();
+        while(iterator.hasNext()){
+            Map.Entry entry = (Map.Entry)iterator.next();
+            PresenterCallback callback = (PresenterCallback)entry.getValue();
+            if(callback != null){
+                callback.onComplete(msg);
+            }
         }
     }
 
@@ -349,11 +411,38 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onGetGoodsListDone(Message msg) {
+        Log.v(TAG,"onGetGoodsListDone()");
         PresenterCallback callback = mPresenterCbs.get(PRESENTER_GOODS_LIST);
         if(callback != null) {
             callback.onComplete(msg);
+        }
+
+        // save it to cache
+        if(msg.what == ResponseCode.RESP_GET_GOODS_LIST_SUCCESS) {
+            List<PublishGoodsInfo> goodsList = (ArrayList<PublishGoodsInfo>) msg.obj;
+            for(PublishGoodsInfo goods: goodsList){
+                // save image to local
+                List<String> imgList = goods.getImageUri();
+                List<String> imgLocal = new ArrayList<>(imgList.size());
+                for(String url: imgList) {
+                    String name = URLUtil.guessFileName(url, null, null);
+                    if (!mCache.isImageCached(name, FileCache.CACHE_TYPE_GOODS)) {
+                        String path = mCache.saveImgToFile(url, FileCache.CACHE_TYPE_GOODS);
+                        imgLocal.add(path);
+                    }
+                    Log.v(TAG, "onGetGoodsListDone(): url = " + url);
+                }
+                // ok,save it now
+                if(imgLocal.size() > 0) {
+                    goods.setImageUri(imgLocal);
+                    if (!mCache.isCached(goods.getId(), FileCache.CACHE_TYPE_GOODS)) {
+                        mCache.saveToFile(goods);
+                    }
+                }
+            }
         }
     }
 
@@ -413,12 +502,6 @@ public class DataRepository implements BaseRepository,RemoteSourceCallBack{
             if(!mCache.isCached(goods.getId(), FileCache.CACHE_TYPE_GOODS)){
                 mCache.saveToFile(goods);
             }
-        }
-
-        if(mPresenterCbs.get(PRESENTER_PUBLISH) != null){
-            Log.v(TAG,"there is a publish callback");
-        }else{
-            Log.v(TAG,"there is no publish callback");
         }
 
         PresenterCallback callback = mPresenterCbs.get(PRESENTER_PUBLISH);

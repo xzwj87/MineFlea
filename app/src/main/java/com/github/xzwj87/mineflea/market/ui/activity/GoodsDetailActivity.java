@@ -3,17 +3,20 @@ package com.github.xzwj87.mineflea.market.ui.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.amap.api.maps.model.Text;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
@@ -22,6 +25,7 @@ import com.github.xzwj87.mineflea.market.ui.GoodsDetailView;
 import com.github.xzwj87.mineflea.market.ui.adapter.ImagePageAdapter;
 import com.github.xzwj87.mineflea.utils.PicassoUtils;
 import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
+import com.rd.PageIndicatorView;
 
 import java.util.List;
 
@@ -41,8 +45,6 @@ public class GoodsDetailActivity extends BaseActivity implements GoodsDetailView
     private String mGoodsId;
     @Inject GoodsDetailPresenterImpl mPresenter;
 
-    private ProgressDialog mProgress;
-
     @BindView(R.id.vp_photos) ViewPager mVpGoodsImages;
     @BindView(R.id.tv_goods_name) TextView mTvName;
     @BindView(R.id.tv_goods_price) TextView mTvPrice;
@@ -50,6 +52,7 @@ public class GoodsDetailActivity extends BaseActivity implements GoodsDetailView
     @BindView(R.id.tv_likes) TextView mTvLikes;
     @BindView(R.id.iv_more) ImageView mIvCheckMore;
     @BindView(R.id.layout_user_info) RelativeLayout mRlUserInfo;
+    @BindView(R.id.page_indicator_view) PageIndicatorView mPiv;
 
     @Override
     public void onCreate(Bundle bundle){
@@ -67,24 +70,19 @@ public class GoodsDetailActivity extends BaseActivity implements GoodsDetailView
 
         Intent intent = getIntent();
         mGoodsId = intent.getStringExtra(PublishGoodsInfo.GOODS_ID);
-
-        initView();
         // inject presenter
         getComponent().inject(this);
 
         ThemeColorUtils.changeThemeColor(this);
+
+        init();
     }
 
     @Override
     public void onResume(){
         super.onResume();
 
-        mPresenter.init();
-        mPresenter.setView(this);
-        mPresenter.getGoodsInfo(mGoodsId);
-
-/*        mProgress = ProgressDialog.show(this,"",
-                getString(R.string.progress_get_goods_detail));*/
+        //registerForContextMenu(mIvCheckMore);
     }
 
     @Override
@@ -93,9 +91,7 @@ public class GoodsDetailActivity extends BaseActivity implements GoodsDetailView
 
         mPresenter.onPause();
 
-        if(mProgress != null && mProgress.isShowing()){
-            mProgress.dismiss();
-        }
+        //unregisterForContextMenu(mIvCheckMore);
     }
 
     @Override
@@ -107,11 +103,22 @@ public class GoodsDetailActivity extends BaseActivity implements GoodsDetailView
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_goods_detail,menu);
 
-        if(item.getItemId() == android.R.id.home){
-            finish();
-            return true;
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+        switch (id) {
+            case (android.R.id.home):
+                finish();
+                return true;
+            case R.id.menu_like:
+                mPresenter.addToFavorites();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -120,18 +127,22 @@ public class GoodsDetailActivity extends BaseActivity implements GoodsDetailView
     @OnClick({R.id.iv_more})
     public void addToFavorites(){
         PopupMenu menu = new PopupMenu(this,mIvCheckMore);
+        menu.setGravity(GravityCompat.START);
         menu.inflate(R.menu.menu_add_to_favoriates);
         menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                mPresenter.addToFavorites(mGoodsId);
+                mPresenter.addToFavorites();
                 return true;
             }
         });
+
+        menu.show();
     }
 
     @Override
     public void onGetGoodsInfoDone(boolean success) {
+        Log.v(TAG,"onGetGoodsInfoDone()");
 /*        if(mProgress != null && mProgress.isShowing()) {
             mProgress.dismiss();
         }*/
@@ -139,8 +150,12 @@ public class GoodsDetailActivity extends BaseActivity implements GoodsDetailView
 
     @Override
     public void updateImageListPage(List<String> imgList) {
+        if(imgList.size()<=  1){
+            mPiv.setVisibility(View.GONE);
+        }
+        initImageViewPager(imgList);
+        mPiv.setCount(imgList.size());
         ImagePageAdapter adapter = (ImagePageAdapter)mVpGoodsImages.getAdapter();
-        adapter.setImageList(imgList);
         adapter.notifyDataSetChanged();
     }
 
@@ -150,8 +165,16 @@ public class GoodsDetailActivity extends BaseActivity implements GoodsDetailView
     }
 
     @Override
-    public void updateGoodsPrice(double price) {
-        mTvPrice.setText(String.valueOf(price));
+    public void updateTitle(String title) {
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setTitle(title);
+        }
+    }
+
+    @Override
+    public void updateGoodsPrice(String price) {
+        mTvPrice.setText(price);
     }
 
     @Override
@@ -160,8 +183,8 @@ public class GoodsDetailActivity extends BaseActivity implements GoodsDetailView
     }
 
     @Override
-    public void updateLikes(int likes) {
-        mTvLikes.setText(String.valueOf(likes));
+    public void updateLikes(String likes) {
+        mTvLikes.setText(likes);
     }
 
     @Override
@@ -171,7 +194,8 @@ public class GoodsDetailActivity extends BaseActivity implements GoodsDetailView
             TextView nickName = (TextView)mRlUserInfo.findViewById(R.id.tv_user_nick_name);
             TextView email = (TextView)mRlUserInfo.findViewById(R.id.tv_email);
             TextView publishedGoodsCnt = (TextView)mRlUserInfo.findViewById(R.id.tv_published_goods_count);
-            //TextView favorGoodsCnt = (TextView)mRlUserInfo.findViewById(R.id.tv_favorite_goods);
+            TextView favors = (TextView)mRlUserInfo.findViewById(R.id.tv_favors);
+            TextView followees = (TextView)mRlUserInfo.findViewById(R.id.tv_followees);
             TextView followers = (TextView)mRlUserInfo.findViewById(R.id.tv_followers);
 
             if(!TextUtils.isEmpty(userInfo.getHeadIconUrl())){
@@ -184,6 +208,12 @@ public class GoodsDetailActivity extends BaseActivity implements GoodsDetailView
             email.setText(userInfo.getUserEmail());
             publishedGoodsCnt.setText(String.valueOf(userInfo.getGoodsCount()));
             followers.setText(String.valueOf(userInfo.getFollowersCount()));
+            if(userInfo.getFavorGoodsList() == null) {
+                favors.setText(String.valueOf(0));
+            }else{
+                favors.setText(String.valueOf(userInfo.getFavorGoodsList().size()));
+            }
+            followees.setText(String.valueOf(userInfo.getFolloweeList().size()));
         }
     }
 
@@ -192,8 +222,31 @@ public class GoodsDetailActivity extends BaseActivity implements GoodsDetailView
         finish();
     }
 
-    private void initView(){
-        ImagePageAdapter adapter = new ImagePageAdapter(this);
+    private void initImageViewPager(List<String> imgList){
+        ImagePageAdapter adapter = new ImagePageAdapter(this,imgList);
         mVpGoodsImages.setAdapter(adapter);
+    }
+
+    private void init(){
+        mPresenter.init();
+        mPresenter.setView(this);
+        mPresenter.getGoodsInfo(mGoodsId);
+
+        mRlUserInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkUserDetail();
+            }
+        });
+    }
+
+    private void checkUserDetail(){
+        Intent intent = new Intent(this,UserDetailActivity.class);
+        String userId = mPresenter.getPublisherId();
+        if(!TextUtils.isEmpty(userId)) {
+            intent.putExtra(UserInfo.USER_ID, userId);
+        }else{
+            Log.e(TAG,"checkUserDetail(): there is no user info");
+        }
     }
 }

@@ -1,27 +1,22 @@
 package com.github.xzwj87.mineflea.market.ui.activity;
 
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.URLUtil;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.github.xzwj87.mineflea.R;
@@ -31,7 +26,6 @@ import com.github.xzwj87.mineflea.market.ui.EditPersonalInfoView;
 import com.github.xzwj87.mineflea.market.ui.dialog.UserInfoEditDialog;
 import com.github.xzwj87.mineflea.utils.PicassoUtils;
 import com.github.xzwj87.mineflea.utils.ThemeColorUtils;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -164,11 +158,11 @@ public class EditPersonalInfoActivity extends BaseActivity
                 break;
             case R.id.email:
                 title = getString(R.string.edit_email);
-                showEditDialog(id,title,mTvEmail.getText().toString());
+                showEditDialog(id,title,mPresenter.getEmail());
                 break;
             case R.id.tel_number:
                 title = getString(R.string.edit_tel_number);
-                showEditDialog(id,title,mTvTel.getText().toString());
+                showEditDialog(id,title,mPresenter.getTelNumber());
                 break;
             case R.id.introduction:
                 title = getString(R.string.edit_intro);
@@ -295,7 +289,7 @@ public class EditPersonalInfoActivity extends BaseActivity
         UserInfoEditDialog dialog = UserInfoEditDialog.newInstance(
                 id,title,content);
 
-        dialog.show(getFragmentManager(),"UserInfoEditDialog");
+        dialog.show(getSupportFragmentManager(),"UserInfoEditDialog");
     }
 
     private void startCamera(){

@@ -1,5 +1,7 @@
 package com.github.xzwj87.mineflea.market.data.cache;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -43,8 +45,12 @@ public class CacheManager {
         }
 
         if(!file.exists()){
+            //file.mkdir();
             setCachedTime(file);
             try {
+                if(!file.exists()){
+                    file.createNewFile();
+                }
                 FileWriter writer = new FileWriter(file);
                 writer.write(content);
                 writer.close();
@@ -71,6 +77,8 @@ public class CacheManager {
 
     public void writeImgToFile(File src, File dest){
         if(src == null || dest == null) return;
+
+        Log.v(TAG,"writeImgToFile()");
 
         try {
             FileInputStream fis = new FileInputStream(src);

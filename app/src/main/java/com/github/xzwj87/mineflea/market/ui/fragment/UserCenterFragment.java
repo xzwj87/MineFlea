@@ -45,8 +45,7 @@ import static android.app.Activity.RESULT_OK;
 public class UserCenterFragment extends BaseFragment implements UserCenterView{
     public static final String TAG = UserCenterFragment.class.getSimpleName();
 
-    public static final int REQUEST_LOGIN = 1;
-    public static final int REQUEST_REGISTER = 2;
+    public static final int REQUEST_REGISTER = 119;
 
     @BindView(R.id.civ_user_header) CircleImageView mCivHeader;
     @BindView(R.id.header_container) LinearLayout mHeaderLayout;

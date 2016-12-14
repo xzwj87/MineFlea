@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -59,6 +60,7 @@ import com.github.xzwj87.mineflea.market.ui.alimap.BusResultListAdapter;
 import com.github.xzwj87.mineflea.market.ui.alimap.DriveRouteDetailActivity;
 import com.github.xzwj87.mineflea.market.ui.alimap.DrivingRouteOverLay;
 import com.github.xzwj87.mineflea.market.ui.alimap.WalkRouteDetailActivity;
+import com.github.xzwj87.mineflea.market.ui.dialog.GoodsInfoPickerDialog;
 import com.github.xzwj87.mineflea.utils.AMapUtil;
 import com.github.xzwj87.mineflea.utils.Constants;
 import com.github.xzwj87.mineflea.utils.ToastUtil;
@@ -74,13 +76,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-//Created by jason on 10/9/16.
 public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, View.OnClickListener, AMap.OnMarkerClickListener,
         AMap.OnInfoWindowClickListener, AMap.OnMarkerDragListener, AMap.OnMapLoadedListener, AMap.InfoWindowAdapter, LocationSource,
         AMapLocationListener, RouteSearch.OnRouteSearchListener, AMap.OnMapClickListener {
     public static final String TAG = "[NearbyTabFragment]";
 
-    private boolean DBG = true;//用于调试
+    private boolean DBG = false;//用于调试
 
     @Inject
     NearbyGoodsPresenterImpl mPresenter;
@@ -164,7 +165,6 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
 
     @Override
     public void updateMarkerDisplay(List<PublishGoodsInfo> list) {
-        Log.e(TAG, list.toString());
         this.list = list;
         addMarkersToMap();
     }
@@ -444,28 +444,27 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
     private void addMarkersToMap() {
 
         if (DBG) {
-            PublishGoodsInfo infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 113.00, 23.00);
+            PublishGoodsInfo infoP = new PublishGoodsInfo("显示物品名字", "1234");
             list.add(infoP);
-            infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 113.15, 23.00);
+            infoP = new PublishGoodsInfo("显示物品名字", "1234");
             list.add(infoP);
-            infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 113.15, 23.50);
+            infoP = new PublishGoodsInfo("显示物品名字", "1234");
             list.add(infoP);
-            infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 112.00, 22.00);
+            infoP = new PublishGoodsInfo("显示物品名字", "1234");
             list.add(infoP);
-            infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 110.15, 20.00);
+            infoP = new PublishGoodsInfo("显示物品名字", "1234");
             list.add(infoP);
-            infoP = new PublishGoodsInfo("显示物品名字", "1234", 20.00, 115.15, 23.00);
+            infoP = new PublishGoodsInfo("显示物品名字", "1234");
             list.add(infoP);
         }
 
-        if (list == null) {
-            ToastUtil.showToast("附近没有数据");
+        if (list == null || list.size() <= 0) {
+            ToastUtil.showToast(getString(R.string.no_goods_found));
             return;
         }
-        if (list.size() <= 0)
-            return;
+
         for (PublishGoodsInfo info : list) {
-            LatLng pos = new LatLng(info.getLng(), info.getLat());
+            LatLng pos = new LatLng(info.getLocation().latitude,info.getLocation().longitude);
             MarkerOptions options = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
                     .title(info.getName()).position(pos).draggable(true);
             Marker marker = aMap.addMarker(options);
@@ -480,7 +479,7 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
             aMap.clear();
             //markerLy.setVisibility(View.INVISIBLE);
             for (PublishGoodsInfo info : list) {
-                LatLng pos = new LatLng(info.getLng(), info.getLat());
+                LatLng pos = new LatLng(info.getLocation().latitude,info.getLocation().longitude);
                 double l = UiUtils.getDistanceM(myLocation, pos);
                 if (select == KM) {
                     l = UiUtils.getDistanceKm(myLocation, pos);
@@ -532,59 +531,9 @@ public class NearbyTabFragment extends BaseFragment implements NearbyGoodsView, 
     }
 
     //显示点击物品的信息
-    private void showGoodsInfoDialog(PublishGoodsInfo info) {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        final AlertDialog dialog = builder.create();
-
-        View searchView = inflater.inflate(R.layout.nearby_fragment_goods_dialog, null, false);
-        ImageView goodsPicIv = (ImageView) searchView.findViewById(R.id.goods_pic_iv);
-        TextView goodsDisTv = (TextView) searchView.findViewById(R.id.goods_dis_tv);
-        TextView goodsPriseTv = (TextView) searchView.findViewById(R.id.goods_prise_tv);
-        TextView goodsNameTv = (TextView) searchView.findViewById(R.id.goods_name_tv);
-        ImageView goodsPriseIv = (ImageView) searchView.findViewById(R.id.goods_prise_iv);
-        Button btnOK = (Button) searchView.findViewById(R.id.goods_btn_ok);
-        ImageButton btnCl = (ImageButton) searchView.findViewById(R.id.goods_btn_cancel);
-
-        //goodsPicIv.setImageResource(info.getImgId());
-        DecimalFormat decimalFormat = new DecimalFormat("#.00");
-        goodsDisTv.setText(decimalFormat.format(UiUtils.getDistanceKm(myLocation, info.getLocation())) + "km");
-        goodsPriseTv.setText(info.getStars() + "");
-        goodsNameTv.setText(info.getName());
-        //PicassoUtils.loadImage(goodsPicIv, info.getImageUri().get(0));
-        btnOK.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                Intent intent = new Intent(getActivity(), GoodsDetailActivity.class);
-                startActivity(intent);
-            }
-        });
-        btnCl.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-            }
-        });
-
-        dialog.setView(searchView);
-        dialog.getWindow().setWindowAnimations(R.style.dialogWindowAnim);
-
-        //获取当前Activity所在的窗体
-        Window dialogWindow = dialog.getWindow();
-        //设置Dialog从窗体底部弹出
-        dialogWindow.setGravity( Gravity.BOTTOM);
-        //获得窗体的属性
-//        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-//        lp.y = 20;//设置Dialog距离底部的距离
-////       将属性设//窗体
-        //dialogWindow.setAttributes(lp);
-        dialog.show();
+    private void showGoodsInfoDialog(final PublishGoodsInfo info) {
+        GoodsInfoPickerDialog dialog = GoodsInfoPickerDialog.newInstance(info);
+        dialog.show(getActivity().getSupportFragmentManager(),"GoodsInfoPickerDialog");
     }
 
     @Override

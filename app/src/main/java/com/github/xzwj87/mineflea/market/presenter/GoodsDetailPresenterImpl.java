@@ -3,6 +3,7 @@ package com.github.xzwj87.mineflea.market.presenter;
 import android.os.Message;
 import android.util.Log;
 
+import com.amap.api.maps2d.AMapUtils;
 import com.amap.api.maps2d.model.LatLng;
 import com.github.xzwj87.mineflea.R;
 import com.github.xzwj87.mineflea.app.AppGlobals;
@@ -13,7 +14,6 @@ import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
 import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.GoodsDetailView;
-import com.github.xzwj87.mineflea.utils.LocationUtils;
 import com.github.xzwj87.mineflea.utils.UserPrefsUtil;
 
 import javax.inject.Inject;
@@ -49,10 +49,19 @@ public class GoodsDetailPresenterImpl implements GoodsDetailPresenter{
     }
 
     @Override
-    public void addToFavorites(String goodsId) {
+    public void addToFavorites() {
         if(mGoods != null){
+            mGoods.addFavorUser(mRepo.getCurrentUserId());
             mRepo.addToMyFavorites(mGoods);
+            mView.updateLikes(String.valueOf(mGoods.getStars()+1));
         }
+    }
+
+    @Override
+    public String getPublisherId() {
+        if(mUser == null) return "";
+
+        return mUser.getUserId();
     }
 
     @Override
@@ -118,11 +127,25 @@ public class GoodsDetailPresenterImpl implements GoodsDetailPresenter{
         Log.v(LOG_TAG,"renderGoodsView()");
         if(mGoods != null){
             mView.updateImageListPage(mGoods.getImageUri());
-            mView.updateGoodsName(mGoods.getName());
 
-            String dist = LocationUtils.getDistance(mGoods.getLocation(),mCurrent) + " " + DIST_UNITS;
+            String name = mGoods.getName() + "(" + mGoods.getNote() + ")";
+            mView.updateGoodsName(name);
+
+            mView.updateTitle(mGoods.getName());
+
+            String curSymbol = AppGlobals.getAppContext().getString(R.string.currency_symbol);
+            String p = curSymbol + String.valueOf(mGoods.getPrice());
+            mView.updateGoodsPrice(p);
+
+            String detail = mGoods.getLocDetail();
+            String distFrom = AppGlobals.getAppContext().getString(R.string.distance_from_you);
+            String d = String.valueOf((int)AMapUtils.calculateLineDistance(mGoods.getLocation(),mCurrent));
+            String dist = detail + "," + distFrom + d + DIST_UNITS;
             mView.updateGoodsLocation(dist);
-            mView.updateLikes(mGoods.getStars());
+
+            String favoredNo = AppGlobals.getAppContext().getString(R.string.favored_user) +
+                    " " + String.valueOf(mGoods.getStars());
+            mView.updateLikes(favoredNo);
         }
     }
 

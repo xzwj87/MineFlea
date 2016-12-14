@@ -11,6 +11,8 @@ import com.github.xzwj87.mineflea.market.model.UserInfo;
 import com.github.xzwj87.mineflea.market.ui.BaseView;
 import com.github.xzwj87.mineflea.market.ui.NearbyGoodsView;
 
+import static com.github.xzwj87.mineflea.market.data.ResponseCode.*;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -27,13 +29,11 @@ public class NearbyGoodsPresenterImpl extends NearbyGoodsPresenter {
 
     @Inject
     DataRepository mRepository;
-    //private NearbyProtocol protocol;
     private NearbyGoodsView mView;
 
     private List<PublishGoodsInfo> mGoodsList;
     private HashSet<String> mGoodsSet;
     private List<UserInfo> mPublisherList;
-    private Object mCompleteLock;
 
     @Inject
     public NearbyGoodsPresenterImpl(DataRepository repository){
@@ -43,18 +43,17 @@ public class NearbyGoodsPresenterImpl extends NearbyGoodsPresenter {
     @Override
     public void loadDataFromServer() {
         mRepository.getAllGoods();
-        Log.e(TAG, "GET  ALL GOODS");
+        Log.v(TAG, "getAllGoods()");
     }
 
     @Override
     public void init() {
         //protocol = new NearbyProtocol();
         mRepository.init();
-        mRepository.registerCallBack(PRESENTER_PUBLISH, new UserGoodsPresenterCallback());
         mGoodsList = new ArrayList<>();
         mPublisherList = new ArrayList<>();
         mGoodsSet = new HashSet<>();
-        mCompleteLock = new Object();
+        mRepository.registerCallBack(PRESENTER_GOODS_LIST, new UserGoodsPresenterCallback());
     }
 
     @Override
@@ -84,7 +83,7 @@ public class NearbyGoodsPresenterImpl extends NearbyGoodsPresenter {
             switch (resp) {
                 case ResponseCode.RESP_GET_GOODS_LIST_SUCCESS:
                     // sync cache/cloud callback
-                    synchronized (mCompleteLock) {
+                    synchronized (this) {
                         List<PublishGoodsInfo> goods = (List<PublishGoodsInfo>) message.obj;
                         if (goods != null) {
                             for (int i = 0; i < goods.size(); ++i) {
@@ -92,6 +91,7 @@ public class NearbyGoodsPresenterImpl extends NearbyGoodsPresenter {
                                 if (!mGoodsSet.contains(goodsInfo.getId())) {
                                     mGoodsSet.add(goodsInfo.getId());
                                     mGoodsList.add(goodsInfo);
+                                    mRepository.getUserInfoById(goodsInfo.getUserId());
                                 }
                             }
                         }
@@ -101,9 +101,15 @@ public class NearbyGoodsPresenterImpl extends NearbyGoodsPresenter {
                 case ResponseCode.RESP_GET_GOODS_LIST_ERROR:
                     //mView.onGetGoodsListDone(false);
                     break;
+                case RESP_GET_USER_INFO_SUCCESS:
+                    mPublisherList.add((UserInfo)message.obj);
+                    break;
+                case RESP_GET_USER_INFO_ERROR:
+                    break;
                 default:
                     break;
             }
+
         }
 
         @Override

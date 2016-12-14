@@ -85,6 +85,11 @@ public interface BaseRepository {
     void updateCurrentUserInfo(String key, String val);
 
     /*
+     * update goods info
+     */
+    void updateGoodsInfo(String id,String key,List<String> val);
+
+    /*
      * add a goods to my favorite list
      */
     void addToMyFavorites(PublishGoodsInfo goodsInfo);

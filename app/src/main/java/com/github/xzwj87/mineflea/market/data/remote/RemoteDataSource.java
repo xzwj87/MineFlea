@@ -3,7 +3,6 @@ package com.github.xzwj87.mineflea.market.data.remote;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MotionEvent;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
@@ -60,6 +59,7 @@ public class RemoteDataSource implements RemoteSource{
 
     @Override
     public void getUserInfoById(String id) {
+        Log.v(TAG,"getUserInfoById()");
         UserInfo user = getCurrentUser();
         if(user != null && user.getUserId().equals(id)){
             final  Message msg = new Message();
@@ -72,6 +72,7 @@ public class RemoteDataSource implements RemoteSource{
             query.getInBackground(id, new GetCallback<AVUser>() {
                 @Override
                 public void done(AVUser avUser, AVException e) {
+                    Log.v(TAG,"getUserInfoById(): done");
                     final Message msg = new Message();
                     if (e == null) {
                         msg.obj = UserInfoUtils.fromAvUser(avUser);
@@ -79,6 +80,7 @@ public class RemoteDataSource implements RemoteSource{
                     } else {
                         msg.obj = null;
                         msg.what = ResponseCode.RESP_GET_USER_INFO_ERROR;
+                        e.printStackTrace();
                     }
 
                     mCloudCallback.onGetUserInfoDone(msg);
@@ -168,6 +170,25 @@ public class RemoteDataSource implements RemoteSource{
             user.put(key, val);
             user.saveInBackground();
         }
+    }
+
+    @Override
+    public void updateCurrentUserInfo(String key, List<String> val) {
+        Log.v(TAG,"updateCurrentUserInfo()");
+
+        AVUser user = AVUser.getCurrentUser();
+        user.put(key,val);
+        user.saveInBackground();
+    }
+
+    @Override
+    public void updateGoodsInfo(String id,String key, List<String> val) {
+        Log.v(TAG,"updateGoodsInfo(): size = " + val.size());
+
+        AVObject object = AVObject.createWithoutData(AvCloudConstants.AV_OBJ_GOODS,id);
+        object.put(key,val);
+
+        object.saveInBackground();
     }
 
     @Override
@@ -287,12 +308,14 @@ public class RemoteDataSource implements RemoteSource{
 
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void getAllGoods() {
+        Log.v(TAG,"getAllGoods()");
         AVQuery<AVObject> query = new AVQuery(AvCloudConstants.AV_OBJ_GOODS);
 
         query.setLimit(MAX_GOODS_TO_GET_ONE_TIME);
-        query.orderByAscending(AvCloudConstants.AV_UPDATE_TIME);
+        query.orderByAscending(PublishGoodsInfo.GOODS_UPDATED_TIME);
 
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
@@ -441,37 +464,28 @@ public class RemoteDataSource implements RemoteSource{
     }
 
     @Override
-    public void uploadImg(List<String> imgList, boolean showProcess) {
+    public void uploadImg(final List<String> imgList, boolean showProcess) {
         if(imgList == null || imgList.size() == 0) return;
 
         Log.v(TAG,"uploadImg(): size = " + imgList.size());
 
+        final List<String> imgUrls = new ArrayList<>(imgList.size());
+        final Message msg = new Message();
+
         for(int i = 0; i < imgList.size(); ++i) {
-            String imgUri = imgList.get(i);
+            final String imgUri = imgList.get(i);
             if (showProcess) {
-                final int totalProgress = imgList.size()*100;
-                final int idx = i;
                 try {
                     final File file = new File(imgUri);
-                    AVFile avFile = AVFile.withAbsoluteLocalPath(file.getName(), file.getPath());
-                    avFile.saveInBackground();
-
-/*                    avFile.saveInBackground(new SaveCallback() {
+                    final AVFile avFile = AVFile.withAbsoluteLocalPath(file.getName(), file.getPath());
+                    avFile.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(AVException e) {
-                            if (e != null) {
-                                Log.e(TAG, "fail to upload image: " + file.getPath());
+                            if(e == null) {
+                                imgUrls.add(avFile.getUrl());
                             }
-                            Log.v(TAG, "saveInBackground(): done");
                         }
-                    }, new ProgressCallback() {
-                        @Override
-                        public void done(Integer integer) {
-                            final int current = integer*(idx+1)/totalProgress;
-                            Log.v(TAG, "uploadImg(): current process = " + current);
-                            mCloudCallback.updateProcess(current);
-                        }
-                    });*/
+                    });
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                     mCloudCallback.updateProcess(100);
@@ -480,27 +494,24 @@ public class RemoteDataSource implements RemoteSource{
                 try {
                     final File file = new File(imgUri);
                     final AVFile avFile = AVFile.withAbsoluteLocalPath(file.getName(), file.getPath());
-                    avFile.saveInBackground();
-                    // FIXME: we need to get the image URL
-/*                    avFile.saveInBackground(new SaveCallback() {
+                    avFile.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(AVException e) {
-                            Log.v(TAG, "saveInBackground(): done");
-                            final Message msg = new Message();
-                            if (e != null) {
-                                msg.what = ResponseCode.RESP_IMAGE_UPLOAD_ERROR;
-                                msg.obj = e.getCode();
-                                Log.e(TAG, "fail to upload image: " + file.getPath());
-                            } else {
-                                msg.what = ResponseCode.RESP_IMAGE_UPLOAD_SUCCESS;
-                                msg.obj = avFile.getUrl();
+                            if(e == null) {
+                                imgUrls.add(avFile.getUrl());
+                                // ok, done
+                                if(imgUrls.size() == imgList.size()) {
+                                    msg.what = ResponseCode.RESP_IMAGE_UPLOAD_SUCCESS;
+                                    msg.obj = imgUrls;
+                                    mCloudCallback.onImgUploadComplete(msg);
+                                }
+                            }else{
+                                e.printStackTrace();
                             }
-                            mCloudCallback.onImgUploadComplete(msg);
                         }
-                    });*/
+                    });
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
-                    Message msg = new Message();
                     msg.what = ResponseCode.RESP_FILE_NOT_FOUND;
                     msg.obj = null;
                     mCloudCallback.onImgUploadComplete(msg);
@@ -627,17 +638,24 @@ public class RemoteDataSource implements RemoteSource{
 
         final AVUser user = AVUser.getCurrentUser();
 
-        final AVObject object = PublishGoodsUtils.toAvObject(goodsInfo);
-        object.put(AvCloudConstants.AV_GOODS_NAME,goodsInfo.getName());
+        final AVObject object = AVObject.createWithoutData(
+                AvCloudConstants.AV_OBJ_GOODS,goodsInfo.getId());
+        object.put(PublishGoodsInfo.GOODS_FAVOR_USER,goodsInfo.getFavorUserList());
+        //object.put(AvCloudConstants.AV_GOODS_NAME,goodsInfo.getName());
 
-        object.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(AVException e) {
-                AVRelation<AVObject> relation = user.getRelation(AvCloudConstants.AV_RELATION_USER_GOODS);
-                relation.add(object);
-                user.saveInBackground();
-            }
-        });
+        if(user != null) {
+            object.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    AVRelation<AVObject> relation = user.getRelation(AvCloudConstants.AV_RELATION_USER_GOODS);
+                    relation.add(object);
+                    user.saveInBackground();
+                    // Todo: we want to do callback to notify uppper layer
+                }
+            });
+        }else{
+            object.saveInBackground();
+        }
     }
 
     @Override

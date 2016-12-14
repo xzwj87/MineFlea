@@ -64,6 +64,10 @@ public class ResponseCode {
 
     public static final int RESP_QUERY_FOLLOWEES_ERROR = 0x305;
 
+    public static final int RESP_QUERY_FOLLOWERS_SUCESS = 0x306;
+
+    public static final int RESP_QUERY_FOLLOWERS_ERROR = 0x307;
+
     public static final int RESP_RESET_PWD_BY_EMAIL_SUCCESS = 0x400;
 
     public static final int RESP_RESET_PWD_BY_EMAIL_FAIL = 0x401;

@@ -2,6 +2,7 @@ package com.github.xzwj87.mineflea.market.presenter;
 
 import android.os.Message;
 
+import static com.github.xzwj87.mineflea.market.data.ResponseCode.*;
 import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
@@ -88,16 +89,23 @@ public class UserGoodsPresenterImpl extends UserGoodsPresenter {
         @SuppressWarnings("unchecked")
         @Override
         public void onComplete(Message message) {
-            if(message.obj != null){
-                mGoodsList = (List<PublishGoodsInfo>)message.obj;
+            int what = message.what;
+            switch (what) {
+                case RESP_GET_GOODS_LIST_SUCCESS:
+                    if (message.obj != null) {
+                        mGoodsList = (List<PublishGoodsInfo>) message.obj;
 
-                renderView();
-                // empty list or fail
-            }else if(message.arg1 == 0){
-                mView.showBlankPage();
+                        renderView();
+                        // empty list or fail
+                    } else if (message.arg1 == 0) {
+                        mView.showBlankPage();
+                    }
+
+                    mView.showProgress(false);
+                    break;
+                case RESP_GET_USER_INFO_SUCCESS:
+                    break;
             }
-
-            mView.showProgress(false);
         }
 
         @Override

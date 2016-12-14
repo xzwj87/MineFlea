@@ -3,6 +3,7 @@ package com.github.xzwj87.mineflea.market.presenter;
 import android.os.Message;
 import android.util.Log;
 
+import com.github.xzwj87.mineflea.market.data.ResponseCode;
 import com.github.xzwj87.mineflea.market.data.repository.DataRepository;
 import com.github.xzwj87.mineflea.market.internal.di.PerActivity;
 import com.github.xzwj87.mineflea.market.model.PublishGoodsInfo;
@@ -86,16 +87,26 @@ public class UserFavorGoodsPresenterImpl extends UserFavorGoodsPresenter{
         @SuppressWarnings("unchecked")
         @Override
         public void onComplete(Message message) {
-            Log.v(TAG,"onComplete(): resp = " + message.what);
-            if(message.obj != null){
-                mGoodsList = (List<PublishGoodsInfo>)message.obj;
+            Log.v(TAG,"onComplete()");
+            int what = message.what;
+            switch (what) {
+                case ResponseCode.RESP_QUERY_FAVORITE_GOODS_LIST_SUCCESS:
+                    if (message.obj != null) {
+                        mGoodsList = (List<PublishGoodsInfo>) message.obj;
 
-                renderView();
-            }else{
-                mView.showBlankPage();
+                        renderView();
+                    } else {
+                        mView.showBlankPage();
+                    }
+
+                    mView.showProgress(false);
+                    break;
+                case ResponseCode.RESP_QUERY_FAVORITE_GOODS_LIST_ERROR:
+                    mView.showProgress(false);
+                    break;
+                default:
+                    break;
             }
-
-            mView.showProgress(false);
         }
 
         @Override
